@@ -481,9 +481,10 @@ Public Class CSEMain
     End Sub
 
     ' Menu open the user manual
-    Private Sub ToolStripMenuItemManu_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripMenuItemManu.Click
-        If File.Exists(MyPath & "VECTO-CSE_UserManual_V" & AppVers & ".pdf") Then
-            Process.Start(MyPath & "VECTO-CSE_UserManual_V" & AppVers & ".pdf")
+    Private Sub ToolStripMenuItemManu_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemManu.Click
+        Dim manual_fname As String = MyPath & "Docs\CSE-UserManual.pdf"
+        If File.Exists(manual_fname) Then
+            Process.Start(manual_fname)
         End If
     End Sub
 #End Region
