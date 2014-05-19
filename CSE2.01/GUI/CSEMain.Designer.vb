@@ -280,14 +280,14 @@ Partial Class CSEMain
         '
         'ToolStripMenuItemNew
         '
-        Me.ToolStripMenuItemNew.Image = Global.CSE2._01.My.Resources.Resources.Neu
+        Me.ToolStripMenuItemNew.Image = Global.CSE.My.Resources.Resources.Neu
         Me.ToolStripMenuItemNew.Name = "ToolStripMenuItemNew"
         Me.ToolStripMenuItemNew.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemNew.Text = "New"
         '
         'ToolStripMenuItemOpen
         '
-        Me.ToolStripMenuItemOpen.Image = Global.CSE2._01.My.Resources.Resources.Öffnen
+        Me.ToolStripMenuItemOpen.Image = Global.CSE.My.Resources.Resources.Öffnen
         Me.ToolStripMenuItemOpen.Name = "ToolStripMenuItemOpen"
         Me.ToolStripMenuItemOpen.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemOpen.Text = "Open"
@@ -299,14 +299,14 @@ Partial Class CSEMain
         '
         'ToolStripMenuItemSave
         '
-        Me.ToolStripMenuItemSave.Image = Global.CSE2._01.My.Resources.Resources.Speichern
+        Me.ToolStripMenuItemSave.Image = Global.CSE.My.Resources.Resources.Speichern
         Me.ToolStripMenuItemSave.Name = "ToolStripMenuItemSave"
         Me.ToolStripMenuItemSave.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemSave.Text = "Save"
         '
         'ToolStripMenuItemSaveAs
         '
-        Me.ToolStripMenuItemSaveAs.Image = Global.CSE2._01.My.Resources.Resources.Speichern_unter
+        Me.ToolStripMenuItemSaveAs.Image = Global.CSE.My.Resources.Resources.Speichern_unter
         Me.ToolStripMenuItemSaveAs.Name = "ToolStripMenuItemSaveAs"
         Me.ToolStripMenuItemSaveAs.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemSaveAs.Text = "SaveAs"
@@ -318,7 +318,7 @@ Partial Class CSEMain
         '
         'ToolStripMenuItemExit
         '
-        Me.ToolStripMenuItemExit.Image = Global.CSE2._01.My.Resources.Resources.Beenden
+        Me.ToolStripMenuItemExit.Image = Global.CSE.My.Resources.Resources.Beenden
         Me.ToolStripMenuItemExit.Name = "ToolStripMenuItemExit"
         Me.ToolStripMenuItemExit.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemExit.Text = "Exit"
@@ -332,7 +332,7 @@ Partial Class CSEMain
         '
         'ToolStripMenuItemLog
         '
-        Me.ToolStripMenuItemLog.Image = Global.CSE2._01.My.Resources.Resources.Log_File
+        Me.ToolStripMenuItemLog.Image = Global.CSE.My.Resources.Resources.Log_File
         Me.ToolStripMenuItemLog.Name = "ToolStripMenuItemLog"
         Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemLog.Text = "Open LogFile"
@@ -344,7 +344,7 @@ Partial Class CSEMain
         '
         'ToolStripMenuItemOption
         '
-        Me.ToolStripMenuItemOption.Image = Global.CSE2._01.My.Resources.Resources.Optionen
+        Me.ToolStripMenuItemOption.Image = Global.CSE.My.Resources.Resources.Optionen
         Me.ToolStripMenuItemOption.Name = "ToolStripMenuItemOption"
         Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemOption.Text = "Options"
@@ -358,14 +358,14 @@ Partial Class CSEMain
         '
         'CreatActivationFileToolStripMenuItem
         '
-        Me.CreatActivationFileToolStripMenuItem.Image = Global.CSE2._01.My.Resources.Resources.Licencefile
+        Me.CreatActivationFileToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.Licencefile
         Me.CreatActivationFileToolStripMenuItem.Name = "CreatActivationFileToolStripMenuItem"
         Me.CreatActivationFileToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.CreatActivationFileToolStripMenuItem.Text = "Create Activation File"
         '
         'ToolStripMenuItemAbout
         '
-        Me.ToolStripMenuItemAbout.Image = Global.CSE2._01.My.Resources.Resources.Info
+        Me.ToolStripMenuItemAbout.Image = Global.CSE.My.Resources.Resources.Info
         Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
         Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(186, 22)
         Me.ToolStripMenuItemAbout.Text = "About CSE"
@@ -875,7 +875,7 @@ Partial Class CSEMain
         '
         'PictureBox2
         '
-        Me.PictureBox2.Image = Global.CSE2._01.My.Resources.Resources.JRC_About
+        Me.PictureBox2.Image = Global.CSE.My.Resources.Resources.JRC_About
         Me.PictureBox2.Location = New System.Drawing.Point(463, 26)
         Me.PictureBox2.Margin = New System.Windows.Forms.Padding(2)
         Me.PictureBox2.Name = "PictureBox2"
@@ -896,7 +896,7 @@ Partial Class CSEMain
         '
         'PictureBox1
         '
-        Me.PictureBox1.Image = Global.CSE2._01.My.Resources.Resources.VECTO_LOGO
+        Me.PictureBox1.Image = Global.CSE.My.Resources.Resources.VECTO_LOGO
         Me.PictureBox1.Location = New System.Drawing.Point(8, 26)
         Me.PictureBox1.Margin = New System.Windows.Forms.Padding(2)
         Me.PictureBox1.Name = "PictureBox1"
@@ -1287,7 +1287,7 @@ Partial Class CSEMain
         '
         'PBInfoIcon
         '
-        Me.PBInfoIcon.Image = Global.CSE2._01.My.Resources.Resources.Info
+        Me.PBInfoIcon.Image = Global.CSE.My.Resources.Resources.Info
         Me.PBInfoIcon.Location = New System.Drawing.Point(488, 245)
         Me.PBInfoIcon.Name = "PBInfoIcon"
         Me.PBInfoIcon.Size = New System.Drawing.Size(25, 24)

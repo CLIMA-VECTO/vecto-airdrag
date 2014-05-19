@@ -132,7 +132,7 @@ Partial Class CSE_Info
         'PictureBoxJRC
         '
         Me.PictureBoxJRC.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxJRC.Image = Global.CSE2._01.My.Resources.Resources.JRC_About
+        Me.PictureBoxJRC.Image = Global.CSE.My.Resources.Resources.JRC_About
         Me.PictureBoxJRC.Location = New System.Drawing.Point(239, 145)
         Me.PictureBoxJRC.Name = "PictureBoxJRC"
         Me.PictureBoxJRC.Size = New System.Drawing.Size(195, 40)
@@ -142,7 +142,7 @@ Partial Class CSE_Info
         'PictureBoxTUG
         '
         Me.PictureBoxTUG.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxTUG.Image = Global.CSE2._01.My.Resources.Resources.TUG_91x34
+        Me.PictureBoxTUG.Image = Global.CSE.My.Resources.Resources.TUG_91x34
         Me.PictureBoxTUG.Location = New System.Drawing.Point(363, 398)
         Me.PictureBoxTUG.Name = "PictureBoxTUG"
         Me.PictureBoxTUG.Size = New System.Drawing.Size(96, 36)
@@ -152,7 +152,7 @@ Partial Class CSE_Info
         'PictureBoxFVT
         '
         Me.PictureBoxFVT.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxFVT.Image = Global.CSE2._01.My.Resources.Resources.IVT_About
+        Me.PictureBoxFVT.Image = Global.CSE.My.Resources.Resources.IVT_About
         Me.PictureBoxFVT.Location = New System.Drawing.Point(245, 398)
         Me.PictureBoxFVT.Name = "PictureBoxFVT"
         Me.PictureBoxFVT.Size = New System.Drawing.Size(75, 36)

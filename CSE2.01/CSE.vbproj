@@ -8,9 +8,9 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6845E24A-D1E7-4B28-92E7-2EBF850F044B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>CSE2._01.My.MyApplication</StartupObject>
-    <RootNamespace>CSE2._01</RootNamespace>
-    <AssemblyName>CSE2.01</AssemblyName>
+    <StartupObject>CSE.My.MyApplication</StartupObject>
+    <RootNamespace>CSE</RootNamespace>
+    <AssemblyName>CSE</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -23,7 +23,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>CSE2.01.xml</DocumentationFile>
+    <DocumentationFile>CSE.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -33,7 +33,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>CSE2.01.xml</DocumentationFile>
+    <DocumentationFile>CSE.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
