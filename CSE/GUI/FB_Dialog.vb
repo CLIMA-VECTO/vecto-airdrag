@@ -264,17 +264,15 @@ Public Class FB_Dialog
 
     'Schlieﬂen und File/Folder History speichern
     Public Sub SaveAndClose()
-        Dim f As System.IO.StreamWriter
         Dim x As Int16
         'Folder History
         If FB_Init Then
             Try
-                f = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & "Directories.txt", False, System.Text.Encoding.UTF8)
-                For x = 0 To 19
-                    f.WriteLine(FB_FolderHistory(x))
-                Next
-                f.Close()
-                f.Dispose()
+                Using f As System.IO.StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & "Directories.txt", False, System.Text.Encoding.UTF8)
+                    For x = 0 To 19
+                        f.WriteLine(FB_FolderHistory(x))
+                    Next
+                End Using
             Catch ex As Exception
             End Try
             FB_Init = False
@@ -283,18 +281,16 @@ Public Class FB_Dialog
         If Initialized And Not bLightMode Then
             If Not bBrowseFolder Then
                 Try
-                    f = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & MyID & ".txt", False, System.Text.Encoding.UTF8)
-                    For x = 0 To 9
-                        f.WriteLine(Me.ContextMenuHisFile.Items(x).Text)
-                    Next
-                    f.Close()
-                    f.Dispose()
+                    Using f As System.IO.StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & MyID & ".txt", False, System.Text.Encoding.UTF8)
+                        For x = 0 To 9
+                            f.WriteLine(Me.ContextMenuHisFile.Items(x).Text)
+                        Next
+                    End Using
                 Catch ex As Exception
                 End Try
             End If
             Initialized = False
         End If
-        f = Nothing
         'Close
         Me.Close()
     End Sub
@@ -315,7 +311,6 @@ Public Class FB_Dialog
     Private Sub Init()
         Dim x As Int16
         Dim line As String
-        Dim f As System.IO.StreamReader
 
         UpdateLock = True
 
@@ -347,16 +342,15 @@ Public Class FB_Dialog
                 Me.ContextMenuHisFile.Items.Add("")
             Next
             If IO.File.Exists(FB_FilHisDir & MyID & ".txt") Then
-                f = New System.IO.StreamReader(FB_FilHisDir & MyID & ".txt")
-                x = -1
-                Do While Not f.EndOfStream And x < 9
-                    x += 1
-                    line = f.ReadLine
-                    Me.ContextMenuHisFile.Items(x).Text = line
-                    If x = 0 Then LastFile = line
-                Loop
-                f.Close()
-                f.Dispose()
+                Using f As System.IO.StreamReader = New System.IO.StreamReader(FB_FilHisDir & MyID & ".txt")
+                    x = -1
+                    Do While Not f.EndOfStream And x < 9
+                        x += 1
+                        line = f.ReadLine
+                        Me.ContextMenuHisFile.Items(x).Text = line
+                        If x = 0 Then LastFile = line
+                    Loop
+                End Using
             End If
         End If
 
@@ -375,15 +369,12 @@ Public Class FB_Dialog
         End If
 
         Initialized = True
-        f = Nothing
         UpdateLock = False
     End Sub
 
     Private Sub GlobalInit()
         Dim drive As String
         Dim x As Int16
-
-        Dim f As System.IO.StreamReader
 
         'Laufwerk-Liste erstellen
         ReDim FB_Drives(UBound(IO.Directory.GetLogicalDrives()))
@@ -398,19 +389,16 @@ Public Class FB_Dialog
             FB_FolderHistory(x) = EmptyText
         Next
         If IO.File.Exists(FB_FilHisDir & "Directories.txt") Then
-            f = New System.IO.StreamReader(FB_FilHisDir & "Directories.txt")
-            x = -1
-            Do While Not f.EndOfStream And x < 19
-                x += 1
-                FB_FolderHistory(x) = f.ReadLine()
-            Loop
-            f.Dispose()
-            f.Close()
+            Using f As System.IO.StreamReader = New System.IO.StreamReader(FB_FilHisDir & "Directories.txt")
+                x = -1
+                Do While Not f.EndOfStream And x < 19
+                    x += 1
+                    FB_FolderHistory(x) = f.ReadLine()
+                Loop
+            End Using
         End If
 
         FB_Init = True
-
-        f = Nothing
     End Sub
 
     'ComboBoxDrive_SelectedIndexChanged
@@ -922,7 +910,7 @@ lb1:
     Private Sub NewFileToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles NewFileToolStripMenuItem.Click
         Dim File As String
         Dim Result As DialogResult
-        Dim NewFile As System.IO.FileStream
+
         File = "New File"
 lb20:
         File = InputBox("Create New File", "New File", File)
@@ -937,8 +925,9 @@ lb20:
                 End If
             End If
             Try
-                NewFile = IO.File.Create(MyFolder & File)
-                NewFile.Close()
+                Using f As System.IO.FileStream = IO.File.Create(MyFolder & File)
+                End Using
+
                 LoadListFiles()
                 Me.TextBoxPath.Text = IO.Path.GetFileName(MyFolder & File)
             Catch ex As Exception

@@ -68,185 +68,181 @@
         Dim lauf, i As Integer
         Dim Info As String = ""
         Dim Line() As String
-        Dim FileInVECTO As New cFile_V3
+        Using FileInVECTO As New cFile_V3
 
-        ' Initialisation
-        lauf = 0
+            ' Initialisation
+            lauf = 0
 
-        ' Open the jobfile
-        If Not FileInVECTO.OpenRead(JobFile) Then
-            ' Falls File nicht vorhanden, abbrechen mit Fehler
-            fInfWarErrBW(9, False, "Can´t find the Jobfile file: " & JobFile)
-            Return False
-        End If
-
-        ' Read the data from the jobfile
-        Vehspez = FileInVECTO.ReadLine(0)
-        Ambspez = FileInVECTO.ReadLine(0)
-
-        Line = FileInVECTO.ReadLine
-        For i = 0 To UBound(AnemIC) - 1
-            AnemIC(i + 1) = Line(i)
-        Next i
-
-        ' Calibration test files
-        MSCCSpez = FileInVECTO.ReadLine(0)
-        DataSpez(1) = FileInVECTO.ReadLine(0)
-
-        ' Test run files
-        MSCTSpez = FileInVECTO.ReadLine(0)
-        RRC = FileInVECTO.ReadLine(0)
-        For i = 2 To JBerF
-            DataSpez(i) = FileInVECTO.ReadLine(0)
-        Next i
-
-        ' Appropriate the Checkboxes
-        ' Acceleration Correction
-        Line = FileInVECTO.ReadLine
-        If IsNumeric(Line(0)) Then
-            If Line(0) = 1 Then
-                AccC = True
-            Else
-                AccC = False
-                'CSEMain.CheckBoxAcc.Checked = False
+            ' Open the jobfile
+            If Not FileInVECTO.OpenRead(JobFile) Then
+                ' Falls File nicht vorhanden, abbrechen mit Fehler
+                fInfWarErrBW(9, False, "Can´t find the Jobfile file: " & JobFile)
+                Return False
             End If
-        End If
 
-        ' Gradient correction
-        Line = FileInVECTO.ReadLine
-        If IsNumeric(Line(0)) Then
-            If Line(0) = 1 Then
-                GradC = True
-            Else
-                GradC = False
-                'CSEMain.CheckBoxGrd.Checked = False
-            End If
-        End If
+            ' Read the data from the jobfile
+            Vehspez = FileInVECTO.ReadLine(0)
+            Ambspez = FileInVECTO.ReadLine(0)
 
-        ' Output sequence
-        Line = FileInVECTO.ReadLine
-        If IsNumeric(Line(0)) Then
-            If Line(0) = 1 Then
-                HzOut = 1
-            ElseIf Line(0) = 100 Then
-                HzOut = 100
-            Else
-                HzOut = 1
-            End If
-        End If
+            Line = FileInVECTO.ReadLine
+            For i = 0 To UBound(AnemIC) - 1
+                AnemIC(i + 1) = Line(i)
+            Next i
 
-        ' Read the parameters
-        Try
-            i = 0
-            Do While Not FileInVECTO.EndOfFile
-                ' Gradient correction
-                Line = FileInVECTO.ReadLine
-                i += 1
-                If IsNumeric(Line(0)) Then
-                    Select Case i
-                        Case 1 ' TBDeltaTTireMax
-                            delta_t_tire_max = Line(0)
-                        Case 2 ' TBDeltaRRCMax.Text
-                            delta_RRC_max = Line(0)
-                        Case 3 ' TBTambVar
-                            t_amb_var = Line(0)
-                        Case 4 ' TBTambTamac
-                            t_amb_tarmac = Line(0)
-                        Case 5 ' TBTambMax
-                            t_amb_max = Line(0)
-                        Case 6 ' TBTambMin
-                            t_amb_min = Line(0)
-                        Case 7 ' TBContHz
-                            delta_Hz_max = Line(0)
-                        Case 8 ' TBRhoAirRef
-                            roh_air_ref = Line(0)
-                        Case 9 ' TBAveSecAcc
-                            acc_corr_ave = Line(0)
-                        Case 10 ' TBDeltaHeadMax
-                            delta_parallel_max = Line(0)
-                        Case 11 ' TBContSecL
-                            delta_x_max = Line(0)
-                        Case 12 ' TBLRec
-                            delta_y_max = Line(0)
-                        Case 13 ' TBContAng
-                            delta_head_max = Line(0)
-                        Case 14 ' TBNSecAnz
-                            ds_min_CAL = Line(0)
-                        Case 15 ' TBNSecAnzLS
-                            ds_min_LS = Line(0)
-                        Case 16 ' TBNSecAnzHS
-                            ds_min_HS = Line(0)
-                        Case 17 ' TBMSHSMin
-                            ds_min_head_MS = Line(0)
-                        Case 18 ' TBDistFloat
-                            dist_float = Line(0)
-                        Case 19 ' TBvWindAveCALMax
-                            v_wind_ave_CAL_max = Line(0)
-                        Case 20 ' TBvWind1sCALMax
-                            v_wind_1s_CAL_max = Line(0)
-                        Case 21 ' TBBetaAveCALMax
-                            beta_ave_CAL_max = Line(0)
-                        Case 22 ' TBLengCrit
-                            leng_crit = Line(0)
-                        Case 23 ' TBvWindAveLSMax
-                            v_wind_ave_LS_max = Line(0)
-                        Case 24 ' TBvWind1sLSMin
-                            v_wind_1s_LS_max = Line(0)
-                        Case 25 ' TBvVehAveLSMax
-                            v_veh_ave_LS_max = Line(0)
-                        Case 26 ' TBvVehAveLSMin
-                            v_veh_ave_LS_min = Line(0)
-                        Case 27 ' TBvVehFloatD
-                            v_veh_float_delta = Line(0)
-                        Case 28 ' TBTqSumFloatD
-                            tq_sum_float_delta = Line(0)
-                        Case 29 ' TBvWindAveHSMax
-                            v_wind_ave_HS_max = Line(0)
-                        Case 30 ' TBvWind1sHSMax
-                            v_wind_1s_HS_max = Line(0)
-                        Case 31 ' TBvVehAveHSMin
-                            v_veh_ave_HS_min = Line(0)
-                        Case 32 ' TBBetaAveHSMax
-                            beta_ave_HS_max = Line(0)
-                        Case 33 ' TBvVeh1sD
-                            v_veh_1s_delta = Line(0)
-                        Case 34 ' TBTq1sD
-                            tq_sum_1s_delta = Line(0)
-                    End Select
+            ' Calibration test files
+            MSCCSpez = FileInVECTO.ReadLine(0)
+            DataSpez(1) = FileInVECTO.ReadLine(0)
+
+            ' Test run files
+            MSCTSpez = FileInVECTO.ReadLine(0)
+            RRC = FileInVECTO.ReadLine(0)
+            For i = 2 To JBerF
+                DataSpez(i) = FileInVECTO.ReadLine(0)
+            Next i
+
+            ' Appropriate the Checkboxes
+            ' Acceleration Correction
+            Line = FileInVECTO.ReadLine
+            If IsNumeric(Line(0)) Then
+                If Line(0) = 1 Then
+                    AccC = True
                 Else
-                    fInfWarErrBW(9, False, "The given value in the job file at position: " & i & " is not a number")
-                    FileInVECTO.Close()
-                    BWorker.CancelAsync()
-                    Return False
+                    AccC = False
+                    'CSEMain.CheckBoxAcc.Checked = False
                 End If
-            Loop
-        Catch ex As Exception
-            ' Error
-            fInfWarErrBW(9, False, "Invalid value in the job file at position: " & i)
-            FileInVECTO.Close()
-            BWorker.CancelAsync()
-            Return False
-        End Try
+            End If
 
-        ' Look if enough parameters are given
-        If i < 34 Then
-            fInfWarErrBW(9, False, "Not enough parameters given in the job file")
-            FileInVECTO.Close()
-            BWorker.CancelAsync()
-            Return False
-        End If
+            ' Gradient correction
+            Line = FileInVECTO.ReadLine
+            If IsNumeric(Line(0)) Then
+                If Line(0) = 1 Then
+                    GradC = True
+                Else
+                    GradC = False
+                    'CSEMain.CheckBoxGrd.Checked = False
+                End If
+            End If
 
-        ' Control the input files
-        fControlInput(Vehspez, 1, "csveh")
-        fControlInput(Ambspez, 2, "csamb")
-        fControlInput(MSCCSpez, 3, "csms")
-        fControlInput(MSCTSpez, 4, "csms")
-        For i = 1 To JBerF
-            fControlInput(DataSpez(i), 4 + i, "csdat")
-        Next i
+            ' Output sequence
+            Line = FileInVECTO.ReadLine
+            If IsNumeric(Line(0)) Then
+                If Line(0) = 1 Then
+                    HzOut = 1
+                ElseIf Line(0) = 100 Then
+                    HzOut = 100
+                Else
+                    HzOut = 1
+                End If
+            End If
 
-        ' Close the Jobfile
-        FileInVECTO.Close()
+            ' Read the parameters
+            Try
+                i = 0
+                Do While Not FileInVECTO.EndOfFile
+                    ' Gradient correction
+                    Line = FileInVECTO.ReadLine
+                    i += 1
+                    If IsNumeric(Line(0)) Then
+                        Select Case i
+                            Case 1 ' TBDeltaTTireMax
+                                delta_t_tire_max = Line(0)
+                            Case 2 ' TBDeltaRRCMax.Text
+                                delta_RRC_max = Line(0)
+                            Case 3 ' TBTambVar
+                                t_amb_var = Line(0)
+                            Case 4 ' TBTambTamac
+                                t_amb_tarmac = Line(0)
+                            Case 5 ' TBTambMax
+                                t_amb_max = Line(0)
+                            Case 6 ' TBTambMin
+                                t_amb_min = Line(0)
+                            Case 7 ' TBContHz
+                                delta_Hz_max = Line(0)
+                            Case 8 ' TBRhoAirRef
+                                roh_air_ref = Line(0)
+                            Case 9 ' TBAveSecAcc
+                                acc_corr_ave = Line(0)
+                            Case 10 ' TBDeltaHeadMax
+                                delta_parallel_max = Line(0)
+                            Case 11 ' TBContSecL
+                                delta_x_max = Line(0)
+                            Case 12 ' TBLRec
+                                delta_y_max = Line(0)
+                            Case 13 ' TBContAng
+                                delta_head_max = Line(0)
+                            Case 14 ' TBNSecAnz
+                                ds_min_CAL = Line(0)
+                            Case 15 ' TBNSecAnzLS
+                                ds_min_LS = Line(0)
+                            Case 16 ' TBNSecAnzHS
+                                ds_min_HS = Line(0)
+                            Case 17 ' TBMSHSMin
+                                ds_min_head_MS = Line(0)
+                            Case 18 ' TBDistFloat
+                                dist_float = Line(0)
+                            Case 19 ' TBvWindAveCALMax
+                                v_wind_ave_CAL_max = Line(0)
+                            Case 20 ' TBvWind1sCALMax
+                                v_wind_1s_CAL_max = Line(0)
+                            Case 21 ' TBBetaAveCALMax
+                                beta_ave_CAL_max = Line(0)
+                            Case 22 ' TBLengCrit
+                                leng_crit = Line(0)
+                            Case 23 ' TBvWindAveLSMax
+                                v_wind_ave_LS_max = Line(0)
+                            Case 24 ' TBvWind1sLSMin
+                                v_wind_1s_LS_max = Line(0)
+                            Case 25 ' TBvVehAveLSMax
+                                v_veh_ave_LS_max = Line(0)
+                            Case 26 ' TBvVehAveLSMin
+                                v_veh_ave_LS_min = Line(0)
+                            Case 27 ' TBvVehFloatD
+                                v_veh_float_delta = Line(0)
+                            Case 28 ' TBTqSumFloatD
+                                tq_sum_float_delta = Line(0)
+                            Case 29 ' TBvWindAveHSMax
+                                v_wind_ave_HS_max = Line(0)
+                            Case 30 ' TBvWind1sHSMax
+                                v_wind_1s_HS_max = Line(0)
+                            Case 31 ' TBvVehAveHSMin
+                                v_veh_ave_HS_min = Line(0)
+                            Case 32 ' TBBetaAveHSMax
+                                beta_ave_HS_max = Line(0)
+                            Case 33 ' TBvVeh1sD
+                                v_veh_1s_delta = Line(0)
+                            Case 34 ' TBTq1sD
+                                tq_sum_1s_delta = Line(0)
+                        End Select
+                    Else
+                        fInfWarErrBW(9, False, "The given value in the job file at position: " & i & " is not a number")
+                        BWorker.CancelAsync()
+                        Return False
+                    End If
+                Loop
+            Catch ex As Exception
+                ' Error
+                fInfWarErrBW(9, False, "Invalid value in the job file at position: " & i)
+                BWorker.CancelAsync()
+                Return False
+            End Try
+
+            ' Look if enough parameters are given
+            If i < 34 Then
+                fInfWarErrBW(9, False, "Not enough parameters given in the job file")
+                BWorker.CancelAsync()
+                Return False
+            End If
+
+            ' Control the input files
+            fControlInput(Vehspez, 1, "csveh")
+            fControlInput(Ambspez, 2, "csamb")
+            fControlInput(MSCCSpez, 3, "csms")
+            fControlInput(MSCTSpez, 4, "csms")
+            For i = 1 To JBerF
+                fControlInput(DataSpez(i), 4 + i, "csdat")
+            Next i
+
+        End Using
 
         ' Transfer the data to the GUI
         ' General
@@ -278,77 +274,78 @@
         Dim Info As String = ""
         Dim Line(), Line2(), Line3(), GenShpFile As String
         Dim XVal(,), YVal(,), XClone(), YClone() As Double
-        Dim FileInGenShp As New cFile_V3
+        Using FileInGenShp As New cFile_V3
 
-        ' Initialisation
-        GenShpFile = ConfigPath & "GenShape.shp"
+            ' Initialisation
+            GenShpFile = ConfigPath & "GenShape.shp"
 
-        ' Open the shape generic file
-        If Not FileInGenShp.OpenRead(GenShpFile) Then
-            ' Falls File nicht vorhanden, abbrechen mit Fehler
-            fInfWarErr(9, True, "Can´t find the generic shape file: " & GenShpFile)
-            Return False
-        End If
-
-        ' Read the line
-        Line = FileInGenShp.ReadLine()
-        Line2 = FileInGenShp.ReadLine()
-        Line3 = FileInGenShp.ReadLine()
-        anz = Int(Line.Length / 2)
-
-        ' Initialise
-        pos = 1
-        num = 0
-        ReDim XVal(anz - 1, 0)
-        ReDim YVal(anz - 1, 0)
-
-        ' Read the Head data
-        For i = 0 To anz - 1
-            ' Control if the vehicle class and configuration is already defined
-            If GenShape.veh_class.Contains(Line(pos)) Then
-                For j = 0 To GenShape.veh_class.Count - 1
-                    If GenShape.veh_class(j) = Line(pos) And GenShape.veh_conf(j) = Line2(pos) Then
-                        fInfWarErr(9, True, "The vehicle class with this configuration is already defined. Please control your generic shape file!")
-                        Return False
-                    End If
-                Next
+            ' Open the shape generic file
+            If Not FileInGenShp.OpenRead(GenShpFile) Then
+                ' Falls File nicht vorhanden, abbrechen mit Fehler
+                fInfWarErr(9, True, "Can´t find the generic shape file: " & GenShpFile)
+                Return False
             End If
-            ' Add the data
-            GenShape.veh_class.Add(Line(pos))
-            GenShape.veh_conf.Add(Line2(pos))
-            GenShape.fa_pe.Add(Line3(pos))
-            pos += 2
-        Next i
 
-        ' Read the shape values
-        Do While Not FileInGenShp.EndOfFile
-            pos = 1
-            num += 1
+            ' Read the line
             Line = FileInGenShp.ReadLine()
-            ReDim Preserve XVal(anz - 1, UBound(XVal, 2) + 1)
-            ReDim Preserve YVal(anz - 1, UBound(YVal, 2) + 1)
+            Line2 = FileInGenShp.ReadLine()
+            Line3 = FileInGenShp.ReadLine()
+            anz = Int(Line.Length / 2)
+
+            ' Initialise
+            pos = 1
+            num = 0
+            ReDim XVal(anz - 1, 0)
+            ReDim YVal(anz - 1, 0)
+
+            ' Read the Head data
             For i = 0 To anz - 1
-                XVal(i, UBound(XVal, 2)) = Line(pos)
-                YVal(i, UBound(YVal, 2)) = Line(pos + 1)
+                ' Control if the vehicle class and configuration is already defined
+                If GenShape.veh_class.Contains(Line(pos)) Then
+                    For j = 0 To GenShape.veh_class.Count - 1
+                        If GenShape.veh_class(j) = Line(pos) And GenShape.veh_conf(j) = Line2(pos) Then
+                            fInfWarErr(9, True, "The vehicle class with this configuration is already defined. Please control your generic shape file!")
+                            Return False
+                        End If
+                    Next
+                End If
+                ' Add the data
+                GenShape.veh_class.Add(Line(pos))
+                GenShape.veh_conf.Add(Line2(pos))
+                GenShape.fa_pe.Add(Line3(pos))
                 pos += 2
             Next i
-        Loop
 
-        ' Clone and add the arrays
-        For i = 0 To anz - 1
-            ' Initialise
-            ReDim XClone(num - 1)
-            ReDim YClone(num - 1)
+            ' Read the shape values
+            Do While Not FileInGenShp.EndOfFile
+                pos = 1
+                num += 1
+                Line = FileInGenShp.ReadLine()
+                ReDim Preserve XVal(anz - 1, UBound(XVal, 2) + 1)
+                ReDim Preserve YVal(anz - 1, UBound(YVal, 2) + 1)
+                For i = 0 To anz - 1
+                    XVal(i, UBound(XVal, 2)) = Line(pos)
+                    YVal(i, UBound(YVal, 2)) = Line(pos + 1)
+                    pos += 2
+                Next i
+            Loop
 
-            ' Copy the arrays
-            For j = 1 To num
-                XClone(j - 1) = XVal(i, j)
-                YClone(j - 1) = YVal(i, j)
-            Next j
-            ' Add the arrays
-            GenShape.x_val.Add(XClone.Clone)
-            GenShape.y_val.Add(YClone.Clone)
-        Next i
+            ' Clone and add the arrays
+            For i = 0 To anz - 1
+                ' Initialise
+                ReDim XClone(num - 1)
+                ReDim YClone(num - 1)
+
+                ' Copy the arrays
+                For j = 1 To num
+                    XClone(j - 1) = XVal(i, j)
+                    YClone(j - 1) = YVal(i, j)
+                Next j
+                ' Add the arrays
+                GenShape.x_val.Add(XClone.Clone)
+                GenShape.y_val.Add(YClone.Clone)
+            Next i
+        End Using
 
         Return True
     End Function
@@ -549,24 +546,58 @@
         Return True
     End Function
 
+    ' Writing from the config file
+    Function fConfigStore() As Boolean
+        Dim settings_fpath As String = ConfigPath & "settings.txt"
+        Try
+            Using FileOutConfig As New cFile_V3
+
+                ' Opfen a file
+                FileOutConfig.OpenWrite(settings_fpath)
+
+                ' Write the data into the file
+                FileOutConfig.WriteLine("c Standard Working Directory Path")
+                FileOutConfig.WriteLine(CSE_Config.TextBoxWorDir.Text)
+                FileOutConfig.WriteLine("c Write log file -1/0")
+                FileOutConfig.WriteLine(CInt(CSE_Config.CheckBoxWriteLog.Checked))
+                FileOutConfig.WriteLine("c Log file size limit [MiB]")
+                FileOutConfig.WriteLine(CSE_Config.TextBoxLogSize.Text)
+                FileOutConfig.WriteLine("c Message Output Level")
+                FileOutConfig.WriteLine(CSE_Config.TextBoxMSG.Text)
+                FileOutConfig.WriteLine("c *.exe Path Notepad")
+                FileOutConfig.WriteLine(CSE_Config.TextBoxNotepad.Text)
+
+                fInfWarErr(7, False, "Writting settings to file: " & settings_fpath)
+                Return True
+            End Using
+        Catch ex As Exception
+            fInfWarErr(9, False, "Failed writting settings due to: " & ex.Message)
+        End Try
+        Return False
+    End Function
+
     ' Load the configuration file
     Function fConfigLoad() As Boolean
-        ' Declarationen
-        Dim FileInConfig As New cFile_V3
+        Dim settings_fpath As String = ConfigPath & "settings.txt"
+        Try
+            Using FileInConfig As New cFile_V3
+                If Not FileInConfig.OpenRead(settings_fpath) Then Return False
 
-        If Not FileInConfig.OpenRead(ConfigPath & "settings.txt") Then Return False
+                ' Read the data
+                StdWorkDir = FileInConfig.ReadLine(0)
+                LogFile = CBool(FileInConfig.ReadLine(0))
+                LogSize = FileInConfig.ReadLine(0)
+                MSG = FileInConfig.ReadLine(0)
+                NotepadExe = FileInConfig.ReadLine(0)
 
-        ' Read the data
-        StdWorkDir = FileInConfig.ReadLine(0)
-        LogFile = CBool(FileInConfig.ReadLine(0))
-        LogSize = FileInConfig.ReadLine(0)
-        MSG = FileInConfig.ReadLine(0)
-        NotepadExe = FileInConfig.ReadLine(0)
+                fInfWarErr(7, False, "Read settings from file: " & settings_fpath)
+                Return True
+            End Using
+        Catch ex As Exception
+            fInfWarErr(9, False, "Failed reading settings due to: " & ex.Message)
+        End Try
 
-        ' Close the file
-        FileInConfig.Close()
-
-        Return True
+        Return False
     End Function
 
     ' Delete lines from the Logfile

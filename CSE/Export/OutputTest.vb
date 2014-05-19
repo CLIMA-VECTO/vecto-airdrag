@@ -3,64 +3,64 @@
         ' Declaration
         Dim i As Integer
         Dim NameOutFile, key As String
-        Dim FileOut As New cFile_V3
-        Dim first As Boolean
-        Dim s As New System.Text.StringBuilder
+        Using FileOut As New cFile_V3
+            Dim first As Boolean
+            Dim s As New System.Text.StringBuilder
 
-        ' Initialise
-        first = True
-        ErgEntriesI = New Dictionary(Of tComp, CResult)
-        ErgEntryListI = New List(Of tComp)
-        ErgEntriesIU = New Dictionary(Of String, CResult)
-        ErgEntryListIU = New List(Of String)
-        ErgEntriesC = New Dictionary(Of tCompCali, CResult)
-        ErgEntryListC = New List(Of tCompCali)
-        GenErgOutDataTest()
-
-        ' Exit function if error is detected
-        If BWorker.CancellationPending And FileBlock Then
-            Return False
-        End If
-
-        ' Write on GUI
-        fInfWarErrBW(5, False, "Write output-file (*.csv)")
-
-        ' Generate the file name
-        NameOutFile = OutFolder & fName(Datafile, False) & "_test.csv"
-
-        ' Anlegen der Datei
-        FileOut.OpenWrite(NameOutFile, , False)
-
-        ' Filekopf
-        FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-        FileOut.WriteLine("Datafile: ", Datafile)
-        FileOut.WriteLine("")
-
-        ' Write the head
-        FileOut.WriteLine(ErgHead("InputData") + "," + ErgHead("CalcData"))
-
-        ' Write the units
-        FileOut.WriteLine(ErgUnits("InputData") + "," + ErgUnits("CalcData"))
-
-        ' Write the data
-        For i = 0 To InputData.Item(tComp.t).Count - 1
-            For Each key In ErgEntryListI
-                If Not first Then s.Append(",")
-                s.Append(InputData(key)(i))
-                first = False
-            Next
-            For Each key In ErgEntryListC
-                If Not first Then s.Append(",")
-                s.Append(CalcData(key)(i))
-                first = False
-            Next
-            FileOut.WriteLine(s.ToString)
-            s.Clear()
+            ' Initialise
             first = True
-        Next i
+            ErgEntriesI = New Dictionary(Of tComp, CResult)
+            ErgEntryListI = New List(Of tComp)
+            ErgEntriesIU = New Dictionary(Of String, CResult)
+            ErgEntryListIU = New List(Of String)
+            ErgEntriesC = New Dictionary(Of tCompCali, CResult)
+            ErgEntryListC = New List(Of tCompCali)
+            GenErgOutDataTest()
 
-        ' Close the file
-        FileOut.Close()
+            ' Exit function if error is detected
+            If BWorker.CancellationPending And FileBlock Then
+                Return False
+            End If
+
+            ' Write on GUI
+            fInfWarErrBW(5, False, "Write output-file (*.csv)")
+
+            ' Generate the file name
+            NameOutFile = OutFolder & fName(Datafile, False) & "_test.csv"
+
+            ' Anlegen der Datei
+            FileOut.OpenWrite(NameOutFile, , False)
+
+            ' Filekopf
+            FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
+            FileOut.WriteLine("Datafile: ", Datafile)
+            FileOut.WriteLine("")
+
+            ' Write the head
+            FileOut.WriteLine(ErgHead("InputData") + "," + ErgHead("CalcData"))
+
+            ' Write the units
+            FileOut.WriteLine(ErgUnits("InputData") + "," + ErgUnits("CalcData"))
+
+            ' Write the data
+            For i = 0 To InputData.Item(tComp.t).Count - 1
+                For Each key In ErgEntryListI
+                    If Not first Then s.Append(",")
+                    s.Append(InputData(key)(i))
+                    first = False
+                Next
+                For Each key In ErgEntryListC
+                    If Not first Then s.Append(",")
+                    s.Append(CalcData(key)(i))
+                    first = False
+                Next
+                FileOut.WriteLine(s.ToString)
+                s.Clear()
+                first = True
+            Next i
+
+        End Using
+
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then

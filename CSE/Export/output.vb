@@ -4,80 +4,79 @@
         ' Declaration
         Dim i As Integer
         Dim NameOutFile, key As String
-        Dim FileOut As New cFile_V3
-        Dim first As Boolean
-        Dim s As New System.Text.StringBuilder
+        Using FileOut As New cFile_V3
+            Dim first As Boolean
+            Dim s As New System.Text.StringBuilder
 
-        ' Initialise
-        first = True
-        ErgEntriesI = New Dictionary(Of tComp, CResult)
-        ErgEntryListI = New List(Of tComp)
-        ErgEntriesIU = New Dictionary(Of String, CResult)
-        ErgEntryListIU = New List(Of String)
-        ErgEntriesC = New Dictionary(Of tCompCali, CResult)
-        ErgEntryListC = New List(Of tCompCali)
-        GenErgOutData(calibration)
-        If HzOut = 1 Then
-            ConvTo1Hz(InputData(tComp.t), InputUndefData)
-            ConvTo1Hz(InputData)
-            ConvTo1Hz(CalcData)
-        End If
-
-        ' Exit function if error is detected
-        If BWorker.CancellationPending And FileBlock Then
-            Return False
-        End If
-
-        ' Write on GUI
-        fInfWarErrBW(5, False, "Writing output-file (*.csv)")
-
-        ' Generate the file name
-        NameOutFile = ""
-        Select Case HzOut
-            Case 1
-                NameOutFile = OutFolder & fName(Datafile, False) & "_1Hz.csv"
-            Case 100
-                NameOutFile = OutFolder & fName(Datafile, False) & "_100Hz.csv"
-        End Select
-
-        ' Anlegen der Datei
-        FileOut.OpenWrite(NameOutFile, , False)
-
-        ' Filekopf
-        FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-        FileOut.WriteLine("Datafile: ", Datafile)
-        FileOut.WriteLine("")
-
-        ' Write the head
-        FileOut.WriteLine(ErgHead("InputData") + "," + ErgHead("InputUndefData") + "," + ErgHead("CalcData"))
-
-        ' Write the units
-        FileOut.WriteLine(ErgUnits("InputData") + "," + ErgUnits("InputUndefData") + "," + ErgUnits("CalcData"))
-
-        ' Write the data
-        For i = 0 To InputData.Item(tComp.t).Count - 1
-            For Each key In ErgEntryListI
-                If Not first Then s.Append(",")
-                s.Append(InputData(key)(i))
-                first = False
-            Next
-            For Each key In ErgEntryListIU
-                If Not first Then s.Append(",")
-                s.Append(InputUndefData(key)(i))
-                first = False
-            Next
-            For Each key In ErgEntryListC
-                If Not first Then s.Append(",")
-                s.Append(CalcData(key)(i))
-                first = False
-            Next
-            FileOut.WriteLine(s.ToString)
-            s.Clear()
+            ' Initialise
             first = True
-        Next i
+            ErgEntriesI = New Dictionary(Of tComp, CResult)
+            ErgEntryListI = New List(Of tComp)
+            ErgEntriesIU = New Dictionary(Of String, CResult)
+            ErgEntryListIU = New List(Of String)
+            ErgEntriesC = New Dictionary(Of tCompCali, CResult)
+            ErgEntryListC = New List(Of tCompCali)
+            GenErgOutData(calibration)
+            If HzOut = 1 Then
+                ConvTo1Hz(InputData(tComp.t), InputUndefData)
+                ConvTo1Hz(InputData)
+                ConvTo1Hz(CalcData)
+            End If
 
-        ' Close the file
-        FileOut.Close()
+            ' Exit function if error is detected
+            If BWorker.CancellationPending And FileBlock Then
+                Return False
+            End If
+
+            ' Write on GUI
+            fInfWarErrBW(5, False, "Writing output-file (*.csv)")
+
+            ' Generate the file name
+            NameOutFile = ""
+            Select Case HzOut
+                Case 1
+                    NameOutFile = OutFolder & fName(Datafile, False) & "_1Hz.csv"
+                Case 100
+                    NameOutFile = OutFolder & fName(Datafile, False) & "_100Hz.csv"
+            End Select
+
+            ' Anlegen der Datei
+            FileOut.OpenWrite(NameOutFile, , False)
+
+            ' Filekopf
+            FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
+            FileOut.WriteLine("Datafile: ", Datafile)
+            FileOut.WriteLine("")
+
+            ' Write the head
+            FileOut.WriteLine(ErgHead("InputData") + "," + ErgHead("InputUndefData") + "," + ErgHead("CalcData"))
+
+            ' Write the units
+            FileOut.WriteLine(ErgUnits("InputData") + "," + ErgUnits("InputUndefData") + "," + ErgUnits("CalcData"))
+
+            ' Write the data
+            For i = 0 To InputData.Item(tComp.t).Count - 1
+                For Each key In ErgEntryListI
+                    If Not first Then s.Append(",")
+                    s.Append(InputData(key)(i))
+                    first = False
+                Next
+                For Each key In ErgEntryListIU
+                    If Not first Then s.Append(",")
+                    s.Append(InputUndefData(key)(i))
+                    first = False
+                Next
+                For Each key In ErgEntryListC
+                    If Not first Then s.Append(",")
+                    s.Append(CalcData(key)(i))
+                    first = False
+                Next
+                FileOut.WriteLine(s.ToString)
+                s.Clear()
+                first = True
+            Next i
+
+        End Using
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
@@ -92,95 +91,95 @@
         ' Declaration
         Dim i As Integer
         Dim NameOutFile, key As String
-        Dim FileOut As New cFile_V3
-        Dim first As Boolean
-        Dim s As New System.Text.StringBuilder
+        Using FileOut As New cFile_V3
+            Dim first As Boolean
+            Dim s As New System.Text.StringBuilder
 
-        ' Initialise
-        first = True
-        ErgEntriesR = New Dictionary(Of tCompErg, CResult)
-        ErgEntryListR = New List(Of tCompErg)
-        ErgEntriesRU = New Dictionary(Of String, CResult)
-        ErgEntryListRU = New List(Of String)
-        GenErgOutRes(calibration)
+            ' Initialise
+            first = True
+            ErgEntriesR = New Dictionary(Of tCompErg, CResult)
+            ErgEntryListR = New List(Of tCompErg)
+            ErgEntriesRU = New Dictionary(Of String, CResult)
+            ErgEntryListRU = New List(Of String)
+            GenErgOutRes(calibration)
 
-        ' Exit function if error is detected
-        If BWorker.CancellationPending And FileBlock Then
-            Return False
-        End If
+            ' Exit function if error is detected
+            If BWorker.CancellationPending And FileBlock Then
+                Return False
+            End If
 
-        ' Write on GUI
-        fInfWarErrBW(5, False, "Writing result-file (*.csv)")
+            ' Write on GUI
+            fInfWarErrBW(5, False, "Writing result-file (*.csv)")
 
-        ' Generate the file name
-        NameOutFile = OutFolder & fName(JobFile, False) & "_MS_CAL.csv"
-        If Not calibration Then
-            NameOutFile = OutFolder & fName(JobFile, False) & "_MS_MEAS.csv"
-        End If
+            ' Generate the file name
+            NameOutFile = OutFolder & fName(JobFile, False) & "_MS_CAL.csv"
+            If Not calibration Then
+                NameOutFile = OutFolder & fName(JobFile, False) & "_MS_MEAS.csv"
+            End If
 
-        ' Anlegen der Datei
-        FileOut.OpenWrite(NameOutFile, , False)
+            ' Anlegen der Datei
+            FileOut.OpenWrite(NameOutFile, , False)
 
-        ' Filekopf
-        FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-        If calibration Then
-            FileOut.WriteLine("Datafile: ", Datafile(1))
-        Else
-            FileOut.WriteLine("Datafile LS1: ", Datafile(2))
-            FileOut.WriteLine("Datafile HS: ", Datafile(3))
-            FileOut.WriteLine("Datafile LS2: ", Datafile(4))
-        End If
-        FileOut.WriteLine("")
-        FileOut.WriteLine("Results")
-        FileOut.WriteLine("fv_veh:", fv_veh)
-        FileOut.WriteLine("fv_veh_opt2:", fv_veh_opt2)
-        FileOut.WriteLine("fv_pe:", fv_pe)
-        FileOut.WriteLine("beta_ame:", beta_ame)
-        FileOut.WriteLine("")
+            ' Filekopf
+            FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
+            If calibration Then
+                FileOut.WriteLine("Datafile: ", Datafile(1))
+            Else
+                FileOut.WriteLine("Datafile LS1: ", Datafile(2))
+                FileOut.WriteLine("Datafile HS: ", Datafile(3))
+                FileOut.WriteLine("Datafile LS2: ", Datafile(4))
+            End If
+            FileOut.WriteLine("")
+            FileOut.WriteLine("Results")
+            FileOut.WriteLine("fv_veh:", fv_veh)
+            FileOut.WriteLine("fv_veh_opt2:", fv_veh_opt2)
+            FileOut.WriteLine("fv_pe:", fv_pe)
+            FileOut.WriteLine("beta_ame:", beta_ame)
+            FileOut.WriteLine("")
 
-        ' Write the head
-        FileOut.WriteLine(ErgHead("ErgValues") + "," + ErgHead("ErgValuesUndef"))
+            ' Write the head
+            FileOut.WriteLine(ErgHead("ErgValues") + "," + ErgHead("ErgValuesUndef"))
 
-        ' Write the units
-        FileOut.WriteLine(ErgUnits("ErgValues") + "," + ErgUnits("ErgValuesUndef"))
+            ' Write the units
+            FileOut.WriteLine(ErgUnits("ErgValues") + "," + ErgUnits("ErgValuesUndef"))
 
-        ' Write the data
-        If calibration Then
-            For i = 0 To ErgValues.Item(tCompErg.SecID).Count - 1
-                For Each key In ErgEntryListR
-                    If Not first Then s.Append(",")
-                    s.Append(ErgValues(key)(i))
-                    first = False
-                Next
-                For Each key In ErgEntryListRU
-                    If Not first Then s.Append(",")
-                    s.Append(ErgValuesUndef(key)(i))
-                    first = False
-                Next
-                FileOut.WriteLine(s.ToString)
-                s.Clear()
-                first = True
-            Next i
-        Else
-            For i = 0 To ErgValuesComp.Item(tCompErg.SecID).Count - 1
-                For Each key In ErgEntryListR
-                    If Not first Then s.Append(",")
-                    s.Append(ErgValuesComp(key)(i))
-                    first = False
-                Next
-                For Each key In ErgEntryListRU
-                    If Not first Then s.Append(",")
-                    s.Append(ErgValuesUndefComp(key)(i))
-                    first = False
-                Next
-                FileOut.WriteLine(s.ToString)
-                s.Clear()
-                first = True
-            Next i
-        End If
+            ' Write the data
+            If calibration Then
+                For i = 0 To ErgValues.Item(tCompErg.SecID).Count - 1
+                    For Each key In ErgEntryListR
+                        If Not first Then s.Append(",")
+                        s.Append(ErgValues(key)(i))
+                        first = False
+                    Next
+                    For Each key In ErgEntryListRU
+                        If Not first Then s.Append(",")
+                        s.Append(ErgValuesUndef(key)(i))
+                        first = False
+                    Next
+                    FileOut.WriteLine(s.ToString)
+                    s.Clear()
+                    first = True
+                Next i
+            Else
+                For i = 0 To ErgValuesComp.Item(tCompErg.SecID).Count - 1
+                    For Each key In ErgEntryListR
+                        If Not first Then s.Append(",")
+                        s.Append(ErgValuesComp(key)(i))
+                        first = False
+                    Next
+                    For Each key In ErgEntryListRU
+                        If Not first Then s.Append(",")
+                        s.Append(ErgValuesUndefComp(key)(i))
+                        first = False
+                    Next
+                    FileOut.WriteLine(s.ToString)
+                    s.Clear()
+                    first = True
+                Next i
+            End If
 
-        ' Close the file
-        FileOut.Close()
+        End Using
+
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
@@ -195,87 +194,86 @@
         ' Declaration
         Dim i As Integer
         Dim NameOutFile, key As String
-        Dim FileOut As New cFile_V3
-        Dim first As Boolean
-        Dim s As New System.Text.StringBuilder
+        Using FileOut As New cFile_V3
+            Dim first As Boolean
+            Dim s As New System.Text.StringBuilder
 
-        ' Initialise
-        first = True
-        ErgEntriesReg = New Dictionary(Of tCompErgReg, CResult)
-        ErgEntryListReg = New List(Of tCompErgReg)
-        GenErgOutResReg()
-
-        ' Exit function if error is detected
-        If BWorker.CancellationPending And FileBlock Then
-            Return False
-        End If
-
-        ' Write on GUI
-        fInfWarErrBW(5, False, "Writing result-file (*.csv)")
-
-        ' Generate the file name
-        NameOutFile = OutFolder & fName(JobFile, False) & "_CSE.csv"
-
-        ' Anlegen der Datei
-        FileOut.OpenWrite(NameOutFile, , False)
-
-        ' Filekopf
-        FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-        FileOut.WriteLine("Datafile LS1: ", Datafile(2))
-        FileOut.WriteLine("Datafile HS: ", Datafile(3))
-        FileOut.WriteLine("Datafile LS2: ", Datafile(4))
-        FileOut.WriteLine("")
-        FileOut.WriteLine("Results")
-        FileOut.WriteLine("fv_veh:", fv_veh, "[-] calibration factor for vehicle speed")
-        FileOut.WriteLine("fv_veh_opt2:", fv_veh_opt2, "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
-        FileOut.WriteLine("fv_pe:", fv_pe, "[-] calibration factor for air speed (position error)")
-        FileOut.WriteLine("fa_pe:", fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
-        FileOut.WriteLine("beta_ame:", beta_ame, "[°] calibration factor for beta (misalignment)")
-        FileOut.WriteLine("CdxA:", CdxA, "[m²] average CdxA before yaw angle correction")
-        FileOut.WriteLine("beta:", beta, "[°] average absolute yaw angle from high speed tests")
-        FileOut.WriteLine("delta_CdxA:", delta_CdxA, "[m²] correction of CdxA for yaw angle")
-        FileOut.WriteLine("CdxA(0):", CdxA0, "[m²] average CdxA for zero yaw angle")
-        FileOut.WriteLine("CdxA(0)_opt2:", CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
-        FileOut.WriteLine("")
-        FileOut.WriteLine("Validity criteria:")
-        If valid_t_tire Then
-            FileOut.WriteLine("Tire temp:", "Ok")
-        Else
-            FileOut.WriteLine("Tire temp:", "Invalid test - maximum variation of tire temperature exceeded")
-        End If
-        If valid_RRC Then
-            FileOut.WriteLine("RRC:", "Ok")
-        Else
-            FileOut.WriteLine("RRC:", "Invalid test - maximum deviation of RRCs between low speed tests exceeded")
-        End If
-        If valid_t_amb Then
-            FileOut.WriteLine("Ambient temp:", "Ok")
-        Else
-            FileOut.WriteLine("Ambient temp:", "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
-        End If
-
-        FileOut.WriteLine("")
-
-        ' Write the head
-        FileOut.WriteLine(ErgHead("ErgValuesReg"))
-
-        ' Write the units
-        FileOut.WriteLine(ErgUnits("ErgValuesReg"))
-
-        ' Write the data
-        For i = 0 To ErgValuesReg.Item(tCompErgReg.SecID).Count - 1
-            For Each key In ErgEntryListReg
-                If Not first Then s.Append(",")
-                s.Append(ErgValuesReg(key)(i))
-                first = False
-            Next
-            FileOut.WriteLine(s.ToString)
-            s.Clear()
+            ' Initialise
             first = True
-        Next i
+            ErgEntriesReg = New Dictionary(Of tCompErgReg, CResult)
+            ErgEntryListReg = New List(Of tCompErgReg)
+            GenErgOutResReg()
 
-        ' Close the file
-        FileOut.Close()
+            ' Exit function if error is detected
+            If BWorker.CancellationPending And FileBlock Then
+                Return False
+            End If
+
+            ' Write on GUI
+            fInfWarErrBW(5, False, "Writing result-file (*.csv)")
+
+            ' Generate the file name
+            NameOutFile = OutFolder & fName(JobFile, False) & "_CSE.csv"
+
+            ' Anlegen der Datei
+            FileOut.OpenWrite(NameOutFile, , False)
+
+            ' Filekopf
+            FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
+            FileOut.WriteLine("Datafile LS1: ", Datafile(2))
+            FileOut.WriteLine("Datafile HS: ", Datafile(3))
+            FileOut.WriteLine("Datafile LS2: ", Datafile(4))
+            FileOut.WriteLine("")
+            FileOut.WriteLine("Results")
+            FileOut.WriteLine("fv_veh:", fv_veh, "[-] calibration factor for vehicle speed")
+            FileOut.WriteLine("fv_veh_opt2:", fv_veh_opt2, "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
+            FileOut.WriteLine("fv_pe:", fv_pe, "[-] calibration factor for air speed (position error)")
+            FileOut.WriteLine("fa_pe:", fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
+            FileOut.WriteLine("beta_ame:", beta_ame, "[°] calibration factor for beta (misalignment)")
+            FileOut.WriteLine("CdxA:", CdxA, "[m²] average CdxA before yaw angle correction")
+            FileOut.WriteLine("beta:", beta, "[°] average absolute yaw angle from high speed tests")
+            FileOut.WriteLine("delta_CdxA:", delta_CdxA, "[m²] correction of CdxA for yaw angle")
+            FileOut.WriteLine("CdxA(0):", CdxA0, "[m²] average CdxA for zero yaw angle")
+            FileOut.WriteLine("CdxA(0)_opt2:", CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
+            FileOut.WriteLine("")
+            FileOut.WriteLine("Validity criteria:")
+            If valid_t_tire Then
+                FileOut.WriteLine("Tire temp:", "Ok")
+            Else
+                FileOut.WriteLine("Tire temp:", "Invalid test - maximum variation of tire temperature exceeded")
+            End If
+            If valid_RRC Then
+                FileOut.WriteLine("RRC:", "Ok")
+            Else
+                FileOut.WriteLine("RRC:", "Invalid test - maximum deviation of RRCs between low speed tests exceeded")
+            End If
+            If valid_t_amb Then
+                FileOut.WriteLine("Ambient temp:", "Ok")
+            Else
+                FileOut.WriteLine("Ambient temp:", "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
+            End If
+
+            FileOut.WriteLine("")
+
+            ' Write the head
+            FileOut.WriteLine(ErgHead("ErgValuesReg"))
+
+            ' Write the units
+            FileOut.WriteLine(ErgUnits("ErgValuesReg"))
+
+            ' Write the data
+            For i = 0 To ErgValuesReg.Item(tCompErgReg.SecID).Count - 1
+                For Each key In ErgEntryListReg
+                    If Not first Then s.Append(",")
+                    s.Append(ErgValuesReg(key)(i))
+                    first = False
+                Next
+                FileOut.WriteLine(s.ToString)
+                s.Clear()
+                first = True
+            Next i
+
+        End Using
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then

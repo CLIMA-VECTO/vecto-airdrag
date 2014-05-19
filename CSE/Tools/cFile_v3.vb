@@ -1,4 +1,5 @@
 Public Class cFile_V3
+    Implements IDisposable
 
     Private TxtFldParser As Microsoft.VisualBasic.FileIO.TextFieldParser
     Private StrWrter As System.IO.StreamWriter
@@ -41,6 +42,7 @@ Public Class cFile_V3
         End Try
         TxtFldParser.TextFieldType = Microsoft.VisualBasic.FileIO.FieldType.Delimited
         TxtFldParser.Delimiters = New String() {Sepp}
+        TxtFldParser.TrimWhiteSpace = False
         Me.ReadLine()
         Return True
     End Function
@@ -117,6 +119,14 @@ lb10:
         End If
 
     End Function
+
+    Public Sub Dispose() Implements IDisposable.Dispose
+        Try
+            Close()
+        Catch ex As Exception
+            fInfWarErr(9, False, "Failed while closing file_v3 fue to: " & ex.Message)
+        End Try
+    End Sub
 
     ' Close the file
     Public Sub Close()

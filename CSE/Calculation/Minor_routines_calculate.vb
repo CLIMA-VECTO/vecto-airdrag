@@ -335,52 +335,49 @@
     Public Function fAltInterp(ByVal File As String, ByVal dist As Double) As Double
         ' Declaration
         Dim endVal As Boolean = True
-        Dim FileInAlt As New cFile_V3
-        Dim vline(), Line() As String
+        Using FileInAlt As New cFile_V3
+            Dim vline(), Line() As String
 
-        ' Output on the GUI
-        fInfWarErrBW(4, False, "Read altitude file")
+            ' Output on the GUI
+            fInfWarErrBW(4, False, "Read altitude file")
 
-        ' Open the MSC spezification file
-        If Not FileInAlt.OpenRead(File) Then
-            ' Error if the file is not available
-            fInfWarErrBW(9, False, "Can´t find the altitude file: " & File)
-            Return False
-        End If
-
-        ' Read the file
-        Line = {0, 0}
-        vline = FileInAlt.ReadLine
-
-        If dist < vline(0) Then
-            fInfWarErrBW(9, False, "The distance is lower then the minimum in the altitude file")
-            BWorker.CancelAsync()
-            FileInAlt.Close()
-            fAltInterp = 0
-        End If
-
-        Do While Not FileInAlt.EndOfFile
-            Line = FileInAlt.ReadLine
-
-            ' Find the right points
-            If dist >= vline(0) And dist < Line(0) Then
-                endVal = False
-                Exit Do
-            Else
-                vline = Line
+            ' Open the MSC spezification file
+            If Not FileInAlt.OpenRead(File) Then
+                ' Error if the file is not available
+                fInfWarErrBW(9, False, "Can´t find the altitude file: " & File)
+                Return False
             End If
-        Loop
 
-        ' Close the file
-        FileInAlt.Close()
+            ' Read the file
+            Line = {0, 0}
+            vline = FileInAlt.ReadLine
 
-        ' Interpolate the value
-        If endVal Then
-            ' Set on last value if dist > max altitude dist
-            fAltInterp = Line(1)
-        Else
-            fAltInterp = InterpLinear(vline(0), Line(0), vline(1), Line(1), dist)
-        End If
+            If dist < vline(0) Then
+                fInfWarErrBW(9, False, "The distance is lower then the minimum in the altitude file")
+                BWorker.CancelAsync()
+                fAltInterp = 0
+            End If
+
+            Do While Not FileInAlt.EndOfFile
+                Line = FileInAlt.ReadLine
+
+                ' Find the right points
+                If dist >= vline(0) And dist < Line(0) Then
+                    endVal = False
+                    Exit Do
+                Else
+                    vline = Line
+                End If
+            Loop
+
+            ' Interpolate the value
+            If endVal Then
+                ' Set on last value if dist > max altitude dist
+                fAltInterp = Line(1)
+            Else
+                fAltInterp = InterpLinear(vline(0), Line(0), vline(1), Line(1), dist)
+            End If
+        End Using
     End Function
 
     ' Length calculation out of coordinates MM.MM (Not used at the moment)

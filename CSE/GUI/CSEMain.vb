@@ -28,7 +28,7 @@ Public Class CSEMain
 
         ' Load the confic file
         If Not fConfigLoad() Then
-            ' Use default values if no confic file is found
+            ' Use default values if no config file is found
             StdWorkDir = MyPath & WorkDir & "\"
             NotepadExe = "C:\Windows\"
             LogFile = True
@@ -57,9 +57,9 @@ Public Class CSEMain
             Me.Close()
         End If
 
-        ' Write a warning if no confic file is found
+        ' Write a defailt config file if failed to read one.
         If Not configL Then
-            fInfWarErr(7, False, "No Config-File found. Standard config used! To generate private config file please go to Tools\Options.")
+            fConfigStore()
         End If
     End Sub
 

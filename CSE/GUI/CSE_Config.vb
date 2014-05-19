@@ -28,7 +28,16 @@ Public Class CSE_Config
             Me.Close()
         Else
             ' Write the config file
-            fAusgConf()
+            fConfigStore()
+
+            ' Close the window
+            Me.Close()
+
+            ' Message for the restart from VECTO
+            RestartN = True
+            fInfWarErr(7, False, "Settings changed. Please restart VECTO to use the new settings!")
+            fInfWarErr(7, True, "Settings changed. Please restart VECTO to use the new settings!" & Chr(13) & "Do you want to restart VECTO now?")
+
         End If
     End Sub
 

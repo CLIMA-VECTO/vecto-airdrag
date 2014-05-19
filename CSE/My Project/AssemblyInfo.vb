@@ -9,7 +9,7 @@ Imports System.Runtime.InteropServices
 ' Die Werte der Assemblyattribute überprüfen
 
 <Assembly: AssemblyTitle("CSE")> 
-<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyDescription("Constant Speed Evaluation Tool for VECTO")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("CSE")> 
 <Assembly: AssemblyCopyright("Copyright ©  2014 European Commission")> 
