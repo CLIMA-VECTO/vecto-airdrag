@@ -1,8 +1,13 @@
-﻿Module Minor_routines
+﻿Imports Newtonsoft.Json.Linq
+Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Schema
+Imports System.Text.RegularExpressions
+
+Module Minor_routines
 
     ' Functions for the identification from the fileend, -name and for the path identification
 
-#Region "File programms"
+#Region "File paths"
     ' Identification from the filename
     Public Function fName(ByVal Pfad As String, ByVal MitEndung As Boolean) As String
         Dim x As Int16
@@ -41,7 +46,25 @@
             Return Microsoft.VisualBasic.Right(Pfad, Microsoft.VisualBasic.Len(Pfad) - x - 1)
         End If
     End Function
-#End Region
+
+
+    ''' <summary>
+    ''' From http://stackoverflow.com/a/7105616/548792
+    ''' 
+    ''' Examples: 
+    '''      {"\some", "path\"}            --> "\some\path\"
+    '''      {"some", "path\"}             --> "some\path\"
+    '''      {"some", "\path"}             --> "some\path"
+    '''      {"some", "\path\", "\file.exe"} --> "some\path\file.exe"
+    ''' </summary>
+    ''' <param name="obj">Any number ob path-segments to be joined regardless if the contain intermediate '\' chars </param>
+    ''' <returns>the joind path</returns>
+    ''' <remarks></remarks>
+    Function joinPaths(ByVal ParamArray obj() As Object) As String
+        Return obj.Aggregate(Function(x, y) IO.Path.Combine(x.ToString(), y.ToString()))
+    End Function
+
+#End Region ' File paths'
 
     ' Function for a linear interpolation
 
@@ -137,25 +160,25 @@
             End If
         Else
             ' Polling the MSG if the message should shown
-            If Style <= MSG Then Return True
+            If Style <= AppSettings.LogLevel Then Return True
 
             ' Established the text wit the symbol from the style
             text = AnzeigeMessage(Style) & text
 
-            ' Output in the Logfile
+            ' Output in the AppSettings.WriteLog
             Select Case Style
                 Case 0 To 7 ' Message
                     CSEMain.ListBoxMSG.Items.Add(text)
-                    If LogFile Then fWriteLog(2, 4, text) ' Write in the LogFile
+                    If AppSettings.WriteLog Then fWriteLog(2, 4, text) ' Write in the AppSettings.WriteLog
                 Case 8 ' Warning
                     CSEMain.ListBoxWar.Items.Add(text)
                     CSEMain.TabPageWar.Text = Styletext & " (" & CSEMain.ListBoxWar.Items.Count & ")"
-                    If LogFile Then fWriteLog(2, 2, text) ' Write in the LogFile
+                    If AppSettings.WriteLog Then fWriteLog(2, 2, text) ' Write in the AppSettings.WriteLog
                 Case 9 ' Error
                     CSEMain.ListBoxErr.Items.Add(text)
                     CSEMain.TabPageErr.Text = Styletext & " (" & CSEMain.ListBoxErr.Items.Count & ")"
                     CSEMain.TabControlOutMsg.SelectTab(2)
-                    If LogFile Then fWriteLog(2, 3, text) ' Write in the LogFile
+                    If AppSettings.WriteLog Then fWriteLog(2, 3, text) ' Write in the AppSettings.WriteLog
             End Select
         End If
 
@@ -199,7 +222,7 @@
         End Select
 
         ' Polling the MSG if the message should shown
-        If Style <= MSG Then Return True
+        If Style <= AppSettings.LogLevel Then Return True
 
         ' Output in the Tabcontrols (Call from Backgroundworker_ProgressChanged)
         BWorker.ReportProgress(0, WorkerMsg)
@@ -222,16 +245,16 @@
         Select Case Style
             Case 0 To 7 ' Message
                 CSEMain.ListBoxMSG.Items.Add(Text)
-                If LogFile Then fWriteLog(2, 4, Text) ' Write into LogFile
+                If AppSettings.WriteLog Then fWriteLog(2, 4, Text) ' Write into AppSettings.WriteLog
             Case 8 ' Warning
                 CSEMain.ListBoxWar.Items.Add(Text)
                 CSEMain.TabPageWar.Text = Styletext & " (" & CSEMain.ListBoxWar.Items.Count & ")"
-                If LogFile Then fWriteLog(2, 2, Text) ' Write into LogFile
+                If AppSettings.WriteLog Then fWriteLog(2, 2, Text) ' Write into AppSettings.WriteLog
             Case 9 ' Error
                 CSEMain.ListBoxErr.Items.Add(Text)
                 CSEMain.TabPageErr.Text = Styletext & " (" & CSEMain.ListBoxErr.Items.Count & ")"
                 CSEMain.TabControlOutMsg.SelectTab(2)
-                If LogFile Then fWriteLog(2, 3, Text) ' Write into LogFile
+                If AppSettings.WriteLog Then fWriteLog(2, 3, Text) ' Write into AppSettings.WriteLog
         End Select
 
         ' Set the Scrollbars in the Listboxes at the end
@@ -241,5 +264,119 @@
     End Sub
 
 #End Region
+
+
+#Region "Json IO"
+
+    Function ReadJsonFile(ByVal path As String) As JObject
+        Dim jobj As New JObject
+        Using sr As New IO.StreamReader(path)
+            Using jsr As New JsonTextReader(sr)
+                Return JObject.ReadFrom(jsr)
+            End Using
+        End Using
+    End Function
+
+    Function ReadAndValidateJsonFile(ByVal inFname As String, ByVal jschema As JsonSchema, ByVal validationMsgs As IList(Of String)) As JObject
+        Using reader As IO.TextReader = IO.File.OpenText(inFname)
+            Dim validator As New JsonValidatingReader(New JsonTextReader(reader))
+
+            validator.Schema = jschema
+            AddHandler validator.ValidationEventHandler, Sub(o, a) validationMsgs.Add(a.Message)
+
+            Dim jobj As JObject = JObject.ReadFrom(validator)
+
+            Return jobj
+        End Using
+    End Function
+
+    Function ReadAndValidateJsonText(ByVal jsonText As String, ByVal jschema As JsonSchema, ByVal validationMsgs As IList(Of String)) As JObject
+        Using reader As IO.TextReader = New IO.StringReader(jsonText)
+            Dim validator As New JsonValidatingReader(New JsonTextReader(reader))
+
+            validator.Schema = jschema
+            AddHandler validator.ValidationEventHandler, Sub(o, a) validationMsgs.Add(a.Message)
+
+            Dim jobj As JObject = JObject.ReadFrom(validator)
+
+            Return jobj
+        End Using
+    End Function
+
+    Sub WriteJsonFile(ByVal path As String, ByVal content As Object, Optional ByVal formatting As Formatting = Formatting.Indented)
+        Dim jser As New JsonSerializer
+        jser.Formatting = formatting
+
+        Using writer As New IO.StreamWriter(path)
+            jser.Serialize(writer, content)
+        End Using
+    End Sub
+
+    ''' <summary>
+    ''' Reads an obligatory value from a json-object, or uses the default-value (if supplied).
+    ''' </summary>
+    Function jvalue(ByVal jobj As JObject, ByVal item As Object, Optional ByVal defaultValue As Object = Nothing) As Object
+        Dim value = jobj(item)
+
+        If (value Is Nothing) Then
+            If (defaultValue Is Nothing) Then
+                Throw New SystemException(format("Required json-property({0}) is missing!", item))
+            Else
+                value = defaultValue
+            End If
+        End If
+
+        Return value
+    End Function
+
+#End Region ' "Json IO"
+
+
+#Region "Strings"
+
+    ''' <summary> Matches '\i' but not '\\i' and captures the sub-strings to the left and right. </summary>
+    Private regexp_identOperator As New Regex("(.*?)\\i(.*)", RegexOptions.Singleline Or RegexOptions.Compiled)
+
+    ''' <summary> Matches any of the new-line markers. </summary>
+    Private regexp_newLine As New Regex("\r\n|\n\r|\n|\r", RegexOptions.Compiled)
+
+
+    '''<summary>
+    ''' Invokes String.Format() translating '\n', '\t' and '\i' for indenting by-2
+    '''   all subsequent lines.
+    '''</summary>
+    ''' <remarks>
+    ''' New-lines are visible only in textBoxes - not console and/or imediate-window.
+    ''' <h4>EXAMPLE:</h4>
+    ''' >>?? format("hello World.\n\iHi\nuser!")
+    ''' hello World.
+    '''   Hi
+    '''   user!
+    ''' </remarks>
+    Function format(ByVal str As String, ByVal ParamArray obj() As Object) As String
+        Dim ident As String = "  "
+
+        ' Mask all '\\' to avoid replacing escaped operators like '\\n' and '\\t'
+        str = str.Replace("\\", Chr(1))
+
+
+        str = str.Replace("\n", Environment.NewLine).Replace("\t", vbTab)
+        str = String.Format(str, obj)
+
+
+        Dim m As Match = regexp_identOperator.Match(str)
+        While (m.Success)
+            str = m.Groups(1).Value & ident & regexp_newLine.Replace(m.Groups(2).Value, Environment.NewLine & ident)
+            m = regexp_identOperator.Match(str)
+        End While
+
+        ' Unmask all '\\'
+        str = str.Replace(Chr(1), "\"c)
+
+        Return str
+    End Function
+
+#End Region ' Strings
+
 
 End Module

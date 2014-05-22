@@ -13,7 +13,6 @@ Public Class CSEMain
         ' Declarations
         Dim configL As Boolean = True
         Dim NoLegFile As Boolean = False
-        Dim WorkDir As String = "WorkingDir"
 
         ' Initialisation
         HzOut = 1
@@ -26,16 +25,15 @@ Public Class CSEMain
         ' Name of the GUI
         Me.Text = AppName & " " & AppVers
 
-        ' Load the confic file
-        If Not fConfigLoad() Then
-            ' Use default values if no config file is found
-            StdWorkDir = MyPath & WorkDir & "\"
-            NotepadExe = "C:\Windows\"
-            LogFile = True
-            LogSize = 2
-            MSG = 5
+        ' Load the config file
+        '
+        Dim settings_fpath = cSettings.SettingsPath()
+        Try
+            AppSettings = New cSettings(settings_fpath)
+        Catch ex As Exception
+            fInfWarErr(9, False, format("Failed reading Settings({0}) due to: {1}", settings_fpath, ex.Message))
             configL = False
-        End If
+        End Try
 
         ' Load the generic shape curve file
         If Not fGenShpLoad() Then
@@ -43,11 +41,13 @@ Public Class CSEMain
         End If
 
         ' Polling if the working dir exist (If not then generate the folder)
-        If Not IO.Directory.Exists(MyPath & WorkDir) Then
-            MkDir(MyPath & WorkDir)
+        '
+        Dim wd_fPath As String = MyPath & AppSettings.WorkingDir
+        If Not IO.Directory.Exists(wd_fPath) Then
+            MkDir(wd_fPath)
         End If
 
-        ' Write the beginning in the Logfile
+        ' Write the beginning in the AppSettings.WriteLog
         fWriteLog(1)
 
         'Lizenz checken
@@ -59,22 +59,26 @@ Public Class CSEMain
 
         ' Write a defailt config file if failed to read one.
         If Not configL Then
-            fConfigStore()
+            Try
+                AppSettings.Store(settings_fpath)
+            Catch ex As Exception
+                fInfWarErr(9, False, format("Failed writting settings({0} due to: {1}", settings_fpath, ex.Message))
+            End Try
         End If
     End Sub
 
     ' Main Tab
 #Region "Main"
     ' Close the GUI
-    Private Sub CSEMain_FormClosed(sender As Object, e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
-        ' Write the end into the LogFile
+    Private Sub CSEMain_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
+        ' Write the end into the AppSettings.WriteLog
         fWriteLog(3)
     End Sub
 
     ' Open the filebrowser for the selection of the vehiclefile
-    Private Sub ButtonSelectVeh_Click(sender As System.Object, e As System.EventArgs) Handles ButtonSelectVeh.Click
+    Private Sub ButtonSelectVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectVeh.Click
         ' Open the filebrowser with the *.csveh parameter
-        If fbVEH.OpenDialog(StdWorkDir, False) Then
+        If fbVEH.OpenDialog(AppSettings.WorkingDir, False) Then
             If (fbVEH.Files(0) <> Nothing) Then
                 Me.TextBoxVeh1.Text = fbVEH.Files(0)
             End If
@@ -82,19 +86,19 @@ Public Class CSEMain
     End Sub
 
     ' Open the vehiclefile in the Notepad
-    Private Sub ButtonVeh_Click(sender As System.Object, e As System.EventArgs) Handles ButtonVeh.Click
+    Private Sub ButtonVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonVeh.Click
         Dim varA As Object
         If IO.File.Exists(Me.TextBoxVeh1.Text) Then
-            varA = Shell(NotepadExe & "Notepad.exe " & Me.TextBoxVeh1.Text, AppWinStyle.NormalFocus)
+            varA = System.Diagnostics.Process.Start(AppSettings.Editor, Me.TextBoxVeh1.Text)
         Else
             If Not fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxVeh1.Text) Then Exit Sub
         End If
     End Sub
 
     ' Open the filebrowser for the selection of the weatherfile
-    Private Sub ButtonSelectWeather_Click(sender As System.Object, e As System.EventArgs) Handles ButtonSelectWeather.Click
+    Private Sub ButtonSelectWeather_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectWeather.Click
         ' Open the filebrowser with the *.cswea parameter
-        If fbAMB.OpenDialog(StdWorkDir, False) Then
+        If fbAMB.OpenDialog(AppSettings.WorkingDir, False) Then
             If (fbAMB.Files(0) <> Nothing) Then
                 Me.TextBoxWeather.Text = fbAMB.Files(0)
             End If
@@ -102,32 +106,32 @@ Public Class CSEMain
     End Sub
 
     ' Open the weatherfile in the Notepad
-    Private Sub ButtonWeather_Click(sender As System.Object, e As System.EventArgs) Handles ButtonWeather.Click
+    Private Sub ButtonWeather_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWeather.Click
         Dim varA As Object
         If IO.File.Exists(Me.TextBoxWeather.Text) Then
-            varA = Shell(NotepadExe & "Notepad.exe " & Me.TextBoxWeather.Text, AppWinStyle.NormalFocus)
+            varA = System.Diagnostics.Process.Start(AppSettings.Editor, Me.TextBoxWeather.Text)
         Else
             If Not fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxWeather.Text) Then Exit Sub
         End If
     End Sub
 
     ' Exit button
-    Private Sub ButtonExit_Click(sender As System.Object, e As System.EventArgs) Handles ButtonExit.Click
+    Private Sub ButtonExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonExit.Click
         ' Close the GUI
         Me.Close()
     End Sub
 
     ' Save button
-    Private Sub ButtonSave_Click(sender As System.Object, e As System.EventArgs) Handles ButtonSave.Click
+    Private Sub ButtonSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSave.Click
         ToolStripMenuItemSave_Click(sender, e)
     End Sub
 
     ' Calibration elements
 #Region "Calibration"
     ' Open the filebrowser for the selection of the datafile from the calibration run
-    Private Sub ButtonSelectDataC_Click(sender As System.Object, e As System.EventArgs) Handles ButtonSelectDataC.Click
+    Private Sub ButtonSelectDataC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataC.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(StdWorkDir, False) Then
+        If fbVEL.OpenDialog(AppSettings.WorkingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataC.Text = fbVEL.Files(0)
             End If
@@ -135,7 +139,7 @@ Public Class CSEMain
     End Sub
 
     ' Open the datafile from the calibration test in Excel
-    Private Sub ButtonDataC_Click(sender As System.Object, e As System.EventArgs) Handles ButtonDataC.Click
+    Private Sub ButtonDataC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataC.Click
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -149,9 +153,9 @@ Public Class CSEMain
     End Sub
 
     ' Open the filebrowser for the selection of the measure section config file (MSC)
-    Private Sub ButtonSelectMSCC_Click(sender As System.Object, e As System.EventArgs) Handles ButtonSelectMSCC.Click
+    Private Sub ButtonSelectMSCC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCC.Click
         ' Open the filebrowser with the *.csmsc parameter
-        If fbMSC.OpenDialog(StdWorkDir, False) Then
+        If fbMSC.OpenDialog(AppSettings.WorkingDir, False) Then
             If (fbMSC.Files(0) <> Nothing) Then
                 Me.TextBoxMSCC.Text = fbMSC.Files(0)
             End If
@@ -159,7 +163,7 @@ Public Class CSEMain
     End Sub
 
     ' Open the measure section config file (MSC) in Excel
-    Private Sub ButtonMSCC_Click(sender As System.Object, e As System.EventArgs) Handles ButtonMSCC.Click
+    Private Sub ButtonMSCC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonMSCC.Click
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -173,7 +177,7 @@ Public Class CSEMain
     End Sub
 
     ' Calculate button calibration test
-    Private Sub ButtonCalc_Click(sender As System.Object, e As System.EventArgs) Handles ButtonCalC.Click
+    Private Sub ButtonCalc_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCalC.Click
         ' Generate cancel butten if the backgroundworker is busy
         If BWorker.IsBusy Then
             BWorker.CancelAsync()
@@ -220,9 +224,9 @@ Public Class CSEMain
         Me.ListBoxMSG.Items.Clear()
         fClear_VECTO_Form(False, False)
 
-        ' Write the Calculation status in the Messageoutput and in the LogFile
+        ' Write the Calculation status in the Messageoutput and in the AppSettings.WriteLog
         fInfWarErr(7, False, "Starting VECTO CSE calibration calculation...")
-        If LogFile Then fWriteLog(2, 4, "------------- Job: " & JobFile & " | Out: " & OutFolder & " | " & CDate(DateAndTime.Now) & "-------------")
+        If AppSettings.WriteLog Then fWriteLog(2, 4, "------------- Job: " & JobFile & " | Out: " & OutFolder & " | " & CDate(DateAndTime.Now) & "-------------")
 
         ' Start the calculation in the backgroundworker
         Me.BackgroundWorkerVECTO.RunWorkerAsync()
@@ -232,9 +236,9 @@ Public Class CSEMain
     ' Test elements
 #Region "Test"
     ' Open the filebrowser for the selection of the measure section file from the test run
-    Private Sub ButtonSelectMSCT_Click(sender As System.Object, e As System.EventArgs) Handles ButtonSelectMSCT.Click
+    Private Sub ButtonSelectMSCT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCT.Click
         ' Open the filebrowser with the *.csmsc parameter
-        If fbMSC.OpenDialog(StdWorkDir, False) Then
+        If fbMSC.OpenDialog(AppSettings.WorkingDir, False) Then
             If (fbMSC.Files(0) <> Nothing) Then
                 Me.TextBoxMSCT.Text = fbMSC.Files(0)
             End If
@@ -242,7 +246,7 @@ Public Class CSEMain
     End Sub
 
     ' Open the measure section config file (MSC) in Excel
-    Private Sub ButtonMSCT_Click(sender As System.Object, e As System.EventArgs) Handles ButtonMSCT.Click
+    Private Sub ButtonMSCT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonMSCT.Click
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -256,9 +260,9 @@ Public Class CSEMain
     End Sub
 
     ' Open the filebrowser for the selection of the first low speed data file from the test run
-    Private Sub ButtonSelectDataLS1_Click(sender As System.Object, e As System.EventArgs) Handles ButtonSelectDataLS1.Click
+    Private Sub ButtonSelectDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS1.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(StdWorkDir, False) Then
+        If fbVEL.OpenDialog(AppSettings.WorkingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataLS1.Text = fbVEL.Files(0)
             End If
@@ -266,7 +270,7 @@ Public Class CSEMain
     End Sub
 
     ' Open the first low speed data file in Excel
-    Private Sub ButtonDataLS1_Click(sender As System.Object, e As System.EventArgs) Handles ButtonDataLS1.Click
+    Private Sub ButtonDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataLS1.Click
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -280,9 +284,9 @@ Public Class CSEMain
     End Sub
 
     ' Open the filebrowser for the selection of the high speed data file from the test run
-    Private Sub ButtonSelectDataHS_Click(sender As System.Object, e As System.EventArgs) Handles ButtonSelectDataHS.Click
+    Private Sub ButtonSelectDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataHS.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(StdWorkDir, False) Then
+        If fbVEL.OpenDialog(AppSettings.WorkingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataHS.Text = fbVEL.Files(0)
             End If
@@ -290,7 +294,7 @@ Public Class CSEMain
     End Sub
 
     ' Open the high speed data file in Excel
-    Private Sub ButtonDataHS_Click(sender As System.Object, e As System.EventArgs) Handles ButtonDataHS.Click
+    Private Sub ButtonDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataHS.Click
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -304,9 +308,9 @@ Public Class CSEMain
     End Sub
 
     ' Open the filebrowser for the selection of the second low speed data file from the test run
-    Private Sub ButtonSelectDataLS2_Click(sender As System.Object, e As System.EventArgs) Handles ButtonSelectDataLS2.Click
+    Private Sub ButtonSelectDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS2.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(StdWorkDir, False) Then
+        If fbVEL.OpenDialog(AppSettings.WorkingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataLS2.Text = fbVEL.Files(0)
             End If
@@ -314,7 +318,7 @@ Public Class CSEMain
     End Sub
 
     ' Open the second low speed data file in Excel
-    Private Sub ButtonDataLS2_Click(sender As System.Object, e As System.EventArgs) Handles ButtonDataLS2.Click
+    Private Sub ButtonDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataLS2.Click
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -328,7 +332,7 @@ Public Class CSEMain
     End Sub
 
     ' Evaluate button test run
-    Private Sub ButtonEvaluate_Click(sender As System.Object, e As System.EventArgs) Handles ButtonEval.Click
+    Private Sub ButtonEvaluate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonEval.Click
         ' Generate cancel butten if the backgroundworker is busy
         If BWorker.IsBusy Then
             BWorker.CancelAsync()
@@ -340,8 +344,8 @@ Public Class CSEMain
         Me.ButtonEval.Text = "Cancel"
         Cali = False
 
-        ' Add into the LogFile
-        If LogFile Then fWriteLog(2, 4, "----- Speed runs ")
+        ' Add into the AppSettings.WriteLog
+        If AppSettings.WriteLog Then fWriteLog(2, 4, "----- Speed runs ")
 
         ' Read the data from the GUI
         If Not fGetOpt(True, Cali) Then
@@ -374,7 +378,7 @@ Public Class CSEMain
         ' Clear the MSG on the GUI
         fClear_VECTO_Form(False, False)
 
-        ' Write the Calculation status in the Messageoutput and in the LogFile
+        ' Write the Calculation status in the Messageoutput and in the AppSettings.WriteLog
         fInfWarErr(7, False, "Starting VECTO CSE test evaluation...")
 
         ' Start the calculation in the backgroundworker
@@ -386,14 +390,14 @@ Public Class CSEMain
 #Region "Menustrip"
 #Region "Datei"
     ' Menu New
-    Private Sub ToolStripMenuItemNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripMenuItemNew.Click
+    Private Sub ToolStripMenuItemNew_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemNew.Click
         fClear_VECTO_Form(True)
     End Sub
 
     ' Menu open
-    Private Sub ToolStripMenuItemOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripMenuItemOpen.Click
+    Private Sub ToolStripMenuItemOpen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click
         ' Open the filebrowser with the *.csjob parameter
-        If fbVECTO.OpenDialog(StdWorkDir, False) Then
+        If fbVECTO.OpenDialog(AppSettings.WorkingDir, False) Then
             JobFile = fbVECTO.Files(0)
             If (JobFile <> Nothing) Then
                 ' Clear the GUI
@@ -412,7 +416,7 @@ Public Class CSEMain
     End Sub
 
     ' Menu Save
-    Private Sub ToolStripMenuItemSave_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripMenuItemSave.Click
+    Private Sub ToolStripMenuItemSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSave.Click
         ' Identify if the file should save under a new name
         If JobFile = Nothing Or ToolstripSaveAs Then
             ' Open the filebrowser to select the folder and name of the Jobfile
@@ -434,7 +438,7 @@ Public Class CSEMain
     End Sub
 
     ' Menu Save as
-    Private Sub ToolStripMenuItemSaveAs_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripMenuItemSaveAs.Click
+    Private Sub ToolStripMenuItemSaveAs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSaveAs.Click
         ' Define that the file should save under an other name
         ToolstripSaveAs = True
 
@@ -446,21 +450,21 @@ Public Class CSEMain
     End Sub
 
     ' Menu Exit
-    Private Sub ToolStripMenuItemExit_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripMenuItemExit.Click
+    Private Sub ToolStripMenuItemExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemExit.Click
         ' Close the GUI
         Me.Close()
     End Sub
 #End Region
 
 #Region "Tools"
-    ' Menu open the Logfile
-    Private Sub ToolStripMenuItemLog_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripMenuItemLog.Click
+    ' Menu open the AppSettings.WriteLog
+    Private Sub ToolStripMenuItemLog_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemLog.Click
         Dim varA As Object
-        varA = Shell(NotepadExe & "Notepad.exe " & MyPath & "Log.txt", AppWinStyle.NormalFocus)
+        varA = System.Diagnostics.Process.Start(AppSettings.Editor, MyPath & "Log.txt")
     End Sub
 
     ' Menu open the config file
-    Private Sub ToolStripMenuItemOption_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripMenuItemOption.Click
+    Private Sub ToolStripMenuItemOption_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOption.Click
         ' Show the confic GUI
         CSE_Config.Show()
     End Sub
@@ -468,14 +472,14 @@ Public Class CSEMain
 
 #Region "Info"
     ' Create activation file
-    Private Sub CreatActivationFileToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles CreatActivationFileToolStripMenuItem.Click
+    Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreatActivationFileToolStripMenuItem.Click
         Lic.CreateActFile(MyPath & "ActivationCode.dat")
         fInfWarErr(7, False, "Activation code created under: " & MyPath & "ActivationCode.dat")
         fInfWarErr(7, True, "Activation code created under: " & MyPath & "ActivationCode.dat")
     End Sub
 
     ' Menu open the Infobox
-    Private Sub ToolStripMenuItemAbout_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripMenuItemAbout.Click
+    Private Sub ToolStripMenuItemAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemAbout.Click
         ' Show the info GUI
         CSE_Info.Show()
     End Sub
@@ -508,7 +512,7 @@ Public Class CSEMain
     End Sub
 
     ' Set all textboxes to standard
-    Private Sub ButtonToStd_Click(sender As System.Object, e As System.EventArgs) Handles ButtonToStd.Click
+    Private Sub ButtonToStd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonToStd.Click
         ' Set the parameter to standard
         StdParameter()
         ' Write parameter on GUI
@@ -516,7 +520,7 @@ Public Class CSEMain
     End Sub
 
     ' CheckBox for the acceleration calibration
-    Private Sub CheckBoxAcc_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles CheckBoxAcc.CheckedChanged
+    Private Sub CheckBoxAcc_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxAcc.CheckedChanged
         ' Inquiry if the checkbox is checked or unchecked
         If CheckBoxAcc.Checked Then
             ' Set the check states
@@ -527,7 +531,7 @@ Public Class CSEMain
     End Sub
 
     ' Checkbox for the gradient correction
-    Private Sub CheckBoxGrd_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles CheckBoxGrd.CheckedChanged
+    Private Sub CheckBoxGrd_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxGrd.CheckedChanged
         ' Inquiry if the checkbox is checked or unchecked
         If CheckBoxGrd.Checked Then
             ' Set the check states
@@ -538,7 +542,7 @@ Public Class CSEMain
     End Sub
 
     ' Change in the 1Hz radio button
-    Private Sub RB1Hz_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles RB1Hz.CheckedChanged
+    Private Sub RB1Hz_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RB1Hz.CheckedChanged
         If RB1Hz.Checked Then
             HzOut = 1
         Else
@@ -547,7 +551,7 @@ Public Class CSEMain
     End Sub
 
     ' Change in the 100Hz radio button
-    Private Sub RB100Hz_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles RB100Hz.CheckedChanged
+    Private Sub RB100Hz_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RB100Hz.CheckedChanged
         If RB100Hz.Checked Then
             HzOut = 100
         Else
@@ -626,7 +630,7 @@ Public Class CSEMain
 
 #Region "Infobox"
     ' Deactivate the message
-    Private Sub DeacMsg(sender As Object, e As System.EventArgs) Handles LDistFloat.MouseLeave, TBDistFloat.MouseLeave, LvWindAveCALMax.MouseLeave, TBvWindAveCALMax.MouseLeave, _
+    Private Sub DeacMsg(ByVal sender As Object, ByVal e As System.EventArgs) Handles LDistFloat.MouseLeave, TBDistFloat.MouseLeave, LvWindAveCALMax.MouseLeave, TBvWindAveCALMax.MouseLeave, _
         LvWind1sCALMax.MouseLeave, TBvWind1sCALMax.MouseLeave, LBetaAveCALMax.MouseLeave, TBBetaAveCALMax.MouseLeave, LLengCrit.MouseLeave, TBLengCrit.MouseLeave, LvWindAveLSMax.MouseLeave, _
         TBvWindAveLSMax.MouseLeave, LvWind1sLSMax.MouseLeave, TBvWind1sLSMax.MouseLeave, LvVehAveLSMax.MouseLeave, TBvVehAveLSMax.MouseLeave, LvVehAveLSMin.MouseLeave, TBvVehAveLSMin.MouseLeave, _
         LvVehFloatD.MouseLeave, TBvVehFloatD.MouseLeave, LTqSumFloatD.MouseLeave, TBTqSumFloatD.MouseLeave, LvWindAveHSMax.MouseLeave, TBvWindAveHSMax.MouseLeave, LvWind1sHSMax.MouseLeave, _
@@ -651,238 +655,238 @@ Public Class CSEMain
 
 #Region "FloatDist"
     ' Show the message
-    Private Sub ShowMsgFloatDist(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDistFloat.MouseMove, TBDistFloat.MouseMove
+    Private Sub ShowMsgFloatDist(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDistFloat.MouseMove, TBDistFloat.MouseMove
         InfActivat("Distance used for calculation of floatinig average signal used for stabilitay criteria in low speed tests")
     End Sub
 #End Region
 
 #Region "vWindAveCALMax"
     ' Show the message
-    Private Sub ShowMsgvWindAveCALMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvWindAveCALMax.MouseMove, TBvWindAveCALMax.MouseMove
+    Private Sub ShowMsgvWindAveCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWindAveCALMax.MouseMove, TBvWindAveCALMax.MouseMove
         InfActivat("Maximum average wind speed during calibration test")
     End Sub
 #End Region
 
 #Region "vWind1sCALMax"
     ' Show the message
-    Private Sub ShowMsgvWind1sCALMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvWind1sCALMax.MouseMove, TBvWind1sCALMax.MouseMove
+    Private Sub ShowMsgvWind1sCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWind1sCALMax.MouseMove, TBvWind1sCALMax.MouseMove
         InfActivat("Maximum gust wind speed during calibration test")
     End Sub
 #End Region
 
 #Region "BetaAveCALMax"
     ' Show the message
-    Private Sub ShowMsgBetaAveCALMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LBetaAveCALMax.MouseMove, TBBetaAveCALMax.MouseMove
+    Private Sub ShowMsgBetaAveCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LBetaAveCALMax.MouseMove, TBBetaAveCALMax.MouseMove
         InfActivat("Maximum average beta during calibration test")
     End Sub
 #End Region
 
 #Region "LengCrit"
     ' Show the message
-    Private Sub ShowMsgLengCrit(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LLengCrit.MouseMove, TBLengCrit.MouseMove
+    Private Sub ShowMsgLengCrit(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LLengCrit.MouseMove, TBLengCrit.MouseMove
         InfActivat("Maximum absolute difference of distance driven with lenght of section as specified in configuration")
     End Sub
 #End Region
 
 #Region "vWindAveLSMax"
     ' Show the message
-    Private Sub ShowMsgvWindAveLSMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvWindAveLSMax.MouseMove, TBvWindAveLSMax.MouseMove
+    Private Sub ShowMsgvWindAveLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWindAveLSMax.MouseMove, TBvWindAveLSMax.MouseMove
         InfActivat("Maximum average wind speed during low speed test")
     End Sub
 #End Region
 
 #Region "vWind1sLSMax"
     ' Show the message
-    Private Sub ShowMsgvWind1sLSMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvWind1sLSMax.MouseMove, TBvWind1sLSMax.MouseMove
+    Private Sub ShowMsgvWind1sLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWind1sLSMax.MouseMove, TBvWind1sLSMax.MouseMove
         InfActivat("Maximum gust wind speed during low speed test")
     End Sub
 #End Region
 
 #Region "vVehAveLSMax"
     ' Show the message
-    Private Sub ShowMsgvVehAveLSMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvVehAveLSMax.MouseMove, TBvVehAveLSMax.MouseMove
+    Private Sub ShowMsgvVehAveLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVehAveLSMax.MouseMove, TBvVehAveLSMax.MouseMove
         InfActivat("Maximum average vehicle speed for low speed test")
     End Sub
 #End Region
 
 #Region "vVehAveLSMin"
     ' Show the message
-    Private Sub ShowMsgvVehAveLSMin(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvVehAveLSMin.MouseMove, TBvVehAveLSMin.MouseMove
+    Private Sub ShowMsgvVehAveLSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVehAveLSMin.MouseMove, TBvVehAveLSMin.MouseMove
         InfActivat("Minimum average vehicle speed for low speed test")
     End Sub
 #End Region
 
 #Region "vVehFloatD"
     ' Show the message
-    Private Sub ShowMsgvVehFloatD(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvVehFloatD.MouseMove, TBvVehFloatD.MouseMove
+    Private Sub ShowMsgvVehFloatD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVehFloatD.MouseMove, TBvVehFloatD.MouseMove
         InfActivat("+/- Maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed test)")
     End Sub
 #End Region
 
 #Region "TqSumFloatD"
     ' Show the message
-    Private Sub ShowMsgTqSumFloatD(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LTqSumFloatD.MouseMove, TBTqSumFloatD.MouseMove
+    Private Sub ShowMsgTqSumFloatD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTqSumFloatD.MouseMove, TBTqSumFloatD.MouseMove
         InfActivat("+/- Maximum relative deviation of floating average torque from average torque over entire section (low speed test)")
     End Sub
 #End Region
 
 #Region "vWindAveHSMax"
     ' Show the message
-    Private Sub ShowMsgvWindAveHSMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvWindAveHSMax.MouseMove, TBvWindAveHSMax.MouseMove
+    Private Sub ShowMsgvWindAveHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWindAveHSMax.MouseMove, TBvWindAveHSMax.MouseMove
         InfActivat("Maximum average wind speed during high speed test")
     End Sub
 #End Region
 
 #Region "vWind1sHSMax"
     ' Show the message
-    Private Sub ShowMsgvWind1sHSMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvWind1sHSMax.MouseMove, TBvWind1sHSMax.MouseMove
+    Private Sub ShowMsgvWind1sHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWind1sHSMax.MouseMove, TBvWind1sHSMax.MouseMove
         InfActivat("Maximum gust wind speed during high speed test")
     End Sub
 #End Region
 
 #Region "vVehAveHSMin"
     ' Show the message
-    Private Sub ShowMsgvVehAveHSMin(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvVehAveHSMin.MouseMove, TBvVehAveHSMin.MouseMove
+    Private Sub ShowMsgvVehAveHSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVehAveHSMin.MouseMove, TBvVehAveHSMin.MouseMove
         InfActivat("Minimum average vehicle speed for high speed test")
     End Sub
 #End Region
 
 #Region "BetaAveHSMax"
     ' Show the message
-    Private Sub ShowMsgBetaAveHSMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LBetaAveHSMax.MouseMove, TBBetaAveHSMax.MouseMove
+    Private Sub ShowMsgBetaAveHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LBetaAveHSMax.MouseMove, TBBetaAveHSMax.MouseMove
         InfActivat("Maximum average beta during high speed test")
     End Sub
 #End Region
 
 #Region "vVeh1sD"
     ' Show the message
-    Private Sub ShowMsgvVeh1sD(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvVeh1sD.MouseMove, TBvVeh1sD.MouseMove
+    Private Sub ShowMsgvVeh1sD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVeh1sD.MouseMove, TBvVeh1sD.MouseMove
         InfActivat("+/- Maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (high speed test)")
     End Sub
 #End Region
 
 #Region "Tq1sD"
     ' Show the message
-    Private Sub ShowMsgTq1sD(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LTq1sD.MouseMove, TBTq1sD.MouseMove
+    Private Sub ShowMsgTq1sD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTq1sD.MouseMove, TBTq1sD.MouseMove
         InfActivat("+/- Maximum relative deviation of 1s average torque from average torque over entire section (high speed test)")
     End Sub
 #End Region
 
 #Region "DeltaTTireMax"
     ' Show the message
-    Private Sub ShowMsgDeltaTTireMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDeltaTTireMax.MouseMove, TBDeltaTTireMax.MouseMove
+    Private Sub ShowMsgDeltaTTireMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaTTireMax.MouseMove, TBDeltaTTireMax.MouseMove
         InfActivat("Maximum variation of tire temperature between high speed tests and low speed tests")
     End Sub
 #End Region
 
 #Region "DeltaRRCMax"
     ' Show the message
-    Private Sub ShowMsgDeltaRRCMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDeltaRRCMax.MouseMove, TBDeltaRRCMax.MouseMove
+    Private Sub ShowMsgDeltaRRCMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaRRCMax.MouseMove, TBDeltaRRCMax.MouseMove
         InfActivat("Maximum difference of RRC from the two low speed runs")
     End Sub
 #End Region
 
 #Region "TambVar"
     ' Show the message
-    Private Sub ShowMsgTambVar(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LTambVar.MouseMove, TBTambVar.MouseMove
+    Private Sub ShowMsgTambVar(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTambVar.MouseMove, TBTambVar.MouseMove
         InfActivat("Maximum variation of ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)")
     End Sub
 #End Region
 
 #Region "TambTamac"
     ' Show the message
-    Private Sub ShowMsgTambTamac(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LTambTamac.MouseMove, TBTambTamac.MouseMove
+    Private Sub ShowMsgTambTamac(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTambTamac.MouseMove, TBTambTamac.MouseMove
         InfActivat("Maximum temperature below which no documentation of tarmac conditions is necessary")
     End Sub
 #End Region
 
 #Region "TambMax"
     ' Show the message
-    Private Sub ShowMsgTambMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LTambMax.MouseMove, TBTambMax.MouseMove
+    Private Sub ShowMsgTambMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTambMax.MouseMove, TBTambMax.MouseMove
         InfActivat("Maximum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)")
     End Sub
 #End Region
 
 #Region "TambMin"
     ' Show the message
-    Private Sub ShowMsgTambMin(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LTambMin.MouseMove, TBTambMin.MouseMove
+    Private Sub ShowMsgTambMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTambMin.MouseMove, TBTambMin.MouseMove
         InfActivat("Minimum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)")
     End Sub
 #End Region
 
 #Region "ContHz"
     ' Show the message
-    Private Sub ShowMsgContHz(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDeltaHzMax.MouseMove, TBDeltaHzMax.MouseMove
+    Private Sub ShowMsgContHz(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaHzMax.MouseMove, TBDeltaHzMax.MouseMove
         InfActivat("Maximum allowed deviation of timestep-size in csdat-file from 100Hz")
     End Sub
 #End Region
 
 #Region "RhoAirRef"
     ' Show the message
-    Private Sub ShowMsgRhoAirRef(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LRhoAirRef.MouseMove, TBRhoAirRef.MouseMove
+    Private Sub ShowMsgRhoAirRef(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LRhoAirRef.MouseMove, TBRhoAirRef.MouseMove
         InfActivat("Reference air density")
     End Sub
 #End Region
 
 #Region "AveSecAcc"
     ' Show the message
-    Private Sub ShowMsgAveSecAcc(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LAccCorrAve.MouseMove, TBAccCorrAve.MouseMove
+    Private Sub ShowMsgAveSecAcc(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LAccCorrAve.MouseMove, TBAccCorrAve.MouseMove
         InfActivat("Averaging of vehicle speed for correction of acceleration forces")
     End Sub
 #End Region
 
 #Region "DeltaHeadMax"
     ' Show the message
-    Private Sub ShowMsgDeltaHeadMax(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDeltaParaMax.MouseMove, TBDeltaParaMax.MouseMove
+    Private Sub ShowMsgDeltaHeadMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaParaMax.MouseMove, TBDeltaParaMax.MouseMove
         InfActivat("Maximum heading difference for measurement section (parallelism criteria for test track layout)")
     End Sub
 #End Region
 
 #Region "ContSecL"
     ' Show the message
-    Private Sub ShowMsgContSecL(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDeltaXMax.MouseMove, TBDeltaXMax.MouseMove
+    Private Sub ShowMsgContSecL(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaXMax.MouseMove, TBDeltaXMax.MouseMove
         InfActivat("+/- Size of the control area around a MS start/end point where a trigger signal is valid (driving direction)")
     End Sub
 #End Region
 
 #Region "LRec"
     ' Show the message
-    Private Sub ShowMsgLRec(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDeltaYMax.MouseMove, TBDeltaYMax.MouseMove
+    Private Sub ShowMsgLRec(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaYMax.MouseMove, TBDeltaYMax.MouseMove
         InfActivat("+/- Size of the control area around a MS start/end point where a trigger signal is valid (perpendicular to driving direction)")
     End Sub
 #End Region
 
 #Region "ContAng"
     ' Show the message
-    Private Sub ShowMsgContAng(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LContAng.MouseMove, TBDeltaHeadMax.MouseMove
+    Private Sub ShowMsgContAng(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LContAng.MouseMove, TBDeltaHeadMax.MouseMove
         InfActivat("+/- Maximum deviation from heading as read from the csdat-file to the heading from csms-file for a valid dataset")
     End Sub
 #End Region
 
 #Region "NSecAnz"
     ' Show the message
-    Private Sub ShowMsgNSecAnz(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDsMinCAL.MouseMove, TBDsMinCAL.MouseMove
+    Private Sub ShowMsgNSecAnz(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDsMinCAL.MouseMove, TBDsMinCAL.MouseMove
         InfActivat("Minimum number of valid datasets required for the calibration test (per combination of MS ID and DIR ID)")
     End Sub
 #End Region
 
 #Region "NSecAnzLS"
     ' Show the message
-    Private Sub ShowMsgNSecAnzLS(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDsMinLS.MouseMove, TBDsMinLS.MouseMove
+    Private Sub ShowMsgNSecAnzLS(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDsMinLS.MouseMove, TBDsMinLS.MouseMove
         InfActivat("Minimum number of valid datasets required for the low speed test (per combination of MS ID and DIR ID)")
     End Sub
 #End Region
 
 #Region "NSecAnzHS"
     ' Show the message
-    Private Sub ShowMsgNSecAnzHS(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDsMinHS.MouseMove, TBDsMinHS.MouseMove
+    Private Sub ShowMsgNSecAnzHS(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDsMinHS.MouseMove, TBDsMinHS.MouseMove
         InfActivat("Minimum number of valid datasets required for the high speed test (per combination of MS ID and DIR ID)")
     End Sub
 #End Region
 
 #Region "MSHSMin"
     ' Show the message
-    Private Sub ShowMsgMSHSMin(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LDsMinHeadMS.MouseMove, TBDsMinHeadHS.MouseMove
+    Private Sub ShowMsgMSHSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDsMinHeadMS.MouseMove, TBDsMinHeadHS.MouseMove
         InfActivat("Minimum TOTAL number of valid datasets required for the high speed test per heading")
     End Sub
 #End Region

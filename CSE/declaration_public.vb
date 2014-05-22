@@ -13,7 +13,6 @@
 
     ' General Path variables
     Public MyPath As String                                     ' Path of the *.exe
-    Public ConfigPath As String                                 ' Path of the configuration file
     Public RestartN As Boolean = False                          ' Restart of the *.exe
 
     ' Jobfile and output folder
@@ -88,12 +87,8 @@
     Public AccC As Boolean = False                              ' Variable for the acceleration correction
     Public GradC As Boolean = False                             ' Variable for the gradient correction
 
-    ' Control variables for the option tool
-    Public LogSize As Integer                                   ' Allowed size from the Logfile
-    Public MSG As Integer                                       ' Output level from the messages
-    Public StdWorkDir As String                                 ' Standard working dir
-    Public NotepadExe As String                                 ' Path to the Notepadexe
-    Public LogFile As Boolean = True                            ' Specification if a Logfile should be written
+    Public AppSettingsFName As String = "settings.json"
+    Public AppSettings As cSettings = New cSettings()           ' Default settings
 
     'File browser
     Public FB_Drives() As String

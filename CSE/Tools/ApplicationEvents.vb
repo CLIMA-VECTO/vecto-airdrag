@@ -27,26 +27,22 @@
 
         Private Sub MyApplication_Startup(ByVal sender As Object, ByVal e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) Handles Me.Startup
             ' Declaration
-            Dim fiAss As New IO.FileInfo(Application.Info.DirectoryPath & "\" & Application.Info.AssemblyName & ".exe")
-
-            ' Path to the *.exe 
-            MyPath = My.Application.Info.DirectoryPath & "\"
-
-            ' Path for the file history
-            FB_FilHisDir = MyPath & "FileHistory\"
-
-            ' Path to the confic file
-            ConfigPath = MyPath & "config\"
+            Dim fiAss As New IO.FileInfo(joinPaths(Application.Info.DirectoryPath, Application.Info.AssemblyName & ".exe"))
 
             ' compile date
             AppDate = fiAss.LastWriteTime.Date
 
-            ' Generateion of folders if they not exist
-            If Not IO.Directory.Exists(FB_FilHisDir) Then MkDir(FB_FilHisDir)
-            If Not IO.Directory.Exists(ConfigPath) Then MkDir(ConfigPath)
+
+            ' Path to the *.exe 
+            MyPath = My.Application.Info.DirectoryPath & "\"
+
+
+            ' Generateion of folder for the file history if not exists
+            FB_FilHisDir = joinPaths(MyPath, "config", "fileHistory\")
+            If Not IO.Directory.Exists(FB_FilHisDir) Then IO.Directory.CreateDirectory(FB_FilHisDir)
 
             ' Licencemodul
-            Lic.FilePath = MyPath & "License.dat"
+            Lic.FilePath = joinPaths(MyPath, "License.dat")
             Lic.AppVersion = AppVers
 
             ' Declaration from the filebrowser optionen

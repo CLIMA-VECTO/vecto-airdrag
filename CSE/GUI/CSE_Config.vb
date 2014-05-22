@@ -3,15 +3,32 @@ Public Class CSE_Config
     ' Load confic
     Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         ' Allocate the data from the confic file (Only by the start)
-        Me.TextBoxWorDir.Text = StdWorkDir
-        Me.TextBoxNotepad.Text = NotepadExe
-        Me.CheckBoxWriteLog.Checked = LogFile
-        Me.TextBoxMSG.Text = MSG
-        Me.TextBoxLogSize.Text = LogSize
+        settings_PopulateFrom(AppSettings)
 
         ' Define the Infolable
         TextBoxMSG_TextChanged(sender, e)
     End Sub
+
+    Private Sub settings_PopulateFrom(ByVal value As cSettings)
+        ' Allocate the data from the confic file (Only by the start)
+        Me.TextBoxWorDir.Text = value.WorkingDir
+        Me.TextBoxNotepad.Text = value.Editor
+        Me.CheckBoxWriteLog.Checked = value.WriteLog
+        Me.TextBoxMSG.Text = value.LogLevel
+        Me.TextBoxLogSize.Text = value.LogSize
+    End Sub
+
+    Private Function settings_PopulateTo() As cSettings
+        Dim value = New cSettings()
+
+        value.WorkingDir = Me.TextBoxWorDir.Text
+        value.Editor = Me.TextBoxNotepad.Text
+        value.WriteLog = Me.CheckBoxWriteLog.Checked
+        value.LogLevel = Me.TextBoxMSG.Text
+        value.LogSize = Me.TextBoxLogSize.Text
+
+        Return value
+    End Function
 
     ' Open the filebrowser for selecting the working dir
     Private Sub ButtonWorDir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectWorDir.Click
@@ -22,23 +39,29 @@ Public Class CSE_Config
 
     ' Ok button
     Private Sub ButtonOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
-        ' Polling if the file have changes
-        If (StdWorkDir = Me.TextBoxWorDir.Text) And (LogFile = Me.CheckBoxWriteLog.Checked) And (MSG = Me.TextBoxMSG.Text) And (LogSize = Me.TextBoxLogSize.Text) And (NotepadExe = Me.TextBoxNotepad.Text) And (System.IO.File.Exists(ConfigPath & "settings.txt")) Then
-            ' Close the window
-            Me.Close()
-        Else
+        Dim settings_fpath As String = cSettings.SettingsPath()
+
+        ' Write new settings only if settings have changed.
+        '
+        Dim newSettings = settings_PopulateTo()
+        If (Not AppSettings.Equals(newSettings) Or Not System.IO.File.Exists(settings_fpath)) Then
             ' Write the config file
-            fConfigStore()
+            Try
+                newSettings.Store(settings_fpath)     ' Also create 'config' dir if not exists
+                AppSettings = newSettings
 
-            ' Close the window
-            Me.Close()
+                ' Message for the restart of VECTO
+                RestartN = True
+                fInfWarErr(7, False, "Settings changed. Please restart to use the new settings!")     ' XXX: Why double-log for restartng-vecto here??
+                fInfWarErr(7, True, format("Settings changed. Please restart to use the new settings!\n  Do you want to restart VECTO now?"))
 
-            ' Message for the restart from VECTO
-            RestartN = True
-            fInfWarErr(7, False, "Settings changed. Please restart VECTO to use the new settings!")
-            fInfWarErr(7, True, "Settings changed. Please restart VECTO to use the new settings!" & Chr(13) & "Do you want to restart VECTO now?")
-
+            Catch ex As Exception
+                fInfWarErr(9, False, format("Failed writting settings({0} due to: {1}", settings_fpath, ex.Message))
+            End Try
         End If
+
+        ' Close the window
+        Me.Close()
     End Sub
 
     ' Close button
@@ -101,3 +124,4 @@ Public Class CSE_Config
         If Me.TextBoxLogSize.Text = Nothing Then Me.TextBoxLogSize.Text = 2
     End Sub
 End Class
+

@@ -56,8 +56,8 @@
             If Not fInfWarErr(9, False, "No acceptably " & NameFK(position) & "-Inputfile: " & Line) Then Return True
         End If
 
-        ' Write the path into the LogFile
-        If LogFile Then fWriteLog(2, 4, NameFK(position) & " File: " & Line)
+        ' Write the path into the AppSettings.WriteLog
+        If AppSettings.WriteLog Then fWriteLog(2, 4, NameFK(position) & " File: " & Line)
 
         Return False
     End Function
@@ -277,7 +277,7 @@
         Using FileInGenShp As New cFile_V3
 
             ' Initialisation
-            GenShpFile = ConfigPath & "GenShape.shp"
+            GenShpFile = joinPaths(MyPath, "Declaration", "GenShape.shp")
 
             ' Open the shape generic file
             If Not FileInGenShp.OpenRead(GenShpFile) Then
@@ -546,61 +546,7 @@
         Return True
     End Function
 
-    ' Writing from the config file
-    Function fConfigStore() As Boolean
-        Dim settings_fpath As String = ConfigPath & "settings.txt"
-        Try
-            Using FileOutConfig As New cFile_V3
-
-                ' Opfen a file
-                FileOutConfig.OpenWrite(settings_fpath)
-
-                ' Write the data into the file
-                FileOutConfig.WriteLine("c Standard Working Directory Path")
-                FileOutConfig.WriteLine(CSE_Config.TextBoxWorDir.Text)
-                FileOutConfig.WriteLine("c Write log file -1/0")
-                FileOutConfig.WriteLine(CInt(CSE_Config.CheckBoxWriteLog.Checked))
-                FileOutConfig.WriteLine("c Log file size limit [MiB]")
-                FileOutConfig.WriteLine(CSE_Config.TextBoxLogSize.Text)
-                FileOutConfig.WriteLine("c Message Output Level")
-                FileOutConfig.WriteLine(CSE_Config.TextBoxMSG.Text)
-                FileOutConfig.WriteLine("c *.exe Path Notepad")
-                FileOutConfig.WriteLine(CSE_Config.TextBoxNotepad.Text)
-
-                fInfWarErr(7, False, "Writting settings to file: " & settings_fpath)
-                Return True
-            End Using
-        Catch ex As Exception
-            fInfWarErr(9, False, "Failed writting settings due to: " & ex.Message)
-        End Try
-        Return False
-    End Function
-
-    ' Load the configuration file
-    Function fConfigLoad() As Boolean
-        Dim settings_fpath As String = ConfigPath & "settings.txt"
-        Try
-            Using FileInConfig As New cFile_V3
-                If Not FileInConfig.OpenRead(settings_fpath) Then Return False
-
-                ' Read the data
-                StdWorkDir = FileInConfig.ReadLine(0)
-                LogFile = CBool(FileInConfig.ReadLine(0))
-                LogSize = FileInConfig.ReadLine(0)
-                MSG = FileInConfig.ReadLine(0)
-                NotepadExe = FileInConfig.ReadLine(0)
-
-                fInfWarErr(7, False, "Read settings from file: " & settings_fpath)
-                Return True
-            End Using
-        Catch ex As Exception
-            fInfWarErr(9, False, "Failed reading settings due to: " & ex.Message)
-        End Try
-
-        Return False
-    End Function
-
-    ' Delete lines from the Logfile
+    ' Delete lines from the AppSettings.WriteLog
     Function fLoeschZeilen(ByVal File As String, ByVal Anzahl As Integer, Optional ByVal Zeichen As String = "-") As Boolean
         ' Declarations
         Dim i, k As Integer
