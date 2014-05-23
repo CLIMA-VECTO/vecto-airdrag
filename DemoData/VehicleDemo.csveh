@@ -1,0 +1,21 @@
+c VECTO-CSE vehicle file
+c vehicle class code (1-16)
+4
+c vehicle configuration (0=rigid; 1=truck/tractor&trailer)
+0
+c vehicle test mass [kg]
+25000
+c wheels inertia [kgm²]
+90
+c axle ratio [-]
+3.6
+c gear ratio high speed [-]
+1
+c gear ratio low speed [-]
+2.5
+c anemometer height  [m]
+4.55
+c vehicle height [m]
+3.5
+c vehicle width [m]
+2.45
