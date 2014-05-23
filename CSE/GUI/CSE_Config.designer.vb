@@ -22,6 +22,7 @@ Partial Class CSE_Config
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CSE_Config))
         Me.TextBoxWorDir = New System.Windows.Forms.TextBox()
         Me.ButtonSelectWorDir = New System.Windows.Forms.Button()
         Me.GroupBoxWorDir = New System.Windows.Forms.GroupBox()
@@ -164,8 +165,8 @@ Partial Class CSE_Config
         'TabControl1
         '
         Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Location = New System.Drawing.Point(3, 3)
         Me.TabControl1.Name = "TabControl1"
@@ -195,7 +196,7 @@ Partial Class CSE_Config
         Me.GroupBoxNotepad.Size = New System.Drawing.Size(490, 51)
         Me.GroupBoxNotepad.TabIndex = 3
         Me.GroupBoxNotepad.TabStop = False
-        Me.GroupBoxNotepad.Text = "Notepad Directory"
+        Me.GroupBoxNotepad.Text = "Editor"
         '
         'ButtonSelectNotepad
         '
@@ -214,7 +215,7 @@ Partial Class CSE_Config
         Me.TextBoxNotepad.Size = New System.Drawing.Size(444, 20)
         Me.TextBoxNotepad.TabIndex = 1
         '
-        'VECTO_Config
+        'CSE_Config
         '
         Me.AcceptButton = Me.ButtonOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -225,10 +226,11 @@ Partial Class CSE_Config
         Me.Controls.Add(Me.ButtonCancel)
         Me.Controls.Add(Me.ButtonOK)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.MinimumSize = New System.Drawing.Size(521, 294)
-        Me.Name = "VECTO_Config"
+        Me.Name = "CSE_Config"
         Me.Text = "Settings"
         Me.GroupBoxWorDir.ResumeLayout(False)
         Me.GroupBoxWorDir.PerformLayout()

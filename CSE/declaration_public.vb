@@ -88,7 +88,7 @@
     Public GradC As Boolean = False                             ' Variable for the gradient correction
 
     Public AppSettingsFName As String = "settings.json"
-    Public AppSettings As cSettings = New cSettings()           ' Default settings
+    Public AppSettings As cSettings
 
     'File browser
     Public FB_Drives() As String
@@ -101,6 +101,7 @@
     Public fbCSV As cFileBrowser
     Public fbDir As cFileBrowser
     Public fbWorkDir As cFileBrowser
+    Public fbExe As cFileBrowser
     Public fbVEH As cFileBrowser
     Public fbAMB As cFileBrowser
     Public fbALT As cFileBrowser

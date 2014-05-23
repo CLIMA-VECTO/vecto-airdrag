@@ -64,6 +64,16 @@ Module Minor_routines
         Return obj.Aggregate(Function(x, y) IO.Path.Combine(x.ToString(), y.ToString()))
     End Function
 
+    Function StripBackslash(ByVal path As String) As String
+        If path Is Nothing Then
+            Return Nothing
+        ElseIf (path.Last = "\"c) Then
+            Return path.Substring(0, path.Length - 1)
+        Else
+            Return path
+        End If
+    End Function
+
 #End Region ' File paths'
 
     ' Function for a linear interpolation
@@ -266,7 +276,7 @@ Module Minor_routines
 #End Region
 
 
-#Region "Json IO"
+#Region "Json"
 
     Function ReadJsonFile(ByVal path As String) As JObject
         Dim jobj As New JObject
@@ -282,7 +292,7 @@ Module Minor_routines
             Dim validator As New JsonValidatingReader(New JsonTextReader(reader))
 
             validator.Schema = jschema
-            AddHandler validator.ValidationEventHandler, Sub(o, a) validationMsgs.Add(a.Message)
+            AddHandler validator.ValidationEventHandler, Sub(o, a) validationMsgs.Add(format("{0}-->{1}", a.Path, a.Message))
 
             Dim jobj As JObject = JObject.ReadFrom(validator)
 
@@ -295,13 +305,17 @@ Module Minor_routines
             Dim validator As New JsonValidatingReader(New JsonTextReader(reader))
 
             validator.Schema = jschema
-            AddHandler validator.ValidationEventHandler, Sub(o, a) validationMsgs.Add(a.Message)
+            AddHandler validator.ValidationEventHandler, Sub(o, a) validationMsgs.Add(format("{0}-->{1}", a.Path, a.Message))
 
             Dim jobj As JObject = JObject.ReadFrom(validator)
 
             Return jobj
         End Using
     End Function
+
+    Sub ValidateJson(ByVal json As JObject, ByVal jschema As JsonSchema, ByVal validationMsgs As IList(Of String))
+        json.Validate(jschema, Sub(o, a) validationMsgs.Add(format("{0}-->{1}", a.Path, a.Message)))
+    End Sub
 
     Sub WriteJsonFile(ByVal path As String, ByVal content As Object, Optional ByVal formatting As Formatting = Formatting.Indented)
         Dim jser As New JsonSerializer
@@ -329,7 +343,7 @@ Module Minor_routines
         Return value
     End Function
 
-#End Region ' "Json IO"
+#End Region ' "Json"
 
 
 #Region "Strings"

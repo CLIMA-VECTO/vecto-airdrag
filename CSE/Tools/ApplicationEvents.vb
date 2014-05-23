@@ -29,17 +29,18 @@
             ' Declaration
             Dim fiAss As New IO.FileInfo(joinPaths(Application.Info.DirectoryPath, Application.Info.AssemblyName & ".exe"))
 
-            ' compile date
-            AppDate = fiAss.LastWriteTime.Date
-
-
             ' Path to the *.exe 
             MyPath = My.Application.Info.DirectoryPath & "\"
-
 
             ' Generateion of folder for the file history if not exists
             FB_FilHisDir = joinPaths(MyPath, "config", "fileHistory\")
             If Not IO.Directory.Exists(FB_FilHisDir) Then IO.Directory.CreateDirectory(FB_FilHisDir)
+
+            ' compile date
+            AppDate = fiAss.LastWriteTime.Date
+
+            AppSettings = New cSettings()
+            ''AppSettings.Validate() !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
 
             ' Licencemodul
             Lic.FilePath = joinPaths(MyPath, "License.dat")
@@ -51,6 +52,9 @@
 
             fbTXT = New cFileBrowser("TXT")
             fbTXT.Extensions = New String() {"txt"}
+
+            fbExe = New cFileBrowser("EXE")
+            fbExe.Extensions = New String() {"exe"}
 
             fbCSV = New cFileBrowser("CSV")
             fbCSV.Extensions = New String() {"csv", "txt"}

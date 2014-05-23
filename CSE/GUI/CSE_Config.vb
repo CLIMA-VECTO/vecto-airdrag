@@ -20,6 +20,7 @@ Public Class CSE_Config
 
     Private Function settings_PopulateTo() As cSettings
         Dim value = New cSettings()
+        value.Validate()
 
         value.WorkingDir = Me.TextBoxWorDir.Text
         value.Editor = Me.TextBoxNotepad.Text
@@ -52,11 +53,11 @@ Public Class CSE_Config
 
                 ' Message for the restart of VECTO
                 RestartN = True
-                fInfWarErr(7, False, "Settings changed. Please restart to use the new settings!")     ' XXX: Why double-log for restartng-vecto here??
-                fInfWarErr(7, True, format("Settings changed. Please restart to use the new settings!\n  Do you want to restart VECTO now?"))
+                fInfWarErr(7, False, "Settings changed. Please restart to use the new Settings!")     ' XXX: Why double-log for restartng-vecto here??
+                fInfWarErr(7, True, format("Settings changed. Please restart to use the new Settings!\n  Do you want to restart VECTO now?"))
 
             Catch ex As Exception
-                fInfWarErr(9, False, format("Failed writting settings({0} due to: {1}", settings_fpath, ex.Message))
+                fInfWarErr(9, False, format("Failed storing Settings({0}) due to: {1} \n  Settings left unmodified!", settings_fpath, ex.Message))
             End Try
         End If
 
@@ -71,8 +72,8 @@ Public Class CSE_Config
 
     ' Select the Notepad path
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectNotepad.Click
-        If fbWorkDir.OpenDialog(Me.TextBoxWorDir.Text) Then
-            Me.TextBoxNotepad.Text = fbWorkDir.Files(0)
+        If fbExe.OpenDialog(Me.TextBoxWorDir.Text) Then
+            Me.TextBoxNotepad.Text = fbExe.Files(0)
         End If
     End Sub
 

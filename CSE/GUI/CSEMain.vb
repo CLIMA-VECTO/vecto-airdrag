@@ -29,9 +29,11 @@ Public Class CSEMain
         '
         Dim settings_fpath = cSettings.SettingsPath()
         Try
-            AppSettings = New cSettings(settings_fpath)
+            Dim fileSettings As New cSettings(settings_fpath)
+            fileSettings.Validate()
+            AppSettings = fileSettings
         Catch ex As Exception
-            fInfWarErr(9, False, format("Failed reading Settings({0}) due to: {1}", settings_fpath, ex.Message))
+            fInfWarErr(9, False, format("Failed loading Settings({0}) due to: {1}", settings_fpath, ex.Message))
             configL = False
         End Try
 
@@ -42,9 +44,8 @@ Public Class CSEMain
 
         ' Polling if the working dir exist (If not then generate the folder)
         '
-        Dim wd_fPath As String = MyPath & AppSettings.WorkingDir
-        If Not IO.Directory.Exists(wd_fPath) Then
-            MkDir(wd_fPath)
+        If Not IO.Directory.Exists(AppSettings.WorkingDir) Then
+            IO.Directory.CreateDirectory(AppSettings.WorkingDir)
         End If
 
         ' Write the beginning in the AppSettings.WriteLog
@@ -61,8 +62,9 @@ Public Class CSEMain
         If Not configL Then
             Try
                 AppSettings.Store(settings_fpath)
+                fInfWarErr(7, False, format("Created Settings({0}).", settings_fpath))
             Catch ex As Exception
-                fInfWarErr(9, False, format("Failed writting settings({0} due to: {1}", settings_fpath, ex.Message))
+                fInfWarErr(9, False, format("Failed storing Settings({0}) due to: {1}", settings_fpath, ex.Message))
             End Try
         End If
     End Sub
