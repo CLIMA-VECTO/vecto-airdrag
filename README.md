@@ -1,32 +1,41 @@
-### BUILD
-Before compiling you need to add/check references to:
-* vectolic.dll
-* Newtonsoft.Json.dll 
+            VECTO-CSE
+          ============
 
-### EXECUTE
-The following directories/files must be provided in the application folder (e.g. ..\bin\Release):
-* vectolic.dll
-* Newtonsoft.Json.dll 
-* license.dat
-* Decleration/
-* Docs/CSE-User Manual.pdf
+Copyright: 2014 EUROPEAN COMMISSION
+Developed by TU-Graz, on behalf of DG CLIMA, supported by JRC.
+
+A Constant Speed Evaluation tool for tests performed on Heavy-duty vehicles.
 
 
-### RELEASE
-Checklist to build a new release:
-* Make  zip-folder named with the "Semantic-version", ie: 2014_15_5-VECTO_CSE-2.0.1-beta1.
-* Copy into it:
-    * executable (`.EXE`) (from bin/Debug when pre/beta release)
-    * vectolic.dll (check for right version!! Source is currently in beta for file signing features)
-    * Declaration/...
-    * Docs/CSE-User Manual.pdf
-    * Docs/CSE-User Manual.pdf
-* Make a temp-copy of the folder and run it with a license to check everything alright.
-* ZIP the original folder.
-* Upload into CITNet's SVN:
-    https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/
-  and link from: 
-    https://webgate.ec.europa.eu/CITnet/confluence/display/VECTO_CSE/Releases
-* Make licenses and update private pages
-* Tag repos.
-* Send announcment email through JIRA (ie see VECTO-28)
+
+## INSTALLATION:
+
+This application is "portable" since no administration rights are needed, 
+and you can simply copy and move it anywhere. 
+
+### Prerequisites:
+
+The application is written in Windows VB.Net-4.0, so you have to ensure 
+that it is installed properly.
+
+To check whether .Net is installed on your PC and which version, 
+follow this [article](http://support.microsoft.com/kb/318785/en-us).
+If not, iInstall it](http://msdn.microsoft.com/en-us/library/vstudio/5a4x27ek(v=vs.100).aspx).
+
+
+
+### License-file:
+
+In order to run it, you should have received instruction on how to download 
+and use your License file.  The installation procedure is similar to the one
+described at [Vecto's wiki-page](https://webgate.ec.europa.eu/CITnet/confluence/display/VECTO/Installation+instructions).
+
+In any case, you can contact JRC to ask for access to the above resources: 
+    vecto@jrc.ec.europa.eu
+
+
+
+
+## USAGE:
+
+Read `./Docs/VECTO_CSE-User Manual.pdf`

@@ -89,9 +89,8 @@ Public Class CSEMain
 
     ' Open the vehiclefile in the Notepad
     Private Sub ButtonVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonVeh.Click
-        Dim varA As Object
         If IO.File.Exists(Me.TextBoxVeh1.Text) Then
-            varA = System.Diagnostics.Process.Start(AppSettings.Editor, Me.TextBoxVeh1.Text)
+            System.Diagnostics.Process.Start(AppSettings.Editor, Me.TextBoxVeh1.Text)
         Else
             If Not fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxVeh1.Text) Then Exit Sub
         End If
@@ -109,9 +108,8 @@ Public Class CSEMain
 
     ' Open the weatherfile in the Notepad
     Private Sub ButtonWeather_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWeather.Click
-        Dim varA As Object
         If IO.File.Exists(Me.TextBoxWeather.Text) Then
-            varA = System.Diagnostics.Process.Start(AppSettings.Editor, Me.TextBoxWeather.Text)
+            System.Diagnostics.Process.Start(AppSettings.Editor, Me.TextBoxWeather.Text)
         Else
             If Not fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxWeather.Text) Then Exit Sub
         End If
@@ -461,8 +459,7 @@ Public Class CSEMain
 #Region "Tools"
     ' Menu open the AppSettings.WriteLog
     Private Sub ToolStripMenuItemLog_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemLog.Click
-        Dim varA As Object
-        varA = System.Diagnostics.Process.Start(AppSettings.Editor, MyPath & "Log.txt")
+        System.Diagnostics.Process.Start(AppSettings.Editor, MyPath & "Log.txt")
     End Sub
 
     ' Menu open the config file
@@ -488,10 +485,12 @@ Public Class CSEMain
 
     ' Menu open the user manual
     Private Sub ToolStripMenuItemManu_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemManu.Click
-        Dim manual_fname As String = MyPath & "Docs\CSE-UserManual.pdf"
-        If File.Exists(manual_fname) Then
-            Process.Start(manual_fname)
-        End If
+        Dim manual_fname As String = joinPaths(MyPath, "Docs", "VECTO_CSE-User Manual.pdf")
+        Try
+            System.Diagnostics.Process.Start(manual_fname)
+        Catch ex As Exception
+            fInfWarErr(9, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message))
+        End Try
     End Sub
 #End Region
 #End Region
