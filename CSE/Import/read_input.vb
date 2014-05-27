@@ -19,16 +19,16 @@ Public Module read_input
             End If
 
             ' Import routine
-            vehicleX.ID = FileInVehSpez.ReadLine(0)
-            vehicleX.veh_conf = FileInVehSpez.ReadLine(0)
-            vehicleX.mveh_ref = FileInVehSpez.ReadLine(0)
-            vehicleX.I_wheels = FileInVehSpez.ReadLine(0)
-            vehicleX.rat_axl = FileInVehSpez.ReadLine(0)
-            vehicleX.rat_gh = FileInVehSpez.ReadLine(0)
-            vehicleX.rat_gl = FileInVehSpez.ReadLine(0)
-            vehicleX.ha = FileInVehSpez.ReadLine(0)
-            vehicleX.hv = FileInVehSpez.ReadLine(0)
-            vehicleX.wm = FileInVehSpez.ReadLine(0)
+            vehicleX.vehClass = FileInVehSpez.ReadLine(0)
+            vehicleX.vehConfig = FileInVehSpez.ReadLine(0)
+            vehicleX.testMass = FileInVehSpez.ReadLine(0)
+            vehicleX.wheelsInertia = FileInVehSpez.ReadLine(0)
+            vehicleX.axleRatio = FileInVehSpez.ReadLine(0)
+            vehicleX.gearRatio_high = FileInVehSpez.ReadLine(0)
+            vehicleX.gearRatio_low = FileInVehSpez.ReadLine(0)
+            vehicleX.flowMeterHeight = FileInVehSpez.ReadLine(0)
+            vehicleX.vehHeight = FileInVehSpez.ReadLine(0)
+            vehicleX.vehWidth = FileInVehSpez.ReadLine(0)
 
         End Using
 
@@ -41,7 +41,7 @@ Public Module read_input
         End If
 
         ' Check if vehicl class is available
-        If Not GenShape.veh_class.Contains(vehicleX.ID) Then
+        If Not GenShape.veh_class.Contains(vehicleX.vehClass) Then
             ' Error if the vehicle class is not available
             fInfWarErrBW(9, False, "The given vehicle class is not specified in the generic shape file. Please add this class to the generic shape file!")
             BWorker.CancelAsync()
@@ -50,7 +50,7 @@ Public Module read_input
 
         ' Check if vehicle class with the given configuration class is available
         For i = 0 To GenShape.veh_class.Count - 1
-            If GenShape.veh_class(i) = vehicleX.ID And GenShape.veh_conf(i) = vehicleX.veh_conf Then
+            If GenShape.veh_class(i) = vehicleX.vehClass And GenShape.veh_conf(i) = vehicleX.vehConfig Then
                 vehT = True
                 fa_pe = GenShape.fa_pe(i)
                 Exit For

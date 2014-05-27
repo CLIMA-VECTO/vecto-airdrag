@@ -448,17 +448,17 @@
 
             ' Calculate the steps
             For h = 5 To 95 Step Pstep
-                vwind_x = vwind_x_ha * Math.Pow((((h / 100) * vehicleX.hv) / vehicleX.ha), 0.2)
-                vwind_y = vwind_y_ha * Math.Pow((((h / 100) * vehicleX.hv) / vehicleX.ha), 0.2)
-                vairX = vairX + (Math.Sqrt((vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6) ^ 2 + vwind_y ^ 2)) * vehicleX.hv * Pstep / 100
-                vwindX = vwindX + (Math.Sqrt(vwind_x ^ 2 + vwind_y ^ 2)) * vehicleX.hv * Pstep / 100
-                betaX = betaX + (Math.Atan(vwind_y / (vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6)) * 180 / Math.PI) * vehicleX.hv * Pstep / 100
+                vwind_x = vwind_x_ha * Math.Pow((((h / 100) * vehicleX.vehHeight) / vehicleX.flowMeterHeight), 0.2)
+                vwind_y = vwind_y_ha * Math.Pow((((h / 100) * vehicleX.vehHeight) / vehicleX.flowMeterHeight), 0.2)
+                vairX = vairX + (Math.Sqrt((vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6) ^ 2 + vwind_y ^ 2)) * vehicleX.vehHeight * Pstep / 100
+                vwindX = vwindX + (Math.Sqrt(vwind_x ^ 2 + vwind_y ^ 2)) * vehicleX.vehHeight * Pstep / 100
+                betaX = betaX + (Math.Atan(vwind_y / (vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6)) * 180 / Math.PI) * vehicleX.vehHeight * Pstep / 100
             Next h
 
             ' Add the calculated values to the calculate arrays
-            CalcData(tCompCali.vair_c)(i) = (vairX / vehicleX.hv)
-            CalcData(tCompCali.vwind_c)(i) = (vwindX / vehicleX.hv)
-            CalcData(tCompCali.beta_c)(i) = (betaX / vehicleX.hv)
+            CalcData(tCompCali.vair_c)(i) = (vairX / vehicleX.vehHeight)
+            CalcData(tCompCali.vwind_c)(i) = (vwindX / vehicleX.vehHeight)
+            CalcData(tCompCali.beta_c)(i) = (betaX / vehicleX.vehHeight)
             vairX = 0
             vwindX = 0
             betaX = 0

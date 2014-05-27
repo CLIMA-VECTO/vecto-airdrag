@@ -209,7 +209,7 @@
                         ErgValuesComp(tCompErg.F0_ref_singleDS)(PosHS(j)) = F0
                         ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) = F0 * (ErgValuesComp(tCompErg.rho_air)(PosHS(j)) / roh_air_ref)
                         ErgValuesComp(tCompErg.F2_ref_singleDS)(PosHS(j)) = F2
-                        ErgValuesComp(tCompErg.RRC_singleDS)(PosHS(j)) = (ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) / (vehicle.mveh_ref * 9.81)) * 1000
+                        ErgValuesComp(tCompErg.RRC_singleDS)(PosHS(j)) = (ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) / (vehicle.testMass * 9.81)) * 1000
                         ErgValuesComp(tCompErg.CdxA_singleDS)(PosHS(j)) = 2 * F2 / roh_air_ref
                     Next j
 
@@ -230,7 +230,7 @@
                     ErgValuesReg(tCompErgReg.F0_LS1_ref).Add(F0)
                     ErgValuesReg(tCompErgReg.F0_LS1).Add(F0 * (Roh_air_LS1 / numLS1) / roh_air_ref)
                     ErgValuesReg(tCompErgReg.F2_LS1_ref).Add(F2)
-                    ErgValuesReg(tCompErgReg.RRC_LS1).Add((ErgValuesReg(tCompErgReg.F0_LS1)(lauf) / (vehicle.mveh_ref * 9.81)) * 1000)
+                    ErgValuesReg(tCompErgReg.RRC_LS1).Add((ErgValuesReg(tCompErgReg.F0_LS1)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
                     '***** Calculate the linear regression for LS2
                     ' Redeminisionate the arrays
@@ -249,7 +249,7 @@
                     ErgValuesReg(tCompErgReg.F0_LS2_ref).Add(F0)
                     ErgValuesReg(tCompErgReg.F0_LS2).Add(F0 * (Roh_air_LS2 / numLS2) / roh_air_ref)
                     ErgValuesReg(tCompErgReg.F2_LS2_ref).Add(F2)
-                    ErgValuesReg(tCompErgReg.RRC_LS2).Add((ErgValuesReg(tCompErgReg.F0_LS2)(lauf) / (vehicle.mveh_ref * 9.81)) * 1000)
+                    ErgValuesReg(tCompErgReg.RRC_LS2).Add((ErgValuesReg(tCompErgReg.F0_LS2)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
                     If Math.Abs(ErgValuesReg(tCompErgReg.RRC_LS1)(lauf) - ErgValuesReg(tCompErgReg.RRC_LS2)(lauf)) > delta_RRC_max Then
                         ErgValuesReg(tCompErgReg.RRC_valid).Add(0)
@@ -281,7 +281,7 @@
                     ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) = ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) / (numLS1 + numLS2)
                     ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf) = ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf) / (numHS)
                     ErgValuesReg(tCompErgReg.F0).Add(F0 * (ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) / roh_air_ref))
-                    ErgValuesReg(tCompErgReg.RRC).Add(ErgValuesReg(tCompErgReg.F0)(lauf) / (vehicle.mveh_ref * 9.81) * 1000)
+                    ErgValuesReg(tCompErgReg.RRC).Add(ErgValuesReg(tCompErgReg.F0)(lauf) / (vehicle.testMass * 9.81) * 1000)
                     ErgValuesReg(tCompErgReg.CdxA).Add(2 * F2 / roh_air_ref)
                     ErgValuesReg(tCompErgReg.delta_CdxA).Add(fCalcGenShp(ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf), vehicle))
                     ErgValuesReg(tCompErgReg.CdxA0).Add(ErgValuesReg(tCompErgReg.CdxA)(lauf) - ErgValuesReg(tCompErgReg.delta_CdxA)(lauf))
@@ -400,7 +400,7 @@
 
         ' Find the correct curve
         For i = 0 To GenShape.veh_class.Count - 1
-            If GenShape.veh_class(i) = vehicleX.ID And GenShape.veh_conf(i) = vehicleX.veh_conf Then
+            If GenShape.veh_class(i) = vehicleX.vehClass And GenShape.veh_conf(i) = vehicleX.vehConfig Then
                 pos = i
                 Exit For
             End If

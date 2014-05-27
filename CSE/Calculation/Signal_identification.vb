@@ -673,26 +673,26 @@
         run = 0
         anz = 0
         If TestRunX = 1 Or TestRunX = 3 Then
-            igear = vehicleX.rat_gl
+            igear = vehicleX.gearRatio_low
             If TestRunX = 1 Then
                 RunIDx = IDLS1
             Else
                 RunIDx = IDLS2
             End If
         Else
-            igear = vehicleX.rat_gh
+            igear = vehicleX.gearRatio_high
             RunIDx = IDHS
         End If
 
         ' Calculate the other values of the speed run
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
             ' Wheel rotation
-            CalcData(tCompCali.omega_wh)(i) = (InputData(tComp.n_eng)(i) * Math.PI / (30 * vehicleX.rat_axl * igear))
+            CalcData(tCompCali.omega_wh)(i) = (InputData(tComp.n_eng)(i) * Math.PI / (30 * vehicleX.axleRatio * igear))
 
             If i = 0 Or i = CalcData(tCompCali.SecID).Count - 1 Then
                 CalcData(tCompCali.omega_p_wh)(i) = 0
             Else
-                CalcData(tCompCali.omega_p_wh)(i) = ((InputData(tComp.n_eng)(i + 1) - InputData(tComp.n_eng)(i - 1)) / 2) * Math.PI / (30 * vehicleX.rat_axl * igear)
+                CalcData(tCompCali.omega_p_wh)(i) = ((InputData(tComp.n_eng)(i + 1) - InputData(tComp.n_eng)(i - 1)) / 2) * Math.PI / (30 * vehicleX.axleRatio * igear)
             End If
 
             ' Torque sum
@@ -781,11 +781,11 @@
                 End If
 
                 ' F gradient
-                CalcData(tCompCali.F_grd)(i) = vehicleX.mveh_ref * 9.81 * Math.Sin(CalcData(tCompCali.slope_deg)(i) * Math.PI / 180)
+                CalcData(tCompCali.F_grd)(i) = vehicleX.testMass * 9.81 * Math.Sin(CalcData(tCompCali.slope_deg)(i) * Math.PI / 180)
             End If
 
             ' Force acceleration
-            CalcData(tCompCali.F_acc)(i) = vehicleX.mveh_ref * CalcData(tCompCali.a_veh_ave)(i) + vehicleX.I_wheels * CalcData(tCompCali.omega_wh)(i) * CalcData(tCompCali.omega_p_wh)(i) / (CalcData(tCompCali.v_veh_c)(i) / 3.6)
+            CalcData(tCompCali.F_acc)(i) = vehicleX.testMass * CalcData(tCompCali.a_veh_ave)(i) + vehicleX.wheelsInertia * CalcData(tCompCali.omega_wh)(i) * CalcData(tCompCali.omega_p_wh)(i) / (CalcData(tCompCali.v_veh_c)(i) / 3.6)
 
             ' Force trajectory
             CalcData(tCompCali.F_res)(i) = CalcData(tCompCali.F_trac)(i)
