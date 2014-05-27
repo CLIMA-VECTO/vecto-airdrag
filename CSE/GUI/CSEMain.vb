@@ -194,7 +194,7 @@ Public Class CSEMain
 
         ' Read the data from the GUI
         If Not fGetOpt(True, Cali) Then
-            Me.ButtonCalC.Text = "Calculate"
+            Me.ButtonCalC.Text = "Calibrate"
             Exit Sub
         End If
 
@@ -210,12 +210,12 @@ Public Class CSEMain
                 If resEx = MsgBoxResult.Yes Then
                     MkDir(OutFolder)
                 Else
-                    Me.ButtonCalC.Text = "Calculate"
+                    Me.ButtonCalC.Text = "Calibrate"
                     Exit Sub
                 End If
             Else
                 fInfWarErr(9, False, "No outputfolder is given!")
-                Me.ButtonCalC.Text = "Calculate"
+                Me.ButtonCalC.Text = "Calibrate"
                 Exit Sub
             End If
         End If
@@ -618,7 +618,7 @@ Public Class CSEMain
 
         ' Reset the calculate button to calculate
         If Cali Then
-            Me.ButtonCalC.Text = "Calculate"
+            Me.ButtonCalC.Text = "Calibrate"
             Me.TextBoxRVeh.Text = Math.Round(fv_veh, 3).ToString
             Me.TextBoxRAirPos.Text = Math.Round(fv_pe, 3).ToString
             Me.TextBoxRBetaMis.Text = Math.Round(beta_ame, 2).ToString

@@ -8,7 +8,7 @@
 
         If SectionDev Then
             ' Output on the GUI
-            fInfWarErrBW(6, False, "Identifing the sections")
+            fInfWarErrBW(6, False, "Identifying the sections")
 
             ' Devide the measured data into there sections
             DevInSec(vMSC)
