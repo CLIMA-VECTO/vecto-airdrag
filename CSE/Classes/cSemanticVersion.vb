@@ -58,7 +58,7 @@ Public NotInheritable Class cSemanticVersion
     Private Shared ReadOnly AlphaRegex As New Regex("^[A-Za-z0-9\-\.]+$", RegexOptions.Compiled Or RegexOptions.Singleline)
 
     ''' <summary>
-    ''' The regular expression to use to parse a semantic version number.
+    ''' The regular expression to use to parse a "strict" semantic version number.
     ''' </summary>
     Private Shared ReadOnly SemanticVersionRegex As New Regex( _
             "^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(-(?<prerelease>[A-Za-z0-9\-\.]+))?(\+(?<build>[A-Za-z0-9\-\.]+))?$", _
@@ -484,9 +484,9 @@ Public NotInheritable Class cSemanticVersion
         Dim hasIdentifier1 = Not String.IsNullOrEmpty(identifier1)
         Dim hasIdentifier2 = Not String.IsNullOrEmpty(identifier2)
         If (hasIdentifier1 AndAlso Not hasIdentifier2) Then
-            result = 1
-        ElseIf (Not hasIdentifier1 AndAlso hasIdentifier2) Then
             result = -1
+        ElseIf (Not hasIdentifier1 AndAlso hasIdentifier2) Then
+            result = 1
         ElseIf (hasIdentifier1) Then
             Dim dotDelimiter As Char() = {"."c}
             Dim parts1 = identifier1.Split(dotDelimiter, StringSplitOptions.RemoveEmptyEntries)

@@ -54,7 +54,7 @@ Public Class F_Preferences
                 fInfWarErr(7, True, format("Preferences have changed.\n  Do you want to restart VECTO now?"))
 
             Catch ex As Exception
-                fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", PreferencesPath, ex.Message))
+                fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", PreferencesPath, ex.Message), ex)
             End Try
         End If
 

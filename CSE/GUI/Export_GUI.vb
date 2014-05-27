@@ -101,7 +101,8 @@
     End Function
 
     ' Generation or upgrade from the log file
-    Function fWriteLog(ByVal BegHinEnd As Integer, Optional ByVal InfWarErrEls As Integer = 4, Optional ByVal text As String = "") As Boolean
+    Function fWriteLog(ByVal BegHinEnd As Integer, Optional ByVal InfWarErrEls As Integer = 4, Optional ByVal text As String = "", _
+                       Optional ByVal ex As Exception = Nothing) As Boolean
         ' Style 1 ... Write beginning
         ' Style 2 ... Add
         ' Style 3 ... Write end
@@ -143,6 +144,10 @@
                         Case 4 ' Else
                             FileOutLog.WriteLine(text)
                     End Select
+                    If ex IsNot Nothing Then
+                        FileOutLog.WriteLine(ex.StackTrace)
+                    End If
+
                     FileOutLog.Close()
                 Case 3 ' At the end
                     FileOutLog.OpenWrite(LogFilenam, , True)

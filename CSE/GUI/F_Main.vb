@@ -30,7 +30,8 @@ Public Class F_Main
         Try
             AppPreferences = New cPreferences(PreferencesPath)
         Catch ex As Exception
-            fInfWarErr(9, False, format("Failed loading Preferences({0}) due to: {1}", PreferencesPath, ex.Message))
+            fInfWarErr(9, False, format("Failed loading Preferences({0}) due to: {1} \n\iThis is not a problem if it is the first time you launch the application.", _
+                                        PreferencesPath, ex.Message), ex)
             configL = False
         End Try
 
@@ -61,7 +62,7 @@ Public Class F_Main
                 AppPreferences.Store(PreferencesPath)
                 fInfWarErr(7, False, format("Stored new Preferences({0}).", PreferencesPath))
             Catch ex As Exception
-                fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1}", PreferencesPath, ex.Message))
+                fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1}", PreferencesPath, ex.Message), ex)
             End Try
         End If
     End Sub
@@ -484,7 +485,7 @@ Public Class F_Main
         Try
             System.Diagnostics.Process.Start(manual_fname)
         Catch ex As Exception
-            fInfWarErr(9, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message))
+            fInfWarErr(9, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
         End Try
     End Sub
 #End Region

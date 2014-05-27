@@ -5,6 +5,17 @@ Imports System.Text.RegularExpressions
 
 Module Minor_routines
 
+    ''' <summary>
+    ''' Utility to check compatibility when reading files, ie 1.0.1-somePre is compatible with [1.0.0--, 2.0.0--)
+    ''' </summary>
+    ''' <param name="checkVersion">the version under investigation</param>
+    ''' <param name="fromVersion">inclusive</param>
+    ''' <param name="toVersion">exclusive</param>
+    ''' <returns>true if fromVersion &lt;= checkVersion &lt; toVersion </returns>
+    ''' <remarks>
+    ''' All version-strings must be, syntactically, valid as Semantic-versions (see http://semver.org/).
+    ''' Note that the earliest pre-release segment is the dash('-'), so 1.0.0-- is the earliest possible version from 1.x release train.
+    ''' </remarks>
     Function IsSemanticVersionsSupported(ByVal checkVersion As String, ByVal fromVersion As String, Optional ByVal toVersion As String = Nothing) As Boolean
 
         Dim cver As New cSemanticVersion(checkVersion)
@@ -152,7 +163,8 @@ Module Minor_routines
     ' Functions for the information depiction on the GUI with the backgroundworker (Info, Warning, Error)
 #Region " Communication functions"
     ' Output from Informations\Warnings\Errors on the GUI
-    Function fInfWarErr(ByVal Style As Integer, ByVal MsgBoxOut As Boolean, ByVal text As String) As Boolean
+    Function fInfWarErr(ByVal Style As Integer, ByVal MsgBoxOut As Boolean, ByVal text As String, Optional ByVal ex As Exception = Nothing) As Boolean
+
         ' Declaration
         Dim Styletext As String = ""
         Dim StyleOut As String = ""
@@ -194,16 +206,16 @@ Module Minor_routines
             Select Case Style
                 Case 0 To 7 ' Message
                     F_Main.ListBoxMSG.Items.Add(text)
-                    fWriteLog(2, 4, text)
+                    fWriteLog(2, 4, text, ex)
                 Case 8 ' Warning
                     F_Main.ListBoxWar.Items.Add(text)
                     F_Main.TabPageWar.Text = Styletext & " (" & F_Main.ListBoxWar.Items.Count & ")"
-                    fWriteLog(2, 2, text)
+                    fWriteLog(2, 2, text, ex)
                 Case 9 ' Error
                     F_Main.ListBoxErr.Items.Add(text)
                     F_Main.TabPageErr.Text = Styletext & " (" & F_Main.ListBoxErr.Items.Count & ")"
                     F_Main.TabControlOutMsg.SelectTab(2)
-                    fWriteLog(2, 3, text)
+                    fWriteLog(2, 3, text, ex)
             End Select
         End If
 
