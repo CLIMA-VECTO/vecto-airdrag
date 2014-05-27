@@ -1,0 +1,74 @@
+﻿c Constant Speed Evaluator VECTO-CSE 2.01
+c General inputfiles
+c Path to vehicle specifications file (*.csveh)
+J:\TE-Em\Projekte\I_2012_08_HDV_CO2_LOT3\Arbeitsordner\CSE\Release_Packages\2.01\Test\WorkingDir\DemoData\VehicleDemo.csveh
+c Path to ambient conditions file (*.csamb)
+J:\TE-Em\Projekte\I_2012_08_HDV_CO2_LOT3\Arbeitsordner\CSE\Release_Packages\2.01\Test\WorkingDir\DemoData\AmbientConditionsDemo.csamb
+c Anemomenter instrument calibration factors (v_air f, v_air d, beta f, beta d)
+1,0,1,0
+c
+c Calibration test inputfiles
+c Path to measurement section specification file (*.csmsc)
+J:\TE-Em\Projekte\I_2012_08_HDV_CO2_LOT3\Arbeitsordner\CSE\Release_Packages\2.01\Test\WorkingDir\DemoData\TrackDemo.csms
+c Path to measurement data file from the calibration test (*.csdat)
+J:\TE-Em\Projekte\I_2012_08_HDV_CO2_LOT3\Arbeitsordner\CSE\Release_Packages\2.01\Test\WorkingDir\DemoData\DataDemo_CAL.csdat
+c
+c Constant speed test inputfiles
+c Path to measurement section specification file (*.csmsc)
+J:\TE-Em\Projekte\I_2012_08_HDV_CO2_LOT3\Arbeitsordner\CSE\Release_Packages\2.01\Test\WorkingDir\DemoData\TrackDemo.csms
+c Rolling resistance correction
+1
+c Path to measurement data files from the test runs LS1, HS, LS2 (*.csdat)
+J:\TE-Em\Projekte\I_2012_08_HDV_CO2_LOT3\Arbeitsordner\CSE\Release_Packages\2.01\Test\WorkingDir\DemoData\DataDemo_LS1.csdat
+J:\TE-Em\Projekte\I_2012_08_HDV_CO2_LOT3\Arbeitsordner\CSE\Release_Packages\2.01\Test\WorkingDir\DemoData\DataDemo_HS.csdat
+J:\TE-Em\Projekte\I_2012_08_HDV_CO2_LOT3\Arbeitsordner\CSE\Release_Packages\2.01\Test\WorkingDir\DemoData\DataDemo_LS2.csdat
+c Evaluation settings
+c Acceleration correction (yes = 1, no = 0)
+0
+c Gradient correction (yes = 1, no = 0)
+0
+c Output frequency (1Hz = 1, 100Hz = 100)
+1
+c Parameters for general validity criteria
+5
+0.3
+3
+25
+35
+0
+c General parameters
+1
+1.1884
+1
+20
+c Parameters for identification of measurement section
+10
+100
+10
+c Requirements on number of valid datasets
+5
+1
+2
+10
+c **DataSet validity criteria**
+25
+c *Calibration test*
+5
+8
+5
+c *Low and high speed test*
+10
+c Low speed test
+5
+8
+16
+9
+0.15
+0.1
+c High speed test
+5
+8
+80
+3
+0.3
+0.1

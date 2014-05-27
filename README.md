@@ -1,8 +1,9 @@
             VECTO-CSE
           ============
 
-Copyright: 2014 EUROPEAN COMMISSION
-Developed by TU-Graz, on behalf of DG CLIMA, supported by JRC.
+Copyright : 2014 EUROPEAN COMMISSION
+Developed : by TU-Graz, on behalf of DG CLIMA, supported by JRC.
+License   : EUPL
 
 A Constant Speed Evaluation tool for tests performed on Heavy-duty vehicles.
 

@@ -151,10 +151,12 @@ Public Class cSettings
         Get
             Dim value As String = Me.Json_Contents("Body")("WorkingDir")
             If value Is Nothing OrElse value.Trim().Length = 0 Then
-                value = MyPath
+                Return MyPath
+            ElseIf IO.Path.IsPathRooted(value) Then
+                Return value
+            Else
+                Return joinPaths(MyPath, value)
             End If
-
-            Return value
         End Get
         Set(ByVal value As String)
             If value IsNot Nothing Then
@@ -170,6 +172,9 @@ Public Class cSettings
                     value = IO.Path.GetFullPath(value)
                     If value.StartsWith(myPlainPath, StringComparison.OrdinalIgnoreCase) Then
                         value = value.Substring(myPlainPath.Length)
+                        If (value.First <> "\"c) Then
+                            value = value.Substring(1)
+                        End If
                         If (value.Last <> "\"c) Then
                             value = value & "\"
                         End If
