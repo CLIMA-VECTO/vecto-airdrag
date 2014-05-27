@@ -1,5 +1,5 @@
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class CSE_Config
+Partial Class CSE_Preferences
     Inherits System.Windows.Forms.Form
 
     'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
@@ -22,7 +22,7 @@ Partial Class CSE_Config
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CSE_Config))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CSE_Preferences))
         Me.TextBoxWorDir = New System.Windows.Forms.TextBox()
         Me.ButtonSelectWorDir = New System.Windows.Forms.Button()
         Me.GroupBoxWorDir = New System.Windows.Forms.GroupBox()
@@ -231,7 +231,7 @@ Partial Class CSE_Config
         Me.MinimizeBox = False
         Me.MinimumSize = New System.Drawing.Size(521, 294)
         Me.Name = "CSE_Config"
-        Me.Text = "Settings"
+        Me.Text = "Preferences"
         Me.GroupBoxWorDir.ResumeLayout(False)
         Me.GroupBoxWorDir.PerformLayout()
         Me.GroupBoxInterface.ResumeLayout(False)

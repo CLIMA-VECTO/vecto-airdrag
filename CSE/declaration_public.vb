@@ -87,8 +87,9 @@
     Public AccC As Boolean = False                              ' Variable for the acceleration correction
     Public GradC As Boolean = False                             ' Variable for the gradient correction
 
-    Public AppSettingsFName As String = "settings.json"
-    Public AppSettings As cSettings
+
+    Public PreferencesPath As String
+    Public AppPreferences As cPreferences
 
     'File browser
     Public FB_Drives() As String

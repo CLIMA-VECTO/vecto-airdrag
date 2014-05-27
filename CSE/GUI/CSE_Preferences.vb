@@ -1,15 +1,15 @@
-Public Class CSE_Config
+Public Class CSE_Preferences
 
     ' Load confic
     Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         ' Allocate the data from the confic file (Only by the start)
-        settings_PopulateFrom(AppSettings)
+        prefs_PopulateFrom(AppPreferences)
 
         ' Define the Infolable
         TextBoxMSG_TextChanged(sender, e)
     End Sub
 
-    Private Sub settings_PopulateFrom(ByVal value As cSettings)
+    Private Sub prefs_PopulateFrom(ByVal value As cPreferences)
         ' Allocate the data from the confic file (Only by the start)
         Me.TextBoxWorDir.Text = value.WorkingDir
         Me.TextBoxNotepad.Text = value.Editor
@@ -18,8 +18,8 @@ Public Class CSE_Config
         Me.TextBoxLogSize.Text = value.LogSize
     End Sub
 
-    Private Function settings_PopulateTo() As cSettings
-        Dim value = New cSettings()
+    Private Function prefs_PopulateTo() As cPreferences
+        Dim value = New cPreferences()
         value.Validate()
 
         value.WorkingDir = Me.TextBoxWorDir.Text
@@ -40,24 +40,22 @@ Public Class CSE_Config
 
     ' Ok button
     Private Sub ButtonOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
-        Dim settings_fpath As String = cSettings.SettingsPath()
-
-        ' Write new settings only if settings have changed.
+        ' Write new prefs only if changed.
         '
-        Dim newSettings = settings_PopulateTo()
-        If (Not AppSettings.Equals(newSettings) Or Not System.IO.File.Exists(settings_fpath)) Then
+        Dim newPrefs = prefs_PopulateTo()
+        If (Not AppPreferences.Equals(newPrefs) Or Not System.IO.File.Exists(PreferencesPath)) Then
             ' Write the config file
             Try
-                newSettings.Store(settings_fpath)     ' Also create 'config' dir if not exists
-                AppSettings = newSettings
+                newPrefs.Store(PreferencesPath)     ' Also create 'config' dir if not exists
+                AppPreferences = newPrefs
 
                 ' Message for the restart of VECTO
                 RestartN = True
-                fInfWarErr(7, False, "Settings changed. Please restart to use the new Settings!")     ' XXX: Why double-log for restartng-vecto here??
-                fInfWarErr(7, True, format("Settings changed. Please restart to use the new Settings!\n  Do you want to restart VECTO now?"))
+                fInfWarErr(7, False, "Preferences have changed. Ask to restart.")     ' XXX: Why double-log for restartng-vecto here??
+                fInfWarErr(7, True, format("Preferences have changed.\n  Do you want to restart VECTO now?"))
 
             Catch ex As Exception
-                fInfWarErr(9, False, format("Failed storing Settings({0}) due to: {1} \n  Settings left unmodified!", settings_fpath, ex.Message))
+                fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", PreferencesPath, ex.Message))
             End Try
         End If
 

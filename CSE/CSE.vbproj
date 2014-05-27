@@ -106,7 +106,7 @@
     <Compile Include="Classes\cGenShp.vb" />
     <Compile Include="Classes\cMSC.vb" />
     <Compile Include="Classes\CResult.vb" />
-    <Compile Include="Classes\cSettings.vb" />
+    <Compile Include="Classes\cPreferences.vb" />
     <Compile Include="Classes\csKey.vb" />
     <Compile Include="Classes\cUTMCoord.vb" />
     <Compile Include="Classes\cValidSec.vb" />
@@ -123,10 +123,10 @@
     <Compile Include="GUI\Export_GUI.vb" />
     <Compile Include="GUI\minor_routines_GUI.vb" />
     <Compile Include="GUI\cFileBrowser.vb" />
-    <Compile Include="GUI\CSE_Config.designer.vb">
-      <DependentUpon>CSE_Config.vb</DependentUpon>
+    <Compile Include="GUI\CSE_Preferences.designer.vb">
+      <DependentUpon>CSE_Preferences.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CSE_Config.vb">
+    <Compile Include="GUI\CSE_Preferences.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\CSE_Info.Designer.vb">
@@ -176,8 +176,8 @@
     <Compile Include="CSE_Types.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GUI\CSE_Config.resx">
-      <DependentUpon>CSE_Config.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\CSE_Preferences.resx">
+      <DependentUpon>CSE_Preferences.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\CSE_Info.resx">
       <DependentUpon>CSE_Info.vb</DependentUpon>

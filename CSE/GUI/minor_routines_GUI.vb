@@ -56,8 +56,7 @@
             If Not fInfWarErr(9, False, "No acceptably " & NameFK(position) & "-Inputfile: " & Line) Then Return True
         End If
 
-        ' Write the path into the AppSettings.WriteLog
-        If AppSettings.WriteLog Then fWriteLog(2, 4, NameFK(position) & " File: " & Line)
+        fWriteLog(2, 4, NameFK(position) & " File: " & Line)
 
         Return False
     End Function
@@ -546,7 +545,7 @@
         Return True
     End Function
 
-    ' Delete lines from the AppSettings.WriteLog
+    ' Delete lines from the Log
     Function fLoeschZeilen(ByVal File As String, ByVal Anzahl As Integer, Optional ByVal Zeichen As String = "-") As Boolean
         ' Declarations
         Dim i, k As Integer

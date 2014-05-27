@@ -335,20 +335,20 @@ Partial Class CSEMain
         '
         Me.ToolStripMenuItemLog.Image = Global.CSE.My.Resources.Resources.Log_File
         Me.ToolStripMenuItemLog.Name = "ToolStripMenuItemLog"
-        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(144, 22)
+        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemLog.Text = "Open LogFile"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(141, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
         '
         'ToolStripMenuItemOption
         '
         Me.ToolStripMenuItemOption.Image = Global.CSE.My.Resources.Resources.Optionen
         Me.ToolStripMenuItemOption.Name = "ToolStripMenuItemOption"
-        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(144, 22)
-        Me.ToolStripMenuItemOption.Text = "Options"
+        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(152, 22)
+        Me.ToolStripMenuItemOption.Text = "Preferences"
         '
         'InfoToolStripMenuItem
         '

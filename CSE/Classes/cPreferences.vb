@@ -3,17 +3,10 @@
 Imports Newtonsoft.Json.Linq
 Imports Newtonsoft.Json.Schema
 
-Public Class cSettings
-    Public Shared Function SettingsPath() As String
-        Dim settings_fpath As String = joinPaths(MyPath, "config", AppSettingsFName)
-
-        Return settings_fpath
-    End Function
-
-
+Public Class cPreferences
     Public Json_Contents As JObject
 
-    ' Default-settings specified here.
+    ' Default-prefs specified here.
     Function JsonStr_Contents() As String
         Return <json>{
             "Header": {
@@ -34,7 +27,7 @@ Public Class cSettings
     Function JSchemaStr(ByVal allowsAdditionalProps As Boolean) As String
         Dim allowsAdditionalProps_str As String = IIf(allowsAdditionalProps, "false", "true")
         Return <json>{
-            "title": "Vecto_cse-settings.ver1.0",
+            "title": "Vecto_cse-prefs.ver1.0",
             "type": "object", "AllowAdditionalProperties": <%= allowsAdditionalProps_str %>, 
             "properties": {
                 "Header": { 
@@ -90,7 +83,7 @@ Public Class cSettings
 
 
     ''' <summary>Reads from file or creates defaults</summary>
-    ''' <param name="inputFilePath">If unspecifed, default settings used, otherwise data read from file</param>
+    ''' <param name="inputFilePath">If unspecifed, default prefs used, otherwise data read from file</param>
     ''' <remarks></remarks>
     Sub New(Optional ByVal inputFilePath As String = Nothing)
         If (inputFilePath Is Nothing) Then
@@ -102,9 +95,9 @@ Public Class cSettings
 
 
     ''' <summary>Validates and Writing to the config file</summary>
-    Sub Store(ByVal settings_fpath As String)
+    Sub Store(ByVal prefs_fpath As String)
         Validate(Me.Strict)
-        WriteJsonFile(settings_fpath, Json_Contents)
+        WriteJsonFile(prefs_fpath, Json_Contents)
     End Sub
 
 
@@ -118,7 +111,7 @@ Public Class cSettings
         ValidateJson(Me.Json_Contents, schema, validateMsgs)
 
         If (validateMsgs.Any()) Then
-            Throw New SystemException(format("Invalid Settings due to: {0}", String.Join(vbCrLf, validateMsgs)))
+            Throw New SystemException(format("Invalid Preferences due to: {0}", String.Join(vbCrLf, validateMsgs)))
         End If
     End Sub
 
@@ -128,7 +121,7 @@ Public Class cSettings
         If obj Is Nothing OrElse Not Me.GetType().Equals(obj.GetType()) Then
             Return False
         Else
-            Return Me.Json_Contents.Equals(DirectCast(obj, cSettings).Json_Contents)
+            Return Me.Json_Contents.Equals(DirectCast(obj, cPreferences).Json_Contents)
         End If
     End Function
 

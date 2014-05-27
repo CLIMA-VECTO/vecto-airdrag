@@ -31,6 +31,7 @@
 
             ' Path to the *.exe 
             MyPath = My.Application.Info.DirectoryPath & "\"
+            PreferencesPath = joinPaths(MyPath, "config", "preferences.json")
 
             ' Generateion of folder for the file history if not exists
             FB_FilHisDir = joinPaths(MyPath, "config", "fileHistory\")
@@ -39,8 +40,8 @@
             ' compile date
             AppDate = fiAss.LastWriteTime.Date
 
-            AppSettings = New cSettings()
-            ''AppSettings.Validate() !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
+            AppPreferences = New cPreferences()
+            ''AppPreferences.Validate() !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
 
             ' Licencemodul
             Lic.FilePath = joinPaths(MyPath, "License.dat")

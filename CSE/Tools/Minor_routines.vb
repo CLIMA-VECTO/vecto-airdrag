@@ -170,25 +170,25 @@ Module Minor_routines
             End If
         Else
             ' Polling the MSG if the message should shown
-            If Style <= AppSettings.LogLevel Then Return True
+            If Style <= AppPreferences.LogLevel Then Return True
 
             ' Established the text wit the symbol from the style
             text = AnzeigeMessage(Style) & text
 
-            ' Output in the AppSettings.WriteLog
+            ' Output in the Log
             Select Case Style
                 Case 0 To 7 ' Message
                     CSEMain.ListBoxMSG.Items.Add(text)
-                    If AppSettings.WriteLog Then fWriteLog(2, 4, text) ' Write in the AppSettings.WriteLog
+                    fWriteLog(2, 4, text)
                 Case 8 ' Warning
                     CSEMain.ListBoxWar.Items.Add(text)
                     CSEMain.TabPageWar.Text = Styletext & " (" & CSEMain.ListBoxWar.Items.Count & ")"
-                    If AppSettings.WriteLog Then fWriteLog(2, 2, text) ' Write in the AppSettings.WriteLog
+                    fWriteLog(2, 2, text)
                 Case 9 ' Error
                     CSEMain.ListBoxErr.Items.Add(text)
                     CSEMain.TabPageErr.Text = Styletext & " (" & CSEMain.ListBoxErr.Items.Count & ")"
                     CSEMain.TabControlOutMsg.SelectTab(2)
-                    If AppSettings.WriteLog Then fWriteLog(2, 3, text) ' Write in the AppSettings.WriteLog
+                    fWriteLog(2, 3, text)
             End Select
         End If
 
@@ -232,7 +232,7 @@ Module Minor_routines
         End Select
 
         ' Polling the MSG if the message should shown
-        If Style <= AppSettings.LogLevel Then Return True
+        If Style <= AppPreferences.LogLevel Then Return True
 
         ' Output in the Tabcontrols (Call from Backgroundworker_ProgressChanged)
         BWorker.ReportProgress(0, WorkerMsg)
@@ -255,16 +255,16 @@ Module Minor_routines
         Select Case Style
             Case 0 To 7 ' Message
                 CSEMain.ListBoxMSG.Items.Add(Text)
-                If AppSettings.WriteLog Then fWriteLog(2, 4, Text) ' Write into AppSettings.WriteLog
+                fWriteLog(2, 4, Text)
             Case 8 ' Warning
                 CSEMain.ListBoxWar.Items.Add(Text)
                 CSEMain.TabPageWar.Text = Styletext & " (" & CSEMain.ListBoxWar.Items.Count & ")"
-                If AppSettings.WriteLog Then fWriteLog(2, 2, Text) ' Write into AppSettings.WriteLog
+                fWriteLog(2, 2, Text)
             Case 9 ' Error
                 CSEMain.ListBoxErr.Items.Add(Text)
                 CSEMain.TabPageErr.Text = Styletext & " (" & CSEMain.ListBoxErr.Items.Count & ")"
                 CSEMain.TabControlOutMsg.SelectTab(2)
-                If AppSettings.WriteLog Then fWriteLog(2, 3, Text) ' Write into AppSettings.WriteLog
+                fWriteLog(2, 3, Text)
         End Select
 
         ' Set the Scrollbars in the Listboxes at the end
