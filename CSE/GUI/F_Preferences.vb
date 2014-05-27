@@ -20,7 +20,6 @@ Public Class F_Preferences
 
     Private Function prefs_PopulateTo() As cPreferences
         Dim value = New cPreferences()
-        value.Validate()
 
         value.WorkingDir = Me.TextBoxWorDir.Text
         value.Editor = Me.TextBoxNotepad.Text

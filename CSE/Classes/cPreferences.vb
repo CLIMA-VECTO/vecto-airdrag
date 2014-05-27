@@ -4,79 +4,61 @@ Imports Newtonsoft.Json.Linq
 Imports Newtonsoft.Json.Schema
 
 Public Class cPreferences
-    Public Json_Contents As JObject
+    Inherits cJsonFile
+
+    Protected Overrides ReadOnly Property CodeVersion() As String
+        Get
+            Return "1.0.0"
+        End Get
+    End Property
 
     ' Default-prefs specified here.
-    Function JsonStr_Contents() As String
-        Return <json>{
-            "Header": {
-                "FileVersion":  "1.0",
-                "Strict":       false,
-            },
-            "Body": {
+    Protected Overrides ReadOnly Property CodeBodyStr() As String
+        Get
+            Return <json>{
                 "WorkingDir":   null,
                 "WriteLog":     true,
                 "LogSize":      2,
                 "LogLevel":     5,
                 "Editor":       "notepad.exe",
-            }
         }</json>.Value
-    End Function
+        End Get
+    End Property
 
-    ''' <param name="allowsAdditionalProps">when false, more strict validation</param>
-    Function JSchemaStr(ByVal allowsAdditionalProps As Boolean) As String
-        Dim allowsAdditionalProps_str As String = IIf(allowsAdditionalProps, "false", "true")
+    ''' <param name="allowAdditionalProps">when false, more strict validation</param>
+    Protected Function JSchemaStr(ByVal allowAdditionalProps As Boolean) As String
+        Dim allowAdditionalProps_str As String = IIf(allowAdditionalProps, "true", "false")
         Return <json>{
-            "title": "Vecto_cse-prefs.ver1.0",
-            "type": "object", "AllowAdditionalProperties": <%= allowsAdditionalProps_str %>, 
+            "title": "cse-prefs.ver1.0",
+            "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
+            "required": true,
             "properties": {
-                "Header": { 
-                    "type": "object", "AllowAdditionalProperties": <%= allowsAdditionalProps_str %>, 
+                "WorkingDir": {
+                    "type": ["string", "null"], 
+                    "required": false,
+                    "default": null,
+                    "description": "Last used Working Directory Path for input/output files, when null/empty,  uses app's dir (default: null)",
+                }, 
+                "WriteLog": {
+                    "type": "boolean",
                     "required": true,
-                    "properties": {
-                        "FileVersion": {
-                            "type": "string",
-                            "required": true,
-                        },
-                        "Strict": {
-                            "type": "boolean",
-                            "required": true,
-                            "default": false,
-                        }
-                    }
-                },
-                "Body": {
-                    "type": "object", "AllowAdditionalProperties": <%= allowsAdditionalProps_str %>, 
+                    "description": "Whether to write messages to log file (default: true)",
+                }, 
+                "LogSize": {
+                    "type": "integer",
                     "required": true,
-                    "properties": {
-                        "WorkingDir": {
-                            "type": ["string", "null"], 
-                            "required": false,
-                            "default": null,
-                            "description": "Last used Working Directory Path for input/output files, when null/empty,  uses app's dir (default: null)",
-                        }, 
-                        "WriteLog": {
-                            "type": "boolean",
-                            "required": true,
-                            "description": "Whether to write messages to log file (default: true)",
-                        }, 
-                        "LogSize": {
-                            "type": "integer",
-                            "required": true,
-                            "description": "Allowed Log-file size limit [MiB] (default: 2)",
-                        }, 
-                        "LogLevel": {
-                            "type": "integer",
-                            "required": true,
-                            "description": "Message Output Level (default: 5 - 'info')",
-                        }, 
-                        "Editor": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Path (or filename if in PATH) of some (text or JSON) editor (default: 'notepad.exe')",
-                        }, 
-                    }
-                }
+                    "description": "Allowed Log-file size limit [MiB] (default: 2)",
+                }, 
+                "LogLevel": {
+                    "type": "integer",
+                    "required": true,
+                    "description": "Message Output Level (default: 5 - 'info')",
+                }, 
+                "Editor": {
+                    "type": "string",
+                    "required": true,
+                    "description": "Path (or filename if in PATH) of some (text or JSON) editor (default: 'notepad.exe')",
+                }, 
             }
         }</json>.Value
     End Function
@@ -84,34 +66,23 @@ Public Class cPreferences
 
     ''' <summary>Reads from file or creates defaults</summary>
     ''' <param name="inputFilePath">If unspecifed, default prefs used, otherwise data read from file</param>
-    ''' <remarks></remarks>
-    Sub New(Optional ByVal inputFilePath As String = Nothing)
-        If (inputFilePath Is Nothing) Then
-            Me.Json_Contents = JObject.Parse(JsonStr_Contents())
-        Else
-            Me.Json_Contents = ReadJsonFile(inputFilePath)
-        End If
-    End Sub
-
-
-    ''' <summary>Validates and Writing to the config file</summary>
-    Sub Store(ByVal prefs_fpath As String)
-        Validate(Me.Strict)
-        WriteJsonFile(prefs_fpath, Json_Contents)
+    ''' <remarks>See cJsonFile() constructor</remarks>
+    Sub New(Optional ByVal inputFilePath As String = Nothing, Optional ByVal skipValidation As Boolean = False)
+        MyBase.New(inputFilePath, skipValidation)
     End Sub
 
 
     ''' <exception cref="SystemException">includes all validation errors</exception>
-    ''' <param name="isStrict">when True, no additional json-properties allowed in the data, when nothing, use value from Header</param>
-    Friend Sub Validate(Optional ByVal isStrict As Boolean? = Nothing)
-        Dim allowsAdditionalProps As Boolean = IIf(isStrict Is Nothing, Me.Strict, Not isStrict)
-        Dim schema = JsonSchema.Parse(JSchemaStr(allowsAdditionalProps))
-        Dim validateMsgs As IList(Of String) = New List(Of String)
+    ''' <param name="allowAdditionalProps">when False, no additional json-properties allowed in the data, when nothing, use value from Header</param>
+    Protected Overrides Sub ValidateVersionAndBody(ByVal fileVersion As String, ByVal body As JObject, ByVal allowAdditionalProps As Boolean, ByVal validateMsgs As IList(Of String))
+        Dim fromVersion = "1.0.0"
+        Dim toVersion = "2.0.0"
+        If Not IsSemanticVersionsSupported(fileVersion, fromVersion, toVersion) Then
+            validateMsgs.Add(format("Unsupported FileVersion({0}, was not in between [{1}, )", fileVersion, fromVersion, toVersion))
+        Else
+            Dim schema = JsonSchema.Parse(JSchemaStr(allowAdditionalProps)) ' TODO: Lazily create schemas once
 
-        ValidateJson(Me.Json_Contents, schema, validateMsgs)
-
-        If (validateMsgs.Any()) Then
-            Throw New SystemException(format("Invalid Preferences due to: {0}", String.Join(vbCrLf, validateMsgs)))
+            ValidateJson(body, schema, validateMsgs)
         End If
     End Sub
 
@@ -127,22 +98,9 @@ Public Class cPreferences
 
 
 #Region "json props"
-    Public ReadOnly Property FileVersion As String
-        Get
-            Return Me.Json_Contents("Header")("FileVersion")
-        End Get
-    End Property
-
-    Public ReadOnly Property Strict As Boolean
-        Get
-            Return Me.Json_Contents("Header")("Strict")
-        End Get
-    End Property
-
-
     Public Property WorkingDir As String
         Get
-            Dim value As String = Me.Json_Contents("Body")("WorkingDir")
+            Dim value As String = Me.Body("WorkingDir")
             If value Is Nothing OrElse value.Trim().Length = 0 Then
                 Return MyPath
             ElseIf IO.Path.IsPathRooted(value) Then
@@ -185,51 +143,48 @@ Public Class cPreferences
                 End If
             End If
 
-            If value Is Nothing Then
-                Me.Json_Contents("Body")("WorkingDir") = Nothing
-            Else
-                Me.Json_Contents("Body")("WorkingDir") = value
-            End If
+            Dim var As Object = value ' NOTE: Avoid early-binding so that Nulls do not end-up with String as schema-type.
+            Me.Body("WorkingDir") = var
         End Set
     End Property
 
     Public Property WriteLog As Boolean
         Get
-            Return Me.Json_Contents("Body")("WriteLog")
+            Return Me.Body("WriteLog")
         End Get
         Set(ByVal value As Boolean)
-            Me.Json_Contents("Body")("WriteLog") = value
+            Me.Body("WriteLog") = value
         End Set
     End Property
 
     Public Property LogSize As Integer
         Get
-            Return Me.Json_Contents("Body")("LogSize")
+            Return Me.Body("LogSize")
         End Get
         Set(ByVal value As Integer)
-            Me.Json_Contents("Body")("LogSize") = value
+            Me.Body("LogSize") = value
         End Set
     End Property
 
     Public Property LogLevel As Integer
         Get
-            Return Me.Json_Contents("Body")("LogLevel")
+            Return Me.Body("LogLevel")
         End Get
         Set(ByVal value As Integer)
-            Me.Json_Contents("Body")("LogLevel") = value
+            Me.Body("LogLevel") = value
         End Set
     End Property
 
     Public Property Editor As String
         Get
-            Return Me.Json_Contents("Body")("Editor")
+            Return Me.Body("Editor")
         End Get
         Set(ByVal value As String)
             If value Is Nothing OrElse value.Trim().Length = 0 Then
                 value = "notepad.exe"
             End If
 
-            Me.Json_Contents("Body")("Editor") = value
+            Me.Body("Editor") = value
         End Set
     End Property
 #End Region ' "json props"

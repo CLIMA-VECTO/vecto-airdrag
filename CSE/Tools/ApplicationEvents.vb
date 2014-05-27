@@ -7,6 +7,7 @@
 
             ' Close the open Filebrowser (Save the History)
             fbTXT.Close()
+            fbExe.Close()
             fbVECTO.Close()
             fbCSV.Close()
             fbDir.Close()
@@ -40,8 +41,7 @@
             ' compile date
             AppDate = fiAss.LastWriteTime.Date
 
-            AppPreferences = New cPreferences()
-            ''AppPreferences.Validate() !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
+            AppPreferences = New cPreferences(, True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
 
             ' Licencemodul
             Lic.FilePath = joinPaths(MyPath, "License.dat")

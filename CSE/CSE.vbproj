@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="Classes\cGenShp.vb" />
     <Compile Include="Classes\cMSC.vb" />
+    <Compile Include="Classes\cJsonFile.vb" />
     <Compile Include="Classes\CResult.vb" />
     <Compile Include="Classes\cPreferences.vb" />
     <Compile Include="Classes\csKey.vb" />
@@ -112,6 +113,7 @@
     <Compile Include="Classes\cValidSec.vb" />
     <Compile Include="Classes\cVehicle.vb" />
     <Compile Include="Classes\cVirtMSC.vb" />
+    <Compile Include="Classes\SemanticVersion.vb" />
     <Compile Include="Export\Minor_routines_output.vb" />
     <Compile Include="Export\output.vb" />
     <Compile Include="Export\OutputTest.vb" />

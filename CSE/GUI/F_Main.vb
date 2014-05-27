@@ -28,9 +28,7 @@ Public Class F_Main
         ' Load the config file
         '
         Try
-            Dim fileprefs As New cPreferences(PreferencesPath)
-            fileprefs.Validate()
-            AppPreferences = fileprefs
+            AppPreferences = New cPreferences(PreferencesPath)
         Catch ex As Exception
             fInfWarErr(9, False, format("Failed loading Preferences({0}) due to: {1}", PreferencesPath, ex.Message))
             configL = False
@@ -61,7 +59,7 @@ Public Class F_Main
         If Not configL Then
             Try
                 AppPreferences.Store(PreferencesPath)
-                fInfWarErr(7, False, format("Created Preferences({0}).", PreferencesPath))
+                fInfWarErr(7, False, format("Stored new Preferences({0}).", PreferencesPath))
             Catch ex As Exception
                 fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1}", PreferencesPath, ex.Message))
             End Try

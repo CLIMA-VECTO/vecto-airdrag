@@ -5,9 +5,24 @@ Imports System.Text.RegularExpressions
 
 Module Minor_routines
 
-    ' Functions for the identification from the fileend, -name and for the path identification
+    Function IsSemanticVersionsSupported(ByVal checkVersion As String, ByVal fromVersion As String, Optional ByVal toVersion As String = Nothing) As Boolean
 
-#Region "File paths"
+        Dim cver As New cSemanticVersion(checkVersion)
+        Dim fver As New cSemanticVersion(fromVersion)
+
+        If toVersion Is Nothing Then
+            Return fver <= cver
+        Else
+            Dim tver As New cSemanticVersion(toVersion)
+            Return fver <= cver AndAlso cver < tver
+        End If
+
+    End Function
+
+
+
+#Region "File paths" ' Functions for the identification from the fileend, -name and for the path identification
+
     ' Identification from the filename
     Public Function fName(ByVal Pfad As String, ByVal MitEndung As Boolean) As String
         Dim x As Int16
@@ -391,6 +406,5 @@ Module Minor_routines
     End Function
 
 #End Region ' Strings
-
 
 End Module
