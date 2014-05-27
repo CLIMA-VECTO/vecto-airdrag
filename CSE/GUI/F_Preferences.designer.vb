@@ -1,5 +1,5 @@
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class CSE_Preferences
+Partial Class F_Preferences
     Inherits System.Windows.Forms.Form
 
     'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
@@ -22,7 +22,7 @@ Partial Class CSE_Preferences
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CSE_Preferences))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_Preferences))
         Me.TextBoxWorDir = New System.Windows.Forms.TextBox()
         Me.ButtonSelectWorDir = New System.Windows.Forms.Button()
         Me.GroupBoxWorDir = New System.Windows.Forms.GroupBox()
@@ -73,7 +73,7 @@ Partial Class CSE_Preferences
         Me.GroupBoxWorDir.Size = New System.Drawing.Size(490, 51)
         Me.GroupBoxWorDir.TabIndex = 2
         Me.GroupBoxWorDir.TabStop = False
-        Me.GroupBoxWorDir.Text = "Standard Working Directory"
+        Me.GroupBoxWorDir.Text = "Working Directory"
         '
         'ButtonOK
         '
@@ -215,7 +215,7 @@ Partial Class CSE_Preferences
         Me.TextBoxNotepad.Size = New System.Drawing.Size(444, 20)
         Me.TextBoxNotepad.TabIndex = 1
         '
-        'CSE_Config
+        'CSE_Preferences
         '
         Me.AcceptButton = Me.ButtonOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -230,7 +230,7 @@ Partial Class CSE_Preferences
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.MinimumSize = New System.Drawing.Size(521, 294)
-        Me.Name = "CSE_Config"
+        Me.Name = "CSE_Preferences"
         Me.Text = "Preferences"
         Me.GroupBoxWorDir.ResumeLayout(False)
         Me.GroupBoxWorDir.PerformLayout()

@@ -1,4 +1,4 @@
-Public Class CSE_Preferences
+Public Class F_Preferences
 
     ' Load confic
     Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -121,6 +121,10 @@ Public Class CSE_Preferences
     ' Set the LogSize to default if it is leave without an input
     Private Sub TextBoxLogSize_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles TextBoxLogSize.Leave
         If Me.TextBoxLogSize.Text = Nothing Then Me.TextBoxLogSize.Text = 2
+    End Sub
+
+    Private Sub GroupBoxWorDir_Enter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GroupBoxWorDir.Enter
+
     End Sub
 End Class
 

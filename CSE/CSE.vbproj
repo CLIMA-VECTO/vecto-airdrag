@@ -123,16 +123,16 @@
     <Compile Include="GUI\Export_GUI.vb" />
     <Compile Include="GUI\minor_routines_GUI.vb" />
     <Compile Include="GUI\cFileBrowser.vb" />
-    <Compile Include="GUI\CSE_Preferences.designer.vb">
-      <DependentUpon>CSE_Preferences.vb</DependentUpon>
+    <Compile Include="GUI\F_Preferences.designer.vb">
+      <DependentUpon>F_Preferences.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CSE_Preferences.vb">
+    <Compile Include="GUI\F_Preferences.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\CSE_Info.Designer.vb">
-      <DependentUpon>CSE_Info.vb</DependentUpon>
+    <Compile Include="GUI\F_Info.Designer.vb">
+      <DependentUpon>F_Info.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CSE_Info.vb">
+    <Compile Include="GUI\F_Info.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="declaration_public.vb" />
@@ -148,10 +148,10 @@
     <Compile Include="GUI\FB_FavDlog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\CSEMain.Designer.vb">
-      <DependentUpon>CSEMain.vb</DependentUpon>
+    <Compile Include="GUI\F_Main.Designer.vb">
+      <DependentUpon>F_Main.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CSEMain.vb">
+    <Compile Include="GUI\F_Main.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -176,11 +176,11 @@
     <Compile Include="CSE_Types.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GUI\CSE_Preferences.resx">
-      <DependentUpon>CSE_Preferences.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\F_Preferences.resx">
+      <DependentUpon>F_Preferences.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\CSE_Info.resx">
-      <DependentUpon>CSE_Info.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\F_Info.resx">
+      <DependentUpon>F_Info.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\FB_Dialog.resx">
       <DependentUpon>FB_Dialog.vb</DependentUpon>
@@ -188,8 +188,8 @@
     <EmbeddedResource Include="GUI\FB_FavDlog.resx">
       <DependentUpon>FB_FavDlog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\CSEMain.resx">
-      <DependentUpon>CSEMain.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\F_Main.resx">
+      <DependentUpon>F_Main.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

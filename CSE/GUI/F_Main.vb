@@ -1,6 +1,6 @@
 ﻿Imports System.IO
 
-Public Class CSEMain
+Public Class F_Main
     ' Declarations
     Private ToolstripSave As Boolean = False
     Private ToolstripSaveAs As Boolean = False
@@ -9,7 +9,7 @@ Public Class CSEMain
     Private Cali As Boolean = True
 
     ' Load the GUI
-    Private Sub CSEMain_Load(sender As System.Object, e As System.EventArgs) Handles Me.Load
+    Private Sub CSEMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.Load
         ' Declarations
         Dim configL As Boolean = True
         Dim NoLegFile As Boolean = False
@@ -462,7 +462,7 @@ Public Class CSEMain
     ' Menu open the config file
     Private Sub ToolStripMenuItemOption_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOption.Click
         ' Show the confic GUI
-        CSE_Preferences.Show()
+        F_Preferences.Show()
     End Sub
 #End Region
 
@@ -477,7 +477,7 @@ Public Class CSEMain
     ' Menu open the Infobox
     Private Sub ToolStripMenuItemAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemAbout.Click
         ' Show the info GUI
-        CSE_Info.Show()
+        F_Info.Show()
     End Sub
 
     ' Menu open the user manual

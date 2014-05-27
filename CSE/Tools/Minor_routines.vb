@@ -163,7 +163,7 @@ Module Minor_routines
                 RestartN = False
                 If MsgBox(text, MsgBoxStyle.YesNo, Styletext) = MsgBoxResult.Yes Then
                     RestartN = True
-                    CSEMain.Close()
+                    F_Main.Close()
                 End If
             Else
                 MsgBox(text, StyleOut, Styletext)
@@ -178,24 +178,24 @@ Module Minor_routines
             ' Output in the Log
             Select Case Style
                 Case 0 To 7 ' Message
-                    CSEMain.ListBoxMSG.Items.Add(text)
+                    F_Main.ListBoxMSG.Items.Add(text)
                     fWriteLog(2, 4, text)
                 Case 8 ' Warning
-                    CSEMain.ListBoxWar.Items.Add(text)
-                    CSEMain.TabPageWar.Text = Styletext & " (" & CSEMain.ListBoxWar.Items.Count & ")"
+                    F_Main.ListBoxWar.Items.Add(text)
+                    F_Main.TabPageWar.Text = Styletext & " (" & F_Main.ListBoxWar.Items.Count & ")"
                     fWriteLog(2, 2, text)
                 Case 9 ' Error
-                    CSEMain.ListBoxErr.Items.Add(text)
-                    CSEMain.TabPageErr.Text = Styletext & " (" & CSEMain.ListBoxErr.Items.Count & ")"
-                    CSEMain.TabControlOutMsg.SelectTab(2)
+                    F_Main.ListBoxErr.Items.Add(text)
+                    F_Main.TabPageErr.Text = Styletext & " (" & F_Main.ListBoxErr.Items.Count & ")"
+                    F_Main.TabControlOutMsg.SelectTab(2)
                     fWriteLog(2, 3, text)
             End Select
         End If
 
         ' Set the Scrollbars in the Listboxes at the end
-        CSEMain.ListBoxMSG.TopIndex = CSEMain.ListBoxMSG.Items.Count - 1
-        CSEMain.ListBoxWar.TopIndex = CSEMain.ListBoxWar.Items.Count - 1
-        CSEMain.ListBoxErr.TopIndex = CSEMain.ListBoxErr.Items.Count - 1
+        F_Main.ListBoxMSG.TopIndex = F_Main.ListBoxMSG.Items.Count - 1
+        F_Main.ListBoxWar.TopIndex = F_Main.ListBoxWar.Items.Count - 1
+        F_Main.ListBoxErr.TopIndex = F_Main.ListBoxErr.Items.Count - 1
 
         ' Return that the program have an error
         If Style = 9 Then
@@ -254,23 +254,23 @@ Module Minor_routines
         ' Output in the Tabcontrols on the GUI
         Select Case Style
             Case 0 To 7 ' Message
-                CSEMain.ListBoxMSG.Items.Add(Text)
+                F_Main.ListBoxMSG.Items.Add(Text)
                 fWriteLog(2, 4, Text)
             Case 8 ' Warning
-                CSEMain.ListBoxWar.Items.Add(Text)
-                CSEMain.TabPageWar.Text = Styletext & " (" & CSEMain.ListBoxWar.Items.Count & ")"
+                F_Main.ListBoxWar.Items.Add(Text)
+                F_Main.TabPageWar.Text = Styletext & " (" & F_Main.ListBoxWar.Items.Count & ")"
                 fWriteLog(2, 2, Text)
             Case 9 ' Error
-                CSEMain.ListBoxErr.Items.Add(Text)
-                CSEMain.TabPageErr.Text = Styletext & " (" & CSEMain.ListBoxErr.Items.Count & ")"
-                CSEMain.TabControlOutMsg.SelectTab(2)
+                F_Main.ListBoxErr.Items.Add(Text)
+                F_Main.TabPageErr.Text = Styletext & " (" & F_Main.ListBoxErr.Items.Count & ")"
+                F_Main.TabControlOutMsg.SelectTab(2)
                 fWriteLog(2, 3, Text)
         End Select
 
         ' Set the Scrollbars in the Listboxes at the end
-        CSEMain.ListBoxMSG.TopIndex = CSEMain.ListBoxMSG.Items.Count - 1
-        CSEMain.ListBoxWar.TopIndex = CSEMain.ListBoxWar.Items.Count - 1
-        CSEMain.ListBoxErr.TopIndex = CSEMain.ListBoxErr.Items.Count - 1
+        F_Main.ListBoxMSG.TopIndex = F_Main.ListBoxMSG.Items.Count - 1
+        F_Main.ListBoxWar.TopIndex = F_Main.ListBoxWar.Items.Count - 1
+        F_Main.ListBoxErr.TopIndex = F_Main.ListBoxErr.Items.Count - 1
     End Sub
 
 #End Region
