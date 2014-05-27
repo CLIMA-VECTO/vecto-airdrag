@@ -108,12 +108,12 @@
     <Compile Include="Classes\cJsonFile.vb" />
     <Compile Include="Classes\CResult.vb" />
     <Compile Include="Classes\cPreferences.vb" />
+    <Compile Include="Classes\cSemanticVersion.vb" />
     <Compile Include="Classes\csKey.vb" />
     <Compile Include="Classes\cUTMCoord.vb" />
     <Compile Include="Classes\cValidSec.vb" />
     <Compile Include="Classes\cVehicle.vb" />
     <Compile Include="Classes\cVirtMSC.vb" />
-    <Compile Include="Classes\SemanticVersion.vb" />
     <Compile Include="Export\Minor_routines_output.vb" />
     <Compile Include="Export\output.vb" />
     <Compile Include="Export\OutputTest.vb" />
@@ -131,10 +131,10 @@
     <Compile Include="GUI\F_Preferences.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\F_Info.Designer.vb">
-      <DependentUpon>F_Info.vb</DependentUpon>
+    <Compile Include="GUI\F_About.Designer.vb">
+      <DependentUpon>F_About.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\F_Info.vb">
+    <Compile Include="GUI\F_About.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="declaration_public.vb" />
@@ -171,9 +171,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Tools\ApplicationEvents.vb" />
-    <Compile Include="Tools\Minor_routines.vb" />
-    <Compile Include="Tools\cFile_v3.vb" />
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Minor_routines.vb" />
+    <Compile Include="Classes\cFile_v3.vb" />
     <Compile Include="CSE_Globals.vb" />
     <Compile Include="CSE_Types.vb" />
   </ItemGroup>
@@ -181,8 +181,8 @@
     <EmbeddedResource Include="GUI\F_Preferences.resx">
       <DependentUpon>F_Preferences.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\F_Info.resx">
-      <DependentUpon>F_Info.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\F_About.resx">
+      <DependentUpon>F_About.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\FB_Dialog.resx">
       <DependentUpon>FB_Dialog.vb</DependentUpon>
@@ -296,6 +296,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

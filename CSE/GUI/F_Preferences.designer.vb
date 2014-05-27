@@ -215,7 +215,7 @@ Partial Class F_Preferences
         Me.TextBoxNotepad.Size = New System.Drawing.Size(444, 20)
         Me.TextBoxNotepad.TabIndex = 1
         '
-        'CSE_Preferences
+        'F_Preferences
         '
         Me.AcceptButton = Me.ButtonOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -230,7 +230,7 @@ Partial Class F_Preferences
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.MinimumSize = New System.Drawing.Size(521, 294)
-        Me.Name = "CSE_Preferences"
+        Me.Name = "F_Preferences"
         Me.Text = "Preferences"
         Me.GroupBoxWorDir.ResumeLayout(False)
         Me.GroupBoxWorDir.PerformLayout()

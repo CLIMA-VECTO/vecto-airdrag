@@ -475,7 +475,7 @@ Public Class F_Main
     ' Menu open the Infobox
     Private Sub ToolStripMenuItemAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemAbout.Click
         ' Show the info GUI
-        F_Info.Show()
+        F_About.Show()
     End Sub
 
     ' Menu open the user manual

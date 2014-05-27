@@ -1,5 +1,5 @@
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class F_Info
+Partial Class F_About
     Inherits System.Windows.Forms.Form
 
     'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
@@ -22,7 +22,7 @@ Partial Class F_Info
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_Info))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_About))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -252,7 +252,7 @@ Partial Class F_Info
         Me.Label13.TabIndex = 20
         Me.Label13.Text = "Copyright: 2014 European Union"
         '
-        'CSE_Info
+        'F_Info
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -282,7 +282,7 @@ Partial Class F_Info
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximumSize = New System.Drawing.Size(480, 591)
         Me.MinimumSize = New System.Drawing.Size(480, 591)
-        Me.Name = "CSE_Info"
+        Me.Name = "F_Info"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "About CSE"
         CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).EndInit()

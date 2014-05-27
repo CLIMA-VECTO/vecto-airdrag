@@ -65,7 +65,7 @@ Public NotInheritable Class cSemanticVersion
             RegexOptions.Compiled Or RegexOptions.Singleline)
 
     ''' <summary>
-    ''' Initializes a new instance of the <see cref="SemanticVersion"/> class.
+    ''' Initializes a new instance of the <see cref="cSemanticVersion"/> class.
     ''' </summary>
     ''' <param name="version">
     ''' The semantic version number to be parsed.
@@ -95,7 +95,7 @@ Public NotInheritable Class cSemanticVersion
     End Sub
 
     ''' <summary>
-    ''' Initializes a new instance of the <see cref="SemanticVersion"/> class.
+    ''' Initializes a new instance of the <see cref="cSemanticVersion"/> class.
     ''' </summary>
     ''' <param name="majorVersion">
     ''' The major version number.
@@ -168,10 +168,10 @@ Public NotInheritable Class cSemanticVersion
     Public Property PrereleaseVersion As String
 
     ''' <summary>
-    ''' Compares two <see cref="SemanticVersion"/> objects for equality.
+    ''' Compares two <see cref="cSemanticVersion"/> objects for equality.
     ''' </summary>
     ''' <param name="version">
-    ''' The first <see cref="SemanticVersion"/> object to compare.
+    ''' The first <see cref="cSemanticVersion"/> object to compare.
     ''' </param>
     ''' <param name="other">
     ''' The second semantic version object to compare.
@@ -187,13 +187,13 @@ Public NotInheritable Class cSemanticVersion
     End Operator
 
     ''' <summary>
-    ''' Compares two <see cref="SemanticVersion"/> objects for equality.
+    ''' Compares two <see cref="cSemanticVersion"/> objects for equality.
     ''' </summary>
     ''' <param name="version">
-    ''' The first <see cref="SemanticVersion"/> object to compare.
+    ''' The first <see cref="cSemanticVersion"/> object to compare.
     ''' </param>
     ''' <param name="other">
-    ''' The second <see cref="SemanticVersion"/> object to compare.
+    ''' The second <see cref="cSemanticVersion"/> object to compare.
     ''' </param>
     ''' <returns>
     ''' <b>True</b> if the objects are not equal, or <b>false</b> if the
@@ -206,14 +206,14 @@ Public NotInheritable Class cSemanticVersion
     End Operator
 
     ''' <summary>
-    ''' Compares two <see cref="SemanticVersion"/> objects to determine if
+    ''' Compares two <see cref="cSemanticVersion"/> objects to determine if
     ''' the first object logically precedes the second object.
     ''' </summary>
     ''' <param name="version">
-    ''' The first <see cref="SemanticVersion"/> object to compare.
+    ''' The first <see cref="cSemanticVersion"/> object to compare.
     ''' </param>
     ''' <param name="other">
-    ''' The second <see cref="SemanticVersion"/> object to compare.
+    ''' The second <see cref="cSemanticVersion"/> object to compare.
     ''' </param>
     ''' <returns>
     ''' <b>True</b> if <paramref name="version"/> precedes 
@@ -233,14 +233,14 @@ Public NotInheritable Class cSemanticVersion
     End Operator
 
     ''' <summary>
-    ''' Compares two <see cref="SemanticVersion"/> object to determine if
+    ''' Compares two <see cref="cSemanticVersion"/> object to determine if
     ''' the first object logically precedes the second object.
     ''' </summary>
     ''' <param name="version">
-    ''' The first <see cref="SemanticVersion"/> object to compare.
+    ''' The first <see cref="cSemanticVersion"/> object to compare.
     ''' </param>
     ''' <param name="other">
-    ''' The second <see cref="SemanticVersion"/> object to compare.
+    ''' The second <see cref="cSemanticVersion"/> object to compare.
     ''' </param>
     ''' <returns>
     ''' <b>True</b> if <paramref name="version"/> follows
@@ -295,7 +295,7 @@ Public NotInheritable Class cSemanticVersion
     ''' </list>
     ''' </returns>
     ''' <exception cref="ArgumentException">
-    ''' <paramref name="obj"/> is not a <see cref="SemanticVersion"/>
+    ''' <paramref name="obj"/> is not a <see cref="cSemanticVersion"/>
     ''' object.
     ''' </exception>
     Public Function CompareTo(ByVal obj As Object) As Integer Implements IComparable.CompareTo
@@ -307,10 +307,10 @@ Public NotInheritable Class cSemanticVersion
 
     ''' <summary>
     ''' Compares the current object with another 
-    ''' <see cref="SemanticVersion"/> object.
+    ''' <see cref="cSemanticVersion"/> object.
     ''' </summary>
     ''' <param name="other">
-    ''' The other <see cref="SemanticVersion"/> object to compare to this
+    ''' The other <see cref="cSemanticVersion"/> object to compare to this
     ''' instance.
     ''' </param>
     ''' <returns>
@@ -380,11 +380,11 @@ Public NotInheritable Class cSemanticVersion
     End Function
 
     ''' <summary>
-    ''' Compares this instance to another <see cref="SemanticVersion"/>
+    ''' Compares this instance to another <see cref="cSemanticVersion"/>
     ''' object for equality.
     ''' </summary>
     ''' <param name="other">
-    ''' The <see cref="SemanticVersion"/> object to compare to this
+    ''' The <see cref="cSemanticVersion"/> object to compare to this
     ''' instance.
     ''' </param>
     ''' <returns>
