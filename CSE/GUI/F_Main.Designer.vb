@@ -335,19 +335,19 @@ Partial Class F_Main
         '
         Me.ToolStripMenuItemLog.Image = Global.CSE.My.Resources.Resources.Log_File
         Me.ToolStripMenuItemLog.Name = "ToolStripMenuItemLog"
-        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(152, 22)
+        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(144, 22)
         Me.ToolStripMenuItemLog.Text = "Open LogFile"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(141, 6)
         '
         'ToolStripMenuItemOption
         '
         Me.ToolStripMenuItemOption.Image = Global.CSE.My.Resources.Resources.Optionen
         Me.ToolStripMenuItemOption.Name = "ToolStripMenuItemOption"
-        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(152, 22)
+        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(144, 22)
         Me.ToolStripMenuItemOption.Text = "Preferences"
         '
         'InfoToolStripMenuItem
@@ -2409,7 +2409,7 @@ Partial Class F_Main
         Me.TBDeltaXMax.Text = "10"
         Me.TBDeltaXMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'CSEMain
+        'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -2419,10 +2419,12 @@ Partial Class F_Main
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.MenuStrip1)
+        Me.DataBindings.Add(New System.Windows.Forms.Binding("Location", Global.CSE.My.MySettings.Default, "F_Main_location", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Location = Global.CSE.My.MySettings.Default.F_Main_location
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MinimumSize = New System.Drawing.Size(686, 717)
-        Me.Name = "CSEMain"
+        Me.Name = "F_Main"
         Me.Text = "VECTO Constant Speed Evaluator"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()

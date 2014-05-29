@@ -14,6 +14,8 @@ Imports System.Globalization
 ''' so it can be used to debug input-files by manually setting it to 'true' with a text-editor.
 ''' </remarks>
 Public MustInherit Class cJsonFile
+    Implements ICloneable
+
     Shared dateFrmt As String = "yyyy/MM/dd HH:mm:ss zzz"
 
     ''' <summary>The json-content for a json-file structured in Header/Body</summary>
@@ -23,16 +25,17 @@ Public MustInherit Class cJsonFile
             "Header": {
                 "Title": null,
                 "FileVersion":  null,
-                "AppVersion":  null,
-                "ModifiedDate":  null,
-                "Strict":       false,
+                "AppVersion":   null,
+                "ModifiedDate": null,
+                "StrictBody":   false,
             },
-            "Body": {}
+            "Body": null
         }</json>.Value
     End Function
 
     ''' <summary>The schema for a json-file structured in Header/Body</summary>
-    Protected Shared Function JSchemaStr_File() As String
+    Protected Shared Function JSchemaStr_Header(ByVal isStrict As Boolean) As String
+        Dim requireAll As String = IIf(isStrict, "true", "false")
         Return <json>{
             "title": "vecto header/body json-file",
             "type": "object", "additionalProperties": false, 
@@ -43,6 +46,7 @@ Public MustInherit Class cJsonFile
                     "properties": {
                         "Title": {
                             "type": "string",
+                            "required": <%= requireAll %>,
                         },
                         "FileVersion": {
                             "type": "string",
@@ -50,18 +54,24 @@ Public MustInherit Class cJsonFile
                         },
                         "AppVersion": {
                             "type": "string",
-                            "required": true,
+                            "required": <%= requireAll %>,
                         },
                         "ModifiedDate": {
                             "type": "string",
-                            "required": true,
-                            "description": "Last modified date",
+                            "description": "Last-modification date",
+                            "required": <%= requireAll %>,
                         },
-                        "Strict": {
+                        "StrictBody": {
                             "title": "Validate body strictly",
                             "type": "boolean",
-                            "required": false,
                             "description": "When True, the 'Body' does not accept unknown properties.",
+                            "default": false,
+                        },
+                        "BodySchema": {
+                            "title": "Body schema",
+                            "type": ["boolean", "object"],
+                            "description": "When set to True, it is replaced by the Body's schema on the next save, so as to provide users with documentation on the file.",
+                            "default": false,
                         },
                     }
                 },
@@ -72,15 +82,19 @@ Public MustInherit Class cJsonFile
 
     ''' <summary>When a new file is Created or Stored, the contents return from this method is overlayed on /Header/*</summary>
     ''' <remarks>The result json must be valid overlaying this header.</remarks>
-    Protected MustOverride ReadOnly Property HeaderOverlay() As JObject
+    Protected MustOverride Function HeaderOverlay() As JObject
 
     ''' <summary>When a instance_with_defauls is Created, it gets its /Body from this method</summary>
     ''' <remarks>The result json must be valid after replacing with this body.</remarks>
-    Protected MustOverride ReadOnly Property BodyContent() As JObject
+    Protected MustOverride Function BodyContent() As JObject
 
-    ''' <summary>The schema used to validate the /Body</summary>
+    ''' <summary>When a instance_with_defauls is Created, it gets its /Body from this method</summary>
+    ''' <remarks>The result json must be valid after replacing with this body.</remarks>
+    Protected MustOverride Function BodySchema() As JObject
+
+    ''' <summary>Invoked by this class for subclasses to validate file</summary>
     ''' <remarks>To signify validation-failure it can throw an exception or add err-messages into the supplied list</remarks>
-    Protected MustOverride Sub ValidateVersionAndBody(ByVal fileVersion As String, ByVal body As JObject, ByVal allowsAdditionalProps As Boolean, ByVal validateMsgs As IList(Of String))
+    Protected MustOverride Sub ValidateBody(ByVal isStrict As Boolean, ByVal validateMsgs As IList(Of String))
 
 
     Protected Json_Contents As JObject
@@ -94,6 +108,8 @@ Public MustInherit Class cJsonFile
     ''' <param name="skipValidation">When false (the default), validates json-contents in both cases (reading or creating-defaults)</param>
     ''' <remarks></remarks>
     Protected Sub New(Optional ByVal inputFilePath As String = Nothing, Optional ByVal skipValidation As Boolean = False)
+        Dim strictHeader = True
+
         If (inputFilePath Is Nothing) Then
             Dim jstr = JsonStr_FileContents()
             Me.Json_Contents = JObject.Parse(jstr)
@@ -103,66 +119,91 @@ Public MustInherit Class cJsonFile
         Else
             fInfWarErrBW(5, False, format("Reading JSON-file({0})...", inputFilePath))
             Me.Json_Contents = ReadJsonFile(inputFilePath)
+            strictHeader = False   '' Try to read even bad headers.
         End If
 
         If Not skipValidation Then
-            Me.Validate()
+            Me.Validate(strictHeader)
         End If
     End Sub
 
-    Protected Sub UpdateHeader()
+    ''' <summary>Validates and Writing to the config file</summary>
+    Sub Store(ByVal fpath As String)
+        Me.UpdateHeader()
+
+        Me.Validate(Me.StrictBody)
+        WriteJsonFile(fpath, Json_Contents)
+    End Sub
+
+
+    Sub UpdateHeader()
         Dim h As JObject = Me.Header
 
         h("ModifiedDate") = DateTime.Now.ToString(dateFrmt)
         h("AppVersion") = AppVers
-        If h("Strict") is Nothing then
-            h("Strict") = False
+        If h("StrictBody") Is Nothing Then
+            h("StrictBody") = False
         End If
 
+        '' Add schema for documenting file according to its boolean(/Header/BodySchema) if any or failback to global prefs:/Body/IncludeSchemas.
+        ''
+        Dim bodySchema = h("BodySchema")
+        Dim includeSchema = False
+        If bodySchema Is Nothing AndAlso AppPreferences IsNot Nothing Then
+            includeSchema = AppPreferences.IncludeSchemas
+        ElseIf bodySchema IsNot Nothing AndAlso bodySchema.Type = JTokenType.Boolean Then
+            includeSchema = bodySchema
+        End If
+        If includeSchema Then
+            h("BodySchema") = Me.BodySchema
+        End If
+
+        '' Overlay subclass's properties.
+        ''
         For Each child As KeyValuePair(Of String, JToken) In Me.HeaderOverlay
             h(child.Key) = child.Value
         Next
     End Sub
 
-    ''' <summary>Validates and Writing to the config file</summary>
-    Sub Store(ByVal fpath As String)
-        UpdateHeader()
-
-        Validate(Me.Strict)
-        WriteJsonFile(fpath, Json_Contents)
-    End Sub
-
-
-    ''' <exception cref="SystemException">includes all validation errors</exception>
-    ''' <param name="isStrict">when True, no additional json-properties allowed in the data, when nothing, use value from Header</param>
-    Friend Sub Validate(Optional ByVal isStrict As Boolean? = Nothing)
+    ''' <exception cref="FormatException">includes all validation errors</exception>
+    ''' <param name="strictHeader">when false, relaxes Header's schema (used on Loading to be more accepting)</param>
+    Friend Sub Validate(Optional ByVal strictHeader As Boolean = False)
         Dim validateMsgs As IList(Of String) = New List(Of String)
-        Dim fileSchema = JsonSchema.Parse(JSchemaStr_File())        ' TODO: Lazily create this schema once
+
+        Dim fileSchema = JsonSchema.Parse(JSchemaStr_Header(strictHeader))
 
         '' Validate Header
         ''
         ValidateJson(Me.Json_Contents, fileSchema, validateMsgs)
         If (validateMsgs.Any()) Then
-            Throw New SystemException(format("Invalid File-format due to: {0}", String.Join(vbCrLf, validateMsgs)))
+            Throw New FormatException(format("Validating /Header failed due to: {0}", String.Join(vbCrLf, validateMsgs)))
         End If
+        Dim dummy = New cSemanticVersion(Me.FileVersion) '' Just to ensure its syntax.
 
-        '' Validate Body
-        ''
-        Dim allowsAdditionalProps As Boolean = Not IIf(isStrict Is Nothing, Me.Strict, isStrict)
-        Me.ValidateVersionAndBody(Me.FileVersion, Me.Body, allowsAdditionalProps, validateMsgs)
+        '' Validate Body by subclass
+        Dim hsb = Me.Header("StrictBody")
+        Dim strictBody As Boolean = IIf(hsb Is Nothing, AppPreferences.StrictBodies, hsb)
+        Me.ValidateBody(strictBody, validateMsgs)
 
         If (validateMsgs.Any()) Then
-            Throw New SystemException(format("Invalid Body-format due to: {0}", String.Join(vbCrLf, validateMsgs)))
+            Throw New FormatException(format("Validating /Body failed due to: {0}", String.Join(vbCrLf, validateMsgs)))
         End If
     End Sub
 
 
 
+    Public Function Clone() As Object Implements ICloneable.Clone
+        Dim nobj As cJsonFile = Me.MemberwiseClone()
+        nobj.Json_Contents = Me.Json_Contents.DeepClone()
+
+        Return nobj
+    End Function
+
     Public Overrides Function Equals(ByVal obj As Object) As Boolean
         If obj Is Nothing OrElse Not Me.GetType().Equals(obj.GetType()) Then
             Return False
         Else
-            Return Me.Json_Contents.Equals(DirectCast(obj, cJsonFile).Json_Contents)
+            Return JToken.DeepEquals(Me.Json_Contents, DirectCast(obj, cJsonFile).Json_Contents)
         End If
     End Function
 
@@ -201,11 +242,13 @@ Public MustInherit Class cJsonFile
         End Get
     End Property
 
-    Public ReadOnly Property Strict As Boolean
+    Public ReadOnly Property StrictBody As Boolean
         Get
-            Return Me.Header("Strict")
+            Dim value = Me.Body("StrictBody")
+            Return IIf(value Is Nothing, False, value)
         End Get
     End Property
+
 #End Region ' "json props"
 
 End Class

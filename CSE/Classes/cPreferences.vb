@@ -6,30 +6,30 @@ Imports Newtonsoft.Json.Schema
 Public Class cPreferences
     Inherits cJsonFile
 
-    Protected Overrides ReadOnly Property HeaderOverlay() As JObject
-        Get
-            Return JObject.Parse(<json>{
+    Protected Overrides Function HeaderOverlay() As JObject
+        Return JObject.Parse(<json>{
                 "Title": "vecto-cse PREFERENCES",
                 "FileVersion":  "1.0.0",
            }</json>.Value)
-        End Get
-    End Property
+    End Function
 
     ' Default-prefs specified here.
-    Protected Overrides ReadOnly Property BodyContent() As JObject
-        Get
-            Return JObject.Parse(<json>{
+    Protected Overrides Function BodyContent() As JObject
+        Return JObject.Parse(<json>{
                 "WorkingDir":   null,
                 "WriteLog":     true,
                 "LogSize":      2,
                 "LogLevel":     5,
                 "Editor":       "notepad.exe",
             }</json>.Value)
-        End Get
-    End Property
+    End Function
+
+    Protected Overrides Function BodySchema() As JObject
+        Return JObject.Parse(JSchemaStr())
+    End Function
 
     ''' <param name="allowAdditionalProps">when false, more strict validation</param>
-    Protected Function JSchemaStr(ByVal allowAdditionalProps As Boolean) As String
+    Protected Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
         Dim allowAdditionalProps_str As String = IIf(allowAdditionalProps, "true", "false")
         Return <json>{
             "title": "Schema for vecto-cse PREFERENCES",
@@ -40,7 +40,7 @@ Public Class cPreferences
                     "type": ["string", "null"], 
                     "required": false,
                     "default": null,
-                    "description": "Last used Working Directory Path for input/output files, when null/empty,  uses app's dir (default: null)",
+                    "description": "Last used Working Directory Path for input/output files, when null/empty,  uses app's dir",
                 }, 
                 "WriteLog": {
                     "type": "boolean",
@@ -62,9 +62,21 @@ Public Class cPreferences
                     "required": true,
                     "description": "Path (or filename if in PATH) of some (text or JSON) editor (default: 'notepad.exe')",
                 }, 
+                "StrictBodies": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "The global-default to use when reading JSON-files without a /Header/StrictBody property.",
+                }, 
+                "IncludeSchemas": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "When true, provides documentation to json-files by populating their Header/BodySchema element when storing them, unless it is already set to false.",
+                }, 
             }
         }</json>.Value
     End Function
+
+
 
 
     ''' <summary>Reads from file or creates defaults</summary>
@@ -76,21 +88,21 @@ Public Class cPreferences
 
 
     ''' <exception cref="SystemException">includes all validation errors</exception>
-    ''' <param name="allowAdditionalProps">when False, no additional json-properties allowed in the data, when nothing, use value from Header</param>
-    Protected Overrides Sub ValidateVersionAndBody(ByVal fileVersion As String, ByVal body As JObject, ByVal allowAdditionalProps As Boolean, ByVal validateMsgs As IList(Of String))
+    ''' <param name="strictBody">when True, no additional json-properties allowed in the data, when nothing, use value from Header</param>
+    Protected Overrides Sub ValidateBody(ByVal strictBody As Boolean, ByVal validateMsgs As IList(Of String))
         '' Check version
         ''
         Dim fromVersion = "1.0.0--"
         Dim toVersion = "2.0.0--" ' The earliest pre-release.
-        If Not IsSemanticVersionsSupported(fileVersion, fromVersion, toVersion) Then
-            validateMsgs.Add(format("Unsupported FileVersion({0}, was not in between [{1}, {2})", fileVersion, fromVersion, toVersion))
+        If Not IsSemanticVersionsSupported(Me.FileVersion, fromVersion, toVersion) Then
+            validateMsgs.Add(format("Unsupported FileVersion({0}, was not in between [{1}, {2})", FileVersion, fromVersion, toVersion))
             Return
         End If
 
         '' Check schema
         ''
-        Dim schema = JsonSchema.Parse(JSchemaStr(allowAdditionalProps)) ' TODO: Lazily create schemas once
-        ValidateJson(body, schema, validateMsgs)
+        Dim schema = JsonSchema.Parse(JSchemaStr(Not strictBody))
+        ValidateJson(Me.Body, schema, validateMsgs)
     End Sub
 
 
@@ -191,5 +203,26 @@ Public Class cPreferences
             Me.Body("Editor") = value
         End Set
     End Property
+
+    Public Property StrictBodies As Boolean
+        Get
+            Dim value = Me.Body("StrictBodies")
+            Return IIf(value Is Nothing, False, value)
+        End Get
+        Set(ByVal value As Boolean)
+            Me.Body("StrictBodies") = value
+        End Set
+    End Property
+
+    Public Property IncludeSchemas As Boolean
+        Get
+            Dim value = Me.Body("IncludeSchemas")
+            Return IIf(value Is Nothing, False, value)
+        End Get
+        Set(ByVal value As Boolean)
+            Me.Body("IncludeSchemas") = value
+        End Set
+    End Property
+
 #End Region ' "json props"
 End Class

@@ -40,6 +40,7 @@ Partial Class F_Preferences
         Me.GroupBoxNotepad = New System.Windows.Forms.GroupBox()
         Me.ButtonSelectNotepad = New System.Windows.Forms.Button()
         Me.TextBoxNotepad = New System.Windows.Forms.TextBox()
+        Me.ButtonReload = New System.Windows.Forms.Button()
         Me.GroupBoxWorDir.SuspendLayout()
         Me.GroupBoxInterface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
@@ -78,7 +79,7 @@ Partial Class F_Preferences
         'ButtonOK
         '
         Me.ButtonOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonOK.Location = New System.Drawing.Point(356, 235)
+        Me.ButtonOK.Location = New System.Drawing.Point(436, 235)
         Me.ButtonOK.Name = "ButtonOK"
         Me.ButtonOK.Size = New System.Drawing.Size(75, 23)
         Me.ButtonOK.TabIndex = 0
@@ -89,7 +90,7 @@ Partial Class F_Preferences
         '
         Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButtonCancel.Location = New System.Drawing.Point(436, 235)
+        Me.ButtonCancel.Location = New System.Drawing.Point(99, 235)
         Me.ButtonCancel.Name = "ButtonCancel"
         Me.ButtonCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButtonCancel.TabIndex = 1
@@ -215,6 +216,16 @@ Partial Class F_Preferences
         Me.TextBoxNotepad.Size = New System.Drawing.Size(444, 20)
         Me.TextBoxNotepad.TabIndex = 1
         '
+        'ButtonReload
+        '
+        Me.ButtonReload.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonReload.Location = New System.Drawing.Point(18, 235)
+        Me.ButtonReload.Name = "ButtonReload"
+        Me.ButtonReload.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonReload.TabIndex = 0
+        Me.ButtonReload.Text = "Reload"
+        Me.ButtonReload.UseVisualStyleBackColor = True
+        '
         'F_Preferences
         '
         Me.AcceptButton = Me.ButtonOK
@@ -224,6 +235,7 @@ Partial Class F_Preferences
         Me.ClientSize = New System.Drawing.Size(515, 270)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.ButtonCancel)
+        Me.Controls.Add(Me.ButtonReload)
         Me.Controls.Add(Me.ButtonOK)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -260,4 +272,5 @@ Partial Class F_Preferences
     Friend WithEvents ButtonSelectNotepad As System.Windows.Forms.Button
     Friend WithEvents TextBoxNotepad As System.Windows.Forms.TextBox
     Friend WithEvents LabelInfo As System.Windows.Forms.Label
+    Friend WithEvents ButtonReload As System.Windows.Forms.Button
 End Class

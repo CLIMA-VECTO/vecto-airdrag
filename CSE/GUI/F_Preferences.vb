@@ -3,13 +3,13 @@ Public Class F_Preferences
     ' Load confic
     Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         ' Allocate the data from the confic file (Only by the start)
-        prefs_PopulateFrom(AppPreferences)
+        UI_PopulateFrom(AppPreferences)
 
         ' Define the Infolable
         TextBoxMSG_TextChanged(sender, e)
     End Sub
 
-    Private Sub prefs_PopulateFrom(ByVal value As cPreferences)
+    Private Sub UI_PopulateFrom(ByVal value As cPreferences)
         ' Allocate the data from the confic file (Only by the start)
         Me.TextBoxWorDir.Text = value.WorkingDir
         Me.TextBoxNotepad.Text = value.Editor
@@ -18,17 +18,14 @@ Public Class F_Preferences
         Me.TextBoxLogSize.Text = value.LogSize
     End Sub
 
-    Private Function prefs_PopulateTo() As cPreferences
-        Dim value = New cPreferences()
-
+    Private Sub UI_PopulateTo(ByVal value As cPreferences)
         value.WorkingDir = Me.TextBoxWorDir.Text
         value.Editor = Me.TextBoxNotepad.Text
         value.WriteLog = Me.CheckBoxWriteLog.Checked
         value.LogLevel = Me.TextBoxMSG.Text
         value.LogSize = Me.TextBoxLogSize.Text
 
-        Return value
-    End Function
+    End Sub
 
     ' Open the filebrowser for selecting the working dir
     Private Sub ButtonWorDir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectWorDir.Click
@@ -38,28 +35,39 @@ Public Class F_Preferences
     End Sub
 
     ' Ok button
-    Private Sub ButtonOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
-        ' Write new prefs only if changed.
-        '
-        Dim newPrefs = prefs_PopulateTo()
-        If (Not AppPreferences.Equals(newPrefs) Or Not System.IO.File.Exists(PreferencesPath)) Then
+    Private Sub StorePrefs(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
+        Try
+            Dim newPrefs As cPreferences = AppPreferences.Clone()
+            UI_PopulateTo(newPrefs)
+
             ' Write the config file
-            Try
-                newPrefs.Store(PreferencesPath)     ' Also create 'config' dir if not exists
-                AppPreferences = newPrefs
+            newPrefs.Store(PreferencesPath)
+            AppPreferences = newPrefs           ' Replace active prefs if successful.
 
-                ' Message for the restart of VECTO
-                RestartN = True
-                fInfWarErr(7, False, "Preferences have changed. Ask to restart.")     ' XXX: Why double-log for restartng-vecto here??
-                fInfWarErr(7, True, format("Preferences have changed.\n  Do you want to restart VECTO now?"))
-
-            Catch ex As Exception
-                fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", PreferencesPath, ex.Message), ex)
-            End Try
-        End If
+            ' Message for the restart of VECTO
+            RestartN = True
+            fInfWarErr(7, False, "Preferences have changed. Ask to restart.")
+            fInfWarErr(7, True, format("Preferences have changed.\nDo you want to restart VECTO now?"))
+        Catch ex As Exception
+            fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", PreferencesPath, ex.Message), ex)
+        End Try
 
         ' Close the window
         Me.Close()
+    End Sub
+
+    ' Ok button
+    Private Sub ReloadPrefs(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonReload.Click
+        Try
+            AppPreferences = New cPreferences(PreferencesPath)
+            UI_PopulateFrom(AppPreferences)
+
+            ' Define the Infolable
+            TextBoxMSG_TextChanged(sender, e)
+        Catch ex As Exception
+            fInfWarErr(9, False, format("Failed loading Preferences({0}) due to: {1}", _
+                                        PreferencesPath, ex.Message), ex)
+        End Try
     End Sub
 
     ' Close button

@@ -30,6 +30,8 @@
             ' Declaration
             Dim fiAss As New IO.FileInfo(joinPaths(Application.Info.DirectoryPath, Application.Info.AssemblyName & ".exe"))
 
+            AppPreferences = New cPreferences(, True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
+
             ' Path to the *.exe 
             MyPath = My.Application.Info.DirectoryPath & "\"
             PreferencesPath = joinPaths(MyPath, "config", "preferences.json")
@@ -40,8 +42,6 @@
 
             ' compile date
             AppDate = fiAss.LastWriteTime.Date
-
-            AppPreferences = New cPreferences(, True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
 
             ' Licencemodul
             Lic.FilePath = joinPaths(MyPath, "License.dat")

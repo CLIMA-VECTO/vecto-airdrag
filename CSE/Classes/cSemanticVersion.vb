@@ -64,6 +64,18 @@ Public NotInheritable Class cSemanticVersion
             "^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(-(?<prerelease>[A-Za-z0-9\-\.]+))?(\+(?<build>[A-Za-z0-9\-\.]+))?$", _
             RegexOptions.Compiled Or RegexOptions.Singleline)
 
+    ' ''' <summary>
+    ' ''' A utility regex used to parse loose version-strings to semantic-versions.
+    ' ''' </summary>
+    ' ''' <remarks>See http://search.cpan.org/dist/SemVer/lib/SemVer.pm</remarks>
+    'Private Shared ReadOnly regex_1stPart As New Regex( _
+    '        "^\s*(?:v(?:e(?:r(?:s(?:i(?:o(?:n)?)?)?)?)?)?)?\s*(?<major>\d+)(?:\.(?<nums>\d+))*(?<prerelease>[^+ ]+)?(\+(?<build>\S+))?", _
+    '        RegexOptions.Compiled Or RegexOptions.Singleline, RegexOptions.IgnoreCase`)
+
+    'Public Shared Function parse(ByVal version As String) As cSemanticVersion
+    'End Function
+
+
     ''' <summary>
     ''' Initializes a new instance of the <see cref="cSemanticVersion"/> class.
     ''' </summary>
