@@ -13,64 +13,84 @@ Public Class cPreferences
            }</json>.Value)
     End Function
 
-    ' Default-prefs specified here.
+    ' Defaults specified here.
     Protected Overrides Function BodyContent() As JObject
-        Return JObject.Parse(<json>{
-                "WorkingDir":   null,
-                "WriteLog":     true,
-                "LogSize":      2,
-                "LogLevel":     5,
-                "Editor":       "notepad.exe",
-            }</json>.Value)
+        '' Return empty body since all proprs are optional.
+        '' They will become concrete on the 1st store.
+        Return New JObject()
+        'Return JObject.Parse(<json>{
+        '        "workingDir":   null,
+        '        "writeLog":     true,
+        '        "logSize":      10,
+        '        "logLevel":     5,
+        '        "editor":       "notepad.exe",
+        '    }</json>.Value)
     End Function
 
-    Protected Overrides Function BodySchema() As JObject
+    Public Overrides Function BodySchema() As JObject
         Return JObject.Parse(JSchemaStr())
     End Function
 
     ''' <param name="allowAdditionalProps">when false, more strict validation</param>
-    Protected Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
+    Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
         Dim allowAdditionalProps_str As String = IIf(allowAdditionalProps, "true", "false")
         Return <json>{
             "title": "Schema for vecto-cse PREFERENCES",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
             "required": true,
             "properties": {
-                "WorkingDir": {
+                "workingDir": {
+                    "title": "Working Directory",
                     "type": ["string", "null"], 
-                    "required": false,
                     "default": null,
-                    "description": "Last used Working Directory Path for input/output files, when null/empty,  uses app's dir",
+                    "description": "The path of the Working Directory for input/output files. \nWhen null/empty, app's dir implied.",
                 }, 
-                "WriteLog": {
-                    "type": "boolean",
-                    "required": true,
-                    "description": "Whether to write messages to log file (default: true)",
-                }, 
-                "LogSize": {
-                    "type": "integer",
-                    "required": true,
-                    "description": "Allowed Log-file size limit [MiB] (default: 2)",
-                }, 
-                "LogLevel": {
-                    "type": "integer",
-                    "required": true,
-                    "description": "Message Output Level (default: 5 - 'info')",
-                }, 
-                "Editor": {
-                    "type": "string",
-                    "required": true,
-                    "description": "Path (or filename if in PATH) of some (text or JSON) editor (default: 'notepad.exe')",
-                }, 
-                "StrictBodies": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "The global-default to use when reading JSON-files without a /Header/StrictBody property.",
-                }, 
-                "IncludeSchemas": {
+                "writeLog": {
+                    "title": "Log to file",
                     "type": "boolean",
                     "default": true,
-                    "description": "When true, provides documentation to json-files by populating their Header/BodySchema element when storing them, unless it is already set to false.",
+                    "description": "Whether to write messages to log file.",
+                }, 
+                "logSize": {
+                    "title": "Log-file's limit",
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 10,
+                    "description": "Allowed Log-file size limit [MiB].",
+                }, 
+                "logLevel": {
+                    "title": "Log-window's Level",
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10, "exclusiveMaximum": true,
+                    "default": 5,
+                    "description": "Sets the threshold(Level) above from which log-messages to appear in the log-window.
+    0     : All
+    3-7   : No infos
+    8     : No warnings
+    9     : Not even errors!
+    other : Nothing at all",
+                }, 
+                "editor": {
+                    "type": "string",
+                    "default": "notepad.exe",
+                    "description": "Path (or just the filename, if in PATH) of a text editor.",
+                }, 
+                "strictBodies": {
+                    "title": "Strict Bodies",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Controls whether unknown body-properties are accepted when reading JSON-files. 
+It is useful for debugging malformed input-files, ie to detect 
+accidentally renamed properties.
+Each file can override it by setting its /Header/StrictBody property.",
+                }, 
+                "includeSchemas": {
+                    "title": "Include Schemas",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Controls whether to self-document JSON-files by populating their '/Header/BodySchema' property.
+Each file can override it by setting its '/Header/BodySchema' property to false/true.",
                 }, 
             }
         }</json>.Value
@@ -109,10 +129,10 @@ Public Class cPreferences
 
 
 #Region "json props"
-    Public Property WorkingDir As String
+    Public Property workingDir As String
         Get
-            Dim value As String = Me.Body("WorkingDir")
-            If value Is Nothing OrElse value.Trim().Length = 0 Then
+            Dim value As String = Me.Body("workingDir")
+            If value Is Nothing OrElse String.IsNullOrWhiteSpace(value) Then
                 Return MyPath
             ElseIf IO.Path.IsPathRooted(value) Then
                 Return value
@@ -157,70 +177,64 @@ Public Class cPreferences
             '' NOTE: Early-binding makes Nulls end-up as 'string' schema-type.
             ''
             If value Is Nothing Then
-                Me.Json_Contents("Body")("WorkingDir") = Nothing
+                Me.Json_Contents("Body")("workingDir") = Nothing
             Else
-                Me.Json_Contents("Body")("WorkingDir") = value
+                Me.Json_Contents("Body")("workingDir") = value
             End If
         End Set
     End Property
 
-    Public Property WriteLog As Boolean
+    Public Property writeLog As Boolean
         Get
-            Return Me.Body("WriteLog")
+            Return BodyGetter(".writeLog")
         End Get
         Set(ByVal value As Boolean)
-            Me.Body("WriteLog") = value
+            Me.Body("writeLog") = value
         End Set
     End Property
 
-    Public Property LogSize As Integer
+    Public Property logSize As Integer
         Get
-            Return Me.Body("LogSize")
+            Return BodyGetter(".logSize")
         End Get
         Set(ByVal value As Integer)
-            Me.Body("LogSize") = value
+            Me.Body("logSize") = value
         End Set
     End Property
 
-    Public Property LogLevel As Integer
+    Public Property logLevel As Integer
         Get
-            Return Me.Body("LogLevel")
+            Return BodyGetter(".logLevel")
         End Get
         Set(ByVal value As Integer)
-            Me.Body("LogLevel") = value
+            Me.Body("logLevel") = value
         End Set
     End Property
 
-    Public Property Editor As String
+    Public Property editor As String
         Get
-            Return Me.Body("Editor")
+            Return BodyGetter(".editor")
         End Get
         Set(ByVal value As String)
-            If value Is Nothing OrElse value.Trim().Length = 0 Then
-                value = "notepad.exe"
-            End If
-
-            Me.Body("Editor") = value
+            Me.Body("editor") = value
         End Set
     End Property
 
-    Public Property StrictBodies As Boolean
+    Public Property strictBodies As Boolean
         Get
-            Dim value = Me.Body("StrictBodies")
-            Return IIf(value Is Nothing, False, value)
+            Return BodyGetter(".strictBodies")
         End Get
         Set(ByVal value As Boolean)
-            Me.Body("StrictBodies") = value
+            Me.Body("strictBodies") = value
         End Set
     End Property
 
-    Public Property IncludeSchemas As Boolean
+    Public Property includeSchemas As Boolean
         Get
-            Dim value = Me.Body("IncludeSchemas")
-            Return IIf(value Is Nothing, False, value)
+            Return BodyGetter(".includeSchemas")
         End Get
         Set(ByVal value As Boolean)
-            Me.Body("IncludeSchemas") = value
+            Me.Body("includeSchemas") = value
         End Set
     End Property
 

@@ -23,37 +23,44 @@ Partial Class F_Preferences
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_Preferences))
-        Me.TextBoxWorDir = New System.Windows.Forms.TextBox()
+        Me.workingDir = New System.Windows.Forms.TextBox()
         Me.ButtonSelectWorDir = New System.Windows.Forms.Button()
         Me.GroupBoxWorDir = New System.Windows.Forms.GroupBox()
         Me.ButtonOK = New System.Windows.Forms.Button()
         Me.ButtonCancel = New System.Windows.Forms.Button()
-        Me.CheckBoxWriteLog = New System.Windows.Forms.CheckBox()
+        Me.writeLog = New System.Windows.Forms.CheckBox()
         Me.GroupBoxInterface = New System.Windows.Forms.GroupBox()
         Me.LabelInfo = New System.Windows.Forms.Label()
-        Me.TextBoxLogSize = New System.Windows.Forms.TextBox()
+        Me.logSize = New System.Windows.Forms.TextBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.TextBoxMSG = New System.Windows.Forms.TextBox()
+        Me.logLevel = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.GroupBoxNotepad = New System.Windows.Forms.GroupBox()
         Me.ButtonSelectNotepad = New System.Windows.Forms.Button()
-        Me.TextBoxNotepad = New System.Windows.Forms.TextBox()
+        Me.editor = New System.Windows.Forms.TextBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.strictBodies = New System.Windows.Forms.CheckBox()
+        Me.includeSchemas = New System.Windows.Forms.CheckBox()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.ButtonReload = New System.Windows.Forms.Button()
         Me.GroupBoxWorDir.SuspendLayout()
         Me.GroupBoxInterface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         Me.GroupBoxNotepad.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
-        'TextBoxWorDir
+        'workingDir
         '
-        Me.TextBoxWorDir.Location = New System.Drawing.Point(6, 19)
-        Me.TextBoxWorDir.Name = "TextBoxWorDir"
-        Me.TextBoxWorDir.Size = New System.Drawing.Size(444, 20)
-        Me.TextBoxWorDir.TabIndex = 1
+        Me.workingDir.Location = New System.Drawing.Point(6, 19)
+        Me.workingDir.Name = "workingDir"
+        Me.workingDir.Size = New System.Drawing.Size(444, 20)
+        Me.workingDir.TabIndex = 1
         '
         'ButtonSelectWorDir
         '
@@ -68,7 +75,7 @@ Partial Class F_Preferences
         'GroupBoxWorDir
         '
         Me.GroupBoxWorDir.Controls.Add(Me.ButtonSelectWorDir)
-        Me.GroupBoxWorDir.Controls.Add(Me.TextBoxWorDir)
+        Me.GroupBoxWorDir.Controls.Add(Me.workingDir)
         Me.GroupBoxWorDir.Location = New System.Drawing.Point(5, 6)
         Me.GroupBoxWorDir.Name = "GroupBoxWorDir"
         Me.GroupBoxWorDir.Size = New System.Drawing.Size(490, 51)
@@ -79,7 +86,8 @@ Partial Class F_Preferences
         'ButtonOK
         '
         Me.ButtonOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonOK.Location = New System.Drawing.Point(436, 235)
+        Me.ButtonOK.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.ButtonOK.Location = New System.Drawing.Point(436, 242)
         Me.ButtonOK.Name = "ButtonOK"
         Me.ButtonOK.Size = New System.Drawing.Size(75, 23)
         Me.ButtonOK.TabIndex = 0
@@ -90,78 +98,78 @@ Partial Class F_Preferences
         '
         Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButtonCancel.Location = New System.Drawing.Point(99, 235)
+        Me.ButtonCancel.Location = New System.Drawing.Point(99, 242)
         Me.ButtonCancel.Name = "ButtonCancel"
         Me.ButtonCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButtonCancel.TabIndex = 1
         Me.ButtonCancel.Text = "Cancel"
         Me.ButtonCancel.UseVisualStyleBackColor = True
         '
-        'CheckBoxWriteLog
+        'writeLog
         '
-        Me.CheckBoxWriteLog.AutoSize = True
-        Me.CheckBoxWriteLog.Location = New System.Drawing.Point(353, 15)
-        Me.CheckBoxWriteLog.Name = "CheckBoxWriteLog"
-        Me.CheckBoxWriteLog.Size = New System.Drawing.Size(129, 17)
-        Me.CheckBoxWriteLog.TabIndex = 5
-        Me.CheckBoxWriteLog.Text = "Write log file (LOG.txt)"
-        Me.CheckBoxWriteLog.UseVisualStyleBackColor = True
+        Me.writeLog.AutoSize = True
+        Me.writeLog.Location = New System.Drawing.Point(13, 58)
+        Me.writeLog.Name = "writeLog"
+        Me.writeLog.Size = New System.Drawing.Size(108, 17)
+        Me.writeLog.TabIndex = 2
+        Me.writeLog.Text = "Log-file Enabled?"
+        Me.writeLog.UseVisualStyleBackColor = True
         '
         'GroupBoxInterface
         '
         Me.GroupBoxInterface.Controls.Add(Me.LabelInfo)
-        Me.GroupBoxInterface.Controls.Add(Me.TextBoxLogSize)
+        Me.GroupBoxInterface.Controls.Add(Me.logSize)
         Me.GroupBoxInterface.Controls.Add(Me.Label16)
         Me.GroupBoxInterface.Controls.Add(Me.Label1)
-        Me.GroupBoxInterface.Controls.Add(Me.TextBoxMSG)
-        Me.GroupBoxInterface.Controls.Add(Me.CheckBoxWriteLog)
+        Me.GroupBoxInterface.Controls.Add(Me.logLevel)
+        Me.GroupBoxInterface.Controls.Add(Me.writeLog)
         Me.GroupBoxInterface.Location = New System.Drawing.Point(5, 120)
         Me.GroupBoxInterface.Name = "GroupBoxInterface"
-        Me.GroupBoxInterface.Size = New System.Drawing.Size(490, 75)
+        Me.GroupBoxInterface.Size = New System.Drawing.Size(341, 84)
         Me.GroupBoxInterface.TabIndex = 11
         Me.GroupBoxInterface.TabStop = False
-        Me.GroupBoxInterface.Text = "Interface"
+        Me.GroupBoxInterface.Text = "Logging && Messages"
         '
         'LabelInfo
         '
         Me.LabelInfo.AutoSize = True
-        Me.LabelInfo.Location = New System.Drawing.Point(185, 22)
+        Me.LabelInfo.Location = New System.Drawing.Point(154, 22)
         Me.LabelInfo.Name = "LabelInfo"
         Me.LabelInfo.Size = New System.Drawing.Size(39, 13)
         Me.LabelInfo.TabIndex = 12
         Me.LabelInfo.Text = "Label2"
         '
-        'TextBoxLogSize
+        'logSize
         '
-        Me.TextBoxLogSize.Location = New System.Drawing.Point(440, 38)
-        Me.TextBoxLogSize.Name = "TextBoxLogSize"
-        Me.TextBoxLogSize.Size = New System.Drawing.Size(36, 20)
-        Me.TextBoxLogSize.TabIndex = 11
+        Me.logSize.Location = New System.Drawing.Point(299, 55)
+        Me.logSize.Name = "logSize"
+        Me.logSize.Size = New System.Drawing.Size(36, 20)
+        Me.logSize.TabIndex = 3
         '
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(356, 41)
+        Me.Label16.Location = New System.Drawing.Point(181, 59)
         Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(78, 13)
+        Me.Label16.Size = New System.Drawing.Size(112, 13)
         Me.Label16.TabIndex = 10
-        Me.Label16.Text = "Size Limit [MiB]"
+        Me.Label16.Text = "Log-file size limit [MiB]:"
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(27, 22)
+        Me.Label1.Location = New System.Drawing.Point(10, 22)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(110, 13)
+        Me.Label1.Size = New System.Drawing.Size(96, 13)
         Me.Label1.TabIndex = 7
-        Me.Label1.Text = "Output Window Level"
+        Me.Label1.Text = "Log-window Level:"
         '
-        'TextBoxMSG
+        'logLevel
         '
-        Me.TextBoxMSG.Location = New System.Drawing.Point(143, 19)
-        Me.TextBoxMSG.Name = "TextBoxMSG"
-        Me.TextBoxMSG.Size = New System.Drawing.Size(36, 20)
-        Me.TextBoxMSG.TabIndex = 6
+        Me.logLevel.Location = New System.Drawing.Point(112, 19)
+        Me.logLevel.Name = "logLevel"
+        Me.logLevel.Size = New System.Drawing.Size(36, 20)
+        Me.logLevel.TabIndex = 1
         '
         'TabControl1
         '
@@ -172,18 +180,19 @@ Partial Class F_Preferences
         Me.TabControl1.Location = New System.Drawing.Point(3, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(508, 226)
+        Me.TabControl1.Size = New System.Drawing.Size(508, 233)
         Me.TabControl1.TabIndex = 12
         '
         'TabPage2
         '
         Me.TabPage2.Controls.Add(Me.GroupBoxNotepad)
         Me.TabPage2.Controls.Add(Me.GroupBoxWorDir)
+        Me.TabPage2.Controls.Add(Me.GroupBox1)
         Me.TabPage2.Controls.Add(Me.GroupBoxInterface)
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(500, 200)
+        Me.TabPage2.Size = New System.Drawing.Size(500, 207)
         Me.TabPage2.TabIndex = 0
         Me.TabPage2.Text = "General"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -191,7 +200,7 @@ Partial Class F_Preferences
         'GroupBoxNotepad
         '
         Me.GroupBoxNotepad.Controls.Add(Me.ButtonSelectNotepad)
-        Me.GroupBoxNotepad.Controls.Add(Me.TextBoxNotepad)
+        Me.GroupBoxNotepad.Controls.Add(Me.editor)
         Me.GroupBoxNotepad.Location = New System.Drawing.Point(5, 63)
         Me.GroupBoxNotepad.Name = "GroupBoxNotepad"
         Me.GroupBoxNotepad.Size = New System.Drawing.Size(490, 51)
@@ -209,17 +218,77 @@ Partial Class F_Preferences
         Me.ButtonSelectNotepad.Text = "..."
         Me.ButtonSelectNotepad.UseVisualStyleBackColor = True
         '
-        'TextBoxNotepad
+        'editor
         '
-        Me.TextBoxNotepad.Location = New System.Drawing.Point(6, 19)
-        Me.TextBoxNotepad.Name = "TextBoxNotepad"
-        Me.TextBoxNotepad.Size = New System.Drawing.Size(444, 20)
-        Me.TextBoxNotepad.TabIndex = 1
+        Me.editor.Location = New System.Drawing.Point(6, 19)
+        Me.editor.Name = "editor"
+        Me.editor.Size = New System.Drawing.Size(444, 20)
+        Me.editor.TabIndex = 1
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.strictBodies)
+        Me.GroupBox1.Controls.Add(Me.includeSchemas)
+        Me.GroupBox1.Controls.Add(Me.TextBox1)
+        Me.GroupBox1.Controls.Add(Me.Label3)
+        Me.GroupBox1.Controls.Add(Me.CheckBox1)
+        Me.GroupBox1.Location = New System.Drawing.Point(352, 120)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(152, 84)
+        Me.GroupBox1.TabIndex = 11
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "JSON"
+        '
+        'strictBodies
+        '
+        Me.strictBodies.AutoSize = True
+        Me.strictBodies.Location = New System.Drawing.Point(6, 57)
+        Me.strictBodies.Name = "strictBodies"
+        Me.strictBodies.Size = New System.Drawing.Size(91, 17)
+        Me.strictBodies.TabIndex = 12
+        Me.strictBodies.Text = "Strict Bodies?"
+        Me.strictBodies.UseVisualStyleBackColor = True
+        '
+        'includeSchemas
+        '
+        Me.includeSchemas.AutoSize = True
+        Me.includeSchemas.Location = New System.Drawing.Point(6, 21)
+        Me.includeSchemas.Name = "includeSchemas"
+        Me.includeSchemas.Size = New System.Drawing.Size(114, 17)
+        Me.includeSchemas.TabIndex = 12
+        Me.includeSchemas.Text = "Include Schemas?"
+        Me.includeSchemas.UseVisualStyleBackColor = True
+        '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(440, 38)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(36, 20)
+        Me.TextBox1.TabIndex = 11
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(356, 41)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(78, 13)
+        Me.Label3.TabIndex = 10
+        Me.Label3.Text = "Size Limit [MiB]"
+        '
+        'CheckBox1
+        '
+        Me.CheckBox1.AutoSize = True
+        Me.CheckBox1.Location = New System.Drawing.Point(353, 15)
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(129, 17)
+        Me.CheckBox1.TabIndex = 5
+        Me.CheckBox1.Text = "Write log file (LOG.txt)"
+        Me.CheckBox1.UseVisualStyleBackColor = True
         '
         'ButtonReload
         '
         Me.ButtonReload.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonReload.Location = New System.Drawing.Point(18, 235)
+        Me.ButtonReload.Location = New System.Drawing.Point(18, 242)
         Me.ButtonReload.Name = "ButtonReload"
         Me.ButtonReload.Size = New System.Drawing.Size(75, 23)
         Me.ButtonReload.TabIndex = 0
@@ -232,7 +301,7 @@ Partial Class F_Preferences
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButtonCancel
-        Me.ClientSize = New System.Drawing.Size(515, 270)
+        Me.ClientSize = New System.Drawing.Size(515, 277)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.ButtonCancel)
         Me.Controls.Add(Me.ButtonReload)
@@ -252,25 +321,33 @@ Partial Class F_Preferences
         Me.TabPage2.ResumeLayout(False)
         Me.GroupBoxNotepad.ResumeLayout(False)
         Me.GroupBoxNotepad.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents TextBoxWorDir As System.Windows.Forms.TextBox
+    Friend WithEvents workingDir As System.Windows.Forms.TextBox
     Friend WithEvents ButtonSelectWorDir As System.Windows.Forms.Button
     Friend WithEvents GroupBoxWorDir As System.Windows.Forms.GroupBox
     Friend WithEvents ButtonOK As System.Windows.Forms.Button
     Friend WithEvents ButtonCancel As System.Windows.Forms.Button
-    Friend WithEvents CheckBoxWriteLog As System.Windows.Forms.CheckBox
+    Friend WithEvents writeLog As System.Windows.Forms.CheckBox
     Friend WithEvents GroupBoxInterface As System.Windows.Forms.GroupBox
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
     Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents TextBoxMSG As System.Windows.Forms.TextBox
-    Friend WithEvents TextBoxLogSize As System.Windows.Forms.TextBox
+    Friend WithEvents logLevel As System.Windows.Forms.TextBox
+    Friend WithEvents logSize As System.Windows.Forms.TextBox
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents GroupBoxNotepad As System.Windows.Forms.GroupBox
     Friend WithEvents ButtonSelectNotepad As System.Windows.Forms.Button
-    Friend WithEvents TextBoxNotepad As System.Windows.Forms.TextBox
+    Friend WithEvents editor As System.Windows.Forms.TextBox
     Friend WithEvents LabelInfo As System.Windows.Forms.Label
     Friend WithEvents ButtonReload As System.Windows.Forms.Button
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
+    Friend WithEvents strictBodies As System.Windows.Forms.CheckBox
+    Friend WithEvents includeSchemas As System.Windows.Forms.CheckBox
 End Class

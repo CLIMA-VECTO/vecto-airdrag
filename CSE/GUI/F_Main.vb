@@ -42,8 +42,8 @@ Public Class F_Main
 
         ' Polling if the working dir exist (If not then generate the folder)
         '
-        If Not IO.Directory.Exists(AppPreferences.WorkingDir) Then
-            IO.Directory.CreateDirectory(AppPreferences.WorkingDir)
+        If Not IO.Directory.Exists(AppPreferences.workingDir) Then
+            IO.Directory.CreateDirectory(AppPreferences.workingDir)
         End If
 
         ' Write the beginning in the Log
@@ -56,7 +56,7 @@ Public Class F_Main
             Me.Close()
         End If
 
-        ' Write a defailt config file if failed to read one.
+        ' Write a defult config file if failed to read one.
         If Not configL Then
             Try
                 AppPreferences.Store(PreferencesPath)
@@ -78,7 +78,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the vehiclefile
     Private Sub ButtonSelectVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectVeh.Click
         ' Open the filebrowser with the *.csveh parameter
-        If fbVEH.OpenDialog(AppPreferences.WorkingDir, False) Then
+        If fbVEH.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEH.Files(0) <> Nothing) Then
                 Me.TextBoxVeh1.Text = fbVEH.Files(0)
             End If
@@ -97,7 +97,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the weatherfile
     Private Sub ButtonSelectWeather_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectWeather.Click
         ' Open the filebrowser with the *.cswea parameter
-        If fbAMB.OpenDialog(AppPreferences.WorkingDir, False) Then
+        If fbAMB.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbAMB.Files(0) <> Nothing) Then
                 Me.TextBoxWeather.Text = fbAMB.Files(0)
             End If
@@ -129,7 +129,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the datafile from the calibration run
     Private Sub ButtonSelectDataC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataC.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppPreferences.WorkingDir, False) Then
+        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataC.Text = fbVEL.Files(0)
             End If
@@ -153,7 +153,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the measure section config file (MSC)
     Private Sub ButtonSelectMSCC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCC.Click
         ' Open the filebrowser with the *.csmsc parameter
-        If fbMSC.OpenDialog(AppPreferences.WorkingDir, False) Then
+        If fbMSC.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbMSC.Files(0) <> Nothing) Then
                 Me.TextBoxMSCC.Text = fbMSC.Files(0)
             End If
@@ -235,7 +235,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the measure section file from the test run
     Private Sub ButtonSelectMSCT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCT.Click
         ' Open the filebrowser with the *.csmsc parameter
-        If fbMSC.OpenDialog(AppPreferences.WorkingDir, False) Then
+        If fbMSC.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbMSC.Files(0) <> Nothing) Then
                 Me.TextBoxMSCT.Text = fbMSC.Files(0)
             End If
@@ -259,7 +259,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the first low speed data file from the test run
     Private Sub ButtonSelectDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS1.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppPreferences.WorkingDir, False) Then
+        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataLS1.Text = fbVEL.Files(0)
             End If
@@ -283,7 +283,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the high speed data file from the test run
     Private Sub ButtonSelectDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataHS.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppPreferences.WorkingDir, False) Then
+        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataHS.Text = fbVEL.Files(0)
             End If
@@ -307,7 +307,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the second low speed data file from the test run
     Private Sub ButtonSelectDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS2.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppPreferences.WorkingDir, False) Then
+        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataLS2.Text = fbVEL.Files(0)
             End If
@@ -393,7 +393,7 @@ Public Class F_Main
     ' Menu open
     Private Sub ToolStripMenuItemOpen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click
         ' Open the filebrowser with the *.csjob parameter
-        If fbVECTO.OpenDialog(AppPreferences.WorkingDir, False) Then
+        If fbVECTO.OpenDialog(AppPreferences.workingDir, False) Then
             JobFile = fbVECTO.Files(0)
             If (JobFile <> Nothing) Then
                 ' Clear the GUI
@@ -566,7 +566,7 @@ Public Class F_Main
         '##### START THE CALCULATION #####
         '#################################
 
-        calculation(Cali)
+            calculation(Cali)
 
         '#################################
 

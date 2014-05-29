@@ -69,9 +69,12 @@ Public MustInherit Class cJsonFile
                         },
                         "BodySchema": {
                             "title": "Body schema",
-                            "type": ["boolean", "object"],
-                            "description": "When set to True, it is replaced by the Body's schema on the next save, so as to provide users with documentation on the file.",
-                            "default": false,
+                            "type": ["boolean", "object", "null"],
+                            "description": "Body schema is included HERE, for documenting file. \n _
+                              When null/property missing, application decides what to do. \n _
+                              When True, it is always replaced by the Body's schema on the next save.\n _
+                              When False, it overrides Application's choice and is not replaced ever.", 
+                            "default": null,
                         },
                     }
                 },
@@ -90,7 +93,7 @@ Public MustInherit Class cJsonFile
 
     ''' <summary>When a instance_with_defauls is Created, it gets its /Body from this method</summary>
     ''' <remarks>The result json must be valid after replacing with this body.</remarks>
-    Protected MustOverride Function BodySchema() As JObject
+    Public MustOverride Function BodySchema() As JObject
 
     ''' <summary>Invoked by this class for subclasses to validate file</summary>
     ''' <remarks>To signify validation-failure it can throw an exception or add err-messages into the supplied list</remarks>
@@ -135,7 +138,7 @@ Public MustInherit Class cJsonFile
         WriteJsonFile(fpath, Json_Contents)
     End Sub
 
-
+    ''' <summary>Maintains header's standard props and overlays any props from subclass.</summary>
     Sub UpdateHeader()
         Dim h As JObject = Me.Header
 
@@ -145,16 +148,22 @@ Public MustInherit Class cJsonFile
             h("StrictBody") = False
         End If
 
-        '' Add schema for documenting file according to its boolean(/Header/BodySchema) if any or failback to global prefs:/Body/IncludeSchemas.
-        ''
+        '' Decide whether to include body-schema in header (for documenting file),
+        ''   by checking the folllowing, ordered by priority:
+        ''      1.   jsonfile:/Header/BodySchema
+        ''      2.   prefs:/Body/IncludeSchemas
+        ''      2.b. prefschema:/properties/Body/properties/IncludeSchemas/default   (implict by cPreferences.IncludeSchemas property)
+        ''      3.   false
+        Dim isIncludeSchema As Boolean
         Dim bodySchema = h("BodySchema")
-        Dim includeSchema = False
-        If bodySchema Is Nothing AndAlso AppPreferences IsNot Nothing Then
-            includeSchema = AppPreferences.IncludeSchemas
-        ElseIf bodySchema IsNot Nothing AndAlso bodySchema.Type = JTokenType.Boolean Then
-            includeSchema = bodySchema
+        If bodySchema IsNot Nothing AndAlso bodySchema.Type = JTokenType.Boolean Then
+            isIncludeSchema = bodySchema
+        ElseIf AppPreferences IsNot Nothing Then
+            isIncludeSchema = AppPreferences.IncludeSchemas
+        Else
+            isIncludeSchema = False
         End If
-        If includeSchema Then
+        If isIncludeSchema Then
             h("BodySchema") = Me.BodySchema
         End If
 
@@ -207,6 +216,26 @@ Public MustInherit Class cJsonFile
         End If
     End Function
 
+    ''' <summary>Used by sublasses to implement Propety-Get with defaults when non-existent</summary>
+    ''' <param name="propPath">The JSON.net's XPath for a Body property, including the starting dot('.').
+    ''' 
+    ''' Examples:
+    '''   PROP REQUESTED                     'propPath' ARGUMENT
+    '''   --------------                     -------------------
+    '''   /Body/SomeProp'                --> .SomeProp
+    '''   /Body/someGroup/somePropName   --> .someGroup.somePropName'.  
+    ''' </param>
+    Protected Function BodyGetter(ByVal propPath As String) As JToken
+        Dim value As JToken = Me.Body.SelectToken(propPath)
+        If value Is Nothing Then  '' No prop existed
+            '' Return a default from schema (if any).
+            ''
+            Dim schemaPath = propPath.Replace(".", ".properties.")
+            Return Me.BodySchema.SelectToken(schemaPath & ".default")
+        Else
+            Return value
+        End If
+    End Function
 
 #Region "json props"
     Protected ReadOnly Property Header() As JObject
@@ -245,9 +274,17 @@ Public MustInherit Class cJsonFile
     Public ReadOnly Property StrictBody As Boolean
         Get
             Dim value = Me.Body("StrictBody")
-            Return IIf(value Is Nothing, False, value)
+            Return IIf(value Is Nothing OrElse value.Type = JTokenType.Null, False, value)
         End Get
     End Property
+
+    '' NO, logic behind it more complex, see UpdateHeader() instead.
+    'Public ReadOnly Property BodySchema As Boolean
+    '    Get
+    '        Dim value = Me.Body("BodySchema")
+    '        Return IIf(value Is Nothing OrElse value.Type = JTokenType.Null, False, value)
+    '    End Get
+    'End Property
 
 #End Region ' "json props"
 

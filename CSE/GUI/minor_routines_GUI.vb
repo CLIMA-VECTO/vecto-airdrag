@@ -1,4 +1,6 @@
-﻿Module minor_routines_GUI
+﻿Imports Newtonsoft.Json.Linq
+
+Module minor_routines_GUI
 
     ' Clear the GUI
     Public Function fClear_VECTO_Form(ByVal Komplet As Boolean, Optional ByVal Fields As Boolean = True) As Boolean
@@ -577,6 +579,99 @@
 
         Return True
 
+    End Function
+
+    Sub updateControlsFromSchema(ByVal schema As JObject, ByVal ctrl As Control, ByVal label As Control)
+        Try
+            Dim pschema = schema.SelectToken(".properties." & ctrl.Name)
+            If pschema Is Nothing Then
+                fInfWarErr(8, False, format("Schema2GUI: Could not find schema for Control({0})!\n\iSchema: {1}", ctrl.Name, schema))
+                Return
+            End If
+
+            '' Set title on control/label
+            ''
+            Dim title = pschema("title")
+            If title IsNot Nothing Then
+                If label IsNot Nothing Then
+                    label.Text = title
+                Else
+                    If TypeOf ctrl Is CheckBox Then
+                        title = title.ToString() & "?"
+                    End If
+                End If
+                ctrl.Text = title
+            End If
+
+            '' Build tooltip.
+            ''
+            Dim infos = _
+                From pname In {"title", "description", "type", "enum", "default", _
+                               "minimum", "exclusiveMinimum", "maximum", "exclusiveMaximum"}
+                Select pschema(pname)
+
+            ''TODO: Include other schema-props in tooltips.
+
+            If infos.Any() Then
+                Dim msg = schemaInfos2helpMsg(infos.ToArray())
+                Dim t = New ToolTip()
+                t.SetToolTip(ctrl, msg)
+                t.AutomaticDelay = 300
+                t.AutoPopDelay = 10000
+            End If
+
+
+        Catch ex As Exception
+            fInfWarErr(8, False, format("Schema2GUI: Skipped exception: {0} ", ex.Message), ex)
+        End Try
+    End Sub
+
+    ''' <summary>Builds a human-readable help-string from any non-null schema-properties.</summary>
+    Function schemaInfos2helpMsg(ByVal ParamArray propSchemaInfos() As JToken) As String
+        Dim titl = propSchemaInfos(0)
+        Dim desc = propSchemaInfos(1)
+        Dim type = propSchemaInfos(2)
+        Dim chce = propSchemaInfos(3)
+        Dim dflt = propSchemaInfos(4)
+        Dim mini = propSchemaInfos(5)
+        Dim miex = propSchemaInfos(6) '' exclusiveMin
+        Dim maxi = propSchemaInfos(7)
+        Dim maex = propSchemaInfos(8) '' exclusiveMax
+
+        Dim sdesc As String = ""
+        Dim stype As String = ""
+        Dim senum As String = ""
+        Dim sdflt As String = ""
+        Dim slimt As String = ""
+
+        If desc IsNot Nothing Then
+            sdesc = format(desc.ToString())
+        ElseIf titl IsNot Nothing Then
+            sdesc = format(titl.ToString())
+        End If
+        If type IsNot Nothing Then stype = type.ToString(Newtonsoft.Json.Formatting.None) & ": "
+        If chce IsNot Nothing Then senum = format("\n- choices: {0}", chce.ToString(Newtonsoft.Json.Formatting.None))
+        If dflt IsNot Nothing Then sdflt = format("\n- default: {0}", dflt)
+        If mini IsNot Nothing OrElse maxi IsNot Nothing Then
+            Dim infinitySymbol = "" + ChrW(&H221E)
+            Dim open = "("c
+            Dim smin = infinitySymbol
+            Dim smax = infinitySymbol
+            Dim clos = ")"c
+
+            If mini IsNot Nothing Then
+                smin = mini
+                If (miex Is Nothing OrElse Not CBool(miex)) Then open = "["c
+            End If
+            If maxi IsNot Nothing Then
+                smax = maxi
+                If (maex Is Nothing OrElse Not CBool(maex)) Then clos = "]"c
+            End If
+            slimt = format("\n- limits : {0}{1}, {2}{3}", _
+                           open, smin, smax, clos)
+        End If
+
+        Return String.Join("", stype, sdesc, senum, sdflt, slimt)
     End Function
 
 End Module
