@@ -103,11 +103,11 @@ Public MustInherit Class cJsonFile
     ''' <summary>The whole json-content receiving any changes, always ready to be written as is.</summary>
     Private Content As JObject
 
-    ''' <summary>Cached instance from 'Content', used (tentatively) for perfomance.</summary>
-    Public ReadOnly Header As JObject
+    ' ''' <summary>Cached instance from 'Content', used (tentatively) for perfomance.</summary>
+    'Public ReadOnly Header As JObject
 
-    ''' <summary>Cached instance from 'Content', used (tentatively) for perfomance.</summary>
-    Public ReadOnly Body As JObject
+    ' ''' <summary>Cached instance from 'Content', used (tentatively) for perfomance.</summary>
+    'Public ReadOnly Body As JObject
 
     ''' <summary>Reads from a file (aka "Load") or creates an instance with defaults
     ''' 
@@ -123,18 +123,18 @@ Public MustInherit Class cJsonFile
         If (inputFilePath Is Nothing) Then
             Dim jstr = JsonStr_FileContents()
             Me.Content = JObject.Parse(jstr)
-            Me.Header = Content("Header")
+            'Me.Header = Content("Header")
             UpdateHeader()
 
             Me.Content("Body") = Me.BodyContent
-            Me.Body = Content("Body")
+            'Me.Body = Content("Body")
         Else
             strictHeader = False   '' Try to read even bad headers.
             fInfWarErr(4, False, format("Reading JSON-file({0})...", inputFilePath))
 
             Me.Content = ReadJsonFile(inputFilePath)
-            Me.Header = Content("Header")
-            Me.Body = Content("Body")
+            'Me.Header = Content("Header")
+            'Me.Body = Content("Body")
         End If
 
         If Not skipValidation Then
@@ -254,16 +254,16 @@ Public MustInherit Class cJsonFile
     End Function
 
 #Region "json props"
-    'Protected ReadOnly Property Header() As JObject
-    '    Get
-    '        Return Me.Json_Contents("Header")
-    '    End Get
-    'End Property
-    'Protected ReadOnly Property Body() As JObject
-    '    Get
-    '        Return Me.Json_Contents("Body")
-    '    End Get
-    'End Property
+    Protected ReadOnly Property Header() As JObject
+        Get
+            Return Me.Content("Header")
+        End Get
+    End Property
+    Protected ReadOnly Property Body() As JObject
+        Get
+            Return Me.Content("Body")
+        End Get
+    End Property
 
 
     Public ReadOnly Property Title As String
