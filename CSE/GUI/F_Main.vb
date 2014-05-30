@@ -205,7 +205,7 @@ Public Class F_Main
             If OutFolder <> Nothing Then
                 ' Generate the folder if it is desired
                 Dim resEx As MsgBoxResult
-                resEx = MsgBox("Output folder doesn´t exist! Create Folder?", MsgBoxStyle.YesNo, "Create folder?")
+                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
                 If resEx = MsgBoxResult.Yes Then
                     MkDir(OutFolder)
                 Else
@@ -358,7 +358,7 @@ Public Class F_Main
             If OutFolder <> Nothing Then
                 ' Generate the folder if it is desired
                 Dim resEx As MsgBoxResult
-                resEx = MsgBox("Output folder doesn´t exist! Create Folder?", MsgBoxStyle.YesNo, "Create folder?")
+                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
                 If resEx = MsgBoxResult.Yes Then
                     MkDir(OutFolder)
                 Else
@@ -399,10 +399,10 @@ Public Class F_Main
             If (JobFile <> Nothing) Then
                 ' Clear the GUI
                 fClear_VECTO_Form(False)
-                OutFolder = fPath(JobFile) & "\Results\"
+                OutFolder = joinPaths(fPath(JobFile), "Results\")
 
                 ' Identify the given Jobfile
-                If fEXT(JobFile) <> "txt" And fEXT(JobFile) <> "csjob" Then
+                If fEXT(JobFile) <> ".txt" And fEXT(JobFile) <> ".csjob" Then
                     fInfWarErr(8, False, "The Inputfile is not a regular VECTO-File: " & JobFile)
                 Else
                     ' Read the Jobfile and insert the data in the GUI
@@ -419,7 +419,7 @@ Public Class F_Main
             ' Open the filebrowser to select the folder and name of the Jobfile
             If fbVECTO.SaveDialog(JobFile) Then
                 JobFile = fbVECTO.Files(0)
-                OutFolder = fPath(JobFile) & "\Results\"
+                OutFolder = joinPaths(fPath(JobFile), "Results\")
                 Me.Text = Formname & " " & JobFile
             End If
             If (JobFile = Nothing) Then

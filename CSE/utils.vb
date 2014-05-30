@@ -3,7 +3,7 @@ Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Schema
 Imports System.Text.RegularExpressions
 
-Module Minor_routines
+Module utils
 
     ''' <summary>
     ''' Utility to check compatibility when reading files, ie 1.0.1-somePre is compatible with [1.0.0--, 2.0.0--)
@@ -42,8 +42,9 @@ Module Minor_routines
         Pfad = Microsoft.VisualBasic.Right(Pfad, Microsoft.VisualBasic.Len(Pfad) - x)
 
         If Not MitEndung Then
-            x = Pfad.LastIndexOf(".")
-            If x > 0 Then Pfad = Microsoft.VisualBasic.Left(Pfad, x)
+            Dim ext = fEXT(Pfad)
+
+            Pfad = Pfad.Remove(Pfad.Length - ext.Length)
         End If
 
         Return Pfad
@@ -60,17 +61,16 @@ Module Minor_routines
         Return Microsoft.VisualBasic.Left(Pfad, x)
     End Function
 
-    ' Identification from the filenend
+    ' Identification from the filenend, including dot('.')
     Public Function fEXT(ByVal Pfad As String) As String
-        Dim x As Int16
+        Dim ext = IO.Path.GetExtension(Pfad)
 
-        x = Pfad.LastIndexOf(".")
-
-        If x = -1 Then
-            Return ""
-        Else
-            Return Microsoft.VisualBasic.Right(Pfad, Microsoft.VisualBasic.Len(Pfad) - x - 1)
+        If ext.Equals(".json", StringComparison.OrdinalIgnoreCase) Then
+            Dim prevExt = IO.Path.GetExtension(Pfad.Remove(Pfad.Length - 5)) ' 5 = ".json".Length
+            ext = prevExt & ext
         End If
+
+        Return ext
     End Function
 
 

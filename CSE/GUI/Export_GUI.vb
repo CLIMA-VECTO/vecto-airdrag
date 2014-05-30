@@ -7,8 +7,8 @@
 
             Dim Jobname As String
 
-            If fEXT(JobFile) <> "csjob" Then
-                Jobname = fPath(JobFile) & "\" & fName(JobFile, False) & ".csjob"
+            If fEXT(JobFile) <> ".csjob" Then
+                Jobname = joinPaths(fPath(JobFile), fName(JobFile, False) & ".csjob")
             Else
                 Jobname = JobFile
             End If

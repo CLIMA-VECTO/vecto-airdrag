@@ -1,5 +1,5 @@
 ﻿' Read the input data
-Public Module read_input
+Public Module input
     ' Read the measurement section config file
     Function ReadInputMSC(ByRef MSCX As cMSC, ByVal MSCfile As String, Optional ByVal calibration As Boolean = True) As Boolean
         ' Declarations
@@ -79,7 +79,7 @@ Public Module read_input
                         Return False
                     End If
 
-                    If fPath(MSCX.AltPath(i)) = Nothing Then MSCX.AltPath(i) = fPath(MSCfile) & "\" & MSCX.AltPath(i)
+                    If fPath(MSCX.AltPath(i)) = Nothing Then MSCX.AltPath(i) = joinPaths(fPath(MSCfile), MSCX.AltPath(i))
                     fControlInput(MSCX.AltPath(i), 3, "csalt")
                     If Not FileIO.FileSystem.FileExists(MSCX.AltPath(i)) Then
                         fInfWarErrBW(9, False, "Altitude correction = on, altitude file doesen´t exist: " & MSCX.AltPath(i))

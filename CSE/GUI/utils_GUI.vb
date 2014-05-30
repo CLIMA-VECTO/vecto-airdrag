@@ -1,6 +1,6 @@
 ﻿Imports Newtonsoft.Json.Linq
 
-Module minor_routines_GUI
+Module utils_GUI
 
     ' Clear the GUI
     Public Function fClear_VECTO_Form(ByVal Komplet As Boolean, Optional ByVal Fields As Boolean = True) As Boolean
@@ -374,7 +374,7 @@ Module minor_routines_GUI
         If (File = Nothing) Then
             fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
             Return False
-        ElseIf (Not File.EndsWith(endung)) And Not (File = varOutStr) Then
+        ElseIf (Not File.EndsWith(endung, StringComparison.OrdinalIgnoreCase)) And Not (File = varOutStr) Then
             fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
             Return False
         End If
