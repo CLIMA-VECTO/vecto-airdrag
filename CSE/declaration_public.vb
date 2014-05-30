@@ -2,7 +2,7 @@
 
     ' Description of the form
     Public Const AppName As String = "VECTO_CSE"                ' Name of the programm
-    Public Const AppVers As String = "2.0.1-pre0"                     ' Version of the Programm
+    Public Const AppVers As String = "2.0.1-pre1"                     ' Version of the Programm
     Public AppDate As String                                    ' Date of the compilation of the programm
 
     ' Control variables
@@ -87,8 +87,9 @@
     Public AccC As Boolean = False                              ' Variable for the acceleration correction
     Public GradC As Boolean = False                             ' Variable for the gradient correction
 
-    Public AppSettingsFName As String = "settings.json"
-    Public AppSettings As cSettings
+
+    Public PreferencesPath As String
+    Public AppPreferences As cPreferences
 
     'File browser
     Public FB_Drives() As String

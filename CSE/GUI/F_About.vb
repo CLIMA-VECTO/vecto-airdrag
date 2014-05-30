@@ -1,4 +1,4 @@
-Public Class CSE_Info
+Public Class F_About
 
 
     'Initialisation
@@ -11,15 +11,15 @@ Public Class CSE_Info
         System.Diagnostics.Process.Start("mailto:rexeis@ivt.tugraz.at")
     End Sub
 
-    Private Sub LinkJRC1_LinkClicked(sender As Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs)
+    Private Sub LinkJRC1_LinkClicked(ByVal sender As Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs)
         System.Diagnostics.Process.Start("mailto:georgios.fontaras@jrc.ec.europa.eu")
     End Sub
 
-    Private Sub LinkJRC2_LinkClicked(sender As Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs)
+    Private Sub LinkJRC2_LinkClicked(ByVal sender As Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs)
         System.Diagnostics.Process.Start("mailto:panagiota.dilara@jrc.ec.europa.eu")
     End Sub
     '----------------------------------------------------------------------------
-    Private Sub LinkLicensed_LinkClicked(sender As System.Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkLicensed.LinkClicked
+    Private Sub LinkLicensed_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkLicensed.LinkClicked
         System.Diagnostics.Process.Start("https://joinup.ec.europa.eu/software/page/eupl")
     End Sub
 
@@ -31,7 +31,7 @@ Public Class CSE_Info
         System.Diagnostics.Process.Start("http://www.tugraz.at/")
     End Sub
     '----------------------------------------------------------------------------
-    Private Sub PictureBoxJRC_Click(sender As System.Object, e As System.EventArgs) Handles PictureBoxJRC.Click
+    Private Sub PictureBoxJRC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBoxJRC.Click
         System.Diagnostics.Process.Start("http://ec.europa.eu/dgs/jrc/index.cfm")
     End Sub
 End Class

@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class CSEMain
+Partial Class F_Main
     Inherits System.Windows.Forms.Form
 
     'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
@@ -22,7 +22,7 @@ Partial Class CSEMain
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CSEMain))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_Main))
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.DataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemNew = New System.Windows.Forms.ToolStripMenuItem()
@@ -348,7 +348,7 @@ Partial Class CSEMain
         Me.ToolStripMenuItemOption.Image = Global.CSE.My.Resources.Resources.Optionen
         Me.ToolStripMenuItemOption.Name = "ToolStripMenuItemOption"
         Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(144, 22)
-        Me.ToolStripMenuItemOption.Text = "Options"
+        Me.ToolStripMenuItemOption.Text = "Preferences"
         '
         'InfoToolStripMenuItem
         '
@@ -2409,7 +2409,7 @@ Partial Class CSEMain
         Me.TBDeltaXMax.Text = "10"
         Me.TBDeltaXMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'CSEMain
+        'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -2419,10 +2419,12 @@ Partial Class CSEMain
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.MenuStrip1)
+        Me.DataBindings.Add(New System.Windows.Forms.Binding("Location", Global.CSE.My.MySettings.Default, "F_Main_location", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Location = Global.CSE.My.MySettings.Default.F_Main_location
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MinimumSize = New System.Drawing.Size(686, 717)
-        Me.Name = "CSEMain"
+        Me.Name = "F_Main"
         Me.Text = "VECTO Constant Speed Evaluator"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()

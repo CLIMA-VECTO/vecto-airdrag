@@ -8,7 +8,7 @@
 
         If SectionDev Then
             ' Output on the GUI
-            fInfWarErrBW(6, False, "Identifing the sections")
+            fInfWarErr(6, False, "Identifying the sections")
 
             ' Devide the measured data into there sections
             DevInSec(vMSC)
@@ -16,7 +16,7 @@
             ' Leap in time control
             If JumpPoint <> -1 Then
                 If CalcData(tCompCali.SecID)(JumpPoint) <> 0 Then
-                    fInfWarErrBW(9, False, "The detected leap in time is inside a measurement section. This is not allowed!")
+                    fInfWarErr(9, False, "The detected leap in time is inside a measurement section. This is not allowed!")
                     BWorker.CancelAsync()
                     Return False
                 End If
@@ -673,26 +673,26 @@
         run = 0
         anz = 0
         If TestRunX = 1 Or TestRunX = 3 Then
-            igear = vehicleX.rat_gl
+            igear = vehicleX.gearRatio_low
             If TestRunX = 1 Then
                 RunIDx = IDLS1
             Else
                 RunIDx = IDLS2
             End If
         Else
-            igear = vehicleX.rat_gh
+            igear = vehicleX.gearRatio_high
             RunIDx = IDHS
         End If
 
         ' Calculate the other values of the speed run
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
             ' Wheel rotation
-            CalcData(tCompCali.omega_wh)(i) = (InputData(tComp.n_eng)(i) * Math.PI / (30 * vehicleX.rat_axl * igear))
+            CalcData(tCompCali.omega_wh)(i) = (InputData(tComp.n_eng)(i) * Math.PI / (30 * vehicleX.axleRatio * igear))
 
             If i = 0 Or i = CalcData(tCompCali.SecID).Count - 1 Then
                 CalcData(tCompCali.omega_p_wh)(i) = 0
             Else
-                CalcData(tCompCali.omega_p_wh)(i) = ((InputData(tComp.n_eng)(i + 1) - InputData(tComp.n_eng)(i - 1)) / 2) * Math.PI / (30 * vehicleX.rat_axl * igear)
+                CalcData(tCompCali.omega_p_wh)(i) = ((InputData(tComp.n_eng)(i + 1) - InputData(tComp.n_eng)(i - 1)) / 2) * Math.PI / (30 * vehicleX.axleRatio * igear)
             End If
 
             ' Torque sum
@@ -723,7 +723,7 @@
             For j = 0 To InputWeatherData(tCompWeat.t).Count - 1
                 If j = 0 Then
                     If CalcData(tCompCali.t)(i) < InputWeatherData(tCompWeat.t)(j) And j = 0 Then
-                        fInfWarErrBW(9, False, "The test time is outside the range of the data from the stationary weather station.")
+                        fInfWarErr(9, False, "The test time is outside the range of the data from the stationary weather station.")
                         BWorker.CancelAsync()
                         Return False
                     ElseIf CalcData(tCompCali.t)(i) >= InputWeatherData(tCompWeat.t)(j) And CalcData(tCompCali.t)(i) < InputWeatherData(tCompWeat.t)(j + 1) Then
@@ -741,7 +741,7 @@
                     End If
                 End If
                 If j = InputWeatherData(tCompWeat.t).Count - 1 Then
-                    fInfWarErrBW(9, False, "The test time is outside the range of the data from the stationary weather station.")
+                    fInfWarErr(9, False, "The test time is outside the range of the data from the stationary weather station.")
                     BWorker.CancelAsync()
                     Return False
                 End If
@@ -771,7 +771,7 @@
                         If CalcData(tCompCali.SecID)(i - 1) = CalcData(tCompCali.SecID)(i) And CalcData(tCompCali.SecID)(i + 1) = CalcData(tCompCali.SecID)(i) Then
                             If (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)) = 0 Then
                                 CalcData(tCompCali.slope_deg)(i) = 0
-                                fInfWarErrBW(9, False, "Standstill or loss of vehicle speed signal inside MS not permitted (Error at line " & i & ")")
+                                fInfWarErr(9, False, "Standstill or loss of vehicle speed signal inside MS not permitted (Error at line " & i & ")")
                                 BWorker.CancelAsync()
                             Else
                                 CalcData(tCompCali.slope_deg)(i) = (Math.Asin((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI
@@ -781,11 +781,11 @@
                 End If
 
                 ' F gradient
-                CalcData(tCompCali.F_grd)(i) = vehicleX.mveh_ref * 9.81 * Math.Sin(CalcData(tCompCali.slope_deg)(i) * Math.PI / 180)
+                CalcData(tCompCali.F_grd)(i) = vehicleX.testMass * 9.81 * Math.Sin(CalcData(tCompCali.slope_deg)(i) * Math.PI / 180)
             End If
 
             ' Force acceleration
-            CalcData(tCompCali.F_acc)(i) = vehicleX.mveh_ref * CalcData(tCompCali.a_veh_ave)(i) + vehicleX.I_wheels * CalcData(tCompCali.omega_wh)(i) * CalcData(tCompCali.omega_p_wh)(i) / (CalcData(tCompCali.v_veh_c)(i) / 3.6)
+            CalcData(tCompCali.F_acc)(i) = vehicleX.testMass * CalcData(tCompCali.a_veh_ave)(i) + vehicleX.wheelsInertia * CalcData(tCompCali.omega_wh)(i) * CalcData(tCompCali.omega_p_wh)(i) / (CalcData(tCompCali.v_veh_c)(i) / 3.6)
 
             ' Force trajectory
             CalcData(tCompCali.F_res)(i) = CalcData(tCompCali.F_trac)(i)

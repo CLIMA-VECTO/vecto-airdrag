@@ -120,16 +120,18 @@ lb10:
 
     End Function
 
+    ' Close the file
     Public Sub Dispose() Implements IDisposable.Dispose
         Try
-            Close()
+            Me.Close()
         Catch ex As Exception
-            fInfWarErr(9, False, "Failed while closing file_v3 fue to: " & ex.Message)
+            fInfWarErr(9, False, format( _
+                       "Skipped exception while closing file_v3({0}) due to: {1}", Me.Path, ex.Message), ex)
         End Try
     End Sub
 
-    ' Close the file
-    Public Sub Close()
+    ' Use Dispose instead.
+    Private Sub Close()
         Select Case Mode
             Case FileMode.Read
                 If FileOpen Then TxtFldParser.Close()

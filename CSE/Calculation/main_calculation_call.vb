@@ -1,7 +1,7 @@
 ﻿Public Module main_calculation_call
 
     ' Main calculation
-    Function calculation(ByVal Cali As Boolean) As Boolean
+    Function calculation(ByVal isCalibrate As Boolean) As Boolean
         ' Declaration
         Dim i As Integer
 
@@ -14,23 +14,22 @@
         Units = Nothing
         UnitsUndef = Nothing
 
-        If Cali Then
+        If isCalibrate Then
             ' Declarations
-            Dim vehicle As New cVehicle
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
 
             ' Read the input data
-            fInfWarErrBW(7, False, "Reading Input Files...")
-            readInputVeh(vehicle)
-            ReadInputMSC(MSC, MSCCSpez, Cali)
+            fInfWarErr(7, False, "Reading Input Files...")
+            Dim vehicle As New cVehicle(Vehspez)
+            ReadInputMSC(MSC, MSCCSpez, isCalibrate)
             ReadDataFile(DataSpez(1), MSC)
 
             ' Exit function if error is detected
             If BWorker.CancellationPending Then Return False
 
             ' Output on the GUI
-            fInfWarErrBW(7, False, "Calculating the calibration run...")
+            fInfWarErr(7, False, "Calculating the calibration run...")
 
             ' Identify the signal measurement sections
             fIdentifyMS(MSC, vMSC)
@@ -39,7 +38,7 @@
             If BWorker.CancellationPending Then Return False
 
             ' Output on the GUI
-            fInfWarErrBW(6, False, "Calculating the calibration run parameter")
+            fInfWarErr(6, False, "Calculating the calibration run parameter")
 
             ' Calculate the results from the calibration test
             fCalcCalib(MSC, vehicle)
@@ -48,24 +47,23 @@
             'If BWorker.CancellationPending Then Return False
 
             ' Output on the GUI
-            fInfWarErrBW(7, False, "Writing the output files...")
+            fInfWarErr(7, False, "Writing the output files...")
 
             ' Output
-            fOutDataCalc1Hz(DataSpez(1), Cali)
-            fOutCalcRes(DataSpez, Cali)
+            fOutDataCalc1Hz(DataSpez(1), isCalibrate)
+            fOutCalcRes(DataSpez, isCalibrate)
         Else
             ' Declarations
-            Dim vehicle As New cVehicle
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
 
             ' Output on the GUI
-            fInfWarErrBW(7, False, "Calculating the speed runs...")
+            fInfWarErr(7, False, "Calculating the speed runs...")
 
             ' Read the input files
-            fInfWarErrBW(7, False, "Reading Input Files...")
-            readInputVeh(vehicle)
-            ReadInputMSC(MSC, MSCTSpez, Cali)
+            fInfWarErr(7, False, "Reading Input Files...")
+            Dim vehicle As New cVehicle(Vehspez)
+            ReadInputMSC(MSC, MSCTSpez, isCalibrate)
             ReadWeather(Ambspez)
 
             ' Calculation of the virtual MSC points
@@ -79,17 +77,17 @@
                 If i = 2 Or i = 4 Then
                     ' Output on the GUI
                     If i = 2 Then
-                        fInfWarErrBW(7, False, "Calculating the first low speed run...")
+                        fInfWarErr(7, False, "Calculating the first low speed run...")
                     Else
-                        fInfWarErrBW(7, False, "Calculating the second low speed run...")
+                        fInfWarErr(7, False, "Calculating the second low speed run...")
                     End If
                 Else
                     ' Output on the GUI
-                    fInfWarErrBW(7, False, "Calculating the high speed run...")
+                    fInfWarErr(7, False, "Calculating the high speed run...")
                 End If
 
                 ' Output on the GUI
-                fInfWarErrBW(6, False, "Reading the data file...")
+                fInfWarErr(6, False, "Reading the data file...")
                 ReadDataFile(DataSpez(i), MSC)
 
                 ' Exit function if error is detected
@@ -108,10 +106,10 @@
                 If BWorker.CancellationPending Then Return False
 
                 ' Output on the GUI
-                fInfWarErrBW(6, False, "Writing the output files...")
+                fInfWarErr(6, False, "Writing the output files...")
 
                 ' Output
-                fOutDataCalc1Hz(DataSpez(i), Cali)
+                fOutDataCalc1Hz(DataSpez(i), isCalibrate)
 
                 ' Save the Result dictionaries
                 fSaveDic(i - 1)
@@ -135,8 +133,8 @@
             ' Exit function if error is detected
             If BWorker.CancellationPending Then
                 ' Write the summerised output file
-                fInfWarErrBW(7, False, "Writing the summarised output file...")
-                fOutCalcRes(DataSpez, Cali)
+                fInfWarErr(7, False, "Writing the summarised output file...")
+                fOutCalcRes(DataSpez, isCalibrate)
                 Return False
             End If
 
@@ -144,8 +142,8 @@
             fCalcReg(vehicle)
 
             ' Write the summerised output file
-            fInfWarErrBW(7, False, "Writing the summarised output file...")
-            fOutCalcRes(DataSpez, Cali)
+            fInfWarErr(7, False, "Writing the summarised output file...")
+            fOutCalcRes(DataSpez, isCalibrate)
 
             ' Check if all is valid
             For i = 0 To ErgValuesReg(tCompErgReg.SecID).Count - 1
@@ -157,10 +155,10 @@
             fOutCalcResReg(DataSpez)
 
             ' Write the results on the GUI
-            fInfWarErrBW(7, False, "Results from the calculation")
-            fInfWarErrBW(6, False, "average absolute beta HS test: " & Math.Round(beta, 4))
-            fInfWarErrBW(6, False, "delta CdxA correction: " & Math.Round(delta_CdxA, 4))
-            fInfWarErrBW(6, False, "CdxA(0): " & Math.Round(CdxA0, 4))
+            fInfWarErr(7, False, "Results from the calculation")
+            fInfWarErr(6, False, "average absolute beta HS test: " & Math.Round(beta, 4))
+            fInfWarErr(6, False, "delta CdxA correction: " & Math.Round(delta_CdxA, 4))
+            fInfWarErr(6, False, "CdxA(0): " & Math.Round(CdxA0, 4))
 
             ' Clear the dictionaries
             ErgValuesComp = Nothing
@@ -223,7 +221,7 @@
 
             ' Error
             If run > 10 Then
-                fInfWarErrBW(9, False, "The calibration is not possible because iteration for valid datasets does not converge (n>10)")
+                fInfWarErr(9, False, "The calibration is not possible because iteration for valid datasets does not converge (n>10)")
                 Change = False
                 BWorker.CancelAsync()
                 Return False
@@ -311,7 +309,7 @@
         ' error message if the CAN velocity is 0
         For i = 0 To UBound(CalcX)
             If ave_vn(i) = 0 And VSec(i) = 1 Then
-                fInfWarErrBW(9, False, "The measured vehicle velocity (v_veh_CAN) is 0 in section: " & CalcX(i))
+                fInfWarErr(9, False, "The measured vehicle velocity (v_veh_CAN) is 0 in section: " & CalcX(i))
                 BWorker.CancelAsync()
                 Return False
             End If
@@ -448,17 +446,17 @@
 
             ' Calculate the steps
             For h = 5 To 95 Step Pstep
-                vwind_x = vwind_x_ha * Math.Pow((((h / 100) * vehicleX.hv) / vehicleX.ha), 0.2)
-                vwind_y = vwind_y_ha * Math.Pow((((h / 100) * vehicleX.hv) / vehicleX.ha), 0.2)
-                vairX = vairX + (Math.Sqrt((vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6) ^ 2 + vwind_y ^ 2)) * vehicleX.hv * Pstep / 100
-                vwindX = vwindX + (Math.Sqrt(vwind_x ^ 2 + vwind_y ^ 2)) * vehicleX.hv * Pstep / 100
-                betaX = betaX + (Math.Atan(vwind_y / (vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6)) * 180 / Math.PI) * vehicleX.hv * Pstep / 100
+                vwind_x = vwind_x_ha * Math.Pow((((h / 100) * vehicleX.vehHeight) / vehicleX.anemometerHeight), 0.2)
+                vwind_y = vwind_y_ha * Math.Pow((((h / 100) * vehicleX.vehHeight) / vehicleX.anemometerHeight), 0.2)
+                vairX = vairX + (Math.Sqrt((vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6) ^ 2 + vwind_y ^ 2)) * vehicleX.vehHeight * Pstep / 100
+                vwindX = vwindX + (Math.Sqrt(vwind_x ^ 2 + vwind_y ^ 2)) * vehicleX.vehHeight * Pstep / 100
+                betaX = betaX + (Math.Atan(vwind_y / (vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6)) * 180 / Math.PI) * vehicleX.vehHeight * Pstep / 100
             Next h
 
             ' Add the calculated values to the calculate arrays
-            CalcData(tCompCali.vair_c)(i) = (vairX / vehicleX.hv)
-            CalcData(tCompCali.vwind_c)(i) = (vwindX / vehicleX.hv)
-            CalcData(tCompCali.beta_c)(i) = (betaX / vehicleX.hv)
+            CalcData(tCompCali.vair_c)(i) = (vairX / vehicleX.vehHeight)
+            CalcData(tCompCali.vwind_c)(i) = (vwindX / vehicleX.vehHeight)
+            CalcData(tCompCali.beta_c)(i) = (betaX / vehicleX.vehHeight)
             vairX = 0
             vwindX = 0
             betaX = 0
@@ -554,7 +552,7 @@
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            fInfWarErrBW(9, False, "Insufficent numbers of valid measurement sections available")
+            fInfWarErr(9, False, "Insufficent numbers of valid measurement sections available")
             BWorker.CancelAsync()
             Return False
         End If
@@ -615,7 +613,7 @@
             End If
         Next i
         If anz < 2 Then
-            fInfWarErrBW(9, False, "Insufficent numbers of valid measurement sections available")
+            fInfWarErr(9, False, "Insufficent numbers of valid measurement sections available")
             BWorker.CancelAsync()
             Return False
         End If
@@ -703,7 +701,7 @@
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            fInfWarErrBW(9, False, "Insufficent numbers of valid measurement sections in the low speed test available")
+            fInfWarErr(9, False, "Insufficent numbers of valid measurement sections in the low speed test available")
             BWorker.CancelAsync()
             Return False
         End If
@@ -743,7 +741,7 @@
                             End If
                         End If
                     Else
-                        fInfWarErrBW(9, False, "Not enough valid data for low speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
+                        fInfWarErr(9, False, "Not enough valid data for low speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
                     End If
                 End If
             Next j
@@ -819,7 +817,7 @@
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            fInfWarErrBW(9, False, "Insufficent numbers of valid measurement sections in the high speed test available")
+            fInfWarErr(9, False, "Insufficent numbers of valid measurement sections in the high speed test available")
             BWorker.CancelAsync()
             Return False
         End If
@@ -837,12 +835,12 @@
                             Case 2
                                 anzHS2 += SecCount.AnzSec(i) + SecCount.AnzSec(j)
                             Case Else
-                                fInfWarErrBW(9, False, "headID not known")
+                                fInfWarErr(9, False, "headID not known")
                                 BWorker.CancelAsync()
                                 Return False
                         End Select
                     Else
-                        fInfWarErrBW(9, False, "Not enough valid data for high speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
+                        fInfWarErr(9, False, "Not enough valid data for high speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
                         BWorker.CancelAsync()
                     End If
                 End If
@@ -851,7 +849,7 @@
 
         ' Ceck if enough sections are detected
         If anzHS1 < ds_min_head_MS Or anzHS2 < ds_min_head_MS Then
-            fInfWarErrBW(9, False, "Number of valid high speed datasets too low")
+            fInfWarErr(9, False, "Number of valid high speed datasets too low")
             BWorker.CancelAsync()
             'Return False
         End If

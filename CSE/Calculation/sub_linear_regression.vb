@@ -10,7 +10,7 @@
         Dim EnumStr As tCompErgReg
 
         ' Output on the GUI
-        fInfWarErrBW(7, False, "Calculate the linear regression...")
+        fInfWarErr(7, False, "Calculate the linear regression...")
 
         ' Initialisation
         lauf = -1
@@ -209,7 +209,7 @@
                         ErgValuesComp(tCompErg.F0_ref_singleDS)(PosHS(j)) = F0
                         ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) = F0 * (ErgValuesComp(tCompErg.rho_air)(PosHS(j)) / roh_air_ref)
                         ErgValuesComp(tCompErg.F2_ref_singleDS)(PosHS(j)) = F2
-                        ErgValuesComp(tCompErg.RRC_singleDS)(PosHS(j)) = (ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) / (vehicle.mveh_ref * 9.81)) * 1000
+                        ErgValuesComp(tCompErg.RRC_singleDS)(PosHS(j)) = (ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) / (vehicle.testMass * 9.81)) * 1000
                         ErgValuesComp(tCompErg.CdxA_singleDS)(PosHS(j)) = 2 * F2 / roh_air_ref
                     Next j
 
@@ -230,7 +230,7 @@
                     ErgValuesReg(tCompErgReg.F0_LS1_ref).Add(F0)
                     ErgValuesReg(tCompErgReg.F0_LS1).Add(F0 * (Roh_air_LS1 / numLS1) / roh_air_ref)
                     ErgValuesReg(tCompErgReg.F2_LS1_ref).Add(F2)
-                    ErgValuesReg(tCompErgReg.RRC_LS1).Add((ErgValuesReg(tCompErgReg.F0_LS1)(lauf) / (vehicle.mveh_ref * 9.81)) * 1000)
+                    ErgValuesReg(tCompErgReg.RRC_LS1).Add((ErgValuesReg(tCompErgReg.F0_LS1)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
                     '***** Calculate the linear regression for LS2
                     ' Redeminisionate the arrays
@@ -249,7 +249,7 @@
                     ErgValuesReg(tCompErgReg.F0_LS2_ref).Add(F0)
                     ErgValuesReg(tCompErgReg.F0_LS2).Add(F0 * (Roh_air_LS2 / numLS2) / roh_air_ref)
                     ErgValuesReg(tCompErgReg.F2_LS2_ref).Add(F2)
-                    ErgValuesReg(tCompErgReg.RRC_LS2).Add((ErgValuesReg(tCompErgReg.F0_LS2)(lauf) / (vehicle.mveh_ref * 9.81)) * 1000)
+                    ErgValuesReg(tCompErgReg.RRC_LS2).Add((ErgValuesReg(tCompErgReg.F0_LS2)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
                     If Math.Abs(ErgValuesReg(tCompErgReg.RRC_LS1)(lauf) - ErgValuesReg(tCompErgReg.RRC_LS2)(lauf)) > delta_RRC_max Then
                         ErgValuesReg(tCompErgReg.RRC_valid).Add(0)
@@ -281,7 +281,7 @@
                     ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) = ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) / (numLS1 + numLS2)
                     ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf) = ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf) / (numHS)
                     ErgValuesReg(tCompErgReg.F0).Add(F0 * (ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) / roh_air_ref))
-                    ErgValuesReg(tCompErgReg.RRC).Add(ErgValuesReg(tCompErgReg.F0)(lauf) / (vehicle.mveh_ref * 9.81) * 1000)
+                    ErgValuesReg(tCompErgReg.RRC).Add(ErgValuesReg(tCompErgReg.F0)(lauf) / (vehicle.testMass * 9.81) * 1000)
                     ErgValuesReg(tCompErgReg.CdxA).Add(2 * F2 / roh_air_ref)
                     ErgValuesReg(tCompErgReg.delta_CdxA).Add(fCalcGenShp(ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf), vehicle))
                     ErgValuesReg(tCompErgReg.CdxA0).Add(ErgValuesReg(tCompErgReg.CdxA)(lauf) - ErgValuesReg(tCompErgReg.delta_CdxA)(lauf))
@@ -322,16 +322,16 @@
         ' Test validation
         t_amb_f = t_amb_f / t_amb_num
         If (t_amb_f - t_amb_min_f) > t_amb_var Or (t_amb_max_f - t_amb_f) > t_amb_var Then
-            fInfWarErrBW(9, False, "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
+            fInfWarErr(9, False, "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
             valid_t_amb = False
         End If
 
         If t_amb_max_f > t_amb_max Then
-            fInfWarErrBW(9, False, "Invalid test - maximum ambient temperature exceeded")
+            fInfWarErr(9, False, "Invalid test - maximum ambient temperature exceeded")
         ElseIf t_amb_min_f < t_amb_min Then
-            fInfWarErrBW(9, False, "Invalid test - fallen below minimum ambient temperature")
+            fInfWarErr(9, False, "Invalid test - fallen below minimum ambient temperature")
         ElseIf t_amb_max_f > t_amb_tarmac Then
-            fInfWarErrBW(9, False, "Invalid test - Ambient temperature higher than " & t_amb_tarmac & "°C")
+            fInfWarErr(9, False, "Invalid test - Ambient temperature higher than " & t_amb_tarmac & "°C")
         End If
 
         Return True
@@ -400,7 +400,7 @@
 
         ' Find the correct curve
         For i = 0 To GenShape.veh_class.Count - 1
-            If GenShape.veh_class(i) = vehicleX.ID And GenShape.veh_conf(i) = vehicleX.veh_conf Then
+            If GenShape.veh_class(i) = vehicleX.classCode And CBool(GenShape.veh_conf(i)) = vehicleX.IsRigid Then
                 pos = i
                 Exit For
             End If
@@ -414,10 +414,10 @@
             End If
             If i = GenShape.x_val(pos).Length - 1 And beta > GenShape.x_val(pos)(i + 1) Then
                 ValueX = 0
-                fInfWarErrBW(8, False, "The calculated yaw angle is higher than the greatest value in the generic curve. Delta_CdxA is set to 0!")
+                fInfWarErr(8, False, "The calculated yaw angle is higher than the greatest value in the generic curve. Delta_CdxA is set to 0!")
             ElseIf i = 0 And GenShape.x_val(pos)(i) > beta Then
                 ValueX = 0
-                fInfWarErrBW(8, False, "The calculated yaw angle is lower than the lowest value in the generic curve. Delta_CdxA is set to 0!")
+                fInfWarErr(8, False, "The calculated yaw angle is lower than the lowest value in the generic curve. Delta_CdxA is set to 0!")
             End If
         Next i
 

@@ -105,34 +105,35 @@
   <ItemGroup>
     <Compile Include="Classes\cGenShp.vb" />
     <Compile Include="Classes\cMSC.vb" />
+    <Compile Include="IO\cJsonFile.vb" />
     <Compile Include="Classes\CResult.vb" />
-    <Compile Include="Classes\cSettings.vb" />
+    <Compile Include="IO\cPreferences.vb" />
+    <Compile Include="cSemanticVersion.vb" />
     <Compile Include="Classes\csKey.vb" />
     <Compile Include="Classes\cUTMCoord.vb" />
     <Compile Include="Classes\cValidSec.vb" />
-    <Compile Include="Classes\cVehicle.vb" />
+    <Compile Include="IO\cVehicle.vb" />
     <Compile Include="Classes\cVirtMSC.vb" />
-    <Compile Include="Export\Minor_routines_output.vb" />
-    <Compile Include="Export\output.vb" />
-    <Compile Include="Export\OutputTest.vb" />
+    <Compile Include="IO\output.vb" />
+    <Compile Include="IO\OutputTest.vb" />
     <Compile Include="Calculation\Minor_routines_calculate.vb" />
     <Compile Include="Calculation\main_calculation_call.vb" />
     <Compile Include="Calculation\Signal_identification.vb" />
     <Compile Include="Calculation\sub_linear_regression.vb" />
-    <Compile Include="Import\read_input.vb" />
+    <Compile Include="IO\input.vb" />
     <Compile Include="GUI\Export_GUI.vb" />
-    <Compile Include="GUI\minor_routines_GUI.vb" />
+    <Compile Include="GUI\utils_GUI.vb" />
     <Compile Include="GUI\cFileBrowser.vb" />
-    <Compile Include="GUI\CSE_Config.designer.vb">
-      <DependentUpon>CSE_Config.vb</DependentUpon>
+    <Compile Include="GUI\F_Preferences.designer.vb">
+      <DependentUpon>F_Preferences.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CSE_Config.vb">
+    <Compile Include="GUI\F_Preferences.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\CSE_Info.Designer.vb">
-      <DependentUpon>CSE_Info.vb</DependentUpon>
+    <Compile Include="GUI\F_About.Designer.vb">
+      <DependentUpon>F_About.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CSE_Info.vb">
+    <Compile Include="GUI\F_About.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="declaration_public.vb" />
@@ -148,10 +149,10 @@
     <Compile Include="GUI\FB_FavDlog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\CSEMain.Designer.vb">
-      <DependentUpon>CSEMain.vb</DependentUpon>
+    <Compile Include="GUI\F_Main.Designer.vb">
+      <DependentUpon>F_Main.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CSEMain.vb">
+    <Compile Include="GUI\F_Main.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -169,18 +170,18 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Tools\ApplicationEvents.vb" />
-    <Compile Include="Tools\Minor_routines.vb" />
-    <Compile Include="Tools\cFile_v3.vb" />
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="utils.vb" />
+    <Compile Include="Classes\cFile_v3.vb" />
     <Compile Include="CSE_Globals.vb" />
     <Compile Include="CSE_Types.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GUI\CSE_Config.resx">
-      <DependentUpon>CSE_Config.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\F_Preferences.resx">
+      <DependentUpon>F_Preferences.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\CSE_Info.resx">
-      <DependentUpon>CSE_Info.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\F_About.resx">
+      <DependentUpon>F_About.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\FB_Dialog.resx">
       <DependentUpon>FB_Dialog.vb</DependentUpon>
@@ -188,8 +189,8 @@
     <EmbeddedResource Include="GUI\FB_FavDlog.resx">
       <DependentUpon>FB_FavDlog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\CSEMain.resx">
-      <DependentUpon>CSEMain.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\F_Main.resx">
+      <DependentUpon>F_Main.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -199,6 +200,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -294,6 +296,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

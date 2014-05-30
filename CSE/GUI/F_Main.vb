@@ -1,6 +1,6 @@
 ﻿Imports System.IO
 
-Public Class CSEMain
+Public Class F_Main
     ' Declarations
     Private ToolstripSave As Boolean = False
     Private ToolstripSaveAs As Boolean = False
@@ -9,7 +9,7 @@ Public Class CSEMain
     Private Cali As Boolean = True
 
     ' Load the GUI
-    Private Sub CSEMain_Load(sender As System.Object, e As System.EventArgs) Handles Me.Load
+    Private Sub CSEMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.Load
         ' Declarations
         Dim configL As Boolean = True
         Dim NoLegFile As Boolean = False
@@ -25,15 +25,17 @@ Public Class CSEMain
         ' Name of the GUI
         Me.Text = AppName & " " & AppVers
 
+        ' Write the beginning in the Log
+        fWriteLog(1)
+
         ' Load the config file
         '
-        Dim settings_fpath = cSettings.SettingsPath()
         Try
-            Dim fileSettings As New cSettings(settings_fpath)
-            fileSettings.Validate()
-            AppSettings = fileSettings
+            AppPreferences = New cPreferences(PreferencesPath)
         Catch ex As Exception
-            fInfWarErr(9, False, format("Failed loading Settings({0}) due to: {1}", settings_fpath, ex.Message))
+            fInfWarErr(9, False, format(<str>Failed loading Preferences({0}) due to: {1} 
+\iThis is normal the first time you launch the application.</str>, _
+                                        PreferencesPath, ex.Message), ex)
             configL = False
         End Try
 
@@ -44,12 +46,9 @@ Public Class CSEMain
 
         ' Polling if the working dir exist (If not then generate the folder)
         '
-        If Not IO.Directory.Exists(AppSettings.WorkingDir) Then
-            IO.Directory.CreateDirectory(AppSettings.WorkingDir)
+        If Not IO.Directory.Exists(AppPreferences.workingDir) Then
+            IO.Directory.CreateDirectory(AppPreferences.workingDir)
         End If
-
-        ' Write the beginning in the AppSettings.WriteLog
-        fWriteLog(1)
 
         'Lizenz checken
         If Not Lic.LICcheck() Then
@@ -58,13 +57,13 @@ Public Class CSEMain
             Me.Close()
         End If
 
-        ' Write a defailt config file if failed to read one.
+        ' Write a defult config file if failed to read one.
         If Not configL Then
             Try
-                AppSettings.Store(settings_fpath)
-                fInfWarErr(7, False, format("Created Settings({0}).", settings_fpath))
+                AppPreferences.Store(PreferencesPath)
+                fInfWarErr(7, False, format("Stored new Preferences({0}).", PreferencesPath))
             Catch ex As Exception
-                fInfWarErr(9, False, format("Failed storing Settings({0}) due to: {1}", settings_fpath, ex.Message))
+                fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1}", PreferencesPath, ex.Message), ex)
             End Try
         End If
     End Sub
@@ -73,14 +72,14 @@ Public Class CSEMain
 #Region "Main"
     ' Close the GUI
     Private Sub CSEMain_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
-        ' Write the end into the AppSettings.WriteLog
+        ' Write the end into the Log
         fWriteLog(3)
     End Sub
 
     ' Open the filebrowser for the selection of the vehiclefile
     Private Sub ButtonSelectVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectVeh.Click
         ' Open the filebrowser with the *.csveh parameter
-        If fbVEH.OpenDialog(AppSettings.WorkingDir, False) Then
+        If fbVEH.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEH.Files(0) <> Nothing) Then
                 Me.TextBoxVeh1.Text = fbVEH.Files(0)
             End If
@@ -90,16 +89,16 @@ Public Class CSEMain
     ' Open the vehiclefile in the Notepad
     Private Sub ButtonVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonVeh.Click
         If IO.File.Exists(Me.TextBoxVeh1.Text) Then
-            System.Diagnostics.Process.Start(AppSettings.Editor, Me.TextBoxVeh1.Text)
+            System.Diagnostics.Process.Start(AppPreferences.editor, Me.TextBoxVeh1.Text)
         Else
-            If Not fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxVeh1.Text) Then Exit Sub
+            fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxVeh1.Text)
         End If
     End Sub
 
     ' Open the filebrowser for the selection of the weatherfile
     Private Sub ButtonSelectWeather_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectWeather.Click
         ' Open the filebrowser with the *.cswea parameter
-        If fbAMB.OpenDialog(AppSettings.WorkingDir, False) Then
+        If fbAMB.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbAMB.Files(0) <> Nothing) Then
                 Me.TextBoxWeather.Text = fbAMB.Files(0)
             End If
@@ -109,9 +108,9 @@ Public Class CSEMain
     ' Open the weatherfile in the Notepad
     Private Sub ButtonWeather_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWeather.Click
         If IO.File.Exists(Me.TextBoxWeather.Text) Then
-            System.Diagnostics.Process.Start(AppSettings.Editor, Me.TextBoxWeather.Text)
+            System.Diagnostics.Process.Start(AppPreferences.editor, Me.TextBoxWeather.Text)
         Else
-            If Not fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxWeather.Text) Then Exit Sub
+            fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxWeather.Text)
         End If
     End Sub
 
@@ -131,7 +130,7 @@ Public Class CSEMain
     ' Open the filebrowser for the selection of the datafile from the calibration run
     Private Sub ButtonSelectDataC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataC.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppSettings.WorkingDir, False) Then
+        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataC.Text = fbVEL.Files(0)
             End If
@@ -155,7 +154,7 @@ Public Class CSEMain
     ' Open the filebrowser for the selection of the measure section config file (MSC)
     Private Sub ButtonSelectMSCC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCC.Click
         ' Open the filebrowser with the *.csmsc parameter
-        If fbMSC.OpenDialog(AppSettings.WorkingDir, False) Then
+        If fbMSC.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbMSC.Files(0) <> Nothing) Then
                 Me.TextBoxMSCC.Text = fbMSC.Files(0)
             End If
@@ -194,7 +193,7 @@ Public Class CSEMain
 
         ' Read the data from the GUI
         If Not fGetOpt(True, Cali) Then
-            Me.ButtonCalC.Text = "Calculate"
+            Me.ButtonCalC.Text = "Calibrate"
             Exit Sub
         End If
 
@@ -206,16 +205,16 @@ Public Class CSEMain
             If OutFolder <> Nothing Then
                 ' Generate the folder if it is desired
                 Dim resEx As MsgBoxResult
-                resEx = MsgBox("Output folder doesn´t exist! Create Folder?", MsgBoxStyle.YesNo, "Create folder?")
+                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
                 If resEx = MsgBoxResult.Yes Then
                     MkDir(OutFolder)
                 Else
-                    Me.ButtonCalC.Text = "Calculate"
+                    Me.ButtonCalC.Text = "Calibrate"
                     Exit Sub
                 End If
             Else
                 fInfWarErr(9, False, "No outputfolder is given!")
-                Me.ButtonCalC.Text = "Calculate"
+                Me.ButtonCalC.Text = "Calibrate"
                 Exit Sub
             End If
         End If
@@ -224,9 +223,7 @@ Public Class CSEMain
         Me.ListBoxMSG.Items.Clear()
         fClear_VECTO_Form(False, False)
 
-        ' Write the Calculation status in the Messageoutput and in the AppSettings.WriteLog
-        fInfWarErr(7, False, "Starting VECTO CSE calibration calculation...")
-        If AppSettings.WriteLog Then fWriteLog(2, 4, "------------- Job: " & JobFile & " | Out: " & OutFolder & " | " & CDate(DateAndTime.Now) & "-------------")
+        fInfWarErr(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
         ' Start the calculation in the backgroundworker
         Me.BackgroundWorkerVECTO.RunWorkerAsync()
@@ -238,7 +235,7 @@ Public Class CSEMain
     ' Open the filebrowser for the selection of the measure section file from the test run
     Private Sub ButtonSelectMSCT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCT.Click
         ' Open the filebrowser with the *.csmsc parameter
-        If fbMSC.OpenDialog(AppSettings.WorkingDir, False) Then
+        If fbMSC.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbMSC.Files(0) <> Nothing) Then
                 Me.TextBoxMSCT.Text = fbMSC.Files(0)
             End If
@@ -262,7 +259,7 @@ Public Class CSEMain
     ' Open the filebrowser for the selection of the first low speed data file from the test run
     Private Sub ButtonSelectDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS1.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppSettings.WorkingDir, False) Then
+        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataLS1.Text = fbVEL.Files(0)
             End If
@@ -286,7 +283,7 @@ Public Class CSEMain
     ' Open the filebrowser for the selection of the high speed data file from the test run
     Private Sub ButtonSelectDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataHS.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppSettings.WorkingDir, False) Then
+        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataHS.Text = fbVEL.Files(0)
             End If
@@ -310,7 +307,7 @@ Public Class CSEMain
     ' Open the filebrowser for the selection of the second low speed data file from the test run
     Private Sub ButtonSelectDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS2.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppSettings.WorkingDir, False) Then
+        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataLS2.Text = fbVEL.Files(0)
             End If
@@ -344,8 +341,7 @@ Public Class CSEMain
         Me.ButtonEval.Text = "Cancel"
         Cali = False
 
-        ' Add into the AppSettings.WriteLog
-        If AppSettings.WriteLog Then fWriteLog(2, 4, "----- Speed runs ")
+        fWriteLog(2, 4, "----- Speed runs ")
 
         ' Read the data from the GUI
         If Not fGetOpt(True, Cali) Then
@@ -361,7 +357,7 @@ Public Class CSEMain
             If OutFolder <> Nothing Then
                 ' Generate the folder if it is desired
                 Dim resEx As MsgBoxResult
-                resEx = MsgBox("Output folder doesn´t exist! Create Folder?", MsgBoxStyle.YesNo, "Create folder?")
+                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
                 If resEx = MsgBoxResult.Yes Then
                     MkDir(OutFolder)
                 Else
@@ -378,8 +374,8 @@ Public Class CSEMain
         ' Clear the MSG on the GUI
         fClear_VECTO_Form(False, False)
 
-        ' Write the Calculation status in the Messageoutput and in the AppSettings.WriteLog
-        fInfWarErr(7, False, "Starting VECTO CSE test evaluation...")
+        ' Write the Calculation status in the Messageoutput and in the Log
+        fInfWarErr(7, False, format("Starting EVALUATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
         ' Start the calculation in the backgroundworker
         Me.BackgroundWorkerVECTO.RunWorkerAsync()
@@ -397,15 +393,15 @@ Public Class CSEMain
     ' Menu open
     Private Sub ToolStripMenuItemOpen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click
         ' Open the filebrowser with the *.csjob parameter
-        If fbVECTO.OpenDialog(AppSettings.WorkingDir, False) Then
+        If fbVECTO.OpenDialog(AppPreferences.workingDir, False) Then
             JobFile = fbVECTO.Files(0)
             If (JobFile <> Nothing) Then
                 ' Clear the GUI
                 fClear_VECTO_Form(False)
-                OutFolder = fPath(JobFile) & "\Results\"
+                OutFolder = joinPaths(fPath(JobFile), "Results\")
 
                 ' Identify the given Jobfile
-                If fEXT(JobFile) <> "txt" And fEXT(JobFile) <> "csjob" Then
+                If fEXT(JobFile) <> ".txt" And fEXT(JobFile) <> ".csjob" Then
                     fInfWarErr(8, False, "The Inputfile is not a regular VECTO-File: " & JobFile)
                 Else
                     ' Read the Jobfile and insert the data in the GUI
@@ -422,7 +418,7 @@ Public Class CSEMain
             ' Open the filebrowser to select the folder and name of the Jobfile
             If fbVECTO.SaveDialog(JobFile) Then
                 JobFile = fbVECTO.Files(0)
-                OutFolder = fPath(JobFile) & "\Results\"
+                OutFolder = joinPaths(fPath(JobFile), "Results\")
                 Me.Text = Formname & " " & JobFile
             End If
             If (JobFile = Nothing) Then
@@ -457,15 +453,15 @@ Public Class CSEMain
 #End Region
 
 #Region "Tools"
-    ' Menu open the AppSettings.WriteLog
+    ' Menu open the Log
     Private Sub ToolStripMenuItemLog_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemLog.Click
-        System.Diagnostics.Process.Start(AppSettings.Editor, MyPath & "Log.txt")
+        System.Diagnostics.Process.Start(AppPreferences.editor, joinPaths(MyPath, "log.txt"))
     End Sub
 
     ' Menu open the config file
     Private Sub ToolStripMenuItemOption_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOption.Click
         ' Show the confic GUI
-        CSE_Config.Show()
+        F_Preferences.Show()
     End Sub
 #End Region
 
@@ -473,14 +469,13 @@ Public Class CSEMain
     ' Create activation file
     Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreatActivationFileToolStripMenuItem.Click
         Lic.CreateActFile(MyPath & "ActivationCode.dat")
-        fInfWarErr(7, False, "Activation code created under: " & MyPath & "ActivationCode.dat")
         fInfWarErr(7, True, "Activation code created under: " & MyPath & "ActivationCode.dat")
     End Sub
 
     ' Menu open the Infobox
     Private Sub ToolStripMenuItemAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemAbout.Click
         ' Show the info GUI
-        CSE_Info.Show()
+        F_About.Show()
     End Sub
 
     ' Menu open the user manual
@@ -489,7 +484,7 @@ Public Class CSEMain
         Try
             System.Diagnostics.Process.Start(manual_fname)
         Catch ex As Exception
-            fInfWarErr(9, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message))
+            fInfWarErr(9, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
         End Try
     End Sub
 #End Region
@@ -565,12 +560,16 @@ Public Class CSEMain
     '*********Backgroundworker*********
 
     ' Backgroundworker for the calculation in the background
-    Private Sub BackgroundWorkerVECTO_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorkerVECTO.DoWork
+    Private Sub BackgroundWorkerVECTO_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) _
+        Handles BackgroundWorkerVECTO.DoWork
 
         '##### START THE CALCULATION #####
         '#################################
-
-        calculation(Cali)
+        Try
+            calculation(Cali)
+        Catch ex As Exception
+            fInfWarErr(9, False, format("Calculation Failed due to: {0}", ex.Message), ex)
+        End Try
 
         '#################################
 
@@ -581,44 +580,40 @@ Public Class CSEMain
     End Sub
 
     ' Output from messages with the Backgroundworker
-    Private Sub BackgroundWorkerVECTO_ProgressChanged(ByVal sender As Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs) Handles BackgroundWorkerVECTO.ProgressChanged
-        ' Declarations
-        Dim WorkerMsg As CMsg
-        WorkerMsg = New CMsg
+    Private Sub BackgroundWorkerVECTO_ProgressChanged(ByVal sender As Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs) _
+        Handles BackgroundWorkerVECTO.ProgressChanged
 
-        ' Identify the Message
-        WorkerMsg = e.UserState
-
-        If e.UserState Is Nothing Then
-
-        Else
-            ' Call the function for the depiction from the message on the GUI
-            MsgToForm(WorkerMsg.Styletext, WorkerMsg.Style, WorkerMsg.Text)
+        Dim workerMsg As cLogMsg = e.UserState
+        If workerMsg IsNot Nothing Then
+            workerMsg.forwardLog()
         End If
     End Sub
 
     ' Identify the ending from the backgroundworker
-    Private Sub BackgroundWorkerVECTO_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorkerVECTO.RunWorkerCompleted
+    Private Sub BackgroundWorkerVECTO_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+        Handles BackgroundWorkerVECTO.RunWorkerCompleted
+
+        Dim op = IIf(Cali, "Calibration", "Evaluation")
+
         ' If an Error is detected
         If e.Error IsNot Nothing Then
-            fInfWarErr(7, False, "End with Error")
-            MsgBox(e.Error.Message)
+            fInfWarErr(8, True, format("{0} ended with exception: {1}", op, e.Error), e.Error)
         Else
             If e.Cancelled Then
                 If ErrorExit Then
-                    fInfWarErr(7, False, "End with Error")
+                    fInfWarErr(8, False, format("{0} ended with exception: {1}", op, e.Error), e.Error)
                 Else
-                    fInfWarErr(7, False, "Aborted by user")
+                    fInfWarErr(7, False, format("{0} aborted by user.", op))
                 End If
             Else
-                fInfWarErr(7, False, "Done")
+                fInfWarErr(7, False, format("{0} ended OK.", op))
                 If Cali Then Me.ButtonEval.Enabled = True
             End If
         End If
 
         ' Reset the calculate button to calculate
         If Cali Then
-            Me.ButtonCalC.Text = "Calculate"
+            Me.ButtonCalC.Text = "Calibrate"
             Me.TextBoxRVeh.Text = Math.Round(fv_veh, 3).ToString
             Me.TextBoxRAirPos.Text = Math.Round(fv_pe, 3).ToString
             Me.TextBoxRBetaMis.Text = Math.Round(beta_ame, 2).ToString

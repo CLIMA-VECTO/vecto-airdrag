@@ -1,0 +1,242 @@
+﻿Option Strict Off
+
+Imports Newtonsoft.Json.Linq
+Imports Newtonsoft.Json.Schema
+
+Public Class cPreferences
+    Inherits cJsonFile
+
+    Protected Overrides Function HeaderOverlay() As JObject
+        Return JObject.Parse(<json>{
+                "Title": "vecto-cse PREFERENCES",
+                "FileVersion":  "1.0.0",
+           }</json>.Value)
+    End Function
+
+    ' Defaults specified here.
+    Protected Overrides Function BodyContent() As JObject
+        '' Return empty body since all proprs are optional.
+        '' They will become concrete on the 1st store.
+        Return New JObject()
+        'Return JObject.Parse(<json>{
+        '        "workingDir":   null,
+        '        "writeLog":     true,
+        '        "logSize":      10,
+        '        "logLevel":     5,
+        '        "editor":       "notepad.exe",
+        '    }</json>.Value)
+    End Function
+
+    Public Overrides Function BodySchema() As JObject
+        Return JObject.Parse(JSchemaStr())
+    End Function
+
+    ''' <param name="allowAdditionalProps">when false, more strict validation</param>
+    Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
+        Dim allowAdditionalProps_str As String = IIf(allowAdditionalProps, "true", "false")
+        Return <json>{
+            "title": "Schema for vecto-cse PREFERENCES",
+            "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
+            "required": true,
+            "properties": {
+                "workingDir": {
+                    "title": "Working Directory",
+                    "type": ["string", "null"], 
+                    "default": null,
+                    "description": "The path of the Working Directory for input/output files. \nWhen null/empty, app's dir implied.",
+                }, 
+                "writeLog": {
+                    "title": "Log to file",
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to write messages to log file.",
+                }, 
+                "logSize": {
+                    "title": "Log-file's limit",
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 10,
+                    "description": "Allowed Log-file size limit [MiB].",
+                }, 
+                "logLevel": {
+                    "title": "Log-window's Level",
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10, "exclusiveMaximum": true,
+                    "default": 5,
+                    "description": "Sets the threshold(Level) below from which log-messages are skipped from the log-window.
+    0     : All
+    3-7   : No infos
+    8     : No warnings
+    9     : Not even errors!
+    other : Nothing at all",
+                }, 
+                "editor": {
+                    "type": "string",
+                    "default": "notepad.exe",
+                    "description": "Path (or just the filename, if in PATH) of a text editor.",
+                }, 
+                "strictBodies": {
+                    "title": "Strict Bodies",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Controls whether unknown body-properties are accepted when reading JSON-files. 
+It is useful for debugging malformed input-files, ie to detect 
+accidentally renamed properties.
+Each file can override it by setting its /Header/StrictBody property.",
+                }, 
+                "includeSchemas": {
+                    "title": "Include Schemas",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Controls whether to self-document JSON-files by populating their '/Header/BodySchema' property.
+Each file can override it by setting its '/Header/BodySchema' property to false/true.",
+                }, 
+            }
+        }</json>.Value
+    End Function
+
+
+
+
+    ''' <summary>Reads from file or creates defaults</summary>
+    ''' <param name="inputFilePath">If unspecifed, default prefs used, otherwise data read from file</param>
+    ''' <remarks>See cJsonFile() constructor</remarks>
+    Sub New(Optional ByVal inputFilePath As String = Nothing, Optional ByVal skipValidation As Boolean = False)
+        MyBase.New(inputFilePath, skipValidation)
+    End Sub
+
+
+    ''' <exception cref="SystemException">includes all validation errors</exception>
+    ''' <param name="strictBody">when True, no additional json-properties allowed in the data, when nothing, use value from Header</param>
+    Protected Overrides Sub ValidateBody(ByVal strictBody As Boolean, ByVal validateMsgs As IList(Of String))
+        '' Check version
+        ''
+        Dim fromVersion = "1.0.0--"
+        Dim toVersion = "2.0.0--" ' The earliest pre-release.
+        If Not IsSemanticVersionsSupported(Me.FileVersion, fromVersion, toVersion) Then
+            validateMsgs.Add(format("Unsupported FileVersion({0}, was not in between [{1}, {2})", FileVersion, fromVersion, toVersion))
+            Return
+        End If
+
+        '' Check schema
+        ''
+        Dim schema = JsonSchema.Parse(JSchemaStr(Not strictBody))
+        ValidateJson(Me.Body, schema, validateMsgs)
+    End Sub
+
+
+
+
+#Region "json props"
+    Public Property workingDir As String
+        Get
+            Dim value As String = Me.Body("workingDir")
+            If value Is Nothing OrElse String.IsNullOrWhiteSpace(value) Then
+                Return MyPath
+            ElseIf IO.Path.IsPathRooted(value) Then
+                Return value
+            Else
+                Return joinPaths(MyPath, value)
+            End If
+        End Get
+        Set(ByVal value As String)
+            If value IsNot Nothing Then
+                '' Convert emtpy-paths into MyPath and store them as null.
+                ''
+                value = value.Trim()
+                If value.Length = 0 Then
+                    value = Nothing
+                Else
+                    '' Convert MyPath-prefixed paths into relative ones.
+                    ''
+                    Dim myPlainPath = IO.Path.GetFullPath(StripBackslash(MyPath))
+                    value = IO.Path.GetFullPath(value)
+                    If value.StartsWith(myPlainPath, StringComparison.OrdinalIgnoreCase) Then
+                        value = value.Substring(myPlainPath.Length)
+                        If (value.First = "\"c) Then
+                            value = value.Substring(1)
+                        End If
+                        If (value.Last <> "\"c) Then
+                            value = value & "\"
+                        End If
+
+                        If value.Length = 1 Then
+                            value = Nothing
+                        End If
+                    End If
+
+                    '' Store MyPath as null.
+                    ''
+                    If String.Equals(value, MyPath, StringComparison.OrdinalIgnoreCase) Then
+                        value = Nothing
+                    End If
+                End If
+            End If
+
+            '' NOTE: Early-binding makes Nulls end-up as 'string' schema-type.
+            ''
+            If value Is Nothing Then
+                Me.Body("workingDir") = Nothing
+            Else
+                Me.Body("workingDir") = value
+            End If
+        End Set
+    End Property
+
+    Public Property writeLog As Boolean
+        Get
+            Return BodyGetter(".writeLog")
+        End Get
+        Set(ByVal value As Boolean)
+            Me.Body("writeLog") = value
+        End Set
+    End Property
+
+    Public Property logSize As Integer
+        Get
+            Return BodyGetter(".logSize")
+        End Get
+        Set(ByVal value As Integer)
+            Me.Body("logSize") = value
+        End Set
+    End Property
+
+    Public Property logLevel As Integer
+        Get
+            Return BodyGetter(".logLevel")
+        End Get
+        Set(ByVal value As Integer)
+            Me.Body("logLevel") = value
+        End Set
+    End Property
+
+    Public Property editor As String
+        Get
+            Return BodyGetter(".editor")
+        End Get
+        Set(ByVal value As String)
+            Me.Body("editor") = value
+        End Set
+    End Property
+
+    Public Property strictBodies As Boolean
+        Get
+            Return BodyGetter(".strictBodies")
+        End Get
+        Set(ByVal value As Boolean)
+            Me.Body("strictBodies") = value
+        End Set
+    End Property
+
+    Public Property includeSchemas As Boolean
+        Get
+            Return BodyGetter(".includeSchemas")
+        End Get
+        Set(ByVal value As Boolean)
+            Me.Body("includeSchemas") = value
+        End Set
+    End Property
+
+#End Region ' "json props"
+End Class

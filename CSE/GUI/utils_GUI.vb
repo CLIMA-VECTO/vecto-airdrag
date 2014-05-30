@@ -1,4 +1,6 @@
-﻿Module minor_routines_GUI
+﻿Imports Newtonsoft.Json.Linq
+
+Module utils_GUI
 
     ' Clear the GUI
     Public Function fClear_VECTO_Form(ByVal Komplet As Boolean, Optional ByVal Fields As Boolean = True) As Boolean
@@ -10,27 +12,27 @@
 
         If Fields Then
             ' Clear the Textboxes or set them to default
-            CSEMain.TextBoxVeh1.Clear()
-            CSEMain.TextBoxWeather.Clear()
-            CSEMain.TextBoxAirf.Text = 1
-            CSEMain.TextBoxAird.Text = 0
-            CSEMain.TextBoxbetaf.Text = 1
-            CSEMain.TextBoxbetad.Text = 0
-            CSEMain.CheckBoxAcc.Checked = True
-            CSEMain.CheckBoxGrd.Checked = False
+            F_Main.TextBoxVeh1.Clear()
+            F_Main.TextBoxWeather.Clear()
+            F_Main.TextBoxAirf.Text = 1
+            F_Main.TextBoxAird.Text = 0
+            F_Main.TextBoxbetaf.Text = 1
+            F_Main.TextBoxbetad.Text = 0
+            F_Main.CheckBoxAcc.Checked = True
+            F_Main.CheckBoxGrd.Checked = False
 
             ' Calibration fields
-            CSEMain.TextBoxDataC.Clear()
-            CSEMain.TextBoxMSCC.Clear()
-            CSEMain.TextBoxRRC.Text = 1.0
+            F_Main.TextBoxDataC.Clear()
+            F_Main.TextBoxMSCC.Clear()
+            F_Main.TextBoxRRC.Text = 1.0
 
             ' Test run fields
-            CSEMain.TextBoxMSCT.Clear()
-            CSEMain.TextBoxDataLS1.Clear()
-            CSEMain.TextBoxDataHS.Clear()
-            CSEMain.TextBoxDataLS2.Clear()
+            F_Main.TextBoxMSCT.Clear()
+            F_Main.TextBoxDataLS1.Clear()
+            F_Main.TextBoxDataHS.Clear()
+            F_Main.TextBoxDataLS2.Clear()
 
-            CSEMain.ButtonEval.Enabled = False
+            F_Main.ButtonEval.Enabled = False
 
             ' Option parameters to standard
             StdParameter()
@@ -38,11 +40,11 @@
         End If
 
         ' Clear the Warning and Error box
-        CSEMain.ListBoxWar.Items.Clear()
-        CSEMain.ListBoxErr.Items.Clear()
-        CSEMain.TabControlOutMsg.SelectTab(0)
-        CSEMain.TabPageErr.Text = "Errors (0)"
-        CSEMain.TabPageWar.Text = "Warnings (0)"
+        F_Main.ListBoxWar.Items.Clear()
+        F_Main.ListBoxErr.Items.Clear()
+        F_Main.TabControlOutMsg.SelectTab(0)
+        F_Main.TabPageErr.Text = "Errors (0)"
+        F_Main.TabPageWar.Text = "Warnings (0)"
         Return True
     End Function
 
@@ -50,14 +52,15 @@
     Function fControlPath(ByVal Line As String, ByVal position As Integer) As Boolean
         ' Polling if a path is available
         If (Line = Nothing) Then
-            If Not fInfWarErr(9, False, "No " & NameFK(position) & "-Inputfile") Then Return True
+            fInfWarErr(9, False, "No " & NameFK(position) & "-Inputfile")
+            Return True
             ' Polling if the path is an acceptable inputfile
         ElseIf IsNumeric(Line) Or (Mid(Line, 2, 1) <> ":") Or (Line = varOutStr) Then
-            If Not fInfWarErr(9, False, "No acceptably " & NameFK(position) & "-Inputfile: " & Line) Then Return True
+            fInfWarErr(9, False, "No acceptably " & NameFK(position) & "-Inputfile: " & Line)
+            Return True
         End If
 
-        ' Write the path into the AppSettings.WriteLog
-        If AppSettings.WriteLog Then fWriteLog(2, 4, NameFK(position) & " File: " & Line)
+        fWriteLog(2, 4, NameFK(position) & " File: " & Line)
 
         Return False
     End Function
@@ -76,7 +79,7 @@
             ' Open the jobfile
             If Not FileInVECTO.OpenRead(JobFile) Then
                 ' Falls File nicht vorhanden, abbrechen mit Fehler
-                fInfWarErrBW(9, False, "Can´t find the Jobfile file: " & JobFile)
+                fInfWarErr(9, False, "Can´t find the Jobfile file: " & JobFile)
                 Return False
             End If
 
@@ -214,27 +217,27 @@
                                 tq_sum_1s_delta = Line(0)
                         End Select
                     Else
-                        fInfWarErrBW(9, False, "The given value in the job file at position: " & i & " is not a number")
+                        fInfWarErr(9, False, "The given value in the job file at position: " & i & " is not a number")
                         BWorker.CancelAsync()
                         Return False
                     End If
                 Loop
             Catch ex As Exception
                 ' Error
-                fInfWarErrBW(9, False, "Invalid value in the job file at position: " & i)
+                fInfWarErr(9, False, "Invalid value in the job file at position: " & i)
                 BWorker.CancelAsync()
                 Return False
             End Try
 
             ' Look if enough parameters are given
             If i < 34 Then
-                fInfWarErrBW(9, False, "Not enough parameters given in the job file")
+                fInfWarErr(9, False, "Not enough parameters given in the job file")
                 BWorker.CancelAsync()
                 Return False
             End If
 
             ' Control the input files
-            fControlInput(Vehspez, 1, "csveh")
+            fControlInput(Vehspez, 1, "csveh.json")
             fControlInput(Ambspez, 2, "csamb")
             fControlInput(MSCCSpez, 3, "csms")
             fControlInput(MSCTSpez, 4, "csms")
@@ -246,21 +249,21 @@
 
         ' Transfer the data to the GUI
         ' General
-        CSEMain.TextBoxVeh1.Text = Vehspez
-        CSEMain.TextBoxAirf.Text = AnemIC(1)
-        CSEMain.TextBoxAird.Text = AnemIC(2)
-        CSEMain.TextBoxbetaf.Text = AnemIC(3)
-        CSEMain.TextBoxbetad.Text = AnemIC(4)
-        CSEMain.TextBoxWeather.Text = Ambspez
+        F_Main.TextBoxVeh1.Text = Vehspez
+        F_Main.TextBoxAirf.Text = AnemIC(1)
+        F_Main.TextBoxAird.Text = AnemIC(2)
+        F_Main.TextBoxbetaf.Text = AnemIC(3)
+        F_Main.TextBoxbetad.Text = AnemIC(4)
+        F_Main.TextBoxWeather.Text = Ambspez
         ' Calibration
-        CSEMain.TextBoxMSCC.Text = MSCCSpez
-        CSEMain.TextBoxDataC.Text = DataSpez(1)
+        F_Main.TextBoxMSCC.Text = MSCCSpez
+        F_Main.TextBoxDataC.Text = DataSpez(1)
         ' Test
-        CSEMain.TextBoxMSCT.Text = MSCTSpez
-        CSEMain.TextBoxRRC.Text = RRC
-        CSEMain.TextBoxDataLS1.Text = DataSpez(2)
-        CSEMain.TextBoxDataHS.Text = DataSpez(3)
-        CSEMain.TextBoxDataLS2.Text = DataSpez(4)
+        F_Main.TextBoxMSCT.Text = MSCTSpez
+        F_Main.TextBoxRRC.Text = RRC
+        F_Main.TextBoxDataLS1.Text = DataSpez(2)
+        F_Main.TextBoxDataHS.Text = DataSpez(3)
+        F_Main.TextBoxDataLS2.Text = DataSpez(4)
         ' Options
         WriteParToTB()
 
@@ -369,10 +372,10 @@
     Function fControlInput(ByVal File As String, ByVal position As Integer, ByVal endung As String) As Boolean
         ' If no file, file with the wrong ending or the default is given then writes a warning
         If (File = Nothing) Then
-            If Not fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File") Then Return False
+            fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
             Return False
-        ElseIf (fEXT(File) <> endung) And Not (File = varOutStr) Then
-            If Not fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File") Then Return False
+        ElseIf (Not File.EndsWith(endung, StringComparison.OrdinalIgnoreCase)) And Not (File = varOutStr) Then
+            fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
             Return False
         End If
         Return True
@@ -384,23 +387,23 @@
         Dim i As Integer
 
         ' Read the data from the textboxes (General)
-        Vehspez = CSEMain.TextBoxVeh1.Text
-        Ambspez = CSEMain.TextBoxWeather.Text
-        AnemIC(1) = CSEMain.TextBoxAirf.Text
-        AnemIC(2) = CSEMain.TextBoxAird.Text
-        AnemIC(3) = CSEMain.TextBoxbetaf.Text
-        AnemIC(4) = CSEMain.TextBoxbetad.Text
+        Vehspez = F_Main.TextBoxVeh1.Text
+        Ambspez = F_Main.TextBoxWeather.Text
+        AnemIC(1) = F_Main.TextBoxAirf.Text
+        AnemIC(2) = F_Main.TextBoxAird.Text
+        AnemIC(3) = F_Main.TextBoxbetaf.Text
+        AnemIC(4) = F_Main.TextBoxbetad.Text
 
         ' Appropriate the inputfiles from calibration run
-        DataSpez(1) = CSEMain.TextBoxDataC.Text
-        MSCCSpez = CSEMain.TextBoxMSCC.Text
+        DataSpez(1) = F_Main.TextBoxDataC.Text
+        MSCCSpez = F_Main.TextBoxMSCC.Text
 
         ' Appropriate the inputfiles from test run
-        DataSpez(2) = CSEMain.TextBoxDataLS1.Text
-        DataSpez(3) = CSEMain.TextBoxDataHS.Text
-        DataSpez(4) = CSEMain.TextBoxDataLS2.Text
-        MSCTSpez = CSEMain.TextBoxMSCT.Text
-        RRC = CSEMain.TextBoxRRC.Text
+        DataSpez(2) = F_Main.TextBoxDataLS1.Text
+        DataSpez(3) = F_Main.TextBoxDataHS.Text
+        DataSpez(4) = F_Main.TextBoxDataLS2.Text
+        MSCTSpez = F_Main.TextBoxMSCT.Text
+        RRC = F_Main.TextBoxRRC.Text
 
         ' Get the option parameter
         If Not fgetPar() Then Return False
@@ -424,57 +427,57 @@
     ' Get the parameters from option tab
     Function fgetPar() As Boolean
         ' Evaluation box
-        If CSEMain.CheckBoxAcc.Checked Then AccC = True
-        If CSEMain.CheckBoxGrd.Checked Then GradC = True
+        If F_Main.CheckBoxAcc.Checked Then AccC = True
+        If F_Main.CheckBoxGrd.Checked Then GradC = True
 
         ' Output box
-        If CSEMain.RB1Hz.Checked Then HzOut = 1
-        If CSEMain.RB100Hz.Checked Then HzOut = 100
+        If F_Main.RB1Hz.Checked Then HzOut = 1
+        If F_Main.RB100Hz.Checked Then HzOut = 100
 
         'Parameter boxes
         ' General valid criteria
-        delta_t_tire_max = CSEMain.TBDeltaTTireMax.Text
-        delta_RRC_max = CSEMain.TBDeltaRRCMax.Text
-        t_amb_var = CSEMain.TBTambVar.Text
-        t_amb_tarmac = CSEMain.TBTambTamac.Text
-        t_amb_max = CSEMain.TBTambMax.Text
-        t_amb_min = CSEMain.TBTambMin.Text
+        delta_t_tire_max = F_Main.TBDeltaTTireMax.Text
+        delta_RRC_max = F_Main.TBDeltaRRCMax.Text
+        t_amb_var = F_Main.TBTambVar.Text
+        t_amb_tarmac = F_Main.TBTambTamac.Text
+        t_amb_max = F_Main.TBTambMax.Text
+        t_amb_min = F_Main.TBTambMin.Text
         ' General
-        delta_Hz_max = CSEMain.TBDeltaHzMax.Text
-        roh_air_ref = CSEMain.TBRhoAirRef.Text
-        acc_corr_ave = CSEMain.TBAccCorrAve.Text
-        delta_parallel_max = CSEMain.TBDeltaParaMax.Text
+        delta_Hz_max = F_Main.TBDeltaHzMax.Text
+        roh_air_ref = F_Main.TBRhoAirRef.Text
+        acc_corr_ave = F_Main.TBAccCorrAve.Text
+        delta_parallel_max = F_Main.TBDeltaParaMax.Text
         ' Identification of measurement section
-        delta_x_max = CSEMain.TBDeltaXMax.Text
-        delta_y_max = CSEMain.TBDeltaYMax.Text
-        delta_head_max = CSEMain.TBDeltaHeadMax.Text
+        delta_x_max = F_Main.TBDeltaXMax.Text
+        delta_y_max = F_Main.TBDeltaYMax.Text
+        delta_head_max = F_Main.TBDeltaHeadMax.Text
         ' Requirements on number of valid datasets
-        ds_min_CAL = CSEMain.TBDsMinCAL.Text
-        ds_min_LS = CSEMain.TBDsMinLS.Text
-        ds_min_HS = CSEMain.TBDsMinHS.Text
-        ds_min_head_MS = CSEMain.TBDsMinHeadHS.Text
+        ds_min_CAL = F_Main.TBDsMinCAL.Text
+        ds_min_LS = F_Main.TBDsMinLS.Text
+        ds_min_HS = F_Main.TBDsMinHS.Text
+        ds_min_head_MS = F_Main.TBDsMinHeadHS.Text
         ' DataSet validity criteria
-        dist_float = CSEMain.TBDistFloat.Text
+        dist_float = F_Main.TBDistFloat.Text
         ' Calibration
-        v_wind_ave_CAL_max = CSEMain.TBvWindAveCALMax.Text
-        v_wind_1s_CAL_max = CSEMain.TBvWind1sCALMax.Text
-        beta_ave_CAL_max = CSEMain.TBBetaAveCALMax.Text
+        v_wind_ave_CAL_max = F_Main.TBvWindAveCALMax.Text
+        v_wind_1s_CAL_max = F_Main.TBvWind1sCALMax.Text
+        beta_ave_CAL_max = F_Main.TBBetaAveCALMax.Text
         ' Low and high speed test
-        leng_crit = CSEMain.TBLengCrit.Text
+        leng_crit = F_Main.TBLengCrit.Text
         ' Low speed test
-        v_wind_ave_LS_max = CSEMain.TBvWindAveLSMax.Text
-        v_wind_1s_LS_max = CSEMain.TBvWind1sLSMax.Text
-        v_veh_ave_LS_max = CSEMain.TBvVehAveLSMax.Text
-        v_veh_ave_LS_min = CSEMain.TBvVehAveLSMin.Text
-        v_veh_float_delta = CSEMain.TBvVehFloatD.Text
-        tq_sum_float_delta = CSEMain.TBTqSumFloatD.Text
+        v_wind_ave_LS_max = F_Main.TBvWindAveLSMax.Text
+        v_wind_1s_LS_max = F_Main.TBvWind1sLSMax.Text
+        v_veh_ave_LS_max = F_Main.TBvVehAveLSMax.Text
+        v_veh_ave_LS_min = F_Main.TBvVehAveLSMin.Text
+        v_veh_float_delta = F_Main.TBvVehFloatD.Text
+        tq_sum_float_delta = F_Main.TBTqSumFloatD.Text
         ' High speed test
-        v_wind_ave_HS_max = CSEMain.TBvWindAveHSMax.Text
-        v_wind_1s_HS_max = CSEMain.TBvWind1sHSMax.Text
-        v_veh_ave_HS_min = CSEMain.TBvVehAveHSMin.Text
-        beta_ave_HS_max = CSEMain.TBBetaAveHSMax.Text
-        v_veh_1s_delta = CSEMain.TBvVeh1sD.Text
-        tq_sum_1s_delta = CSEMain.TBTq1sD.Text
+        v_wind_ave_HS_max = F_Main.TBvWindAveHSMax.Text
+        v_wind_1s_HS_max = F_Main.TBvWind1sHSMax.Text
+        v_veh_ave_HS_min = F_Main.TBvVehAveHSMin.Text
+        beta_ave_HS_max = F_Main.TBBetaAveHSMax.Text
+        v_veh_1s_delta = F_Main.TBvVeh1sD.Text
+        tq_sum_1s_delta = F_Main.TBTq1sD.Text
 
         Return True
     End Function
@@ -483,70 +486,70 @@
     Function WriteParToTB() As Boolean
         ' Write the Standard values in the textboxes
         ' General valid criteria
-        CSEMain.TBDeltaTTireMax.Text = delta_t_tire_max
-        CSEMain.TBDeltaRRCMax.Text = delta_RRC_max
-        CSEMain.TBTambVar.Text = t_amb_var
-        CSEMain.TBTambTamac.Text = t_amb_tarmac
-        CSEMain.TBTambMax.Text = t_amb_max
-        CSEMain.TBTambMin.Text = t_amb_min
+        F_Main.TBDeltaTTireMax.Text = delta_t_tire_max
+        F_Main.TBDeltaRRCMax.Text = delta_RRC_max
+        F_Main.TBTambVar.Text = t_amb_var
+        F_Main.TBTambTamac.Text = t_amb_tarmac
+        F_Main.TBTambMax.Text = t_amb_max
+        F_Main.TBTambMin.Text = t_amb_min
         ' General
-        CSEMain.TBDeltaHzMax.Text = delta_Hz_max
-        CSEMain.TBRhoAirRef.Text = roh_air_ref
-        CSEMain.TBAccCorrAve.Text = acc_corr_ave
-        CSEMain.TBDeltaParaMax.Text = delta_parallel_max
+        F_Main.TBDeltaHzMax.Text = delta_Hz_max
+        F_Main.TBRhoAirRef.Text = roh_air_ref
+        F_Main.TBAccCorrAve.Text = acc_corr_ave
+        F_Main.TBDeltaParaMax.Text = delta_parallel_max
         ' Identification of measurement section
-        CSEMain.TBDeltaXMax.Text = delta_x_max
-        CSEMain.TBDeltaYMax.Text = delta_y_max
-        CSEMain.TBDeltaHeadMax.Text = delta_head_max
+        F_Main.TBDeltaXMax.Text = delta_x_max
+        F_Main.TBDeltaYMax.Text = delta_y_max
+        F_Main.TBDeltaHeadMax.Text = delta_head_max
         ' Requirements on number of valid datasets
-        CSEMain.TBDsMinCAL.Text = ds_min_CAL
-        CSEMain.TBDsMinLS.Text = ds_min_LS
-        CSEMain.TBDsMinHS.Text = ds_min_HS
-        CSEMain.TBDsMinHeadHS.Text = ds_min_head_MS
+        F_Main.TBDsMinCAL.Text = ds_min_CAL
+        F_Main.TBDsMinLS.Text = ds_min_LS
+        F_Main.TBDsMinHS.Text = ds_min_HS
+        F_Main.TBDsMinHeadHS.Text = ds_min_head_MS
         ' DataSet validity criteria
-        CSEMain.TBDistFloat.Text = dist_float
+        F_Main.TBDistFloat.Text = dist_float
         ' Calibration
-        CSEMain.TBvWindAveCALMax.Text = v_wind_ave_CAL_max
-        CSEMain.TBvWind1sCALMax.Text = v_wind_1s_CAL_max
-        CSEMain.TBBetaAveCALMax.Text = beta_ave_CAL_max
+        F_Main.TBvWindAveCALMax.Text = v_wind_ave_CAL_max
+        F_Main.TBvWind1sCALMax.Text = v_wind_1s_CAL_max
+        F_Main.TBBetaAveCALMax.Text = beta_ave_CAL_max
         ' Low and high speed test
-        CSEMain.TBLengCrit.Text = leng_crit
+        F_Main.TBLengCrit.Text = leng_crit
         ' Low speed test
-        CSEMain.TBvWindAveLSMax.Text = v_wind_ave_LS_max
-        CSEMain.TBvWind1sLSMax.Text = v_wind_1s_LS_max
-        CSEMain.TBvVehAveLSMax.Text = v_veh_ave_LS_max
-        CSEMain.TBvVehAveLSMin.Text = v_veh_ave_LS_min
-        CSEMain.TBvVehFloatD.Text = v_veh_float_delta
-        CSEMain.TBTqSumFloatD.Text = tq_sum_float_delta
+        F_Main.TBvWindAveLSMax.Text = v_wind_ave_LS_max
+        F_Main.TBvWind1sLSMax.Text = v_wind_1s_LS_max
+        F_Main.TBvVehAveLSMax.Text = v_veh_ave_LS_max
+        F_Main.TBvVehAveLSMin.Text = v_veh_ave_LS_min
+        F_Main.TBvVehFloatD.Text = v_veh_float_delta
+        F_Main.TBTqSumFloatD.Text = tq_sum_float_delta
         ' High speed test
-        CSEMain.TBvWindAveHSMax.Text = v_wind_ave_HS_max
-        CSEMain.TBvWind1sHSMax.Text = v_wind_1s_HS_max
-        CSEMain.TBvVehAveHSMin.Text = v_veh_ave_HS_min
-        CSEMain.TBBetaAveHSMax.Text = beta_ave_HS_max
-        CSEMain.TBvVeh1sD.Text = v_veh_1s_delta
-        CSEMain.TBTq1sD.Text = tq_sum_1s_delta
+        F_Main.TBvWindAveHSMax.Text = v_wind_ave_HS_max
+        F_Main.TBvWind1sHSMax.Text = v_wind_1s_HS_max
+        F_Main.TBvVehAveHSMin.Text = v_veh_ave_HS_min
+        F_Main.TBBetaAveHSMax.Text = beta_ave_HS_max
+        F_Main.TBvVeh1sD.Text = v_veh_1s_delta
+        F_Main.TBTq1sD.Text = tq_sum_1s_delta
         ' Evaluation box
         If AccC Then
-            CSEMain.CheckBoxAcc.Checked = True
+            F_Main.CheckBoxAcc.Checked = True
         Else
-            CSEMain.CheckBoxAcc.Checked = False
+            F_Main.CheckBoxAcc.Checked = False
         End If
         If GradC Then
-            CSEMain.CheckBoxGrd.Checked = True
+            F_Main.CheckBoxGrd.Checked = True
         Else
-            CSEMain.CheckBoxGrd.Checked = False
+            F_Main.CheckBoxGrd.Checked = False
         End If
         ' Output
         If HzOut = 1 Then
-            CSEMain.RB1Hz.Checked = True
+            F_Main.RB1Hz.Checked = True
         ElseIf HzOut = 100 Then
-            CSEMain.RB100Hz.Checked = True
+            F_Main.RB100Hz.Checked = True
         End If
 
         Return True
     End Function
 
-    ' Delete lines from the AppSettings.WriteLog
+    ' Delete lines from the Log
     Function fLoeschZeilen(ByVal File As String, ByVal Anzahl As Integer, Optional ByVal Zeichen As String = "-") As Boolean
         ' Declarations
         Dim i, k As Integer
@@ -579,5 +582,50 @@
         Return True
 
     End Function
+
+    Sub updateControlsFromSchema(ByVal schema As JObject, ByVal ctrl As Control, ByVal label As Control)
+        Try
+            Dim pschema = schema.SelectToken(".properties." & ctrl.Name)
+            If pschema Is Nothing Then
+                fInfWarErr(8, False, format("Schema2GUI: Could not find schema for Control({0})!\n\iSchema: {1}", ctrl.Name, schema))
+                Return
+            End If
+
+            '' Set title on control/label
+            ''
+            Dim title = pschema("title")
+            If title IsNot Nothing Then
+                If label IsNot Nothing Then
+                    label.Text = title
+                Else
+                    If TypeOf ctrl Is CheckBox Then
+                        title = title.ToString() & "?"
+                    End If
+                End If
+                ctrl.Text = title
+            End If
+
+            '' Build tooltip.
+            ''
+            Dim infos = _
+                From pname In {"title", "description", "type", "enum", "default", _
+                               "minimum", "exclusiveMinimum", "maximum", "exclusiveMaximum"}
+                Select pschema(pname)
+
+            ''TODO: Include other schema-props in tooltips.
+
+            If infos.Any() Then
+                Dim msg = schemaInfos2helpMsg(infos.ToArray())
+                Dim t = New ToolTip()
+                t.SetToolTip(ctrl, msg)
+                t.AutomaticDelay = 300
+                t.AutoPopDelay = 10000
+            End If
+
+
+        Catch ex As Exception
+            fInfWarErr(8, False, format("Schema2GUI: Skipped exception: {0} ", ex.Message), ex)
+        End Try
+    End Sub
 
 End Module

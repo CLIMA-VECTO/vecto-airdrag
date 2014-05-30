@@ -7,6 +7,7 @@
 
             ' Close the open Filebrowser (Save the History)
             fbTXT.Close()
+            fbExe.Close()
             fbVECTO.Close()
             fbCSV.Close()
             fbDir.Close()
@@ -29,8 +30,11 @@
             ' Declaration
             Dim fiAss As New IO.FileInfo(joinPaths(Application.Info.DirectoryPath, Application.Info.AssemblyName & ".exe"))
 
+            AppPreferences = New cPreferences(, True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
+
             ' Path to the *.exe 
             MyPath = My.Application.Info.DirectoryPath & "\"
+            PreferencesPath = joinPaths(MyPath, "config", "preferences.json")
 
             ' Generateion of folder for the file history if not exists
             FB_FilHisDir = joinPaths(MyPath, "config", "fileHistory\")
@@ -38,9 +42,6 @@
 
             ' compile date
             AppDate = fiAss.LastWriteTime.Date
-
-            AppSettings = New cSettings()
-            ''AppSettings.Validate() !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
 
             ' Licencemodul
             Lic.FilePath = joinPaths(MyPath, "License.dat")
@@ -63,8 +64,8 @@
 
             fbWorkDir = New cFileBrowser("DIR", True)
 
-            fbVEH = New cFileBrowser("VEH")
-            fbVEH.Extensions = New String() {"csveh"}
+            fbVEH = New cFileBrowser("VEH.json")
+            fbVEH.Extensions = New String() {"csveh.json"}
 
             fbAMB = New cFileBrowser("AMB")
             fbAMB.Extensions = New String() {"csamb"}

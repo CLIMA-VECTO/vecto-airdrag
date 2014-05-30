@@ -36,7 +36,7 @@
         ElseIf Dy < 0 And DX = 0 Then
             QuadReq = 180
         Else
-            fInfWarErrBW(9, False, "The angle definition is not possible")
+            fInfWarErr(9, False, "The angle definition is not possible")
             QuadReq = "x"
         End If
     End Function
@@ -59,7 +59,7 @@
             If i = 1 Then tstep = TimeX(i) - TimeX(i - 1)
             If tstep + (tstep * delta_Hz_max / 100) < Math.Abs(TimeX(i) - TimeX(i - 1)) Or tstep - (tstep * delta_Hz_max / 100) > Math.Abs(TimeX(i) - TimeX(i - 1)) Then
                 If Sprung Then
-                    fInfWarErrBW(9, False, "Time step invalid! t(" & i - 1 & ") = " & TimeX(i - 1) & "[s], t(" & i & ") = " & TimeX(i) & "[s]")
+                    fInfWarErr(9, False, "Time step invalid! t(" & i - 1 & ") = " & TimeX(i - 1) & "[s], t(" & i & ") = " & TimeX(i) & "[s]")
                     Return False
                 Else
                     Sprung = True
@@ -130,7 +130,7 @@
             If i = 1 Then tstep = TimeX(i) - TimeX(i - 1)
             If tstep + (tstep * delta_Hz_max / 100) < Math.Abs(TimeX(i) - TimeX(i - 1)) Or tstep - (tstep * delta_Hz_max / 100) > Math.Abs(TimeX(i) - TimeX(i - 1)) Then
                 If Sprung Then
-                    fInfWarErrBW(9, False, "Time step invalid! t(" & i - 1 & ") = " & TimeX(i - 1) & "[s], t(" & i & ") = " & TimeX(i) & "[s]")
+                    fInfWarErr(9, False, "Time step invalid! t(" & i - 1 & ") = " & TimeX(i - 1) & "[s], t(" & i & ") = " & TimeX(i) & "[s]")
                     Return False
                 Else
                     Sprung = True
@@ -203,7 +203,7 @@
         'Check whether Time is not reversed
         For z = 1 To UBound(TimeX)
             If TimeX(z) < TimeX(z - 1) Then
-                fInfWarErrBW(9, False, "Time step invalid! t(" & z - 1 & ") = " & TimeX(z - 1) & "[s], t(" & z & ") = " & TimeX(z) & "[s]")
+                fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & TimeX(z - 1) & "[s], t(" & z & ") = " & TimeX(z) & "[s]")
                 Return False
             End If
         Next z
@@ -339,12 +339,12 @@
             Dim vline(), Line() As String
 
             ' Output on the GUI
-            fInfWarErrBW(4, False, "Read altitude file")
+            fInfWarErr(5, False, "Read altitude file")
 
             ' Open the MSC spezification file
             If Not FileInAlt.OpenRead(File) Then
                 ' Error if the file is not available
-                fInfWarErrBW(9, False, "Can´t find the altitude file: " & File)
+                fInfWarErr(9, False, "Can´t find the altitude file: " & File)
                 Return False
             End If
 
@@ -353,7 +353,7 @@
             vline = FileInAlt.ReadLine
 
             If dist < vline(0) Then
-                fInfWarErrBW(9, False, "The distance is lower then the minimum in the altitude file")
+                fInfWarErr(9, False, "The distance is lower then the minimum in the altitude file")
                 BWorker.CancelAsync()
                 fAltInterp = 0
             End If
@@ -431,7 +431,7 @@
 
         ' Erreor message wehen lambda can not be calculated
         If i = 0 Then
-            fInfWarErrBW(9, False, "Was not able to calculate the distance and bearing between koordinates.")
+            fInfWarErr(9, False, "Was not able to calculate the distance and bearing between koordinates.")
             BWorker.CancelAsync()
             Return 0  ' formula failed to converge
         End If

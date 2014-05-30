@@ -7,8 +7,8 @@
 
             Dim Jobname As String
 
-            If fEXT(JobFile) <> "csjob" Then
-                Jobname = fPath(JobFile) & "\" & fName(JobFile, False) & ".csjob"
+            If fEXT(JobFile) <> ".csjob" Then
+                Jobname = joinPaths(fPath(JobFile), fName(JobFile, False) & ".csjob")
             Else
                 Jobname = JobFile
             End If
@@ -96,62 +96,6 @@
             ' Refresh the jobfile
             JobFile = Jobname
         End Using
-
-        Return True
-    End Function
-
-    ' Generation or upgrade from the log file
-    Function fWriteLog(ByVal BegHinEnd As Integer, Optional ByVal InfWarErrEls As Integer = 4, Optional ByVal text As String = "") As Boolean
-        ' Style 1 ... Write beginning
-        ' Style 2 ... Add
-        ' Style 3 ... Write end
-
-        ' Write AppSettings.WriteLog only it is necessary
-        If AppSettings.WriteLog Then
-
-            ' Declaration
-            Dim LogFilenam As String = MyPath & "Log.txt"
-
-            ' Decision where should be write
-            Select Case BegHinEnd
-                Case 1 ' At the beginning of VECTO
-                    Dim fInf As New System.IO.FileInfo(LogFilenam)
-                    If IO.File.Exists(LogFilenam) Then
-                        If fInf.Length > AppSettings.LogSize * Math.Pow(10, 6) Then
-                            fLoeschZeilen(LogFilenam, System.IO.File.ReadAllLines(LogFilenam).Length / 2)
-                        End If
-                        FileOutLog.OpenWrite(LogFilenam, , True)
-                    Else
-                        FileOutLog.OpenWrite(LogFilenam)
-                    End If
-                    FileOutLog.WriteLine("-----")
-
-                    ' Write the start time into the AppSettings.WriteLog
-                    FileOutLog.WriteLine("Starting Session " & CDate(DateAndTime.Now))
-                    FileOutLog.WriteLine(AppName & " " & AppVers)
-                    FileOutLog.Close()
-
-                Case 2 ' Add a message to the AppSettings.WriteLog
-                    FileOutLog.OpenWrite(LogFilenam, , True)
-                    Select Case InfWarErrEls
-                        Case 1 ' Info
-                            FileOutLog.WriteLine("INFO     | " & text)
-                        Case 2 ' Warning
-                            FileOutLog.WriteLine("WARNING  | " & text)
-                        Case 3 ' Error
-                            FileOutLog.WriteLine("ERROR    | " & text)
-                        Case 4 ' Else
-                            FileOutLog.WriteLine(text)
-                    End Select
-                    FileOutLog.Close()
-                Case 3 ' At the end
-                    FileOutLog.OpenWrite(LogFilenam, , True)
-                    ' Write the end to the AppSettings.WriteLog
-                    FileOutLog.WriteLine("Closing Session " & CDate(DateAndTime.Now))
-                    FileOutLog.WriteLine("-----")
-                    FileOutLog.Close()
-            End Select
-        End If
 
         Return True
     End Function
