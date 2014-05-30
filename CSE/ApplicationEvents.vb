@@ -64,8 +64,8 @@
 
             fbWorkDir = New cFileBrowser("DIR", True)
 
-            fbVEH = New cFileBrowser("VEH")
-            fbVEH.Extensions = New String() {"csveh"}
+            fbVEH = New cFileBrowser("VEH.json")
+            fbVEH.Extensions = New String() {"csveh.json"}
 
             fbAMB = New cFileBrowser("AMB")
             fbAMB.Extensions = New String() {"csamb"}

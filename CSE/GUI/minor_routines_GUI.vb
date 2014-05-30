@@ -237,7 +237,7 @@ Module minor_routines_GUI
             End If
 
             ' Control the input files
-            fControlInput(Vehspez, 1, "csveh")
+            fControlInput(Vehspez, 1, "csveh.json")
             fControlInput(Ambspez, 2, "csamb")
             fControlInput(MSCCSpez, 3, "csms")
             fControlInput(MSCTSpez, 4, "csms")

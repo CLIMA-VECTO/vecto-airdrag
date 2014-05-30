@@ -400,7 +400,7 @@
 
         ' Find the correct curve
         For i = 0 To GenShape.veh_class.Count - 1
-            If GenShape.veh_class(i) = vehicleX.vehClass And GenShape.veh_conf(i) = vehicleX.vehConfig Then
+            If GenShape.veh_class(i) = vehicleX.classCode And CBool(GenShape.veh_conf(i)) = vehicleX.IsRigid Then
                 pos = i
                 Exit For
             End If

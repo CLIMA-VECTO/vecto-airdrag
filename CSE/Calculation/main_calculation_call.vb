@@ -16,13 +16,12 @@
 
         If Cali Then
             ' Declarations
-            Dim vehicle As New cVehicle
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
 
             ' Read the input data
             fInfWarErrBW(7, False, "Reading Input Files...")
-            readInputVeh(vehicle)
+            Dim vehicle As New cVehicle(Vehspez)
             ReadInputMSC(MSC, MSCCSpez, Cali)
             ReadDataFile(DataSpez(1), MSC)
 
@@ -55,7 +54,6 @@
             fOutCalcRes(DataSpez, Cali)
         Else
             ' Declarations
-            Dim vehicle As New cVehicle
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
 
@@ -64,7 +62,7 @@
 
             ' Read the input files
             fInfWarErrBW(7, False, "Reading Input Files...")
-            readInputVeh(vehicle)
+            Dim vehicle As New cVehicle(Vehspez)
             ReadInputMSC(MSC, MSCTSpez, Cali)
             ReadWeather(Ambspez)
 
@@ -448,8 +446,8 @@
 
             ' Calculate the steps
             For h = 5 To 95 Step Pstep
-                vwind_x = vwind_x_ha * Math.Pow((((h / 100) * vehicleX.vehHeight) / vehicleX.flowMeterHeight), 0.2)
-                vwind_y = vwind_y_ha * Math.Pow((((h / 100) * vehicleX.vehHeight) / vehicleX.flowMeterHeight), 0.2)
+                vwind_x = vwind_x_ha * Math.Pow((((h / 100) * vehicleX.vehHeight) / vehicleX.anemometerHeight), 0.2)
+                vwind_y = vwind_y_ha * Math.Pow((((h / 100) * vehicleX.vehHeight) / vehicleX.anemometerHeight), 0.2)
                 vairX = vairX + (Math.Sqrt((vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6) ^ 2 + vwind_y ^ 2)) * vehicleX.vehHeight * Pstep / 100
                 vwindX = vwindX + (Math.Sqrt(vwind_x ^ 2 + vwind_y ^ 2)) * vehicleX.vehHeight * Pstep / 100
                 betaX = betaX + (Math.Atan(vwind_y / (vwind_x + CalcData(tCompCali.v_veh_c)(i) / 3.6)) * 180 / Math.PI) * vehicleX.vehHeight * Pstep / 100
