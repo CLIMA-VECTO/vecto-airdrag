@@ -339,7 +339,7 @@
             Dim vline(), Line() As String
 
             ' Output on the GUI
-            fInfWarErrBW(4, False, "Read altitude file")
+            fInfWarErrBW(5, False, "Read altitude file")
 
             ' Open the MSC spezification file
             If Not FileInAlt.OpenRead(File) Then

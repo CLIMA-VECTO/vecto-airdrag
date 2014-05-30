@@ -30,7 +30,8 @@ Public Class F_Main
         Try
             AppPreferences = New cPreferences(PreferencesPath)
         Catch ex As Exception
-            fInfWarErr(9, False, format("Failed loading Preferences({0}) due to: {1} \n\iThis is not a problem if it is the first time you launch the application.", _
+            fInfWarErr(9, False, format(<str>Failed loading Preferences({0}) due to: {1} 
+\iThis is normal the first time you launch the application.</str>, _
                                         PreferencesPath, ex.Message), ex)
             configL = False
         End Try
@@ -88,9 +89,9 @@ Public Class F_Main
     ' Open the vehiclefile in the Notepad
     Private Sub ButtonVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonVeh.Click
         If IO.File.Exists(Me.TextBoxVeh1.Text) Then
-            System.Diagnostics.Process.Start(AppPreferences.Editor, Me.TextBoxVeh1.Text)
+            System.Diagnostics.Process.Start(AppPreferences.editor, Me.TextBoxVeh1.Text)
         Else
-            If Not fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxVeh1.Text) Then Exit Sub
+            fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxVeh1.Text)
         End If
     End Sub
 
@@ -107,9 +108,9 @@ Public Class F_Main
     ' Open the weatherfile in the Notepad
     Private Sub ButtonWeather_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWeather.Click
         If IO.File.Exists(Me.TextBoxWeather.Text) Then
-            System.Diagnostics.Process.Start(AppPreferences.Editor, Me.TextBoxWeather.Text)
+            System.Diagnostics.Process.Start(AppPreferences.editor, Me.TextBoxWeather.Text)
         Else
-            If Not fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxWeather.Text) Then Exit Sub
+            fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxWeather.Text)
         End If
     End Sub
 
@@ -223,7 +224,7 @@ Public Class F_Main
         fClear_VECTO_Form(False, False)
 
         fInfWarErr(7, False, "Starting VECTO CSE calibration calculation...")
-        If AppPreferences.WriteLog Then fWriteLog(2, 4, "------------- Job: " & JobFile & " | Out: " & OutFolder & " | " & CDate(DateAndTime.Now) & "-------------")
+        If AppPreferences.writeLog Then fWriteLog(2, 4, "------------- Job: " & JobFile & " | Out: " & OutFolder & " | " & CDate(DateAndTime.Now) & "-------------")
 
         ' Start the calculation in the backgroundworker
         Me.BackgroundWorkerVECTO.RunWorkerAsync()
@@ -455,7 +456,7 @@ Public Class F_Main
 #Region "Tools"
     ' Menu open the Log
     Private Sub ToolStripMenuItemLog_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemLog.Click
-        System.Diagnostics.Process.Start(AppPreferences.Editor, MyPath & "Log.txt")
+        System.Diagnostics.Process.Start(AppPreferences.editor, joinPaths(MyPath, "log.txt"))
     End Sub
 
     ' Menu open the config file
@@ -565,8 +566,11 @@ Public Class F_Main
 
         '##### START THE CALCULATION #####
         '#################################
-
+        Try
             calculation(Cali)
+        Catch ex As Exception
+            fInfWarErrBW(9, True, format("Calculation Failed due to: {0}", ex.Message), ex)
+        End Try
 
         '#################################
 
@@ -589,7 +593,7 @@ Public Class F_Main
 
         Else
             ' Call the function for the depiction from the message on the GUI
-            MsgToForm(WorkerMsg.Styletext, WorkerMsg.Style, WorkerMsg.Text)
+            WorkerMsg.MsgToForm()
         End If
     End Sub
 

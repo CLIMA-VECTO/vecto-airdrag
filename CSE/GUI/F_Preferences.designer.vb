@@ -282,7 +282,7 @@ Partial Class F_Preferences
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(129, 17)
         Me.CheckBox1.TabIndex = 5
-        Me.CheckBox1.Text = "Write log file (LOG.txt)"
+        Me.CheckBox1.Text = "Write log file (log.txt)"
         Me.CheckBox1.UseVisualStyleBackColor = True
         '
         'ButtonReload

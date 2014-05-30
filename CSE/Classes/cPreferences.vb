@@ -64,7 +64,7 @@ Public Class cPreferences
                     "minimum": 0,
                     "maximum": 10, "exclusiveMaximum": true,
                     "default": 5,
-                    "description": "Sets the threshold(Level) above from which log-messages to appear in the log-window.
+                    "description": "Sets the threshold(Level) below from which log-messages are skipped from the log-window.
     0     : All
     3-7   : No infos
     8     : No warnings

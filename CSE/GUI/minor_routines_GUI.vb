@@ -52,10 +52,12 @@ Module minor_routines_GUI
     Function fControlPath(ByVal Line As String, ByVal position As Integer) As Boolean
         ' Polling if a path is available
         If (Line = Nothing) Then
-            If Not fInfWarErr(9, False, "No " & NameFK(position) & "-Inputfile") Then Return True
+            fInfWarErr(9, False, "No " & NameFK(position) & "-Inputfile")
+            Return True
             ' Polling if the path is an acceptable inputfile
         ElseIf IsNumeric(Line) Or (Mid(Line, 2, 1) <> ":") Or (Line = varOutStr) Then
-            If Not fInfWarErr(9, False, "No acceptably " & NameFK(position) & "-Inputfile: " & Line) Then Return True
+            fInfWarErr(9, False, "No acceptably " & NameFK(position) & "-Inputfile: " & Line)
+            Return True
         End If
 
         fWriteLog(2, 4, NameFK(position) & " File: " & Line)
@@ -370,10 +372,10 @@ Module minor_routines_GUI
     Function fControlInput(ByVal File As String, ByVal position As Integer, ByVal endung As String) As Boolean
         ' If no file, file with the wrong ending or the default is given then writes a warning
         If (File = Nothing) Then
-            If Not fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File") Then Return False
+            fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
             Return False
-        ElseIf (fEXT(File) <> endung) And Not (File = varOutStr) Then
-            If Not fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File") Then Return False
+        ElseIf (Not File.EndsWith(endung)) And Not (File = varOutStr) Then
+            fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
             Return False
         End If
         Return True

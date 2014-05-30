@@ -101,24 +101,25 @@
     End Function
 
     ' Generation or upgrade from the log file
-    Function fWriteLog(ByVal BegHinEnd As Integer, Optional ByVal InfWarErrEls As Integer = 4, Optional ByVal text As String = "", _
+    Function fWriteLog(ByVal filePosition As Integer, Optional ByVal logLevel As Integer = 4, Optional ByVal text As String = "", _
                        Optional ByVal ex As Exception = Nothing) As Boolean
-        ' Style 1 ... Write beginning
-        ' Style 2 ... Add
-        ' Style 3 ... Write end
+        ' filePosition:
+        '   Write beginning
+        '   Add
+        '   Write end
 
-        ' Write Log only it is necessary
-        If AppPreferences.WriteLog Then
+        If Not AppPreferences.writeLog Then Return True
 
-            ' Declaration
-            Dim LogFilenam As String = MyPath & "Log.txt"
+        ' Declaration
+        Dim LogFilenam As String = joinPaths(MyPath, "log.txt")
 
+        Try
             ' Decision where should be write
-            Select Case BegHinEnd
+            Select Case filePosition
                 Case 1 ' At the beginning of VECTO
                     Dim fInf As New System.IO.FileInfo(LogFilenam)
                     If IO.File.Exists(LogFilenam) Then
-                        If fInf.Length > AppPreferences.LogSize * Math.Pow(10, 6) Then
+                        If fInf.Length > AppPreferences.logSize * Math.Pow(10, 6) Then
                             fLoeschZeilen(LogFilenam, System.IO.File.ReadAllLines(LogFilenam).Length / 2)
                         End If
                         FileOutLog.OpenWrite(LogFilenam, , True)
@@ -130,33 +131,34 @@
                     ' Write the start time into the Log
                     FileOutLog.WriteLine("Starting Session " & CDate(DateAndTime.Now))
                     FileOutLog.WriteLine(AppName & " " & AppVers)
-                    FileOutLog.Close()
 
                 Case 2 ' Add a message to the Log
-                    FileOutLog.OpenWrite(LogFilenam, , True)
-                    Select Case InfWarErrEls
-                        Case 1 ' Info
-                            FileOutLog.WriteLine("INFO     | " & text)
-                        Case 2 ' Warning
-                            FileOutLog.WriteLine("WARNING  | " & text)
-                        Case 3 ' Error
-                            FileOutLog.WriteLine("ERROR    | " & text)
-                        Case 4 ' Else
-                            FileOutLog.WriteLine(text)
+                    Dim slevel As String
+                    Select Case logLevel
+                        Case 1
+                            slevel = "INFO   | "
+                        Case 2
+                            slevel = "WARNING| "
+                        Case 3
+                            slevel = "ERROR  | "
+                        Case Else
+                            slevel = "DEBUG  | "
                     End Select
+                    FileOutLog.OpenWrite(LogFilenam, , True)
+                    FileOutLog.WriteLine(slevel & text)
                     If ex IsNot Nothing Then
                         FileOutLog.WriteLine(ex.StackTrace)
                     End If
 
-                    FileOutLog.Close()
                 Case 3 ' At the end
                     FileOutLog.OpenWrite(LogFilenam, , True)
                     ' Write the end to the Log
                     FileOutLog.WriteLine("Closing Session " & CDate(DateAndTime.Now))
                     FileOutLog.WriteLine("-----")
-                    FileOutLog.Close()
             End Select
-        End If
+        Finally
+            FileOutLog.Dispose()
+        End Try
 
         Return True
     End Function

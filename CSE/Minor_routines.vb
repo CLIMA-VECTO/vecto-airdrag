@@ -161,26 +161,62 @@ Module Minor_routines
 #End Region
 
     ' Functions for the information depiction on the GUI with the backgroundworker (Info, Warning, Error)
-#Region " Communication functions"
+#Region "Logging"
     ' Output from Informations\Warnings\Errors on the GUI
-    Function fInfWarErr(ByVal Style As Integer, ByVal MsgBoxOut As Boolean, ByVal text As String, Optional ByVal ex As Exception = Nothing) As Boolean
+    Function fInfWarErr(ByVal logLevel As Integer, ByVal MsgBoxOut As Boolean, _
+                   ByVal text As String, Optional ByVal ex As Exception = Nothing) As Boolean
 
         ' Declaration
-        Dim Styletext As String = ""
-        Dim StyleOut As String = ""
+        Dim Styletext = "Debug"
+        Dim logFileLevel As Integer = 0
+        Dim StyleOut = MsgBoxStyle.Information
 
         ' Identify the output style
-        Select Case Style
-            Case 0 To 7 ' Info
+        Select Case logLevel
+            Case 5 To 7 ' Info
+                logFileLevel = 1
                 Styletext = "Info"
-                StyleOut = MsgBoxStyle.Information
             Case 8 ' Warning
+                logFileLevel = 2
                 Styletext = "Warning"
                 StyleOut = MsgBoxStyle.Exclamation
             Case 9 ' Error
+                logFileLevel = 3
                 Styletext = "Error"
                 StyleOut = MsgBoxStyle.Critical
         End Select
+
+        ' Write to Log-file.
+        fWriteLog(2, logFileLevel, text, ex)
+
+        ' Polling the MSG if the message should shown
+        If logLevel >= AppPreferences.logLevel Then
+
+            ' Established the text wit the symbol from the style
+            text = AnzeigeMessage(logLevel) & text
+
+            ' Write to Log-windows
+            Select Case logFileLevel
+                Case 1 ' Info
+                    F_Main.ListBoxMSG.Items.Add(text)
+                Case 2 ' Warning
+                    F_Main.ListBoxMSG.Items.Add(text)
+                    F_Main.ListBoxWar.Items.Add(text)
+                    F_Main.TabPageWar.Text = Styletext & " (" & F_Main.ListBoxWar.Items.Count & ")"
+                Case 3 ' Error
+                    F_Main.ListBoxMSG.Items.Add(text)
+                    F_Main.ListBoxErr.Items.Add(text)
+                    F_Main.TabPageErr.Text = Styletext & " (" & F_Main.ListBoxErr.Items.Count & ")"
+                    F_Main.TabControlOutMsg.SelectTab(2)
+                Case Else
+                    '' ignored
+            End Select
+
+            ' Set the Scrollbars in the Listboxes at the end
+            F_Main.ListBoxMSG.TopIndex = F_Main.ListBoxMSG.Items.Count - 1
+            F_Main.ListBoxWar.TopIndex = F_Main.ListBoxWar.Items.Count - 1
+            F_Main.ListBoxErr.TopIndex = F_Main.ListBoxErr.Items.Count - 1
+        End If
 
         ' Output as an messagebox or on the tabcontrols
         If MsgBoxOut Then
@@ -195,112 +231,41 @@ Module Minor_routines
             Else
                 MsgBox(text, StyleOut, Styletext)
             End If
-        Else
-            ' Polling the MSG if the message should shown
-            If Style <= AppPreferences.LogLevel Then Return True
-
-            ' Established the text wit the symbol from the style
-            text = AnzeigeMessage(Style) & text
-
-            ' Output in the Log
-            Select Case Style
-                Case 0 To 7 ' Message
-                    F_Main.ListBoxMSG.Items.Add(text)
-                    fWriteLog(2, 4, text, ex)
-                Case 8 ' Warning
-                    F_Main.ListBoxWar.Items.Add(text)
-                    F_Main.TabPageWar.Text = Styletext & " (" & F_Main.ListBoxWar.Items.Count & ")"
-                    fWriteLog(2, 2, text, ex)
-                Case 9 ' Error
-                    F_Main.ListBoxErr.Items.Add(text)
-                    F_Main.TabPageErr.Text = Styletext & " (" & F_Main.ListBoxErr.Items.Count & ")"
-                    F_Main.TabControlOutMsg.SelectTab(2)
-                    fWriteLog(2, 3, text, ex)
-            End Select
         End If
 
-        ' Set the Scrollbars in the Listboxes at the end
-        F_Main.ListBoxMSG.TopIndex = F_Main.ListBoxMSG.Items.Count - 1
-        F_Main.ListBoxWar.TopIndex = F_Main.ListBoxWar.Items.Count - 1
-        F_Main.ListBoxErr.TopIndex = F_Main.ListBoxErr.Items.Count - 1
-
-        ' Return that the program have an error
-        If Style = 9 Then
-            Return False
-        Else
-            Return True
-        End If
-
+        Return logLevel <> 9
     End Function
 
-    ' Definition for the Backgroundworker
-    Public Class CMsg
-        Public Styletext As String
-        Public Style As Integer
-        Public Text As String
-    End Class
-
-    ' Output from Informations\Warnings\Errors with the Backgoundworker
-    Function fInfWarErrBW(ByVal Style As Integer, ByVal MsgBoxOut As Boolean, ByVal text As String) As Boolean
-        ' Declaration
+    ''' <summary>Log from Informations\Warnings\Errors from within the Backgoundworker</summary>
+    Function fInfWarErrBW(ByVal logLevel As Integer, ByVal msgBoxOut As Boolean, _
+                     ByVal text As String, Optional ByVal ex As Exception = Nothing) As Boolean
         Dim WorkerMsg As New CMsg
 
-        WorkerMsg.Style = Style
+        WorkerMsg.LogLevel = logLevel
+        WorkerMsg.MsgBoxOut = msgBoxOut
         WorkerMsg.Text = text
-
-        ' Identify the output style
-        Select Case Style
-            Case 0 To 7 ' Info
-                WorkerMsg.Styletext = "Info"
-            Case 8 ' Warning
-                WorkerMsg.Styletext = "Warning"
-            Case 9 ' Error
-                WorkerMsg.Styletext = "Error"
-        End Select
-
-        ' Polling the MSG if the message should shown
-        If Style <= AppPreferences.LogLevel Then Return True
+        WorkerMsg.Ex = ex
 
         ' Output in the Tabcontrols (Call from Backgroundworker_ProgressChanged)
         BWorker.ReportProgress(0, WorkerMsg)
 
-        ' Return that the program have an error
-        If Style = 9 Then
-            Return (False)
-        Else
-            Return True
-        End If
-
+        Return logLevel <> 9
     End Function
 
-    ' Call for the output from Informations\Warnings\Errors with the backgoundworker
-    Sub MsgToForm(ByVal Styletext As String, ByVal Style As Integer, ByVal Text As String)
-        ' Established the text wit the symbol from the style
-        If Not Style = 10 Then Text = AnzeigeMessage(Style) & Text
+    ' Definition for the Backgroundworker
+    Class CMsg
+        Public LogLevel As Integer
+        Public Text As String
+        Public Ex As Exception
+        Public MsgBoxOut As Boolean = False
 
-        ' Output in the Tabcontrols on the GUI
-        Select Case Style
-            Case 0 To 7 ' Message
-                F_Main.ListBoxMSG.Items.Add(Text)
-                fWriteLog(2, 4, Text)
-            Case 8 ' Warning
-                F_Main.ListBoxWar.Items.Add(Text)
-                F_Main.TabPageWar.Text = Styletext & " (" & F_Main.ListBoxWar.Items.Count & ")"
-                fWriteLog(2, 2, Text)
-            Case 9 ' Error
-                F_Main.ListBoxErr.Items.Add(Text)
-                F_Main.TabPageErr.Text = Styletext & " (" & F_Main.ListBoxErr.Items.Count & ")"
-                F_Main.TabControlOutMsg.SelectTab(2)
-                fWriteLog(2, 3, Text)
-        End Select
+        ' Call for the output from Informations\Warnings\Errors with the backgoundworker
+        Public Sub MsgToForm()
+            fInfWarErr(LogLevel, MsgBoxOut, Text, Ex)
+        End Sub
+    End Class
 
-        ' Set the Scrollbars in the Listboxes at the end
-        F_Main.ListBoxMSG.TopIndex = F_Main.ListBoxMSG.Items.Count - 1
-        F_Main.ListBoxWar.TopIndex = F_Main.ListBoxWar.Items.Count - 1
-        F_Main.ListBoxErr.TopIndex = F_Main.ListBoxErr.Items.Count - 1
-    End Sub
-
-#End Region
+#End Region ' Logging
 
 
 #Region "Json"
@@ -370,7 +335,7 @@ Module Minor_routines
         Return value
     End Function
 
-#End Region ' "Json"
+#End Region ' Json
 
 
 #Region "Strings"

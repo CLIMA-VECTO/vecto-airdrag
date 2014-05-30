@@ -216,7 +216,7 @@ Public MustInherit Class cJsonFile
         End If
     End Function
 
-    ''' <summary>Used by sublasses to implement Propety-Get with defaults when non-existent</summary>
+    ''' <summary>Reads value found by XPath and if notinhg there, fetches default-value schema.</summary>
     ''' <param name="propPath">The JSON.net's XPath for a Body property, including the starting dot('.').
     ''' 
     ''' Examples:
@@ -225,6 +225,7 @@ Public MustInherit Class cJsonFile
     '''   /Body/SomeProp'                --> .SomeProp
     '''   /Body/someGroup/somePropName   --> .someGroup.somePropName'.  
     ''' </param>
+    ''' <remarks>Used by sublasses to implement Propety-Get with defaults when non-existent</remarks>
     Protected Function BodyGetter(ByVal propPath As String) As JToken
         Dim value As JToken = Me.Body.SelectToken(propPath)
         If value Is Nothing Then  '' No prop existed
