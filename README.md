@@ -1,12 +1,9 @@
-            VECTO-CSE
-          ============
-
-Copyright : 2014 EUROPEAN COMMISSION
-Developed : by TU-Graz, on behalf of DG CLIMA, supported by JRC.
-License   : EUPL
-
+VECTO-CSE
+=========
 A Constant Speed Evaluation tool for tests performed on Heavy-duty vehicles.
-
+* Copyright : 2014 EUROPEAN COMMISSION
+* Developed : by TU-Graz, on behalf of DG CLIMA, supported by JRC.
+* License   : EUPL
 
 
 ## INSTALLATION:
@@ -21,7 +18,7 @@ that it is installed properly.
 
 To check whether .Net is installed on your PC and which version, 
 follow this [article](http://support.microsoft.com/kb/318785/en-us).
-If not, iInstall it](http://msdn.microsoft.com/en-us/library/vstudio/5a4x27ek(v=vs.100).aspx).
+If not, [install it](http://msdn.microsoft.com/en-us/library/vstudio/5a4x27ek%28v=vs.100%29.aspx)!
 
 
 

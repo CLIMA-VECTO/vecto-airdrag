@@ -1,18 +1,18 @@
-            VECTO-CSE's Changes
-            ===================
+VECTO-CSE: Changes
+===================
  
 #### 2014-05-29: 2.0.1-pre1 ####
 JRC contributions:
   * Read/write Vehicle-file as JSON.
   * prefsUI: Add Reload button.
   * Remember window-location (use .net Settings for that).
-  * Start logging stack-traces in the file-log.
+  * All logs (even those sent to msg-box) are written to log-file, with timestamps and stack-traces.
 ##### Internal:
   * Start saving stack-traces into the log-file.
   * Enhance JSON-files with standard header/body behavior.
   * Link JSON to GUI controls (labels & toolstips)
   * json: Read defaults from schemas.
-  * Rework logging ensure always writing to file-log (even when sent to msg-box).
+  * Rework logging as a single routine, whether invoked from Background Worker or not.
 
 
 #### 2014-05-23: 2.0.1-pre0 ####

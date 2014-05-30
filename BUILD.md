@@ -1,3 +1,6 @@
+VECTO-CSE: Development
+======================
+
 ### BUILD
 Before compiling you need to add/check references to:
 * vectolic.dll
