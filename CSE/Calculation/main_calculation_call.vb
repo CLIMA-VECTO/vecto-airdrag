@@ -1,7 +1,7 @@
 ﻿Public Module main_calculation_call
 
     ' Main calculation
-    Function calculation(ByVal Cali As Boolean) As Boolean
+    Function calculation(ByVal isCalibrate As Boolean) As Boolean
         ' Declaration
         Dim i As Integer
 
@@ -14,7 +14,7 @@
         Units = Nothing
         UnitsUndef = Nothing
 
-        If Cali Then
+        If isCalibrate Then
             ' Declarations
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
@@ -22,7 +22,7 @@
             ' Read the input data
             fInfWarErrBW(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Vehspez)
-            ReadInputMSC(MSC, MSCCSpez, Cali)
+            ReadInputMSC(MSC, MSCCSpez, isCalibrate)
             ReadDataFile(DataSpez(1), MSC)
 
             ' Exit function if error is detected
@@ -50,8 +50,8 @@
             fInfWarErrBW(7, False, "Writing the output files...")
 
             ' Output
-            fOutDataCalc1Hz(DataSpez(1), Cali)
-            fOutCalcRes(DataSpez, Cali)
+            fOutDataCalc1Hz(DataSpez(1), isCalibrate)
+            fOutCalcRes(DataSpez, isCalibrate)
         Else
             ' Declarations
             Dim MSC As New cMSC
@@ -63,7 +63,7 @@
             ' Read the input files
             fInfWarErrBW(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Vehspez)
-            ReadInputMSC(MSC, MSCTSpez, Cali)
+            ReadInputMSC(MSC, MSCTSpez, isCalibrate)
             ReadWeather(Ambspez)
 
             ' Calculation of the virtual MSC points
@@ -109,7 +109,7 @@
                 fInfWarErrBW(6, False, "Writing the output files...")
 
                 ' Output
-                fOutDataCalc1Hz(DataSpez(i), Cali)
+                fOutDataCalc1Hz(DataSpez(i), isCalibrate)
 
                 ' Save the Result dictionaries
                 fSaveDic(i - 1)
@@ -134,7 +134,7 @@
             If BWorker.CancellationPending Then
                 ' Write the summerised output file
                 fInfWarErrBW(7, False, "Writing the summarised output file...")
-                fOutCalcRes(DataSpez, Cali)
+                fOutCalcRes(DataSpez, isCalibrate)
                 Return False
             End If
 
@@ -143,7 +143,7 @@
 
             ' Write the summerised output file
             fInfWarErrBW(7, False, "Writing the summarised output file...")
-            fOutCalcRes(DataSpez, Cali)
+            fOutCalcRes(DataSpez, isCalibrate)
 
             ' Check if all is valid
             For i = 0 To ErgValuesReg(tCompErgReg.SecID).Count - 1

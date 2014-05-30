@@ -163,8 +163,8 @@ Module Minor_routines
     ' Functions for the information depiction on the GUI with the backgroundworker (Info, Warning, Error)
 #Region "Logging"
     ' Output from Informations\Warnings\Errors on the GUI
-    Function fInfWarErr(ByVal logLevel As Integer, ByVal MsgBoxOut As Boolean, _
-                   ByVal text As String, Optional ByVal ex As Exception = Nothing) As Boolean
+    Sub fInfWarErr(ByVal logLevel As Integer, ByVal MsgBoxOut As Boolean, _
+                   ByVal text As String, Optional ByVal ex As Exception = Nothing)
 
         ' Declaration
         Dim Styletext = "Debug"
@@ -232,13 +232,11 @@ Module Minor_routines
                 MsgBox(text, StyleOut, Styletext)
             End If
         End If
-
-        Return logLevel <> 9
-    End Function
+    End Sub
 
     ''' <summary>Log from Informations\Warnings\Errors from within the Backgoundworker</summary>
-    Function fInfWarErrBW(ByVal logLevel As Integer, ByVal msgBoxOut As Boolean, _
-                     ByVal text As String, Optional ByVal ex As Exception = Nothing) As Boolean
+    Sub fInfWarErrBW(ByVal logLevel As Integer, ByVal msgBoxOut As Boolean, _
+                     ByVal text As String, Optional ByVal ex As Exception = Nothing)
         Dim WorkerMsg As New CMsg
 
         WorkerMsg.LogLevel = logLevel
@@ -248,9 +246,7 @@ Module Minor_routines
 
         ' Output in the Tabcontrols (Call from Backgroundworker_ProgressChanged)
         BWorker.ReportProgress(0, WorkerMsg)
-
-        Return logLevel <> 9
-    End Function
+    End Sub
 
     ' Definition for the Backgroundworker
     Class CMsg
@@ -264,6 +260,70 @@ Module Minor_routines
             fInfWarErr(LogLevel, MsgBoxOut, Text, Ex)
         End Sub
     End Class
+
+
+    ' Generation or upgrade from the log file
+    Function fWriteLog(ByVal filePosition As Integer, Optional ByVal logLevel As Integer = 4, Optional ByVal text As String = "", _
+                       Optional ByVal ex As Exception = Nothing) As Boolean
+        ' filePosition:
+        '   Write beginning
+        '   Add
+        '   Write end
+
+        If Not AppPreferences.writeLog Then Return True
+
+        ' Declaration
+        Dim LogFilenam As String = joinPaths(MyPath, "log.txt")
+
+        Try
+            ' Decision where should be write
+            Select Case filePosition
+                Case 1 ' At the beginning of VECTO
+                    Dim fInf As New System.IO.FileInfo(LogFilenam)
+                    If IO.File.Exists(LogFilenam) Then
+                        If fInf.Length > AppPreferences.logSize * Math.Pow(10, 6) Then
+                            fLoeschZeilen(LogFilenam, System.IO.File.ReadAllLines(LogFilenam).Length / 2)
+                        End If
+                        FileOutLog.OpenWrite(LogFilenam, , True)
+                    Else
+                        FileOutLog.OpenWrite(LogFilenam)
+                    End If
+                    FileOutLog.WriteLine("-----")
+
+                    ' Write the start time into the Log
+                    FileOutLog.WriteLine("Starting Session " & CDate(DateAndTime.Now))
+                    FileOutLog.WriteLine(AppName & " " & AppVers)
+
+                Case 2 ' Add a message to the Log
+                    Dim slevel As String
+                    Select Case logLevel
+                        Case 1
+                            slevel = "INFO   | "
+                        Case 2
+                            slevel = "WARNING| "
+                        Case 3
+                            slevel = "ERROR  | "
+                        Case Else
+                            slevel = "DEBUG  | "
+                    End Select
+                    FileOutLog.OpenWrite(LogFilenam, , True)
+                    FileOutLog.WriteLine(slevel & text)
+                    If ex IsNot Nothing Then
+                        FileOutLog.WriteLine(ex.StackTrace)
+                    End If
+
+                Case 3 ' At the end
+                    FileOutLog.OpenWrite(LogFilenam, , True)
+                    ' Write the end to the Log
+                    FileOutLog.WriteLine("Closing Session " & CDate(DateAndTime.Now))
+                    FileOutLog.WriteLine("-----")
+            End Select
+        Finally
+            FileOutLog.Dispose()
+        End Try
+
+        Return True
+    End Function
 
 #End Region ' Logging
 
@@ -333,6 +393,54 @@ Module Minor_routines
         End If
 
         Return value
+    End Function
+
+    ''' <summary>Builds a human-readable help-string from any non-null schema-properties.</summary>
+    Function schemaInfos2helpMsg(ByVal ParamArray propSchemaInfos() As JToken) As String
+        Dim titl = propSchemaInfos(0)
+        Dim desc = propSchemaInfos(1)
+        Dim type = propSchemaInfos(2)
+        Dim chce = propSchemaInfos(3)
+        Dim dflt = propSchemaInfos(4)
+        Dim mini = propSchemaInfos(5)
+        Dim miex = propSchemaInfos(6) '' exclusiveMin
+        Dim maxi = propSchemaInfos(7)
+        Dim maex = propSchemaInfos(8) '' exclusiveMax
+
+        Dim sdesc As String = ""
+        Dim stype As String = ""
+        Dim senum As String = ""
+        Dim sdflt As String = ""
+        Dim slimt As String = ""
+
+        If desc IsNot Nothing Then
+            sdesc = format(desc.ToString())
+        ElseIf titl IsNot Nothing Then
+            sdesc = format(titl.ToString())
+        End If
+        If type IsNot Nothing Then stype = type.ToString(Newtonsoft.Json.Formatting.None) & ": "
+        If chce IsNot Nothing Then senum = format("\n- choices: {0}", chce.ToString(Newtonsoft.Json.Formatting.None))
+        If dflt IsNot Nothing Then sdflt = format("\n- default: {0}", dflt)
+        If mini IsNot Nothing OrElse maxi IsNot Nothing Then
+            Dim infinitySymbol = "" + ChrW(&H221E)
+            Dim open = "("c
+            Dim smin = infinitySymbol
+            Dim smax = infinitySymbol
+            Dim clos = ")"c
+
+            If mini IsNot Nothing Then
+                smin = mini
+                If (miex Is Nothing OrElse Not CBool(miex)) Then open = "["c
+            End If
+            If maxi IsNot Nothing Then
+                smax = maxi
+                If (maex Is Nothing OrElse Not CBool(maex)) Then clos = "]"c
+            End If
+            slimt = format("\n- limits : {0}{1}, {2}{3}", _
+                           open, smin, smax, clos)
+        End If
+
+        Return String.Join("", stype, sdesc, senum, sdflt, slimt)
     End Function
 
 #End Region ' Json

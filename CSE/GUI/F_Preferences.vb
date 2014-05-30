@@ -66,7 +66,6 @@ Public Class F_Preferences
 
             ' Message for the restart of VECTO
             RestartN = True
-            fInfWarErr(7, False, format("Stored Preferences({0}).", PreferencesPath))
             fInfWarErr(7, True, format("Stored Preferences({0}). \n\nDo you want to restart VECTO now?", PreferencesPath))
         Catch ex As Exception
             fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", _

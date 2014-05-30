@@ -165,6 +165,8 @@ Public MustInherit Class cJsonFile
         End If
         If isIncludeSchema Then
             h("BodySchema") = Me.BodySchema
+        ElseIf bodySchema Is Nothing Then
+            h("BodySchema") = Nothing
         End If
 
         '' Overlay subclass's properties.

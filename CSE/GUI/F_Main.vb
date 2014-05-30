@@ -470,7 +470,6 @@ Public Class F_Main
     ' Create activation file
     Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreatActivationFileToolStripMenuItem.Click
         Lic.CreateActFile(MyPath & "ActivationCode.dat")
-        fInfWarErr(7, False, "Activation code created under: " & MyPath & "ActivationCode.dat")
         fInfWarErr(7, True, "Activation code created under: " & MyPath & "ActivationCode.dat")
     End Sub
 
@@ -569,7 +568,7 @@ Public Class F_Main
         Try
             calculation(Cali)
         Catch ex As Exception
-            fInfWarErrBW(9, True, format("Calculation Failed due to: {0}", ex.Message), ex)
+            fInfWarErrBW(9, False, format("Calculation Failed due to: {0}", ex.Message), ex)
         End Try
 
         '#################################

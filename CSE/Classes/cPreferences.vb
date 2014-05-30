@@ -154,7 +154,7 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
                     value = IO.Path.GetFullPath(value)
                     If value.StartsWith(myPlainPath, StringComparison.OrdinalIgnoreCase) Then
                         value = value.Substring(myPlainPath.Length)
-                        If (value.First <> "\"c) Then
+                        If (value.First = "\"c) Then
                             value = value.Substring(1)
                         End If
                         If (value.Last <> "\"c) Then

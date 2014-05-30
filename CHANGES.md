@@ -12,6 +12,7 @@ JRC contributions:
   * Enhance JSON-files with standard header/body behavior.
   * Link JSON to GUI controls (labels & toolstips)
   * json: Read defaults from schemas.
+  * Rework logging ensure always writing to file-log (even when sent to msg-box).
 
 
 #### 2014-05-23: 2.0.1-pre0 ####
