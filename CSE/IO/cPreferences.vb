@@ -177,9 +177,9 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
             '' NOTE: Early-binding makes Nulls end-up as 'string' schema-type.
             ''
             If value Is Nothing Then
-                Me.Json_Contents("Body")("workingDir") = Nothing
+                Me.Body("workingDir") = Nothing
             Else
-                Me.Json_Contents("Body")("workingDir") = value
+                Me.Body("workingDir") = value
             End If
         End Set
     End Property

@@ -10,7 +10,7 @@
         Dim EnumStr As tCompErgReg
 
         ' Output on the GUI
-        fInfWarErrBW(7, False, "Calculate the linear regression...")
+        fInfWarErr(7, False, "Calculate the linear regression...")
 
         ' Initialisation
         lauf = -1
@@ -322,16 +322,16 @@
         ' Test validation
         t_amb_f = t_amb_f / t_amb_num
         If (t_amb_f - t_amb_min_f) > t_amb_var Or (t_amb_max_f - t_amb_f) > t_amb_var Then
-            fInfWarErrBW(9, False, "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
+            fInfWarErr(9, False, "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
             valid_t_amb = False
         End If
 
         If t_amb_max_f > t_amb_max Then
-            fInfWarErrBW(9, False, "Invalid test - maximum ambient temperature exceeded")
+            fInfWarErr(9, False, "Invalid test - maximum ambient temperature exceeded")
         ElseIf t_amb_min_f < t_amb_min Then
-            fInfWarErrBW(9, False, "Invalid test - fallen below minimum ambient temperature")
+            fInfWarErr(9, False, "Invalid test - fallen below minimum ambient temperature")
         ElseIf t_amb_max_f > t_amb_tarmac Then
-            fInfWarErrBW(9, False, "Invalid test - Ambient temperature higher than " & t_amb_tarmac & "°C")
+            fInfWarErr(9, False, "Invalid test - Ambient temperature higher than " & t_amb_tarmac & "°C")
         End If
 
         Return True
@@ -414,10 +414,10 @@
             End If
             If i = GenShape.x_val(pos).Length - 1 And beta > GenShape.x_val(pos)(i + 1) Then
                 ValueX = 0
-                fInfWarErrBW(8, False, "The calculated yaw angle is higher than the greatest value in the generic curve. Delta_CdxA is set to 0!")
+                fInfWarErr(8, False, "The calculated yaw angle is higher than the greatest value in the generic curve. Delta_CdxA is set to 0!")
             ElseIf i = 0 And GenShape.x_val(pos)(i) > beta Then
                 ValueX = 0
-                fInfWarErrBW(8, False, "The calculated yaw angle is lower than the lowest value in the generic curve. Delta_CdxA is set to 0!")
+                fInfWarErr(8, False, "The calculated yaw angle is lower than the lowest value in the generic curve. Delta_CdxA is set to 0!")
             End If
         Next i
 

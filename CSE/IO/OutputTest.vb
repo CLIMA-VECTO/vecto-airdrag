@@ -23,7 +23,7 @@
             End If
 
             ' Write on GUI
-            fInfWarErrBW(5, False, "Write output-file (*.csv)")
+            fInfWarErr(5, False, "Write output-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = OutFolder & fName(Datafile, False) & "_test.csv"
@@ -64,7 +64,7 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErrBW(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True

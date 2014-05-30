@@ -25,6 +25,9 @@ Public Class F_Main
         ' Name of the GUI
         Me.Text = AppName & " " & AppVers
 
+        ' Write the beginning in the Log
+        fWriteLog(1)
+
         ' Load the config file
         '
         Try
@@ -46,9 +49,6 @@ Public Class F_Main
         If Not IO.Directory.Exists(AppPreferences.workingDir) Then
             IO.Directory.CreateDirectory(AppPreferences.workingDir)
         End If
-
-        ' Write the beginning in the Log
-        fWriteLog(1)
 
         'Lizenz checken
         If Not Lic.LICcheck() Then
@@ -223,8 +223,7 @@ Public Class F_Main
         Me.ListBoxMSG.Items.Clear()
         fClear_VECTO_Form(False, False)
 
-        fInfWarErr(7, False, "Starting VECTO CSE calibration calculation...")
-        If AppPreferences.writeLog Then fWriteLog(2, 4, "------------- Job: " & JobFile & " | Out: " & OutFolder & " | " & CDate(DateAndTime.Now) & "-------------")
+        fInfWarErr(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
         ' Start the calculation in the backgroundworker
         Me.BackgroundWorkerVECTO.RunWorkerAsync()
@@ -376,7 +375,7 @@ Public Class F_Main
         fClear_VECTO_Form(False, False)
 
         ' Write the Calculation status in the Messageoutput and in the Log
-        fInfWarErr(7, False, "Starting VECTO CSE test evaluation...")
+        fInfWarErr(7, False, format("Starting EVALUATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
         ' Start the calculation in the backgroundworker
         Me.BackgroundWorkerVECTO.RunWorkerAsync()
@@ -561,14 +560,15 @@ Public Class F_Main
     '*********Backgroundworker*********
 
     ' Backgroundworker for the calculation in the background
-    Private Sub BackgroundWorkerVECTO_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorkerVECTO.DoWork
+    Private Sub BackgroundWorkerVECTO_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) _
+        Handles BackgroundWorkerVECTO.DoWork
 
         '##### START THE CALCULATION #####
         '#################################
         Try
             calculation(Cali)
         Catch ex As Exception
-            fInfWarErrBW(9, False, format("Calculation Failed due to: {0}", ex.Message), ex)
+            fInfWarErr(9, False, format("Calculation Failed due to: {0}", ex.Message), ex)
         End Try
 
         '#################################
@@ -580,37 +580,33 @@ Public Class F_Main
     End Sub
 
     ' Output from messages with the Backgroundworker
-    Private Sub BackgroundWorkerVECTO_ProgressChanged(ByVal sender As Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs) Handles BackgroundWorkerVECTO.ProgressChanged
-        ' Declarations
-        Dim WorkerMsg As CMsg
-        WorkerMsg = New CMsg
+    Private Sub BackgroundWorkerVECTO_ProgressChanged(ByVal sender As Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs) _
+        Handles BackgroundWorkerVECTO.ProgressChanged
 
-        ' Identify the Message
-        WorkerMsg = e.UserState
-
-        If e.UserState Is Nothing Then
-
-        Else
-            ' Call the function for the depiction from the message on the GUI
-            WorkerMsg.MsgToForm()
+        Dim workerMsg As cLogMsg = e.UserState
+        If workerMsg IsNot Nothing Then
+            workerMsg.forwardLog()
         End If
     End Sub
 
     ' Identify the ending from the backgroundworker
-    Private Sub BackgroundWorkerVECTO_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorkerVECTO.RunWorkerCompleted
+    Private Sub BackgroundWorkerVECTO_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+        Handles BackgroundWorkerVECTO.RunWorkerCompleted
+
+        Dim op = IIf(Cali, "Calibration", "Evaluation")
+
         ' If an Error is detected
         If e.Error IsNot Nothing Then
-            fInfWarErr(7, False, "End with Error")
-            MsgBox(e.Error.Message)
+            fInfWarErr(8, True, format("{0} ended with exception: {1}", op, e.Error), e.Error)
         Else
             If e.Cancelled Then
                 If ErrorExit Then
-                    fInfWarErr(7, False, "End with Error")
+                    fInfWarErr(8, False, format("{0} ended with exception: {1}", op, e.Error), e.Error)
                 Else
-                    fInfWarErr(7, False, "Aborted by user")
+                    fInfWarErr(7, False, format("{0} aborted by user.", op))
                 End If
             Else
-                fInfWarErr(7, False, "Done")
+                fInfWarErr(7, False, format("{0} ended OK.", op))
                 If Cali Then Me.ButtonEval.Enabled = True
             End If
         End If

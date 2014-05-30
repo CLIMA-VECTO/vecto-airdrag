@@ -100,7 +100,14 @@ Public MustInherit Class cJsonFile
     Protected MustOverride Sub ValidateBody(ByVal isStrict As Boolean, ByVal validateMsgs As IList(Of String))
 
 
-    Protected Json_Contents As JObject
+    ''' <summary>The whole json-content receiving any changes, always ready to be written as is.</summary>
+    Private Content As JObject
+
+    ''' <summary>Cached instance from 'Content', used (tentatively) for perfomance.</summary>
+    Public ReadOnly Header As JObject
+
+    ''' <summary>Cached instance from 'Content', used (tentatively) for perfomance.</summary>
+    Public ReadOnly Body As JObject
 
     ''' <summary>Reads from a file (aka "Load") or creates an instance with defaults
     ''' 
@@ -115,14 +122,19 @@ Public MustInherit Class cJsonFile
 
         If (inputFilePath Is Nothing) Then
             Dim jstr = JsonStr_FileContents()
-            Me.Json_Contents = JObject.Parse(jstr)
-
+            Me.Content = JObject.Parse(jstr)
+            Me.Header = Content("Header")
             UpdateHeader()
-            Me.Json_Contents("Body") = Me.BodyContent
+
+            Me.Content("Body") = Me.BodyContent
+            Me.Body = Content("Body")
         Else
-            fInfWarErrBW(5, False, format("Reading JSON-file({0})...", inputFilePath))
-            Me.Json_Contents = ReadJsonFile(inputFilePath)
             strictHeader = False   '' Try to read even bad headers.
+            fInfWarErr(4, False, format("Reading JSON-file({0})...", inputFilePath))
+
+            Me.Content = ReadJsonFile(inputFilePath)
+            Me.Header = Content("Header")
+            Me.Body = Content("Body")
         End If
 
         If Not skipValidation Then
@@ -135,10 +147,11 @@ Public MustInherit Class cJsonFile
         Me.UpdateHeader()
 
         Me.Validate(Me.StrictBody)
-        WriteJsonFile(fpath, Json_Contents)
+        WriteJsonFile(fpath, Content)
     End Sub
 
     ''' <summary>Maintains header's standard props and overlays any props from subclass.</summary>
+    ''' <remarks>Note that it is invoked early enough, before the new file has acquired a Body.</remarks>
     Sub UpdateHeader()
         Dim h As JObject = Me.Header
 
@@ -185,7 +198,7 @@ Public MustInherit Class cJsonFile
 
         '' Validate Header
         ''
-        ValidateJson(Me.Json_Contents, fileSchema, validateMsgs)
+        ValidateJson(Me.Content, fileSchema, validateMsgs)
         If (validateMsgs.Any()) Then
             Throw New FormatException(format("Validating /Header failed due to: {0}", String.Join(vbCrLf, validateMsgs)))
         End If
@@ -205,7 +218,7 @@ Public MustInherit Class cJsonFile
 
     Public Function Clone() As Object Implements ICloneable.Clone
         Dim nobj As cJsonFile = Me.MemberwiseClone()
-        nobj.Json_Contents = Me.Json_Contents.DeepClone()
+        nobj.Content = Me.Content.DeepClone()
 
         Return nobj
     End Function
@@ -214,7 +227,7 @@ Public MustInherit Class cJsonFile
         If obj Is Nothing OrElse Not Me.GetType().Equals(obj.GetType()) Then
             Return False
         Else
-            Return JToken.DeepEquals(Me.Json_Contents, DirectCast(obj, cJsonFile).Json_Contents)
+            Return JToken.DeepEquals(Me.Content, DirectCast(obj, cJsonFile).Content)
         End If
     End Function
 
@@ -241,16 +254,16 @@ Public MustInherit Class cJsonFile
     End Function
 
 #Region "json props"
-    Protected ReadOnly Property Header() As JObject
-        Get
-            Return Me.Json_Contents("Header")
-        End Get
-    End Property
-    Protected ReadOnly Property Body() As JObject
-        Get
-            Return Me.Json_Contents("Body")
-        End Get
-    End Property
+    'Protected ReadOnly Property Header() As JObject
+    '    Get
+    '        Return Me.Json_Contents("Header")
+    '    End Get
+    'End Property
+    'Protected ReadOnly Property Body() As JObject
+    '    Get
+    '        Return Me.Json_Contents("Body")
+    '    End Get
+    'End Property
 
 
     Public ReadOnly Property Title As String

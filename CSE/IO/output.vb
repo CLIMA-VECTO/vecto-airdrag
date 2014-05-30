@@ -29,7 +29,7 @@
             End If
 
             ' Write on GUI
-            fInfWarErrBW(5, False, "Writing output-file (*.csv)")
+            fInfWarErr(5, False, "Writing output-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = ""
@@ -80,7 +80,7 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErrBW(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True
@@ -109,7 +109,7 @@
             End If
 
             ' Write on GUI
-            fInfWarErrBW(5, False, "Writing result-file (*.csv)")
+            fInfWarErr(5, False, "Writing result-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = OutFolder & fName(JobFile, False) & "_MS_CAL.csv"
@@ -183,7 +183,7 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErrBW(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True
@@ -210,7 +210,7 @@
             End If
 
             ' Write on GUI
-            fInfWarErrBW(5, False, "Writing result-file (*.csv)")
+            fInfWarErr(5, False, "Writing result-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = OutFolder & fName(JobFile, False) & "_CSE.csv"
@@ -277,7 +277,7 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErrBW(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True
@@ -653,7 +653,7 @@
         For z = 1 To ValuesX.Item(tCompCali.t).Count - 1
             If fTime(z) < fTime(z - 1) Then
                 If Sprung Then
-                    fInfWarErrBW(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
+                    fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
                     Return False
                 Else
                     Sprung = True
@@ -844,7 +844,7 @@
         For z = 1 To ValuesX.Item(tComp.t).Count - 1
             If fTime(z) < fTime(z - 1) Then
                 If Sprung Then
-                    fInfWarErrBW(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
+                    fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
                     Return False
                 Else
                     Sprung = True
@@ -1035,7 +1035,7 @@
         For z = 1 To ValuesX.Item(ValuesX.First.Key).Count - 1
             If fTime(z) < fTime(z - 1) Then
                 If Sprung Then
-                    fInfWarErrBW(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
+                    fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
                     Return False
                 Else
                     Sprung = True

@@ -8,7 +8,7 @@
 
         If SectionDev Then
             ' Output on the GUI
-            fInfWarErrBW(6, False, "Identifying the sections")
+            fInfWarErr(6, False, "Identifying the sections")
 
             ' Devide the measured data into there sections
             DevInSec(vMSC)
@@ -16,7 +16,7 @@
             ' Leap in time control
             If JumpPoint <> -1 Then
                 If CalcData(tCompCali.SecID)(JumpPoint) <> 0 Then
-                    fInfWarErrBW(9, False, "The detected leap in time is inside a measurement section. This is not allowed!")
+                    fInfWarErr(9, False, "The detected leap in time is inside a measurement section. This is not allowed!")
                     BWorker.CancelAsync()
                     Return False
                 End If
@@ -723,7 +723,7 @@
             For j = 0 To InputWeatherData(tCompWeat.t).Count - 1
                 If j = 0 Then
                     If CalcData(tCompCali.t)(i) < InputWeatherData(tCompWeat.t)(j) And j = 0 Then
-                        fInfWarErrBW(9, False, "The test time is outside the range of the data from the stationary weather station.")
+                        fInfWarErr(9, False, "The test time is outside the range of the data from the stationary weather station.")
                         BWorker.CancelAsync()
                         Return False
                     ElseIf CalcData(tCompCali.t)(i) >= InputWeatherData(tCompWeat.t)(j) And CalcData(tCompCali.t)(i) < InputWeatherData(tCompWeat.t)(j + 1) Then
@@ -741,7 +741,7 @@
                     End If
                 End If
                 If j = InputWeatherData(tCompWeat.t).Count - 1 Then
-                    fInfWarErrBW(9, False, "The test time is outside the range of the data from the stationary weather station.")
+                    fInfWarErr(9, False, "The test time is outside the range of the data from the stationary weather station.")
                     BWorker.CancelAsync()
                     Return False
                 End If
@@ -771,7 +771,7 @@
                         If CalcData(tCompCali.SecID)(i - 1) = CalcData(tCompCali.SecID)(i) And CalcData(tCompCali.SecID)(i + 1) = CalcData(tCompCali.SecID)(i) Then
                             If (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)) = 0 Then
                                 CalcData(tCompCali.slope_deg)(i) = 0
-                                fInfWarErrBW(9, False, "Standstill or loss of vehicle speed signal inside MS not permitted (Error at line " & i & ")")
+                                fInfWarErr(9, False, "Standstill or loss of vehicle speed signal inside MS not permitted (Error at line " & i & ")")
                                 BWorker.CancelAsync()
                             Else
                                 CalcData(tCompCali.slope_deg)(i) = (Math.Asin((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI

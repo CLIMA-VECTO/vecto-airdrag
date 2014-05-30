@@ -162,12 +162,12 @@ Module utils
 
     ' Functions for the information depiction on the GUI with the backgroundworker (Info, Warning, Error)
 #Region "Logging"
-    ' Output from Informations\Warnings\Errors on the GUI
+    ''' <summary>Output from Informations\Warnings\Errors on the GUI, even from within the Backgoundworker</summary>
     Sub fInfWarErr(ByVal logLevel As Integer, ByVal MsgBoxOut As Boolean, _
                    ByVal text As String, Optional ByVal ex As Exception = Nothing)
 
         ' Declaration
-        Dim Styletext = "Debug"
+        Dim tabLabel = "Debug"
         Dim logFileLevel As Integer = 0
         Dim StyleOut = MsgBoxStyle.Information
 
@@ -175,149 +175,152 @@ Module utils
         Select Case logLevel
             Case 5 To 7 ' Info
                 logFileLevel = 1
-                Styletext = "Info"
+                tabLabel = "Info"
             Case 8 ' Warning
                 logFileLevel = 2
-                Styletext = "Warning"
+                tabLabel = "Warning"
                 StyleOut = MsgBoxStyle.Exclamation
             Case 9 ' Error
                 logFileLevel = 3
-                Styletext = "Error"
+                tabLabel = "Error"
                 StyleOut = MsgBoxStyle.Critical
         End Select
 
         ' Write to Log-file.
         fWriteLog(2, logFileLevel, text, ex)
 
-        ' Polling the MSG if the message should shown
+        '' Print only filtered msgs in log-window
+        ''
         If logLevel >= AppPreferences.logLevel Then
-
-            ' Established the text wit the symbol from the style
-            text = AnzeigeMessage(logLevel) & text
-
-            ' Write to Log-windows
-            Select Case logFileLevel
-                Case 1 ' Info
-                    F_Main.ListBoxMSG.Items.Add(text)
-                Case 2 ' Warning
-                    F_Main.ListBoxMSG.Items.Add(text)
-                    F_Main.ListBoxWar.Items.Add(text)
-                    F_Main.TabPageWar.Text = Styletext & " (" & F_Main.ListBoxWar.Items.Count & ")"
-                Case 3 ' Error
-                    F_Main.ListBoxMSG.Items.Add(text)
-                    F_Main.ListBoxErr.Items.Add(text)
-                    F_Main.TabPageErr.Text = Styletext & " (" & F_Main.ListBoxErr.Items.Count & ")"
-                    F_Main.TabControlOutMsg.SelectTab(2)
-                Case Else
-                    '' ignored
-            End Select
-
-            ' Set the Scrollbars in the Listboxes at the end
-            F_Main.ListBoxMSG.TopIndex = F_Main.ListBoxMSG.Items.Count - 1
-            F_Main.ListBoxWar.TopIndex = F_Main.ListBoxWar.Items.Count - 1
-            F_Main.ListBoxErr.TopIndex = F_Main.ListBoxErr.Items.Count - 1
+            Dim wintext = AnzeigeMessage(logLevel) & text
+            If BWorker.IsBusy Then
+                '' If in Worker-thread, update GUI through a ProgressChanged event
+                ''
+                Dim WorkerMsg As New cLogMsg(logFileLevel, MsgBoxOut, wintext, ex, tabLabel)
+                BWorker.ReportProgress(0, WorkerMsg)
+            Else
+                updateLogWindow(logFileLevel, wintext, tabLabel)
+            End If
         End If
 
-        ' Output as an messagebox or on the tabcontrols
+        '' Output as an messagebox (if requested)
+        ''
         If MsgBoxOut Then
             ' Output in a MsgBox
             If RestartN Then
                 ' By changes in the confic use other output
                 RestartN = False
-                If MsgBox(text, MsgBoxStyle.YesNo, Styletext) = MsgBoxResult.Yes Then
+                If MsgBox(text, MsgBoxStyle.YesNo, tabLabel) = MsgBoxResult.Yes Then
                     RestartN = True
                     F_Main.Close()
                 End If
             Else
-                MsgBox(text, StyleOut, Styletext)
+                MsgBox(text, StyleOut, tabLabel)
             End If
         End If
     End Sub
 
-    ''' <summary>Log from Informations\Warnings\Errors from within the Backgoundworker</summary>
-    Sub fInfWarErrBW(ByVal logLevel As Integer, ByVal msgBoxOut As Boolean, _
-                     ByVal text As String, Optional ByVal ex As Exception = Nothing)
-        Dim WorkerMsg As New CMsg
+    Private Sub updateLogWindow(ByVal logFileLevel As Integer, ByVal text As String, ByVal tabLabel As String)
+        ' Established the text wit the symbol from the style
 
-        WorkerMsg.LogLevel = logLevel
-        WorkerMsg.MsgBoxOut = msgBoxOut
-        WorkerMsg.Text = text
-        WorkerMsg.Ex = ex
+        ' Write to Log-windows
+        Select Case logFileLevel
+            Case 1 ' Info
+                F_Main.ListBoxMSG.Items.Add(text)
+            Case 2 ' Warning
+                F_Main.ListBoxMSG.Items.Add(text)
+                F_Main.ListBoxWar.Items.Add(text)
+                F_Main.TabPageWar.Text = tabLabel & " (" & F_Main.ListBoxWar.Items.Count & ")"
+            Case 3 ' Error
+                F_Main.ListBoxMSG.Items.Add(text)
+                F_Main.ListBoxErr.Items.Add(text)
+                F_Main.TabPageErr.Text = tabLabel & " (" & F_Main.ListBoxErr.Items.Count & ")"
+                F_Main.TabControlOutMsg.SelectTab(2)
+            Case Else
+                '' ignored
+        End Select
 
-        ' Output in the Tabcontrols (Call from Backgroundworker_ProgressChanged)
-        BWorker.ReportProgress(0, WorkerMsg)
+        ' Set the Scrollbars in the Listboxes at the end
+        F_Main.ListBoxMSG.TopIndex = F_Main.ListBoxMSG.Items.Count - 1
+        F_Main.ListBoxWar.TopIndex = F_Main.ListBoxWar.Items.Count - 1
+        F_Main.ListBoxErr.TopIndex = F_Main.ListBoxErr.Items.Count - 1
+
     End Sub
 
+
     ' Definition for the Backgroundworker
-    Class CMsg
-        Public LogLevel As Integer
-        Public Text As String
-        Public Ex As Exception
-        Public MsgBoxOut As Boolean = False
+    Class cLogMsg
+        Private LogLevel As Integer
+        Private Text As String
+        Private Ex As Exception
+        Private MsgBoxOut As Boolean = False
+        Private TabLabel
+
+        Public Sub New(ByVal logLevel As Integer, ByVal msgBoxOut As Boolean, ByVal text As String, _
+                       ByVal ex As Exception, Optional ByVal TabLabel As String = "")
+            Me.LogLevel = logLevel
+            Me.MsgBoxOut = msgBoxOut
+            Me.Text = text
+            Me.Ex = ex
+        End Sub
 
         ' Call for the output from Informations\Warnings\Errors with the backgoundworker
-        Public Sub MsgToForm()
-            fInfWarErr(LogLevel, MsgBoxOut, Text, Ex)
+        Public Sub forwardLog()
+            updateLogWindow(LogLevel, Text, TabLabel)
         End Sub
     End Class
 
+    Private logDateFrmt As String = "yyyy/MM/dd HH:mm:ss zzz"
 
-    ' Generation or upgrade from the log file
-    Function fWriteLog(ByVal filePosition As Integer, Optional ByVal logLevel As Integer = 4, Optional ByVal text As String = "", _
+    ''' <summary>Format and write log-mesages to file.</summary>
+    ''' <param name="eventType">1: Session started, 2: Add log, 3: Session ended</param>
+    Function fWriteLog(ByVal eventType As Integer, Optional ByVal logLevel As Integer = 4, Optional ByVal text As String = "", _
                        Optional ByVal ex As Exception = Nothing) As Boolean
-        ' filePosition:
-        '   Write beginning
-        '   Add
-        '   Write end
 
         If Not AppPreferences.writeLog Then Return True
 
-        ' Declaration
         Dim LogFilenam As String = joinPaths(MyPath, "log.txt")
 
+        If eventType = 1 Then
+            logLevel = 1
+            text = "Session started: " & AppName & " " & AppVers
+
+            '' Truncate log-file if size exceeded on session-start.
+            ''
+            Dim fInf As New System.IO.FileInfo(LogFilenam)
+            If fInf.Exists AndAlso fInf.Length > AppPreferences.logSize * Math.Pow(10, 6) Then
+                fLoeschZeilen(LogFilenam, System.IO.File.ReadAllLines(LogFilenam).Length / 2)
+            End If
+        ElseIf eventType = 3 Then
+            logLevel = 1
+            text = "Session finished: " & AppName & " " & AppVers
+        End If
+
+        Dim slevel As String
+        Select Case logLevel
+            Case 1
+                slevel = "INFO"
+            Case 2
+                slevel = "WARN"
+            Case 3
+                slevel = "ERROR"
+            Case Else
+                slevel = "DEBUG"
+        End Select
+
+
         Try
-            ' Decision where should be write
-            Select Case filePosition
-                Case 1 ' At the beginning of VECTO
-                    Dim fInf As New System.IO.FileInfo(LogFilenam)
-                    If IO.File.Exists(LogFilenam) Then
-                        If fInf.Length > AppPreferences.logSize * Math.Pow(10, 6) Then
-                            fLoeschZeilen(LogFilenam, System.IO.File.ReadAllLines(LogFilenam).Length / 2)
-                        End If
-                        FileOutLog.OpenWrite(LogFilenam, , True)
-                    Else
-                        FileOutLog.OpenWrite(LogFilenam)
-                    End If
-                    FileOutLog.WriteLine("-----")
+            FileOutLog.OpenWrite(LogFilenam, , True)
 
-                    ' Write the start time into the Log
-                    FileOutLog.WriteLine("Starting Session " & CDate(DateAndTime.Now))
-                    FileOutLog.WriteLine(AppName & " " & AppVers)
+            If eventType = 1 Then FileOutLog.WriteLine("---------------")
 
-                Case 2 ' Add a message to the Log
-                    Dim slevel As String
-                    Select Case logLevel
-                        Case 1
-                            slevel = "INFO   | "
-                        Case 2
-                            slevel = "WARNING| "
-                        Case 3
-                            slevel = "ERROR  | "
-                        Case Else
-                            slevel = "DEBUG  | "
-                    End Select
-                    FileOutLog.OpenWrite(LogFilenam, , True)
-                    FileOutLog.WriteLine(slevel & text)
-                    If ex IsNot Nothing Then
-                        FileOutLog.WriteLine(ex.StackTrace)
-                    End If
+            If ex Is Nothing Then
+                FileOutLog.WriteLine(format("{0}: {1,-5}| {2}", DateAndTime.Now.ToString(logDateFrmt), slevel, text))
+            Else
+                FileOutLog.WriteLine(format("{0}: {1,-5}| {2}\n\i{3}", DateAndTime.Now.ToString(logDateFrmt), slevel, text, ex))
+            End If
 
-                Case 3 ' At the end
-                    FileOutLog.OpenWrite(LogFilenam, , True)
-                    ' Write the end to the Log
-                    FileOutLog.WriteLine("Closing Session " & CDate(DateAndTime.Now))
-                    FileOutLog.WriteLine("-----")
-            End Select
+            If eventType = 3 Then FileOutLog.WriteLine("---------------")
         Finally
             FileOutLog.Dispose()
         End Try

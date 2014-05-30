@@ -79,7 +79,7 @@ Module utils_GUI
             ' Open the jobfile
             If Not FileInVECTO.OpenRead(JobFile) Then
                 ' Falls File nicht vorhanden, abbrechen mit Fehler
-                fInfWarErrBW(9, False, "Can´t find the Jobfile file: " & JobFile)
+                fInfWarErr(9, False, "Can´t find the Jobfile file: " & JobFile)
                 Return False
             End If
 
@@ -217,21 +217,21 @@ Module utils_GUI
                                 tq_sum_1s_delta = Line(0)
                         End Select
                     Else
-                        fInfWarErrBW(9, False, "The given value in the job file at position: " & i & " is not a number")
+                        fInfWarErr(9, False, "The given value in the job file at position: " & i & " is not a number")
                         BWorker.CancelAsync()
                         Return False
                     End If
                 Loop
             Catch ex As Exception
                 ' Error
-                fInfWarErrBW(9, False, "Invalid value in the job file at position: " & i)
+                fInfWarErr(9, False, "Invalid value in the job file at position: " & i)
                 BWorker.CancelAsync()
                 Return False
             End Try
 
             ' Look if enough parameters are given
             If i < 34 Then
-                fInfWarErrBW(9, False, "Not enough parameters given in the job file")
+                fInfWarErr(9, False, "Not enough parameters given in the job file")
                 BWorker.CancelAsync()
                 Return False
             End If
