@@ -107,6 +107,7 @@
     <Compile Include="Classes\cMSC.vb" />
     <Compile Include="IO\cJsonFile.vb" />
     <Compile Include="Classes\CResult.vb" />
+    <Compile Include="IO\cJob.vb" />
     <Compile Include="IO\cPreferences.vb" />
     <Compile Include="cSemanticVersion.vb" />
     <Compile Include="Classes\csKey.vb" />
