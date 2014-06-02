@@ -27,7 +27,9 @@ Public MustInherit Class cJsonFile
                 "FileVersion":  null,
                 "AppVersion":   null,
                 "ModifiedDate": null,
+                "CreatedBy": null,
                 "StrictBody":   false,
+                "BodySchema":   null,
             },
             "Body": null
         }</json>.Value
@@ -59,6 +61,11 @@ Public MustInherit Class cJsonFile
                         "ModifiedDate": {
                             "type": "string",
                             "description": "Last-modification date",
+                            "required": <%= requireAll %>,
+                        },
+                        "CreatedBy": {
+                            "type": "string",
+                            "description": "The persons who executed the application to produce this file, fetched from the license-file.",
                             "required": <%= requireAll %>,
                         },
                         "StrictBody": {
@@ -151,11 +158,20 @@ Public MustInherit Class cJsonFile
     End Sub
 
     ''' <summary>Maintains header's standard props and overlays any props from subclass.</summary>
-    ''' <remarks>Note that it is invoked early enough, before the new file has acquired a Body.</remarks>
+    ''' <remarks>Note that it is invoked early enough, before the new file has acquired a Body and before AppPreferences exist(!).</remarks>
     Sub UpdateHeader()
         Dim h As JObject = Me.Header
 
         h("ModifiedDate") = DateTime.Now.ToString(dateFrmt)
+
+        '' Decide whether to add username in "CreatedBy".
+        ''
+        Dim username = ""
+        If AppPreferences Is Nothing OrElse Not AppPreferences.hideUsername Then
+            username = System.Security.Principal.WindowsIdentity.GetCurrent().Name & "@"
+        End If
+        h("CreatedBy") = format("{0}{1}(lic: {2})", username, Lic.LicString, Lic.GUID)
+
         h("AppVersion") = AppVers
         If h("StrictBody") Is Nothing Then
             h("StrictBody") = False
@@ -231,7 +247,16 @@ Public MustInherit Class cJsonFile
         End If
     End Function
 
-    ''' <summary>Reads value found by XPath and if notinhg there, fetches default-value schema.</summary>
+    ''' <param name="propPath">The JSON.net's XPath for a Body property, with or without a starting dot('.').</param>
+    Public Function PropDefault(ByVal propPath As String) As JToken
+        If Not propPath.StartsWith(".") Then
+            propPath = "." & propPath
+        End If
+        Dim schemaPath = propPath.Replace(".", ".properties.")
+        Return Me.BodySchema.SelectToken(schemaPath & ".default")
+    End Function
+
+    ''' <summary>Reads value found by XPath and if nothing there, fetches default-value schema.</summary>
     ''' <param name="propPath">The JSON.net's XPath for a Body property, including the starting dot('.').
     ''' 
     ''' Examples:

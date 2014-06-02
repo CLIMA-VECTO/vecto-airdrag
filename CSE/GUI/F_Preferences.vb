@@ -13,6 +13,7 @@ Public Class F_Preferences
         controlPairs.Add({Me.logSize, Label16})
         controlPairs.Add({Me.includeSchemas, Nothing})
         controlPairs.Add({Me.strictBodies, Nothing})
+        controlPairs.Add({Me.hideUsername, Nothing})
 
         '' Add help-tooltips from Json-Schema.
         ''
@@ -34,7 +35,8 @@ Public Class F_Preferences
         Me.logLevel.Text = value.LogLevel
         Me.logSize.Text = value.LogSize
         Me.includeSchemas.Checked = value.IncludeSchemas
-        Me.strictBodies.Checked = value.StrictBodies
+        Me.strictBodies.Checked = value.strictBodies
+        Me.hideUsername.Checked = value.hideUsername
     End Sub
 
     Private Sub UI_PopulateTo(ByVal value As cPreferences)
@@ -44,7 +46,8 @@ Public Class F_Preferences
         value.LogLevel = Me.logLevel.Text
         value.LogSize = Me.logSize.Text
         value.IncludeSchemas = Me.includeSchemas.Checked
-        value.StrictBodies = Me.strictBodies.Checked
+        value.strictBodies = Me.strictBodies.Checked
+        value.hideUsername = Me.hideUsername.Checked
     End Sub
 
     ' Open the filebrowser for selecting the working dir
@@ -68,7 +71,7 @@ Public Class F_Preferences
             RestartN = True
             fInfWarErr(7, True, format("Stored Preferences({0}). \n\nDo you want to restart VECTO now?", PreferencesPath))
         Catch ex As Exception
-            fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", _
+            fInfWarErr(9, True, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", _
                                         PreferencesPath, ex.Message), ex)
         End Try
 
@@ -82,7 +85,7 @@ Public Class F_Preferences
             AppPreferences = New cPreferences(PreferencesPath)
             UI_PopulateFrom(AppPreferences)
         Catch ex As Exception
-            fInfWarErr(9, False, format("Failed loading Preferences({0}) due to: {1}", _
+            fInfWarErr(9, True, format("Failed loading Preferences({0}) due to: {1}", _
                                         PreferencesPath, ex.Message), ex)
         End Try
     End Sub
@@ -110,7 +113,7 @@ Public Class F_Preferences
 
     ' Set the MSG box to default if it is leave without an input
     Private Sub TextBoxMSG_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles logLevel.Leave
-        If Me.logLevel.Text = Nothing Then Me.logLevel.Text = 5
+        If Me.logLevel.Text = Nothing Then Me.logLevel.Text = AppPreferences.PropDefault("logLevel")
     End Sub
 
     ' Changes in the MSG --> Change the lable
@@ -144,7 +147,7 @@ Public Class F_Preferences
 
     ' Set the LogSize to default if it is leave without an input
     Private Sub TextBoxLogSize_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles logSize.Leave, TextBox1.Leave
-        If Me.logSize.Text = Nothing Then Me.logSize.Text = 2
+        If Me.logSize.Text = Nothing Then Me.logSize.Text = AppPreferences.PropDefault("logSize")
     End Sub
 End Class
 

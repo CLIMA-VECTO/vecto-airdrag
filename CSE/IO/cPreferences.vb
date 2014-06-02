@@ -80,18 +80,25 @@ Public Class cPreferences
                     "title": "Strict Bodies",
                     "type": "boolean",
                     "default": false,
-                    "description": "Controls whether unknown body-properties are accepted when reading JSON-files. 
+                    "description": "When set to true, any unknown body-properties are not accepted when reading JSON-files. 
 It is useful for debugging malformed input-files, ie to detect 
 accidentally renamed properties.
-Each file can override it by setting its /Header/StrictBody property.",
+Each file can override it by setting its `/Header/StrictBody` property.",
                 }, 
                 "includeSchemas": {
                     "title": "Include Schemas",
                     "type": "boolean",
                     "default": false,
-                    "description": "Controls whether to self-document JSON-files by populating their '/Header/BodySchema' property.
-Each file can override it by setting its '/Header/BodySchema' property to false/true.",
+                    "description": "When set to true the JSON-files are self-documented by populating their `/Header/BodySchema` property.
+Each file can override it by setting its `/Header/BodySchema` property to false/true.",
                 }, 
+                "hideUsername": {
+                    "title": "Hide Username",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When true, the name of the user running the application will not be written
+in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.", 
+                },
             }
         }</json>.Value
     End Function
@@ -154,14 +161,11 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
                     value = IO.Path.GetFullPath(value)
                     If value.StartsWith(myPlainPath, StringComparison.OrdinalIgnoreCase) Then
                         value = value.Substring(myPlainPath.Length)
-                        If (value.First = "\"c) Then
+                        If (value.StartsWith("\")) Then
                             value = value.Substring(1)
                         End If
-                        If (value.Last <> "\"c) Then
-                            value = value & "\"
-                        End If
 
-                        If value.Length = 1 Then
+                        If value.Length = 0 Then
                             value = Nothing
                         End If
                     End If
@@ -235,6 +239,15 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
         End Get
         Set(ByVal value As Boolean)
             Me.Body("includeSchemas") = value
+        End Set
+    End Property
+
+    Public Property hideUsername As Boolean
+        Get
+            Return BodyGetter(".hideUsername")
+        End Get
+        Set(ByVal value As Boolean)
+            Me.Body("hideUsername") = value
         End Set
     End Property
 
