@@ -251,7 +251,7 @@
                     ErgValuesReg(tCompErgReg.F2_LS2_ref).Add(F2)
                     ErgValuesReg(tCompErgReg.RRC_LS2).Add((ErgValuesReg(tCompErgReg.F0_LS2)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
-                    If Math.Abs(ErgValuesReg(tCompErgReg.RRC_LS1)(lauf) - ErgValuesReg(tCompErgReg.RRC_LS2)(lauf)) > delta_RRC_max Then
+                    If Math.Abs(ErgValuesReg(tCompErgReg.RRC_LS1)(lauf) - ErgValuesReg(tCompErgReg.RRC_LS2)(lauf)) > delta_rr_corr_max Then
                         ErgValuesReg(tCompErgReg.RRC_valid).Add(0)
                     Else
                         ErgValuesReg(tCompErgReg.RRC_valid).Add(1)
@@ -285,9 +285,9 @@
                     ErgValuesReg(tCompErgReg.CdxA).Add(2 * F2 / roh_air_ref)
                     ErgValuesReg(tCompErgReg.delta_CdxA).Add(fCalcGenShp(ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf), vehicle))
                     ErgValuesReg(tCompErgReg.CdxA0).Add(ErgValuesReg(tCompErgReg.CdxA)(lauf) - ErgValuesReg(tCompErgReg.delta_CdxA)(lauf))
-                    If ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_HS_max)(lauf) - delta_t_tire_max) Or _
-                       ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) - delta_t_tire_max) Or _
-                       ErgValuesReg(tCompErgReg.t_tire_HS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_HS_max)(lauf) - delta_t_tire_max) Then
+                    If ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_HS_max)(lauf) - delta_t_tyre_max) Or _
+                       ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) - delta_t_tyre_max) Or _
+                       ErgValuesReg(tCompErgReg.t_tire_HS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_HS_max)(lauf) - delta_t_tyre_max) Then
                         ErgValuesReg(tCompErgReg.valid_t_tire).Add(0)
                     Else
                         ErgValuesReg(tCompErgReg.valid_t_tire).Add(1)

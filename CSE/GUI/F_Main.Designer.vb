@@ -1561,7 +1561,7 @@ Partial Class F_Main
         Me.LAccCorrAve.Name = "LAccCorrAve"
         Me.LAccCorrAve.Size = New System.Drawing.Size(73, 13)
         Me.LAccCorrAve.TabIndex = 36
-        Me.LAccCorrAve.Text = "acc_corr_ave"
+        Me.LAccCorrAve.Text = "acc_corr_avg"
         '
         'TBAccCorrAve
         '
@@ -1814,7 +1814,7 @@ Partial Class F_Main
         Me.LBetaAveHSMax.Name = "LBetaAveHSMax"
         Me.LBetaAveHSMax.Size = New System.Drawing.Size(98, 13)
         Me.LBetaAveHSMax.TabIndex = 86
-        Me.LBetaAveHSMax.Text = "beta_ave_HS_max"
+        Me.LBetaAveHSMax.Text = "beta_avg_HS_max"
         '
         'LvWindAveHSMax
         '
@@ -1823,7 +1823,7 @@ Partial Class F_Main
         Me.LvWindAveHSMax.Name = "LvWindAveHSMax"
         Me.LvWindAveHSMax.Size = New System.Drawing.Size(111, 13)
         Me.LvWindAveHSMax.TabIndex = 78
-        Me.LvWindAveHSMax.Text = "v_wind_ave_HS_max"
+        Me.LvWindAveHSMax.Text = "v_wind_avg_HS_max"
         '
         'Label57
         '
@@ -1886,7 +1886,7 @@ Partial Class F_Main
         Me.LvVehAveHSMin.Name = "LvVehAveHSMin"
         Me.LvVehAveHSMin.Size = New System.Drawing.Size(104, 13)
         Me.LvVehAveHSMin.TabIndex = 83
-        Me.LvVehAveHSMin.Text = "v_veh_ave_HS_min"
+        Me.LvVehAveHSMin.Text = "v_veh_avg_HS_min"
         '
         'Label61
         '
@@ -1985,7 +1985,7 @@ Partial Class F_Main
         Me.LvWindAveLSMax.Name = "LvWindAveLSMax"
         Me.LvWindAveLSMax.Size = New System.Drawing.Size(109, 13)
         Me.LvWindAveLSMax.TabIndex = 66
-        Me.LvWindAveLSMax.Text = "v_wind_ave_LS_max"
+        Me.LvWindAveLSMax.Text = "v_wind_avg_LS_max"
         '
         'Label48
         '
@@ -2012,7 +2012,7 @@ Partial Class F_Main
         Me.LvVehAveLSMax.Name = "LvVehAveLSMax"
         Me.LvVehAveLSMax.Size = New System.Drawing.Size(105, 13)
         Me.LvVehAveLSMax.TabIndex = 75
-        Me.LvVehAveLSMax.Text = "v_veh_ave_LS_max"
+        Me.LvVehAveLSMax.Text = "v_veh_avg_LS_max"
         '
         'Label54
         '
@@ -2066,7 +2066,7 @@ Partial Class F_Main
         Me.LvVehAveLSMin.Name = "LvVehAveLSMin"
         Me.LvVehAveLSMin.Size = New System.Drawing.Size(102, 13)
         Me.LvVehAveLSMin.TabIndex = 72
-        Me.LvVehAveLSMin.Text = "v_veh_ave_LS_min"
+        Me.LvVehAveLSMin.Text = "v_veh_avg_LS_min"
         '
         'Label52
         '
@@ -2138,7 +2138,7 @@ Partial Class F_Main
         Me.LvWindAveCALMax.Name = "LvWindAveCALMax"
         Me.LvWindAveCALMax.Size = New System.Drawing.Size(116, 13)
         Me.LvWindAveCALMax.TabIndex = 57
-        Me.LvWindAveCALMax.Text = "v_wind_ave_CAL_max"
+        Me.LvWindAveCALMax.Text = "v_wind_avg_CAL_max"
         '
         'TBBetaAveCALMax
         '
@@ -2183,7 +2183,7 @@ Partial Class F_Main
         Me.LBetaAveCALMax.Name = "LBetaAveCALMax"
         Me.LBetaAveCALMax.Size = New System.Drawing.Size(103, 13)
         Me.LBetaAveCALMax.TabIndex = 60
-        Me.LBetaAveCALMax.Text = "beta_ave_CAL_max"
+        Me.LBetaAveCALMax.Text = "beta_avg_CAL_max"
         '
         'GroupBox8
         '

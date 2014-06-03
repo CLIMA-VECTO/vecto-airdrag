@@ -15,7 +15,7 @@ Public Class F_Main
         Dim NoLegFile As Boolean = False
 
         ' Initialisation
-        HzOut = 1
+        hz_out = 1
         PBInfoIcon.Visible = False
         TBInfo.Visible = False
 
@@ -33,9 +33,9 @@ Public Class F_Main
         Try
             AppPreferences = New cPreferences(PreferencesPath)
         Catch ex As Exception
-            fInfWarErr(9, False, format(<str>Failed loading Preferences({0}) due to: {1} 
-\iThis is normal the first time you launch the application.</str>, _
-                                        PreferencesPath, ex.Message), ex)
+            fInfWarErr(9, False, format( _
+                    "Failed loading Preferences({0}) due to: {1}\n\iThis is normal the first time you launch the application.", _
+                    PreferencesPath, ex.Message), ex)
             configL = False
         End Try
 
@@ -44,8 +44,8 @@ Public Class F_Main
             Me.Close()
         End If
 
-        ' Polling if the working dir exist (If not then generate the folder)
-        '
+        '' Create working dir if not exists.
+        ''
         If Not IO.Directory.Exists(AppPreferences.workingDir) Then
             IO.Directory.CreateDirectory(AppPreferences.workingDir)
         End If
@@ -57,13 +57,14 @@ Public Class F_Main
             Me.Close()
         End If
 
-        ' Write a defult config file if failed to read one.
+        '' Write a defult config file if failed to read one.
+        ''
         If Not configL Then
             Try
                 AppPreferences.Store(PreferencesPath)
                 fInfWarErr(7, False, format("Stored new Preferences({0}).", PreferencesPath))
             Catch ex As Exception
-                fInfWarErr(9, False, format("Failed storing Preferences({0}) due to: {1}", PreferencesPath, ex.Message), ex)
+                fInfWarErr(9, False, format("Failed storing default Preferences({0}) due to: {1}", PreferencesPath, ex.Message), ex)
             End Try
         End If
     End Sub
@@ -185,13 +186,8 @@ Public Class F_Main
         End If
 
         ' Read the data from the GUI
-        Try
-            UI_PopulateToJob(True, Cali)
-            UI_PopulateToCriteria()
-        Catch ex As Exception
-            fInfWarErr(9, False, format("Cannot start calculation due to: {0}", ex.Message), ex)
-            Return
-        End Try
+        UI_PopulateToJob(True, Cali)
+        UI_PopulateToCriteria()
 
         Dim ok = False
         Try
@@ -346,13 +342,8 @@ Public Class F_Main
         End If
 
         ' Read the data from the GUI
-        Try
-            UI_PopulateToJob(True, Cali)
-            UI_PopulateToCriteria()
-        Catch ex As Exception
-            fInfWarErr(9, False, format("Cannot start calculation due to: {0}", ex.Message), ex)
-            Return
-        End Try
+        UI_PopulateToJob(True, Cali)
+        UI_PopulateToCriteria()
 
         Dim ok = False
         Try
@@ -452,13 +443,9 @@ Public Class F_Main
             End If
         End If
 
-        Try
-            ' Get all data from the GUI
-            UI_PopulateToJob()
-            UI_PopulateToCriteria()
-        Catch ex As Exception
-            fInfWarErr(8, False, format("Will store Invalid Job-file due to: {0}", ex.Message), ex)
-        End Try
+        ' Get all data from the GUI
+        UI_PopulateToJob()
+        UI_PopulateToCriteria()
 
         ' Write the file
         Dim job As New cJob()
@@ -519,7 +506,7 @@ Public Class F_Main
         Try
             System.Diagnostics.Process.Start(manual_fname)
         Catch ex As Exception
-            fInfWarErr(9, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
+            fInfWarErr(8, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
         End Try
     End Sub
 #End Region
@@ -564,29 +551,29 @@ Public Class F_Main
 
     ' CheckBox for the acceleration calibration
     Private Sub CheckBoxAcc_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxAcc.CheckedChanged
-        AccC = CheckBoxAcc.Checked
+        accel_correction = CheckBoxAcc.Checked
     End Sub
 
     ' Checkbox for the gradient correction
     Private Sub CheckBoxGrd_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxGrd.CheckedChanged
-        GradC = CheckBoxGrd.Checked
+        gradient_correction = CheckBoxGrd.Checked
     End Sub
 
     ' Change in the 1Hz radio button
     Private Sub RB1Hz_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RB1Hz.CheckedChanged
         If RB1Hz.Checked Then
-            HzOut = 1
+            hz_out = 1
         Else
-            HzOut = 100
+            hz_out = 100
         End If
     End Sub
 
     ' Change in the 100Hz radio button
     Private Sub RB100Hz_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RB100Hz.CheckedChanged
         If RB100Hz.Checked Then
-            HzOut = 100
+            hz_out = 100
         Else
-            HzOut = 1
+            hz_out = 1
         End If
     End Sub
 #End Region
@@ -600,16 +587,11 @@ Public Class F_Main
 
         '##### START THE CALCULATION #####
         '#################################
-        Try
-            calculation(Cali)
-        Catch ex As Exception
-            fInfWarErr(9, False, format("Calculation Failed due to: {0}", ex.Message), ex)
-        End Try
+        calculation(Cali)
 
         '#################################
 
         ' Polling if the backgroundworker was canceled
-
         If Me.BackgroundWorkerVECTO.CancellationPending Then e.Cancel = True
 
     End Sub
@@ -632,7 +614,7 @@ Public Class F_Main
 
         ' If an Error is detected
         If e.Error IsNot Nothing Then
-            fInfWarErr(8, True, format("{0} ended with exception: {1}", op, e.Error), e.Error)
+            fInfWarErr(8, False, format("{0} ended with exception: {1}", op, e.Error), e.Error)
         Else
             If e.Cancelled Then
                 If ErrorExit Then
@@ -683,7 +665,7 @@ Public Class F_Main
         DataSpez(2) = TextBoxDataHS.Text
         DataSpez(3) = TextBoxDataLS2.Text
         MSCTSpez = TextBoxMSCT.Text
-        RRC = TextBoxRRC.Text
+        rr_corr_factor = TextBoxRRC.Text
 
         If validate Then
             ' Control the input
@@ -704,17 +686,17 @@ Public Class F_Main
     ' Get the parameters from option tab
     Sub UI_PopulateToCriteria()
         ' Evaluation box
-        If CheckBoxAcc.Checked Then AccC = True
-        If CheckBoxGrd.Checked Then GradC = True
+        accel_correction = CheckBoxAcc.Checked
+        gradient_correction = CheckBoxGrd.Checked
 
         ' Output box
-        If RB1Hz.Checked Then HzOut = 1
-        If RB100Hz.Checked Then HzOut = 100
+        If RB1Hz.Checked Then hz_out = 1
+        If RB100Hz.Checked Then hz_out = 100
 
         'Parameter boxes
         ' General valid criteria
-        delta_t_tire_max = TBDeltaTTireMax.Text
-        delta_RRC_max = TBDeltaRRCMax.Text
+        delta_t_tyre_max = TBDeltaTTireMax.Text
+        delta_rr_corr_max = TBDeltaRRCMax.Text
         t_amb_var = TBTambVar.Text
         t_amb_tarmac = TBTambTamac.Text
         t_amb_max = TBTambMax.Text
@@ -722,39 +704,39 @@ Public Class F_Main
         ' General
         delta_Hz_max = TBDeltaHzMax.Text
         roh_air_ref = TBRhoAirRef.Text
-        acc_corr_ave = TBAccCorrAve.Text
+        acc_corr_avg = TBAccCorrAve.Text
         delta_parallel_max = TBDeltaParaMax.Text
         ' Identification of measurement section
-        delta_x_max = TBDeltaXMax.Text
-        delta_y_max = TBDeltaYMax.Text
+        trigger_delta_x_max = TBDeltaXMax.Text
+        trigger_delta_y_max = TBDeltaYMax.Text
         delta_head_max = TBDeltaHeadMax.Text
         ' Requirements on number of valid datasets
-        ds_min_CAL = TBDsMinCAL.Text
-        ds_min_LS = TBDsMinLS.Text
-        ds_min_HS = TBDsMinHS.Text
-        ds_min_head_MS = TBDsMinHeadHS.Text
+        segruns_min_CAL = TBDsMinCAL.Text
+        segruns_min_LS = TBDsMinLS.Text
+        segruns_min_HS = TBDsMinHS.Text
+        segruns_min_head_MS = TBDsMinHeadHS.Text
         ' DataSet validity criteria
         dist_float = TBDistFloat.Text
         ' Calibration
-        v_wind_ave_CAL_max = TBvWindAveCALMax.Text
-        v_wind_1s_CAL_max = TBvWind1sCALMax.Text
-        beta_ave_CAL_max = TBBetaAveCALMax.Text
+        v_wind_avg_max_CAL = TBvWindAveCALMax.Text
+        v_wind_1s_max_CAL = TBvWind1sCALMax.Text
+        beta_avg_max_CAL = TBBetaAveCALMax.Text
         ' Low and high speed test
         leng_crit = TBLengCrit.Text
         ' Low speed test
-        v_wind_ave_LS_max = TBvWindAveLSMax.Text
-        v_wind_1s_LS_max = TBvWind1sLSMax.Text
-        v_veh_ave_LS_max = TBvVehAveLSMax.Text
-        v_veh_ave_LS_min = TBvVehAveLSMin.Text
-        v_veh_float_delta = TBvVehFloatD.Text
-        tq_sum_float_delta = TBTqSumFloatD.Text
+        v_wind_avg_max_LS = TBvWindAveLSMax.Text
+        v_wind_1s_max_LS = TBvWind1sLSMax.Text
+        v_veh_avg_max_LS = TBvVehAveLSMax.Text
+        v_veh_avg_min_LS = TBvVehAveLSMin.Text
+        v_veh_float_delta_LS = TBvVehFloatD.Text
+        tq_sum_float_delta_LS = TBTqSumFloatD.Text
         ' High speed test
-        v_wind_ave_HS_max = TBvWindAveHSMax.Text
-        v_wind_1s_HS_max = TBvWind1sHSMax.Text
-        v_veh_ave_HS_min = TBvVehAveHSMin.Text
-        beta_ave_HS_max = TBBetaAveHSMax.Text
-        v_veh_1s_delta = TBvVeh1sD.Text
-        tq_sum_1s_delta = TBTq1sD.Text
+        v_wind_avg_max_HS = TBvWindAveHSMax.Text
+        v_wind_1s_max_HS = TBvWind1sHSMax.Text
+        v_veh_avg_min_HS = TBvVehAveHSMin.Text
+        beta_avg_max_HS = TBBetaAveHSMax.Text
+        v_veh_1s_delta_HS = TBvVeh1sD.Text
+        tq_sum_1s_delta_HS = TBTq1sD.Text
     End Sub
 
     Sub UI_PopulateFromJob()
@@ -771,7 +753,7 @@ Public Class F_Main
         TextBoxDataC.Text = DataSpez(0)
         ' Test
         TextBoxMSCT.Text = MSCTSpez
-        TextBoxRRC.Text = RRC
+        TextBoxRRC.Text = rr_corr_factor
         TextBoxDataLS1.Text = DataSpez(1)
         TextBoxDataHS.Text = DataSpez(2)
         TextBoxDataLS2.Text = DataSpez(3)
@@ -782,8 +764,8 @@ Public Class F_Main
     Sub UI_PopulateFromCriteria()
         ' Write the Standard values in the textboxes
         ' General valid criteria
-        TBDeltaTTireMax.Text = delta_t_tire_max
-        TBDeltaRRCMax.Text = delta_RRC_max
+        TBDeltaTTireMax.Text = delta_t_tyre_max
+        TBDeltaRRCMax.Text = delta_rr_corr_max
         TBTambVar.Text = t_amb_var
         TBTambTamac.Text = t_amb_tarmac
         TBTambMax.Text = t_amb_max
@@ -791,47 +773,47 @@ Public Class F_Main
         ' General
         TBDeltaHzMax.Text = delta_Hz_max
         TBRhoAirRef.Text = roh_air_ref
-        TBAccCorrAve.Text = acc_corr_ave
+        TBAccCorrAve.Text = acc_corr_avg
         TBDeltaParaMax.Text = delta_parallel_max
         ' Identification of measurement section
-        TBDeltaXMax.Text = delta_x_max
-        TBDeltaYMax.Text = delta_y_max
+        TBDeltaXMax.Text = trigger_delta_x_max
+        TBDeltaYMax.Text = trigger_delta_y_max
         TBDeltaHeadMax.Text = delta_head_max
         ' Requirements on number of valid datasets
-        TBDsMinCAL.Text = ds_min_CAL
-        TBDsMinLS.Text = ds_min_LS
-        TBDsMinHS.Text = ds_min_HS
-        TBDsMinHeadHS.Text = ds_min_head_MS
+        TBDsMinCAL.Text = segruns_min_CAL
+        TBDsMinLS.Text = segruns_min_LS
+        TBDsMinHS.Text = segruns_min_HS
+        TBDsMinHeadHS.Text = segruns_min_head_MS
         ' DataSet validity criteria
         TBDistFloat.Text = dist_float
         ' Calibration
-        TBvWindAveCALMax.Text = v_wind_ave_CAL_max
-        TBvWind1sCALMax.Text = v_wind_1s_CAL_max
-        TBBetaAveCALMax.Text = beta_ave_CAL_max
+        TBvWindAveCALMax.Text = v_wind_avg_max_CAL
+        TBvWind1sCALMax.Text = v_wind_1s_max_CAL
+        TBBetaAveCALMax.Text = beta_avg_max_CAL
         ' Low and high speed test
         TBLengCrit.Text = leng_crit
         ' Low speed test
-        TBvWindAveLSMax.Text = v_wind_ave_LS_max
-        TBvWind1sLSMax.Text = v_wind_1s_LS_max
-        TBvVehAveLSMax.Text = v_veh_ave_LS_max
-        TBvVehAveLSMin.Text = v_veh_ave_LS_min
-        TBvVehFloatD.Text = v_veh_float_delta
-        TBTqSumFloatD.Text = tq_sum_float_delta
+        TBvWindAveLSMax.Text = v_wind_avg_max_LS
+        TBvWind1sLSMax.Text = v_wind_1s_max_LS
+        TBvVehAveLSMax.Text = v_veh_avg_max_LS
+        TBvVehAveLSMin.Text = v_veh_avg_min_LS
+        TBvVehFloatD.Text = v_veh_float_delta_LS
+        TBTqSumFloatD.Text = tq_sum_float_delta_LS
         ' High speed test
-        TBvWindAveHSMax.Text = v_wind_ave_HS_max
-        TBvWind1sHSMax.Text = v_wind_1s_HS_max
-        TBvVehAveHSMin.Text = v_veh_ave_HS_min
-        TBBetaAveHSMax.Text = beta_ave_HS_max
-        TBvVeh1sD.Text = v_veh_1s_delta
-        TBTq1sD.Text = tq_sum_1s_delta
+        TBvWindAveHSMax.Text = v_wind_avg_max_HS
+        TBvWind1sHSMax.Text = v_wind_1s_max_HS
+        TBvVehAveHSMin.Text = v_veh_avg_min_HS
+        TBBetaAveHSMax.Text = beta_avg_max_HS
+        TBvVeh1sD.Text = v_veh_1s_delta_HS
+        TBTq1sD.Text = tq_sum_1s_delta_HS
         ' Evaluation box
-        CheckBoxAcc.Checked = AccC
-        CheckBoxGrd.Checked = GradC
+        CheckBoxAcc.Checked = accel_correction
+        CheckBoxGrd.Checked = gradient_correction
 
         ' Output
-        If HzOut = 1 Then
+        If hz_out = 1 Then
             RB1Hz.Checked = True
-        ElseIf HzOut = 100 Then
+        ElseIf hz_out = 100 Then
             RB100Hz.Checked = True
         End If
     End Sub
@@ -1034,7 +1016,7 @@ Public Class F_Main
 #Region "DeltaTTireMax"
     ' Show the message
     Private Sub ShowMsgDeltaTTireMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaTTireMax.MouseMove, TBDeltaTTireMax.MouseMove
-        InfActivat("Maximum variation of tire temperature between high speed tests and low speed tests")
+        InfActivat("Maximum variation of tyre temperature between high speed tests and low speed tests")
     End Sub
 #End Region
 

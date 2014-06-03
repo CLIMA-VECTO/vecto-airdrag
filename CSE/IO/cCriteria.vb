@@ -16,77 +16,182 @@ Public Class cCriteria
 
     ' Defaults specified here.
     Protected Shared Function BuildBody() As JObject
-        Return JObject.Parse(<json>{
-            "Processing": {
-                "rollResistCorrect":<%= RRC %>,
-                "accelCorrect":     <%= AccC.ToString.ToLower %>,
-                "gradientCorrect":  <%= GradC.ToString.ToLower %>,
-                "hzOut":            <%= HzOut %>,
-            },
-            "GeneralValidity": {
-                "delta_t_tire_max": <%= delta_t_tire_max %>, 
-                "delta_RRC_max":    <%= delta_RRC_max %>, 
-                "t_amb_var":        <%= t_amb_var %>, 
-                "t_amb_tarmac":     <%= t_amb_tarmac %>, 
-                "t_amb_max":        <%= t_amb_max %>, 
-                "t_amb_min":        <%= t_amb_min %>, 
-            },
-            "General": {
-                "delta_Hz_max":     <%= delta_Hz_max %>, 
-                "roh_air_ref":      <%= roh_air_ref %>, 
-                "acc_corr_ave":     <%= acc_corr_ave %>, 
-                "delta_parallel_max": <%= delta_parallel_max %>, 
-            },
-            "SectionsIdentification" : {
-                "delta_x_max":      <%= delta_x_max %>, 
-                "delta_y_max":      <%= delta_y_max %>, 
-                "delta_head_max":   <%= delta_head_max %>, 
-            },
-            "RunsMultiplicity": {
-                "ds_min_CAL":       <%= ds_min_CAL %>, 
-                "ds_min_LS":        <%= ds_min_LS %>, 
-                "ds_min_HS":        <%= ds_min_HS %>, 
-                "ds_min_head_MS":   <%= ds_min_head_MS %>, 
-            },
-            "DataSetValidity": {
-                "dist_float":       <%= dist_float %>, 
-            },
-            "Calibration": {
-                "v_wind_ave_CAL_max":   <%= v_wind_ave_CAL_max %>, 
-                "v_wind_1s_CAL_max":    <%= v_wind_1s_CAL_max %>, 
-                "beta_ave_CAL_max":     <%= beta_ave_CAL_max %>, 
-            },
-            "LowHigh": {
-                "leng_crit": <%= leng_crit %>, 
-            },
-            "Low": {
-                "v_wind_ave_LS_max":    <%= v_wind_ave_LS_max %>, 
-                "v_wind_1s_LS_max":     <%= v_wind_1s_LS_max %>, 
-                "v_veh_ave_LS_max":     <%= v_veh_ave_LS_max %>, 
-                "v_veh_ave_LS_min":     <%= v_veh_ave_LS_min %>, 
-                "v_veh_float_delta":    <%= v_veh_float_delta %>, 
-                "tq_sum_float_delta":   <%= tq_sum_float_delta %>, 
-            },
-            "High": {
-                "v_wind_ave_HS_max":    <%= v_wind_ave_HS_max %>, 
-                "v_wind_1s_HS_max":     <%= v_wind_1s_HS_max %>, 
-                "v_veh_ave_HS_min":     <%= v_veh_ave_HS_min %>, 
-                "beta_ave_HS_max":      <%= beta_ave_HS_max %>, 
-                "v_veh_1s_delta":       <%= v_veh_1s_delta %>, 
-                "tq_sum_1s_delta":      <%= tq_sum_1s_delta %>, 
-            },        
-        }</json>.Value)
+        Dim b, g As Object
+        b = New JObject()
+
+        g = New JObject()
+        b.Processing = g
+        g.roh_air_ref = roh_air_ref
+        g.accel_correction = accel_correction
+        g.gradient_correction = gradient_correction
+        g.hz_out = hz_out
+        g.rr_corr_factor = rr_corr_factor
+        g.acc_corr_avg = acc_corr_avg
+        g.dist_float = dist_float
+
+        g = New JObject()
+        b.Validation = g
+        g.trigger_delta_x_max = trigger_delta_x_max
+        g.trigger_delta_y_max = trigger_delta_y_max
+        g.delta_head_max = delta_head_max
+        g.segruns_min_CAL = segruns_min_CAL
+        g.segruns_min_LS = segruns_min_LS
+        g.segruns_min_HS = segruns_min_HS
+        g.segruns_min_head_MS = segruns_min_head_MS
+        g.delta_Hz_max = delta_Hz_max
+        g.delta_parallel_max = delta_parallel_max
+
+        g.v_wind_avg_max_CAL = v_wind_avg_max_CAL
+        g.v_wind_1s_max_CAL = v_wind_1s_max_CAL
+        g.beta_avg_max_CAL = beta_avg_max_CAL
+
+        g.leng_crit = leng_crit
+
+        g.v_wind_avg_max_LS = v_wind_avg_max_LS
+        g.v_wind_1s_max_LS = v_wind_1s_max_LS
+        g.v_veh_avg_min_LS = v_veh_avg_min_LS
+        g.v_veh_avg_max_LS = v_veh_avg_max_LS
+        g.v_veh_float_delta_LS = v_veh_float_delta_LS
+        g.tq_sum_float_delta_LS = tq_sum_float_delta_LS
+
+        g.v_wind_avg_max_HS = v_wind_avg_max_HS
+        g.v_wind_1s_max_HS = v_wind_1s_max_HS
+        g.beta_avg_max_HS = beta_avg_max_HS
+        g.v_veh_avg_min_HS = v_veh_avg_min_HS
+        g.v_veh_1s_delta_HS = v_veh_1s_delta_HS
+        g.tq_sum_1s_delta_HS = tq_sum_1s_delta_HS
+        g.delta_t_tyre_max = delta_t_tyre_max
+        g.delta_rr_corr_max = delta_rr_corr_max
+        g.t_amb_var = t_amb_var
+        g.t_amb_tarmac = t_amb_tarmac
+        g.t_amb_max = t_amb_max
+        g.t_amb_min = t_amb_min
+
+        Return b
+    End Function
+
+    Function std() As JObject
+        Dim b, g As Object
+        b = New JObject()
+
+        g = New JObject()
+        b.Processing = g
+        g.roh_air_ref = 1.1884
+        g.accel_correction = False
+        g.gradient_correction = False
+        g.hz_out = 1
+        g.rr_corr_factor = 1
+        g.acc_corr_avg = 1
+        g.dist_float = 25
+
+        g = New JObject()
+        b.Validation = g
+        g.trigger_delta_x_max = 10
+        g.trigger_delta_y_max = 100
+        g.delta_head_max = 10
+        g.segruns_min_CAL = 5
+        g.segruns_min_LS = 1
+        g.segruns_min_HS = 2
+        g.segruns_min_head_MS = 10
+        g.delta_Hz_max = 1
+        g.delta_parallel_max = 20
+
+        g.v_wind_avg_max_CAL = 5
+        g.v_wind_1s_max_CAL = 8
+        g.beta_avg_max_CAL = 5
+
+        g.leng_crit = 10
+
+        g.v_wind_avg_max_LS = 5
+        g.v_wind_1s_max_LS = 8
+        g.v_veh_avg_min_LS = 9
+        g.v_veh_avg_max_LS = 16
+        g.v_veh_float_delta_LS = 0.15
+        g.tq_sum_float_delta_LS = 0.1
+
+        g.v_wind_avg_max_HS = 5
+        g.v_wind_1s_max_HS = 10
+        g.beta_avg_max_HS = 3
+        g.v_veh_avg_min_HS = 80
+        g.v_veh_1s_delta_HS = 0.3
+        g.tq_sum_1s_delta_HS = 0.1
+        g.delta_t_tyre_max = 5
+        g.delta_rr_corr_max = 0.3
+        g.t_amb_var = 3
+        g.t_amb_tarmac = 25
+        g.t_amb_max = 35
+        g.t_amb_min = 0
+
+        Return b
     End Function
 
     ''' <param name="allowAdditionalProps">when false, more strict validation</param>
     Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
+        allowAdditionalProps = True
         Dim allowAdditionalProps_str As String = allowAdditionalProps.ToString.ToLower
         Return <json>{
             "title": "Schema for vecto-cse CRITERIA",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
             "required": true,
             "properties": {
-            }
+                "Processing": {
+                    "type": "object",
+                    "required": true,
+                    "additionalProperties": <%= allowAdditionalProps_str %>, 
+                    "properties": {
+                        "roh_air_ref": {"type": "number", "required": true, },
+                        "accel_correction": {"type": "boolean", "required": true, },
+                        "gradient_correction": {"type": "boolean", "required": true, },
+                        "hz_out": {"type": "integer", "required": true, },
+                        "rr_corr_factor": {"type": "number", "required": true, },
+                        "acc_corr_avg": {"type": "number", "required": true, },
+                        "dist_float": {"type": "number", "required": true, },
+                    }
+                },
+                "Validation": {
+                    "type": "object",
+                    "required": true,
+                    "additionalProperties": <%= allowAdditionalProps_str %>, 
+                    "properties": {
+                        "trigger_delta_x_max": {"type": "number", "required": true, },
+                        "trigger_delta_y_max": {"type": "number", "required": true, },
+                        "delta_head_max": {"type": "number", "required": true, },
+                        "segruns_min_CAL": {"type": "integer", "required": true, },
+                        "segruns_min_LS": {"type": "integer", "required": true, },
+                        "segruns_min_HS": {"type": "integer", "required": true, },
+                        "segruns_min_head_MS": {"type": "integer", "required": true, },
+                        "delta_Hz_max": {"type": "number", "required": true, },
+                        "delta_parallel_max": {"type": "number", "required": true, },
+
+                        "v_wind_avg_max_CAL": {"type": "number", "required": true, },
+                        "v_wind_1s_max_CAL": {"type": "number", "required": true, },
+                        "beta_avg_max_CAL": {"type": "number", "required": true, },
+
+                        "leng_crit": {"type": "number", "required": true, },
+
+                        "v_wind_avg_max_LS": {"type": "number", "required": true, },
+                        "v_wind_1s_max_LS": {"type": "number", "required": true, },
+                        "v_veh_avg_min_LS": {"type": "number", "required": true, },
+                        "v_veh_avg_max_LS": {"type": "number", "required": true, },
+                        "v_veh_float_delta_LS": {"type": "number", "required": true, },
+                        "tq_sum_float_delta_LS": {"type": "number", "required": true, },
+
+                        "v_wind_avg_max_HS": {"type": "number", "required": true, },
+                        "v_wind_1s_max_HS": {"type": "number", "required": true, },
+                        "beta_avg_max_HS": {"type": "number", "required": true, },
+                        "v_veh_avg_min_HS": {"type": "number", "required": true, },
+                        "v_veh_1s_delta_HS": {"type": "number", "required": true, },
+                        "tq_sum_1s_delta_HS": {"type": "number", "required": true, },
+
+                        "delta_t_tyre_max": {"type": "number", "required": true, },
+                        "delta_rr_corr_max": {"type": "number", "required": true, },
+                        "t_amb_var": {"type": "number", "required": true, },
+                        "t_amb_tarmac": {"type": "number", "required": true, },
+                        "t_amb_max": {"type": "number", "required": true, },
+                        "t_amb_min": {"type": "number", "required": true, },
+                    }
+                },
+            },
         }</json>.Value
     End Function
 
@@ -140,62 +245,47 @@ Public Class cCriteria
         p = Me.Body
 
         g = p("Processing")
-        RRC = g("rollResistCorrect")
-        AccC = g("accelCorrect")
-        GradC = g("gradientCorrect")
-        HzOut = g("hzOut")
+        rr_corr_factor = g("rr_corr_factor")
+        accel_correction = g("accel_correction")
+        gradient_correction = g("gradient_correction")
+        hz_out = g("hz_out")
+        roh_air_ref = g("roh_air_ref")
+        acc_corr_avg = g("acc_corr_avg")
+        dist_float = g("dist_float")
 
-        g = p("GeneralValidity")
-        delta_t_tire_max = g("delta_t_tire_max")
-        delta_RRC_max = g("delta_RRC_max")
+
+        g = p("Validation")
+        trigger_delta_x_max = g("trigger_delta_x_max")
+        trigger_delta_y_max = g("trigger_delta_y_max")
+        delta_head_max = g("delta_head_max")
+        segruns_min_CAL = g("segruns_min_CAL")
+        segruns_min_LS = g("segruns_min_LS")
+        segruns_min_HS = g("segruns_min_HS")
+        segruns_min_head_MS = g("segruns_min_head_MS")
+        delta_Hz_max = g("delta_Hz_max")
+        delta_parallel_max = g("delta_parallel_max")
+        leng_crit = g("leng_crit")
+        delta_t_tyre_max = g("delta_t_tyre_max")
+        delta_rr_corr_max = g("delta_rr_corr_max")
         t_amb_var = g("t_amb_var")
         t_amb_tarmac = g("t_amb_tarmac")
         t_amb_max = g("t_amb_max")
         t_amb_min = g("t_amb_min")
-
-        g = p("General")
-        delta_Hz_max = g("delta_Hz_max")
-        roh_air_ref = g("roh_air_ref")
-        acc_corr_ave = g("acc_corr_ave")
-        delta_parallel_max = g("delta_parallel_max")
-
-        g = p("SectionsIdentification")
-        delta_x_max = g("delta_x_max")
-        delta_y_max = g("delta_y_max")
-        delta_head_max = g("delta_head_max")
-
-        g = p("RunsMultiplicity")
-        ds_min_CAL = g("ds_min_CAL")
-        ds_min_LS = g("ds_min_LS")
-        ds_min_HS = g("ds_min_HS")
-        ds_min_head_MS = g("ds_min_head_MS")
-
-        g = p("DataSetValidity")
-        dist_float = g("dist_float")
-
-        g = p("Calibration")
-        v_wind_ave_CAL_max = g("v_wind_ave_CAL_max")
-        v_wind_1s_CAL_max = g("v_wind_1s_CAL_max")
-        beta_ave_CAL_max = g("beta_ave_CAL_max")
-
-        g = p("LowHigh")
-        leng_crit = g("leng_crit")
-
-        g = p("Low")
-        v_wind_ave_LS_max = g("v_wind_ave_LS_max")
-        v_wind_1s_LS_max = g("v_wind_1s_LS_max")
-        v_veh_ave_LS_max = g("v_veh_ave_LS_max")
-        v_veh_ave_LS_min = g("v_veh_ave_LS_min")
-        v_veh_float_delta = g("v_veh_float_delta")
-        tq_sum_float_delta = g("tq_sum_float_delta")
-
-        g = p("High")
-        v_wind_ave_HS_max = g("v_wind_ave_HS_max")
-        v_wind_1s_HS_max = g("v_wind_1s_HS_max")
-        v_veh_ave_HS_min = g("v_veh_ave_HS_min")
-        beta_ave_HS_max = g("beta_ave_HS_max")
-        v_veh_1s_delta = g("v_veh_1s_delta")
-        tq_sum_1s_delta = g("tq_sum_1s_delta")
+        v_wind_avg_max_CAL = g("v_wind_avg_max_CAL")
+        v_wind_1s_max_CAL = g("v_wind_1s_max_CAL")
+        beta_avg_max_CAL = g("beta_avg_max_CAL")
+        v_wind_avg_max_LS = g("v_wind_avg_max_LS")
+        v_wind_1s_max_LS = g("v_wind_1s_max_LS")
+        v_veh_avg_max_LS = g("v_veh_avg_max_LS")
+        v_veh_avg_min_LS = g("v_veh_avg_min_LS")
+        v_veh_float_delta_LS = g("v_veh_float_delta_LS")
+        tq_sum_float_delta_LS = g("tq_sum_float_delta_LS")
+        v_wind_avg_max_HS = g("v_wind_avg_max_HS")
+        v_veh_avg_min_HS = g("v_veh_avg_min_HS")
+        v_wind_1s_max_HS = g("v_wind_1s_max_HS")
+        beta_avg_max_HS = g("beta_avg_max_HS")
+        v_veh_1s_delta_HS = g("v_veh_1s_delta_HS")
+        tq_sum_1s_delta_HS = g("tq_sum_1s_delta_HS")
     End Sub
 
 #End Region ' json props

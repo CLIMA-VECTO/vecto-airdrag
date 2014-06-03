@@ -81,8 +81,18 @@
 
             ' Initialise the key array
             sKey = New csKey
+
+            'Dim currentDomain As AppDomain = AppDomain.CurrentDomain
+            'AddHandler currentDomain.UnhandledException, AddressOf Me.MyApplicationDomain_UnhandledException
         End Sub
 
+        Private Sub MyApplication_UnhandledException(ByVal sender As Object, ByVal ev As Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs) Handles Me.UnhandledException
+            fInfWarErr(9, False, format("Unhandled exception: {0}", ev.Exception.Message), ev.Exception)
+        End Sub
+        'Private Sub MyApplicationDomain_UnhandledException(ByVal sender As Object, ByVal ev As UnhandledExceptionEventArgs)
+        '    Dim ex As Exception = DirectCast(ev.ExceptionObject, Exception)
+        '    fInfWarErr(9, False, format("Worked's unhandled exception: {0}", ex.Message), ex)
+        'End Sub
     End Class
 
 End Namespace

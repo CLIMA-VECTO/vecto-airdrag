@@ -51,7 +51,7 @@ Public Class cPreferences
                     "title": "Log-file's limit",
                     "type": "integer",
                     "minimum": 0,
-                    "default": 10,
+                    "default": 2,
                     "description": "Allowed Log-file size limit [MiB].",
                 }, 
                 "logLevel": {
@@ -60,7 +60,7 @@ Public Class cPreferences
                     "minimum": 0,
                     "maximum": 10, "exclusiveMaximum": true,
                     "default": 5,
-                    "description": "Sets the threshold(Level) below from which log-messages are skipped from the log-window.
+                    "description": "Sets the threshold(Level) above (inclusive) from which log-messages are shown in the log-window.
     0     : All
     3-7   : No infos
     8     : No warnings

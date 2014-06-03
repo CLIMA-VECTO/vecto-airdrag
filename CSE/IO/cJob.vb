@@ -142,7 +142,7 @@ Public Class cJob
     End Sub
 
     ' Function for reading the jobfile
-    Public Shared Function fReadOldJobFile() As Boolean
+    Public Shared Sub fReadOldJobFile()
         ' Declarations
         Dim lauf, i As Integer
         Dim Info As String = ""
@@ -153,11 +153,7 @@ Public Class cJob
             lauf = 0
 
             ' Open the jobfile
-            If Not FileInVECTO.OpenRead(JobFile) Then
-                ' Falls File nicht vorhanden, abbrechen mit Fehler
-                fInfWarErr(9, False, "Can´t find the Jobfile file: " & JobFile)
-                Return False
-            End If
+            FileInVECTO.OpenReadWithEx(JobFile)
 
             ' Read the data from the jobfile
             Vehspez = FileInVECTO.ReadLine(0)
@@ -174,7 +170,7 @@ Public Class cJob
 
             ' Test run files
             MSCTSpez = FileInVECTO.ReadLine(0)
-            RRC = FileInVECTO.ReadLine(0)
+            rr_corr_factor = FileInVECTO.ReadLine(0)
             For i = 1 To UBound(DataSpez)
                 DataSpez(i) = FileInVECTO.ReadLine(0)
             Next i
@@ -182,35 +178,23 @@ Public Class cJob
             ' Appropriate the Checkboxes
             ' Acceleration Correction
             Line = FileInVECTO.ReadLine
-            If IsNumeric(Line(0)) Then
-                If Line(0) = 1 Then
-                    AccC = True
-                Else
-                    AccC = False
-                    'CSEMain.CheckBoxAcc.Checked = False
-                End If
-            End If
+            accel_correction = CBool(Line(0))
+            'CSEMain.CheckBoxAcc.Checked = False
 
             ' Gradient correction
             Line = FileInVECTO.ReadLine
-            If IsNumeric(Line(0)) Then
-                If Line(0) = 1 Then
-                    GradC = True
-                Else
-                    GradC = False
-                    'CSEMain.CheckBoxGrd.Checked = False
-                End If
-            End If
+            gradient_correction = CBool(Line(0))
+            'CSEMain.CheckBoxGrd.Checked = False
 
             ' Output sequence
             Line = FileInVECTO.ReadLine
             If IsNumeric(Line(0)) Then
                 If Line(0) = 1 Then
-                    HzOut = 1
+                    hz_out = 1
                 ElseIf Line(0) = 100 Then
-                    HzOut = 100
+                    hz_out = 100
                 Else
-                    HzOut = 1
+                    hz_out = 1
                 End If
             End If
 
@@ -224,9 +208,9 @@ Public Class cJob
                     If IsNumeric(Line(0)) Then
                         Select Case i
                             Case 1 ' TBDeltaTTireMax
-                                delta_t_tire_max = Line(0)
+                                delta_t_tyre_max = Line(0)
                             Case 2 ' TBDeltaRRCMax.Text
-                                delta_RRC_max = Line(0)
+                                delta_rr_corr_max = Line(0)
                             Case 3 ' TBTambVar
                                 t_amb_var = Line(0)
                             Case 4 ' TBTambTamac
@@ -240,79 +224,73 @@ Public Class cJob
                             Case 8 ' TBRhoAirRef
                                 roh_air_ref = Line(0)
                             Case 9 ' TBAveSecAcc
-                                acc_corr_ave = Line(0)
+                                acc_corr_avg = Line(0)
                             Case 10 ' TBDeltaHeadMax
                                 delta_parallel_max = Line(0)
                             Case 11 ' TBContSecL
-                                delta_x_max = Line(0)
+                                trigger_delta_x_max = Line(0)
                             Case 12 ' TBLRec
-                                delta_y_max = Line(0)
+                                trigger_delta_y_max = Line(0)
                             Case 13 ' TBContAng
                                 delta_head_max = Line(0)
                             Case 14 ' TBNSecAnz
-                                ds_min_CAL = Line(0)
+                                segruns_min_CAL = Line(0)
                             Case 15 ' TBNSecAnzLS
-                                ds_min_LS = Line(0)
+                                segruns_min_LS = Line(0)
                             Case 16 ' TBNSecAnzHS
-                                ds_min_HS = Line(0)
+                                segruns_min_HS = Line(0)
                             Case 17 ' TBMSHSMin
-                                ds_min_head_MS = Line(0)
+                                segruns_min_head_MS = Line(0)
                             Case 18 ' TBDistFloat
                                 dist_float = Line(0)
                             Case 19 ' TBvWindAveCALMax
-                                v_wind_ave_CAL_max = Line(0)
+                                v_wind_avg_max_CAL = Line(0)
                             Case 20 ' TBvWind1sCALMax
-                                v_wind_1s_CAL_max = Line(0)
+                                v_wind_1s_max_CAL = Line(0)
                             Case 21 ' TBBetaAveCALMax
-                                beta_ave_CAL_max = Line(0)
+                                beta_avg_max_CAL = Line(0)
                             Case 22 ' TBLengCrit
                                 leng_crit = Line(0)
                             Case 23 ' TBvWindAveLSMax
-                                v_wind_ave_LS_max = Line(0)
+                                v_wind_avg_max_LS = Line(0)
                             Case 24 ' TBvWind1sLSMin
-                                v_wind_1s_LS_max = Line(0)
+                                v_wind_1s_max_LS = Line(0)
                             Case 25 ' TBvVehAveLSMax
-                                v_veh_ave_LS_max = Line(0)
+                                v_veh_avg_max_LS = Line(0)
                             Case 26 ' TBvVehAveLSMin
-                                v_veh_ave_LS_min = Line(0)
+                                v_veh_avg_min_LS = Line(0)
                             Case 27 ' TBvVehFloatD
-                                v_veh_float_delta = Line(0)
+                                v_veh_float_delta_LS = Line(0)
                             Case 28 ' TBTqSumFloatD
-                                tq_sum_float_delta = Line(0)
+                                tq_sum_float_delta_LS = Line(0)
                             Case 29 ' TBvWindAveHSMax
-                                v_wind_ave_HS_max = Line(0)
+                                v_wind_avg_max_HS = Line(0)
                             Case 30 ' TBvWind1sHSMax
-                                v_wind_1s_HS_max = Line(0)
+                                v_wind_1s_max_HS = Line(0)
                             Case 31 ' TBvVehAveHSMin
-                                v_veh_ave_HS_min = Line(0)
+                                v_veh_avg_min_HS = Line(0)
                             Case 32 ' TBBetaAveHSMax
-                                beta_ave_HS_max = Line(0)
+                                beta_avg_max_HS = Line(0)
                             Case 33 ' TBvVeh1sD
-                                v_veh_1s_delta = Line(0)
+                                v_veh_1s_delta_HS = Line(0)
                             Case 34 ' TBTq1sD
-                                tq_sum_1s_delta = Line(0)
+                                tq_sum_1s_delta_HS = Line(0)
                         End Select
                     Else
-                        fInfWarErr(9, False, "The given value in the job file at position: " & i & " is not a number")
-                        BWorker.CancelAsync()
-                        Return False
+                        Throw New ArgumentException(format("The given value in the Job-file({0}) at position({1}) is not a number!", JobFile, i))
                     End If
                 Loop
             Catch ex As Exception
-                ' Error
-                fInfWarErr(9, False, "Invalid value in the job file at position: " & i)
-                BWorker.CancelAsync()
-                Return False
+                Throw New ArgumentException("Invalid value in the job file at position: " & i)
             End Try
 
             ' Look if enough parameters are given
             If i < 34 Then
-                fInfWarErr(9, False, "Not enough parameters given in the job file")
-                BWorker.CancelAsync()
-                Return False
+                Throw New ArgumentException(format("Premature ending of the Job-file({0})!", JobFile))
             End If
 
             ' Control the input files
+            '' TDOD: Use Validate()
             fControlInput(Vehspez, 1, "csveh.json")
             fControlInput(Ambspez, 2, "csamb")
             fControlInput(MSCCSpez, 3, "csms")
@@ -325,9 +303,7 @@ Public Class cJob
 
         F_Main.UI_PopulateFromJob()
         F_Main.UI_PopulateFromCriteria()
-
-        Return True
-    End Function
+    End Sub
 
 #End Region ' "json props"
 

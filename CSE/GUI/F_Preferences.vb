@@ -70,13 +70,14 @@ Public Class F_Preferences
             ' Message for the restart of VECTO
             RestartN = True
             fInfWarErr(7, True, format("Stored Preferences({0}). \n\nDo you want to restart VECTO now?", PreferencesPath))
+
+            ' Close the window
+            Me.Close()
         Catch ex As Exception
             fInfWarErr(9, True, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", _
                                         PreferencesPath, ex.Message), ex)
         End Try
 
-        ' Close the window
-        Me.Close()
     End Sub
 
     ' Ok button

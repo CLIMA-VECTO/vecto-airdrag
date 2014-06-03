@@ -17,7 +17,7 @@
             ErgEntriesC = New Dictionary(Of tCompCali, CResult)
             ErgEntryListC = New List(Of tCompCali)
             GenErgOutData(calibration)
-            If HzOut = 1 Then
+            If hz_out = 1 Then
                 ConvTo1Hz(InputData(tComp.t), InputUndefData)
                 ConvTo1Hz(InputData)
                 ConvTo1Hz(CalcData)
@@ -33,7 +33,7 @@
 
             ' Generate the file name
             NameOutFile = ""
-            Select Case HzOut
+            Select Case hz_out
                 Case 1
                     NameOutFile = OutFolder & fName(Datafile, False) & "_1Hz.csv"
                 Case 100
@@ -240,7 +240,7 @@
             If valid_t_tire Then
                 FileOut.WriteLine("Tire temp:", "Ok")
             Else
-                FileOut.WriteLine("Tire temp:", "Invalid test - maximum variation of tire temperature exceeded")
+                FileOut.WriteLine("Tire temp:", "Invalid test - maximum variation of tyre temperature exceeded")
             End If
             If valid_RRC Then
                 FileOut.WriteLine("RRC:", "Ok")
@@ -348,7 +348,7 @@
             AddToErg(tCompCali.F_res, fCompName(tCompCali.F_res), fCompUnit(tCompCali.F_res), "CalcData")
             AddToErg(tCompCali.v_veh_1s, fCompName(tCompCali.v_veh_1s), fCompUnit(tCompCali.v_veh_1s), "CalcData")
             AddToErg(tCompCali.v_veh_acc, fCompName(tCompCali.v_veh_acc), fCompUnit(tCompCali.v_veh_acc), "CalcData")
-            AddToErg(tCompCali.a_veh_ave, fCompName(tCompCali.a_veh_ave), fCompUnit(tCompCali.a_veh_ave), "CalcData")
+            AddToErg(tCompCali.a_veh_avg, fCompName(tCompCali.a_veh_avg), fCompUnit(tCompCali.a_veh_avg), "CalcData")
             AddToErg(tCompCali.v_veh_float, fCompName(tCompCali.v_veh_float), fCompUnit(tCompCali.v_veh_float), "CalcData")
             AddToErg(tCompCali.t_amp_stat, fCompName(tCompCali.t_amp_stat), fCompUnit(tCompCali.t_amp_stat), "CalcData")
             AddToErg(tCompCali.p_amp_stat, fCompName(tCompCali.p_amp_stat), fCompUnit(tCompCali.p_amp_stat), "CalcData")
@@ -384,7 +384,7 @@
 
         If Not calibration Then
             AddToErg(tCompErg.val_User, fCompName(tCompErg.val_User), fCompUnit(tCompErg.val_User), "ErgValues")
-            AddToErg(tCompErg.val_vVeh_ave, fCompName(tCompErg.val_vVeh_ave), fCompUnit(tCompErg.val_vVeh_ave), "ErgValues")
+            AddToErg(tCompErg.val_vVeh_avg, fCompName(tCompErg.val_vVeh_avg), fCompUnit(tCompErg.val_vVeh_avg), "ErgValues")
             AddToErg(tCompErg.val_vVeh_f, fCompName(tCompErg.val_vVeh_f), fCompUnit(tCompErg.val_vVeh_f), "ErgValues")
             AddToErg(tCompErg.val_vVeh_1s, fCompName(tCompErg.val_vVeh_1s), fCompUnit(tCompErg.val_vVeh_1s), "ErgValues")
             AddToErg(tCompErg.val_vWind, fCompName(tCompErg.val_vWind), fCompUnit(tCompErg.val_vWind), "ErgValues")
@@ -396,10 +396,10 @@
         End If
 
         AddToErg(tCompErg.vair, fCompName(tCompErg.vair), fCompUnit(tCompErg.vair), "ErgValues")
-        AddToErg(tCompErg.v_wind_ave, fCompName(tCompErg.v_wind_ave), fCompUnit(tCompErg.v_wind_ave), "ErgValues")
+        AddToErg(tCompErg.v_wind_avg, fCompName(tCompErg.v_wind_avg), fCompUnit(tCompErg.v_wind_avg), "ErgValues")
         AddToErg(tCompErg.v_wind_1s, fCompName(tCompErg.v_wind_1s), fCompUnit(tCompErg.v_wind_1s), "ErgValues")
         AddToErg(tCompErg.v_wind_1s_max, fCompName(tCompErg.v_wind_1s_max), fCompUnit(tCompErg.v_wind_1s_max), "ErgValues")
-        AddToErg(tCompErg.beta_ave, fCompName(tCompErg.beta_ave), fCompUnit(tCompErg.beta_ave), "ErgValues")
+        AddToErg(tCompErg.beta_avg, fCompName(tCompErg.beta_avg), fCompUnit(tCompErg.beta_avg), "ErgValues")
 
         If Not calibration Then
             AddToErg(tCompErg.beta_abs, fCompName(tCompErg.beta_abs), fCompUnit(tCompErg.beta_abs), "ErgValues")
@@ -423,8 +423,8 @@
             AddToErg(tCompErg.v_veh_1s, fCompName(tCompErg.v_veh_1s), fCompUnit(tCompErg.v_veh_1s), "ErgValues")
             AddToErg(tCompErg.v_veh_1s_max, fCompName(tCompErg.v_veh_1s_max), fCompUnit(tCompErg.v_veh_1s_max), "ErgValues")
             AddToErg(tCompErg.v_veh_1s_min, fCompName(tCompErg.v_veh_1s_min), fCompUnit(tCompErg.v_veh_1s_min), "ErgValues")
-            AddToErg(tCompErg.v_veh_ave, fCompName(tCompErg.v_veh_ave), fCompUnit(tCompErg.v_veh_ave), "ErgValues")
-            AddToErg(tCompErg.a_veh_ave, fCompName(tCompErg.a_veh_ave), fCompUnit(tCompErg.a_veh_ave), "ErgValues")
+            AddToErg(tCompErg.v_veh_avg, fCompName(tCompErg.v_veh_avg), fCompUnit(tCompErg.v_veh_avg), "ErgValues")
+            AddToErg(tCompErg.a_veh_avg, fCompName(tCompErg.a_veh_avg), fCompUnit(tCompErg.a_veh_avg), "ErgValues")
             AddToErg(tCompErg.v_veh_float, fCompName(tCompErg.v_veh_float), fCompUnit(tCompErg.v_veh_float), "ErgValues")
             AddToErg(tCompErg.v_veh_float_max, fCompName(tCompErg.v_veh_float_max), fCompUnit(tCompErg.v_veh_float_max), "ErgValues")
             AddToErg(tCompErg.v_veh_float_min, fCompName(tCompErg.v_veh_float_min), fCompUnit(tCompErg.v_veh_float_min), "ErgValues")

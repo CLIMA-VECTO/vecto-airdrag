@@ -60,7 +60,7 @@ Public Enum tCompCali
     tq_sum_float
     F_trac
     v_veh_acc
-    a_veh_ave
+    a_veh_avg
     F_acc
     F_grd
     F_res
@@ -95,10 +95,10 @@ Public Enum tCompErg
     used
     calcT
     n_eng
-    v_wind_ave
+    v_wind_avg
     v_wind_1s
     v_wind_1s_max
-    beta_ave
+    beta_avg
     dist
     omega_wh
     omega_p_wh
@@ -107,8 +107,8 @@ Public Enum tCompErg
     tq_sum_float
     F_trac
     F_res_ref
-    v_veh_ave
-    a_veh_ave
+    v_veh_avg
+    a_veh_avg
     F_acc
     F_grd
     F_res
@@ -139,7 +139,7 @@ Public Enum tCompErg
     RRC_singleDS
     CdxA_singleDS
     val_User
-    val_vVeh_ave
+    val_vVeh_avg
     val_vVeh_1s
     val_vVeh_f
     val_vWind

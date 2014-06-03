@@ -484,7 +484,7 @@
 
         ' Set the values
         For i = 0 To ErgValues(tCompErg.SecID).Count - 1
-            If ErgValues(tCompErg.v_wind_ave)(i) < v_wind_ave_CAL_max And Math.Abs(ErgValues(tCompErg.beta_ave)(i)) < beta_ave_CAL_max And ErgValues(tCompErg.v_wind_1s_max)(i) < v_wind_1s_CAL_max And ErgValues(tCompErg.user_valid)(i) = 1 Then
+            If ErgValues(tCompErg.v_wind_avg)(i) < v_wind_avg_max_CAL And Math.Abs(ErgValues(tCompErg.beta_avg)(i)) < beta_avg_max_CAL And ErgValues(tCompErg.v_wind_1s_max)(i) < v_wind_1s_max_CAL And ErgValues(tCompErg.user_valid)(i) = 1 Then
                 ErgValues(tCompErg.valid)(i) = 1
                 ErgValues(tCompErg.used)(i) = 1
             Else
@@ -562,7 +562,7 @@
             For j = i + 1 To SecCount.NameSec.Count - 1
                 If Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) Then
                     ' If enought sections in both directions are detected
-                    If SecCount.AnzSec(i) >= ds_min_CAL And SecCount.AnzSec(j) >= ds_min_CAL Then
+                    If SecCount.AnzSec(i) >= segruns_min_CAL And SecCount.AnzSec(j) >= segruns_min_CAL Then
                         ' Set the whole sections on valid
                         SecCount.ValidSec(i) = True
                         SecCount.ValidSec(j) = True
@@ -712,7 +712,7 @@
                 If Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) And _
                    Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), "(") + 1, InStr(SecCount.NameSec(i), ",") - (InStr(SecCount.NameSec(i), "(") + 1))) = Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), "(") + 1, InStr(SecCount.NameSec(j), ",") - (InStr(SecCount.NameSec(j), "(") + 1))) Then
                     ' If enought sections in both directions are detected
-                    If SecCount.AnzSec(i) >= ds_min_LS And SecCount.AnzSec(j) >= ds_min_LS Then
+                    If SecCount.AnzSec(i) >= segruns_min_LS And SecCount.AnzSec(j) >= segruns_min_LS Then
 
                         ' If not both the same number
                         If Not SecCount.AnzSec(i) = SecCount.AnzSec(j) Then
@@ -827,7 +827,7 @@
             For j = i + 1 To SecCount.NameSec.Count - 1
                 If Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1))) = Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), ",") + 1, InStr(SecCount.NameSec(j), ")") - (InStr(SecCount.NameSec(j), ",") + 1))) Then
                     ' If enought sections in both directions are detected
-                    If SecCount.AnzSec(i) >= ds_min_HS And SecCount.AnzSec(j) >= ds_min_HS Then
+                    If SecCount.AnzSec(i) >= segruns_min_HS And SecCount.AnzSec(j) >= segruns_min_HS Then
                         ' Count the valid tests per HeadID
                         Select Case Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1)))
                             Case 1
@@ -848,7 +848,7 @@
         Next i
 
         ' Ceck if enough sections are detected
-        If anzHS1 < ds_min_head_MS Or anzHS2 < ds_min_head_MS Then
+        If anzHS1 < segruns_min_head_MS Or anzHS2 < segruns_min_head_MS Then
             fInfWarErr(9, False, "Number of valid high speed datasets too low")
             BWorker.CancelAsync()
             'Return False
@@ -902,19 +902,19 @@
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
-                    If ErgValues(tCompErg.v_veh)(i) < v_veh_ave_LS_max And _
-                       ErgValues(tCompErg.v_veh)(i) > v_veh_ave_LS_min Then ErgValues(tCompErg.val_vVeh_ave)(i) = 1
-                    If ErgValues(tCompErg.v_wind_ave)(i) < v_wind_ave_LS_max Then ErgValues(tCompErg.val_vWind)(i) = 1
-                    If ErgValues(tCompErg.v_wind_1s_max)(i) < v_wind_1s_LS_max Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
-                    If ErgValues(tCompErg.v_veh_float_max)(i) < (ErgValues(tCompErg.v_veh)(i) + v_veh_float_delta) And _
-                       ErgValues(tCompErg.v_veh_float_min)(i) > (ErgValues(tCompErg.v_veh)(i) - v_veh_float_delta) Then ErgValues(tCompErg.val_vVeh_f)(i) = 1
-                    If ErgValues(tCompErg.tq_sum_float_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + tq_sum_float_delta)) And _
-                       ErgValues(tCompErg.tq_sum_float_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - tq_sum_float_delta)) Then ErgValues(tCompErg.val_tq_f)(i) = 1
+                    If ErgValues(tCompErg.v_veh)(i) < v_veh_avg_max_LS And _
+                       ErgValues(tCompErg.v_veh)(i) > v_veh_avg_min_LS Then ErgValues(tCompErg.val_vVeh_avg)(i) = 1
+                    If ErgValues(tCompErg.v_wind_avg)(i) < v_wind_avg_max_LS Then ErgValues(tCompErg.val_vWind)(i) = 1
+                    If ErgValues(tCompErg.v_wind_1s_max)(i) < v_wind_1s_max_LS Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
+                    If ErgValues(tCompErg.v_veh_float_max)(i) < (ErgValues(tCompErg.v_veh)(i) + v_veh_float_delta_LS) And _
+                       ErgValues(tCompErg.v_veh_float_min)(i) > (ErgValues(tCompErg.v_veh)(i) - v_veh_float_delta_LS) Then ErgValues(tCompErg.val_vVeh_f)(i) = 1
+                    If ErgValues(tCompErg.tq_sum_float_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + tq_sum_float_delta_LS)) And _
+                       ErgValues(tCompErg.tq_sum_float_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - tq_sum_float_delta_LS)) Then ErgValues(tCompErg.val_tq_f)(i) = 1
                     If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + leng_crit And _
                        ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
 
                     ' Check if all criterias are valid
-                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_ave)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And _
+                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And _
                        ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_vVeh_f)(i) = 1 And ErgValues(tCompErg.val_tq_f)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
@@ -932,19 +932,19 @@
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
-                    If ErgValues(tCompErg.v_veh)(i) > v_veh_ave_HS_min Then ErgValues(tCompErg.val_vVeh_ave)(i) = 1
-                    If ErgValues(tCompErg.v_wind_ave)(i) < v_wind_ave_HS_max Then ErgValues(tCompErg.val_vWind)(i) = 1
-                    If ErgValues(tCompErg.v_wind_1s_max)(i) < v_wind_1s_HS_max Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
-                    If ErgValues(tCompErg.beta_abs)(i) < beta_ave_HS_max Then ErgValues(tCompErg.val_beta)(i) = 1
-                    If ErgValues(tCompErg.v_veh_1s_max)(i) < (ErgValues(tCompErg.v_veh)(i) + v_veh_1s_delta) And _
-                       ErgValues(tCompErg.v_veh_1s_min)(i) > (ErgValues(tCompErg.v_veh)(i) - v_veh_1s_delta) Then ErgValues(tCompErg.val_vVeh_1s)(i) = 1
-                    If ErgValues(tCompErg.tq_sum_1s_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + tq_sum_1s_delta)) And _
-                       ErgValues(tCompErg.tq_sum_1s_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - tq_sum_1s_delta)) Then ErgValues(tCompErg.val_tq_1s)(i) = 1
+                    If ErgValues(tCompErg.v_veh)(i) > v_veh_avg_min_HS Then ErgValues(tCompErg.val_vVeh_avg)(i) = 1
+                    If ErgValues(tCompErg.v_wind_avg)(i) < v_wind_avg_max_HS Then ErgValues(tCompErg.val_vWind)(i) = 1
+                    If ErgValues(tCompErg.v_wind_1s_max)(i) < v_wind_1s_max_HS Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
+                    If ErgValues(tCompErg.beta_abs)(i) < beta_avg_max_HS Then ErgValues(tCompErg.val_beta)(i) = 1
+                    If ErgValues(tCompErg.v_veh_1s_max)(i) < (ErgValues(tCompErg.v_veh)(i) + v_veh_1s_delta_HS) And _
+                       ErgValues(tCompErg.v_veh_1s_min)(i) > (ErgValues(tCompErg.v_veh)(i) - v_veh_1s_delta_HS) Then ErgValues(tCompErg.val_vVeh_1s)(i) = 1
+                    If ErgValues(tCompErg.tq_sum_1s_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + tq_sum_1s_delta_HS)) And _
+                       ErgValues(tCompErg.tq_sum_1s_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - tq_sum_1s_delta_HS)) Then ErgValues(tCompErg.val_tq_1s)(i) = 1
                     If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + leng_crit And _
                        ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
 
                     ' Check if all criterias are valid
-                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_ave)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_vWind_1s)(i) = 1 And _
+                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_vWind_1s)(i) = 1 And _
                        ErgValues(tCompErg.val_beta)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And ErgValues(tCompErg.val_tq_1s)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
@@ -989,7 +989,11 @@
         Else
             ' Add the ResultValues to the complet dictionary
             For Each sKV In ErgValues
-                ErgValuesComp(sKV.Key).AddRange(ErgValues(sKV.Key))
+                Dim o = ErgValuesComp(sKV.Key)
+                If (o Is Nothing) Then
+                Else
+                    ErgValuesComp(sKV.Key).AddRange(ErgValues(sKV.Key))
+                End If
             Next
             For Each sKVUndef In ErgValuesUndef
                 ErgValuesUndefComp(sKVUndef.Key).AddRange(ErgValuesUndef(sKVUndef.Key))

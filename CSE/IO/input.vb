@@ -36,7 +36,7 @@ Public Module input
                     MSCX.longS.Add(Line(5))
                     MSCX.latE.Add(Line(6))
                     MSCX.longE.Add(Line(7))
-                    If GradC Then MSCX.AltPath.Add(Line(8))
+                    If gradient_correction Then MSCX.AltPath.Add(Line(8))
                 Loop
             Catch ex As Exception
                 ' Falls kein gültiger Wert eingegeben wurde
@@ -72,7 +72,7 @@ Public Module input
 
             ' Control the altitude path
             For i = 1 To MSCX.meID.Count - 1
-                If GradC Then
+                If gradient_correction Then
                     If MSCX.AltPath(i) = Nothing Then
                         fInfWarErr(9, False, "Altitude correction = on, missing altitude file at line: " & i)
                         BWorker.CancelAsync()

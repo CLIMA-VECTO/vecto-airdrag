@@ -52,8 +52,8 @@
             Aae = QuadReq(UTMCoordV.Easting - UTMCoordP.Easting, UTMCoordV.Northing - UTMCoordP.Northing)
             MSCVirt.meID.Add(MSCOrg.meID(i))
             MSCVirt.dID.Add(MSCOrg.dID(i))
-            MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, 0, -delta_y_max))
-            MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, 0, delta_y_max))
+            MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, 0, -trigger_delta_y_max))
+            MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, 0, trigger_delta_y_max))
             MSCVirt.NewSec.Add(False)
             MSCVirt.Head.Add(MSCOrg.head(i))
 
@@ -62,16 +62,16 @@
                     MSCVirt.NewSec.Add(True)
                     MSCVirt.meID.Add(0)
                     MSCVirt.dID.Add(MSCOrg.dID(i))
-                    MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), -delta_y_max))
-                    MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), delta_y_max))
+                    MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), -trigger_delta_y_max))
+                    MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), trigger_delta_y_max))
                     MSCVirt.Head.Add(MSCOrg.head(i))
                 End If
             ElseIf i = MSCOrg.meID.Count - 1 Then
                 MSCVirt.NewSec.Add(True)
                 MSCVirt.meID.Add(0)
                 MSCVirt.dID.Add(MSCOrg.dID(i))
-                MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), -delta_y_max))
-                MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), delta_y_max))
+                MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), -trigger_delta_y_max))
+                MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), trigger_delta_y_max))
                 MSCVirt.Head.Add(MSCOrg.head(i))
             End If
         Next i
@@ -111,7 +111,7 @@
             h = Math.Sqrt((DXep ^ 2 + DYep ^ 2) - p ^ 2)
 
             ' Appropriate if the point is in the detection area
-            If h <= delta_x_max And p > 0 And q > 0 Then
+            If h <= trigger_delta_x_max And p > 0 And q > 0 Then
                 Return True
             Else
                 Return False
@@ -601,9 +601,9 @@
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
             If CalcData(tCompCali.SecID)(i) <> 0 Then
                 If firstIn Then
-                    ErgValues(tCompErg.v_wind_ave)(run) = (CalcData(tCompCali.vwind_c)(i))
+                    ErgValues(tCompErg.v_wind_avg)(run) = (CalcData(tCompCali.vwind_c)(i))
                     ErgValues(tCompErg.v_wind_1s)(run) = (CalcData(tCompCali.vwind_1s)(i))
-                    ErgValues(tCompErg.beta_ave)(run) = (CalcData(tCompCali.beta_c)(i))
+                    ErgValues(tCompErg.beta_avg)(run) = (CalcData(tCompCali.beta_c)(i))
                     ErgValues(tCompErg.vair)(run) = (CalcData(tCompCali.vair_c)(i))
                     ErgValues(tCompErg.beta_uf)(run) = (CalcData(tCompCali.beta_uf)(i))
                     ErgValues(tCompErg.vair_uf)(run) = (CalcData(tCompCali.vair_uf)(i))
@@ -613,9 +613,9 @@
                 Else
                     If (CalcData(tCompCali.SecID)(i) = CalcData(tCompCali.SecID)(i - 1)) And (CalcData(tCompCali.DirID)(i) = CalcData(tCompCali.DirID)(i - 1)) Then
                         ' Build the sum
-                        ErgValues(tCompErg.v_wind_ave)(run) += CalcData(tCompCali.vwind_c)(i)
+                        ErgValues(tCompErg.v_wind_avg)(run) += CalcData(tCompCali.vwind_c)(i)
                         ErgValues(tCompErg.v_wind_1s)(run) += CalcData(tCompCali.vwind_1s)(i)
-                        ErgValues(tCompErg.beta_ave)(run) += CalcData(tCompCali.beta_c)(i)
+                        ErgValues(tCompErg.beta_avg)(run) += CalcData(tCompCali.beta_c)(i)
                         ErgValues(tCompErg.vair)(run) += CalcData(tCompCali.vair_c)(i)
                         ErgValues(tCompErg.beta_uf)(run) += CalcData(tCompCali.beta_uf)(i)
                         ErgValues(tCompErg.vair_uf)(run) += CalcData(tCompCali.vair_uf)(i)
@@ -623,9 +623,9 @@
                         anz += 1
                     Else
                         ' Calculate the results from the last section
-                        ErgValues(tCompErg.v_wind_ave)(run) = ErgValues(tCompErg.v_wind_ave)(run) / anz
+                        ErgValues(tCompErg.v_wind_avg)(run) = ErgValues(tCompErg.v_wind_avg)(run) / anz
                         ErgValues(tCompErg.v_wind_1s)(run) = ErgValues(tCompErg.v_wind_1s)(run) / anz
-                        ErgValues(tCompErg.beta_ave)(run) = ErgValues(tCompErg.beta_ave)(run) / anz
+                        ErgValues(tCompErg.beta_avg)(run) = ErgValues(tCompErg.beta_avg)(run) / anz
                         ErgValues(tCompErg.vair)(run) = ErgValues(tCompErg.vair)(run) / anz
                         ErgValues(tCompErg.beta_uf)(run) = ErgValues(tCompErg.beta_uf)(run) / anz
                         ErgValues(tCompErg.vair_uf)(run) = ErgValues(tCompErg.vair_uf)(run) / anz
@@ -633,9 +633,9 @@
                         ' Add a new Section to the resultfile
                         anz = 1
                         run += 1
-                        ErgValues(tCompErg.v_wind_ave)(run) = (CalcData(tCompCali.vwind_c)(i))
+                        ErgValues(tCompErg.v_wind_avg)(run) = (CalcData(tCompCali.vwind_c)(i))
                         ErgValues(tCompErg.v_wind_1s)(run) = (CalcData(tCompCali.vwind_1s)(i))
-                        ErgValues(tCompErg.beta_ave)(run) = (CalcData(tCompCali.beta_c)(i))
+                        ErgValues(tCompErg.beta_avg)(run) = (CalcData(tCompCali.beta_c)(i))
                         ErgValues(tCompErg.vair)(run) = (CalcData(tCompCali.vair_c)(i))
                         ErgValues(tCompErg.beta_uf)(run) = (CalcData(tCompCali.beta_uf)(i))
                         ErgValues(tCompErg.vair_uf)(run) = (CalcData(tCompCali.vair_uf)(i))
@@ -646,9 +646,9 @@
                 ' Finish calculation after a valid section
                 If run > 0 And firstIn = False Then
                     ' Calculate the results from the last section
-                    ErgValues(tCompErg.v_wind_ave)(run) = ErgValues(tCompErg.v_wind_ave)(run) / anz
+                    ErgValues(tCompErg.v_wind_avg)(run) = ErgValues(tCompErg.v_wind_avg)(run) / anz
                     ErgValues(tCompErg.v_wind_1s)(run) = ErgValues(tCompErg.v_wind_1s)(run) / anz
-                    ErgValues(tCompErg.beta_ave)(run) = ErgValues(tCompErg.beta_ave)(run) / anz
+                    ErgValues(tCompErg.beta_avg)(run) = ErgValues(tCompErg.beta_avg)(run) / anz
                     ErgValues(tCompErg.vair)(run) = ErgValues(tCompErg.vair)(run) / anz
                     ErgValues(tCompErg.beta_uf)(run) = ErgValues(tCompErg.beta_uf)(run) / anz
                     ErgValues(tCompErg.vair_uf)(run) = ErgValues(tCompErg.vair_uf)(run) / anz
@@ -709,7 +709,7 @@
             CalcData(tCompCali.F_trac)(i) = (InputData(tComp.tq_l)(i) + InputData(tComp.tq_r)(i)) * CalcData(tCompCali.omega_wh)(i) / (CalcData(tCompCali.v_veh_c)(i) / 3.6)
 
 
-            If GradC Then
+            If gradient_correction Then
                 If CalcData(tCompCali.SecID)(i) <> 0 Then
                     ' Altitude
                     CalcData(tCompCali.alt)(i) = fAltInterp(orgMSCX.AltPath(fSecPos(orgMSCX, CalcData(tCompCali.SecID)(i), CalcData(tCompCali.DirID)(i))), CalcData(tCompCali.dist_root)(i))
@@ -752,19 +752,19 @@
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.tq_sum), CalcData(tCompCali.tq_sum_float), CalcData(tCompCali.t_float))
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.tq_sum), CalcData(tCompCali.tq_sum_1s))
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.v_veh_c), CalcData(tCompCali.v_veh_1s))
-        fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.v_veh_c), CalcData(tCompCali.v_veh_acc), acc_corr_ave)
+        fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.v_veh_c), CalcData(tCompCali.v_veh_acc), acc_corr_avg)
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.v_veh_c), CalcData(tCompCali.v_veh_float), CalcData(tCompCali.t_float))
 
         ' Calculate the remaining values
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
             ' Acceleration
             If i = 0 Or i = CalcData(tCompCali.SecID).Count - 1 Then
-                CalcData(tCompCali.a_veh_ave)(i) = 0
+                CalcData(tCompCali.a_veh_avg)(i) = 0
             Else
-                CalcData(tCompCali.a_veh_ave)(i) = (CalcData(tCompCali.v_veh_acc)(i + 1) - CalcData(tCompCali.v_veh_acc)(i - 1)) / (3.6 * 2) * HzIn
+                CalcData(tCompCali.a_veh_avg)(i) = (CalcData(tCompCali.v_veh_acc)(i + 1) - CalcData(tCompCali.v_veh_acc)(i - 1)) / (3.6 * 2) * HzIn
             End If
 
-            If GradC Then
+            If gradient_correction Then
                 If CalcData(tCompCali.SecID)(i) <> 0 Then
                     ' Slope Deg
                     If i > 0 And i < CalcData(tCompCali.SecID).Count - 1 Then
@@ -785,12 +785,12 @@
             End If
 
             ' Force acceleration
-            CalcData(tCompCali.F_acc)(i) = vehicleX.testMass * CalcData(tCompCali.a_veh_ave)(i) + vehicleX.wheelsInertia * CalcData(tCompCali.omega_wh)(i) * CalcData(tCompCali.omega_p_wh)(i) / (CalcData(tCompCali.v_veh_c)(i) / 3.6)
+            CalcData(tCompCali.F_acc)(i) = vehicleX.testMass * CalcData(tCompCali.a_veh_avg)(i) + vehicleX.wheelsInertia * CalcData(tCompCali.omega_wh)(i) * CalcData(tCompCali.omega_p_wh)(i) / (CalcData(tCompCali.v_veh_c)(i) / 3.6)
 
             ' Force trajectory
             CalcData(tCompCali.F_res)(i) = CalcData(tCompCali.F_trac)(i)
-            If AccC Then CalcData(tCompCali.F_res)(i) -= CalcData(tCompCali.F_acc)(i)
-            If GradC Then CalcData(tCompCali.F_res)(i) -= CalcData(tCompCali.F_grd)(i)
+            If accel_correction Then CalcData(tCompCali.F_res)(i) -= CalcData(tCompCali.F_acc)(i)
+            If gradient_correction Then CalcData(tCompCali.F_res)(i) -= CalcData(tCompCali.F_grd)(i)
         Next i
 
 
@@ -807,8 +807,8 @@
                     ErgValues(tCompErg.tq_sum_float)(run) = (CalcData(tCompCali.tq_sum_float)(i))
                     ErgValues(tCompErg.t_float)(run) = (CalcData(tCompCali.t_float)(i))
                     ErgValues(tCompErg.F_trac)(run) = (CalcData(tCompCali.F_trac)(i))
-                    ErgValues(tCompErg.v_veh_ave)(run) = (CalcData(tCompCali.v_veh_acc)(i))
-                    ErgValues(tCompErg.a_veh_ave)(run) = (CalcData(tCompCali.a_veh_ave)(i))
+                    ErgValues(tCompErg.v_veh_avg)(run) = (CalcData(tCompCali.v_veh_acc)(i))
+                    ErgValues(tCompErg.a_veh_avg)(run) = (CalcData(tCompCali.a_veh_avg)(i))
                     ErgValues(tCompErg.F_acc)(run) = (CalcData(tCompCali.F_acc)(i))
                     ErgValues(tCompErg.F_grd)(run) = (CalcData(tCompCali.F_grd)(i))
                     ErgValues(tCompErg.F_res)(run) = (CalcData(tCompCali.F_res)(i))
@@ -843,8 +843,8 @@
                         ErgValues(tCompErg.tq_sum_float)(run) += (CalcData(tCompCali.tq_sum_float)(i))
                         ErgValues(tCompErg.t_float)(run) += (CalcData(tCompCali.t_float)(i))
                         ErgValues(tCompErg.F_trac)(run) += (CalcData(tCompCali.F_trac)(i))
-                        ErgValues(tCompErg.v_veh_ave)(run) += (CalcData(tCompCali.v_veh_acc)(i))
-                        ErgValues(tCompErg.a_veh_ave)(run) += (CalcData(tCompCali.a_veh_ave)(i))
+                        ErgValues(tCompErg.v_veh_avg)(run) += (CalcData(tCompCali.v_veh_acc)(i))
+                        ErgValues(tCompErg.a_veh_avg)(run) += (CalcData(tCompCali.a_veh_avg)(i))
                         ErgValues(tCompErg.F_acc)(run) += (CalcData(tCompCali.F_acc)(i))
                         ErgValues(tCompErg.F_grd)(run) += (CalcData(tCompCali.F_grd)(i))
                         ErgValues(tCompErg.F_res)(run) += (CalcData(tCompCali.F_res)(i))
@@ -876,8 +876,8 @@
                         ErgValues(tCompErg.tq_sum_float)(run) = ErgValues(tCompErg.tq_sum_float)(run) / anz
                         ErgValues(tCompErg.t_float)(run) = ErgValues(tCompErg.t_float)(run) / anz
                         ErgValues(tCompErg.F_trac)(run) = ErgValues(tCompErg.F_trac)(run) / anz
-                        ErgValues(tCompErg.v_veh_ave)(run) = ErgValues(tCompErg.v_veh_ave)(run) / anz
-                        ErgValues(tCompErg.a_veh_ave)(run) = ErgValues(tCompErg.a_veh_ave)(run) / anz
+                        ErgValues(tCompErg.v_veh_avg)(run) = ErgValues(tCompErg.v_veh_avg)(run) / anz
+                        ErgValues(tCompErg.a_veh_avg)(run) = ErgValues(tCompErg.a_veh_avg)(run) / anz
                         ErgValues(tCompErg.F_acc)(run) = ErgValues(tCompErg.F_acc)(run) / anz
                         ErgValues(tCompErg.F_grd)(run) = ErgValues(tCompErg.F_grd)(run) / anz
                         ErgValues(tCompErg.F_res)(run) = ErgValues(tCompErg.F_res)(run) / anz
@@ -888,13 +888,13 @@
                         ErgValues(tCompErg.p_amb_stat)(run) = ErgValues(tCompErg.p_amb_stat)(run) / anz
                         ErgValues(tCompErg.rh_stat)(run) = ErgValues(tCompErg.rh_stat)(run) / anz
                         ErgValues(tCompErg.v_air_sq)(run) = ErgValues(tCompErg.v_air_sq)(run) / anz
-                        ErgValues(tCompErg.beta_abs)(run) = Math.Abs(ErgValues(tCompErg.beta_ave)(run))
+                        ErgValues(tCompErg.beta_abs)(run) = Math.Abs(ErgValues(tCompErg.beta_avg)(run))
                         ErgValues(tCompErg.vp_H2O)(run) = ((ErgValues(tCompErg.rh_stat)(run) / 100) * 611 * 10 ^ ((7.5 * ErgValues(tCompErg.t_amb_stat)(run)) / (237 + ErgValues(tCompErg.t_amb_stat)(run))))
                         ErgValues(tCompErg.rho_air)(run) = (ErgValues(tCompErg.p_amb_stat)(run) * 100 - ErgValues(tCompErg.vp_H2O)(run)) / (287.05 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15)) + ErgValues(tCompErg.vp_H2O)(run) / (461.9 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15))
                         If ErgValues(tCompErg.RunID)(run) = IDHS Then
                             ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS * (roh_air_ref / ErgValues(tCompErg.rho_air)(run))
                         Else
-                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * RRC * (roh_air_ref / ErgValues(tCompErg.rho_air)(run))
+                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * rr_corr_factor * (roh_air_ref / ErgValues(tCompErg.rho_air)(run))
                         End If
                         ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
                         If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz
@@ -911,8 +911,8 @@
                         ErgValues(tCompErg.tq_sum_float)(run) = (CalcData(tCompCali.tq_sum_float)(i))
                         ErgValues(tCompErg.t_float)(run) = (CalcData(tCompCali.t_float)(i))
                         ErgValues(tCompErg.F_trac)(run) = (CalcData(tCompCali.F_trac)(i))
-                        ErgValues(tCompErg.v_veh_ave)(run) = (CalcData(tCompCali.v_veh_acc)(i))
-                        ErgValues(tCompErg.a_veh_ave)(run) = (CalcData(tCompCali.a_veh_ave)(i))
+                        ErgValues(tCompErg.v_veh_avg)(run) = (CalcData(tCompCali.v_veh_acc)(i))
+                        ErgValues(tCompErg.a_veh_avg)(run) = (CalcData(tCompCali.a_veh_avg)(i))
                         ErgValues(tCompErg.F_acc)(run) = (CalcData(tCompCali.F_acc)(i))
                         ErgValues(tCompErg.F_grd)(run) = (CalcData(tCompCali.F_grd)(i))
                         ErgValues(tCompErg.F_res)(run) = (CalcData(tCompCali.F_res)(i))
@@ -947,8 +947,8 @@
                     ErgValues(tCompErg.tq_sum_float)(run) = ErgValues(tCompErg.tq_sum_float)(run) / anz
                     ErgValues(tCompErg.t_float)(run) = ErgValues(tCompErg.t_float)(run) / anz
                     ErgValues(tCompErg.F_trac)(run) = ErgValues(tCompErg.F_trac)(run) / anz
-                    ErgValues(tCompErg.v_veh_ave)(run) = ErgValues(tCompErg.v_veh_ave)(run) / anz
-                    ErgValues(tCompErg.a_veh_ave)(run) = ErgValues(tCompErg.a_veh_ave)(run) / anz
+                    ErgValues(tCompErg.v_veh_avg)(run) = ErgValues(tCompErg.v_veh_avg)(run) / anz
+                    ErgValues(tCompErg.a_veh_avg)(run) = ErgValues(tCompErg.a_veh_avg)(run) / anz
                     ErgValues(tCompErg.F_acc)(run) = ErgValues(tCompErg.F_acc)(run) / anz
                     ErgValues(tCompErg.F_grd)(run) = ErgValues(tCompErg.F_grd)(run) / anz
                     ErgValues(tCompErg.F_res)(run) = ErgValues(tCompErg.F_res)(run) / anz
@@ -959,13 +959,13 @@
                     ErgValues(tCompErg.p_amb_stat)(run) = ErgValues(tCompErg.p_amb_stat)(run) / anz
                     ErgValues(tCompErg.rh_stat)(run) = ErgValues(tCompErg.rh_stat)(run) / anz
                     ErgValues(tCompErg.v_air_sq)(run) = ErgValues(tCompErg.v_air_sq)(run) / anz
-                    ErgValues(tCompErg.beta_abs)(run) = Math.Abs(ErgValues(tCompErg.beta_ave)(run))
+                    ErgValues(tCompErg.beta_abs)(run) = Math.Abs(ErgValues(tCompErg.beta_avg)(run))
                     ErgValues(tCompErg.vp_H2O)(run) = ((ErgValues(tCompErg.rh_stat)(run) / 100) * 611 * 10 ^ ((7.5 * ErgValues(tCompErg.t_amb_stat)(run)) / (237 + ErgValues(tCompErg.t_amb_stat)(run))))
                     ErgValues(tCompErg.rho_air)(run) = (ErgValues(tCompErg.p_amb_stat)(run) * 100 - ErgValues(tCompErg.vp_H2O)(run)) / (287.05 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15)) + ErgValues(tCompErg.vp_H2O)(run) / (461.9 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15))
                     If ErgValues(tCompErg.RunID)(run) = IDHS Then
                         ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS * (roh_air_ref / ErgValues(tCompErg.rho_air)(run))
                     Else
-                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * RRC * (roh_air_ref / ErgValues(tCompErg.rho_air)(run))
+                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * rr_corr_factor * (roh_air_ref / ErgValues(tCompErg.rho_air)(run))
                     End If
                     ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
                     If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz
