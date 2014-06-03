@@ -142,7 +142,7 @@ lb10:
         Try
             Me.Close()
         Catch ex As Exception
-            fInfWarErr(8, False, format( _
+            logme(8, False, format( _
                        "Skipped exception while closing file_v3({0}) due to: {1}", Me.Path, ex.Message), ex)
         End Try
     End Sub

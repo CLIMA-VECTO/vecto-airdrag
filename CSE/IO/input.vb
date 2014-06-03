@@ -10,12 +10,12 @@ Public Module input
 
             ' Read the filelist with the MSC spezifications
             ' Output on the GUI
-            fInfWarErr(5, False, "Read MS configuration file")
+            logme(5, False, "Read MS configuration file")
 
             ' Open the MSC spezification file
             If Not FileInMSCSpez.OpenRead(MSCfile) Then
                 ' Error if the file is not available
-                fInfWarErr(9, False, "Can´t find the MS configuration specification file: " & MSCfile)
+                logme(9, False, "Can´t find the MS configuration specification file: " & MSCfile)
                 Return False
             End If
 
@@ -36,11 +36,11 @@ Public Module input
                     MSCX.longS.Add(Line(5))
                     MSCX.latE.Add(Line(6))
                     MSCX.longE.Add(Line(7))
-                    If gradient_correction Then MSCX.AltPath.Add(Line(8))
+                    If Crt.gradient_correction Then MSCX.AltPath.Add(Line(8))
                 Loop
             Catch ex As Exception
                 ' Falls kein gültiger Wert eingegeben wurde
-                fInfWarErr(9, False, "Invalid value in the trigger data file: " & fName(MSCfile, True))
+                logme(9, False, "Invalid value in the trigger data file: " & fName(MSCfile, True))
                 BWorker.CancelAsync()
                 Return False
             End Try
@@ -56,14 +56,14 @@ Public Module input
                     RefHead = MSCX.head(i)
                     MSCX.headID.Add(1)
                 Else
-                    If Math.Abs(MSCX.head(i) - RefHead) < delta_parallel_max Then
+                    If Math.Abs(MSCX.head(i) - RefHead) < Crt.delta_parallel_max Then
                         MSCX.headID.Add(1)
                         Continue For
-                    ElseIf (Math.Abs(MSCX.head(i) - RefHead + 180) < delta_parallel_max Or Math.Abs(MSCX.head(i) - RefHead - 180) < delta_parallel_max) Then
+                    ElseIf (Math.Abs(MSCX.head(i) - RefHead + 180) < Crt.delta_parallel_max Or Math.Abs(MSCX.head(i) - RefHead - 180) < Crt.delta_parallel_max) Then
                         MSCX.headID.Add(2)
                         Continue For
                     Else
-                        fInfWarErr(9, False, "Measurement section with invalid headings identified (test track not parallel) at line: " & i)
+                        logme(9, False, "Measurement section with invalid headings identified (test track not parallel) at line: " & i)
                         BWorker.CancelAsync()
                         Return False
                     End If
@@ -72,17 +72,16 @@ Public Module input
 
             ' Control the altitude path
             For i = 1 To MSCX.meID.Count - 1
-                If gradient_correction Then
+                If Crt.gradient_correction Then
                     If MSCX.AltPath(i) = Nothing Then
-                        fInfWarErr(9, False, "Altitude correction = on, missing altitude file at line: " & i)
+                        logme(9, False, "Altitude correction = on, missing altitude file at line: " & i)
                         BWorker.CancelAsync()
                         Return False
                     End If
 
                     If fPath(MSCX.AltPath(i)) = Nothing Then MSCX.AltPath(i) = joinPaths(fPath(MSCfile), MSCX.AltPath(i))
-                    fControlInput(MSCX.AltPath(i), 3, "csalt")
                     If Not FileIO.FileSystem.FileExists(MSCX.AltPath(i)) Then
-                        fInfWarErr(9, False, "Altitude correction = on, altitude file doesen´t exist: " & MSCX.AltPath(i))
+                        logme(9, False, "Altitude correction = on, altitude file doesen´t exist: " & MSCX.AltPath(i))
                         BWorker.CancelAsync()
                         Return False
                     End If
@@ -116,14 +115,14 @@ Public Module input
 
             'Abort if there's no file
             If Datafile = "" OrElse Not IO.File.Exists(Datafile) Then
-                fInfWarErr(9, False, "Weather data file not found (" & Datafile & ") !")
+                logme(9, False, "Weather data file not found (" & Datafile & ") !")
                 BWorker.CancelAsync()
                 Return False
             End If
 
             'Open file
             If Not FileInWeather.OpenRead(Datafile) Then
-                fInfWarErr(9, False, "Failed to open file (" & Datafile & ") !")
+                logme(9, False, "Failed to open file (" & Datafile & ") !")
                 BWorker.CancelAsync()
                 Return False
             End If
@@ -148,7 +147,7 @@ Public Module input
                 Else
                     ' Check if component is already defined
                     If WeathCheck(Comp) Then
-                        fInfWarErr(9, False, "Component '" & Line(i) & "' already defined! Column " & i + 1)
+                        logme(9, False, "Component '" & Line(i) & "' already defined! Column " & i + 1)
                         BWorker.CancelAsync()
                         Return False
                     End If
@@ -164,7 +163,7 @@ Public Module input
             ' Check if all required data is given
             For Each sKVW In WeathCheck
                 If Not WeathCheck(sKVW.Key) Then
-                    fInfWarErr(9, False, "Missing signal for " & fCompName(sKVW.Key))
+                    logme(9, False, "Missing signal for " & fCompName(sKVW.Key))
                     BWorker.CancelAsync()
                     Return False
                 End If
@@ -185,7 +184,7 @@ Public Module input
                     Next sKV
                 Loop
             Catch ex As Exception
-                fInfWarErr(9, False, "Error during file read! Line number: " & tdim + 1 & " (" & Datafile & ")")
+                logme(9, False, "Error during file read! Line number: " & tdim + 1 & " (" & Datafile & ")")
                 BWorker.CancelAsync()
                 Return False
             End Try
@@ -240,14 +239,14 @@ Public Module input
 
             'Abort if there's no file
             If Datafile = "" OrElse Not IO.File.Exists(Datafile) Then
-                fInfWarErr(9, False, "Measurement data file not found (" & Datafile & ") !")
+                logme(9, False, "Measurement data file not found (" & Datafile & ") !")
                 BWorker.CancelAsync()
                 Return False
             End If
 
             'Open file
             If Not FileInMeasure.OpenRead(Datafile) Then
-                fInfWarErr(9, False, "Failed to open file (" & Datafile & ") !")
+                logme(9, False, "Failed to open file (" & Datafile & ") !")
                 BWorker.CancelAsync()
                 Return False
             End If
@@ -286,7 +285,7 @@ Public Module input
 
                     ' Check if the component is already defined
                     If InputUndefData.ContainsKey(txt) Then
-                        fInfWarErr(9, False, "Component '" & Line(i) & "' already defined! Column " & i + 1)
+                        logme(9, False, "Component '" & Line(i) & "' already defined! Column " & i + 1)
                         BWorker.CancelAsync()
                         Return False
                     End If
@@ -298,7 +297,7 @@ Public Module input
                 Else
                     ' Check if component is already defined
                     If MeasCheck(Comp) Then
-                        fInfWarErr(9, False, "Component '" & Line(i) & "' already defined! Column " & i + 1)
+                        logme(9, False, "Component '" & Line(i) & "' already defined! Column " & i + 1)
                         BWorker.CancelAsync()
                         Return False
                     End If
@@ -317,7 +316,7 @@ Public Module input
                     Select Case sKVM.Key
                         Case tComp.trigger
                             If MSCX.tUse Then
-                                fInfWarErr(9, False, "No trigger signal detected, but trigger_used in MS config activated!")
+                                logme(9, False, "No trigger signal detected, but trigger_used in MS config activated!")
                                 BWorker.CancelAsync()
                                 Return False
                             End If
@@ -329,7 +328,7 @@ Public Module input
                         Case tComp.user_valid
                             valid_set = True
                         Case Else
-                            fInfWarErr(9, False, "Missing signal for " & fCompName(sKVM.Key))
+                            logme(9, False, "Missing signal for " & fCompName(sKVM.Key))
                             BWorker.CancelAsync()
                             Return False
                     End Select
@@ -350,9 +349,9 @@ Public Module input
                             If sKV.Key = tComp.t Then
                                 CalcData(tCompCali.t).Add(CDbl(Line(sKV.Value)))
                                 If tDim >= 2 Then
-                                    If Math.Abs((InputData(sKV.Key)(tDim - 1) - InputData(sKV.Key)(tDim - 2)) / (1 / HzIn) - 1) * 100 > delta_Hz_max Then
+                                    If Math.Abs((InputData(sKV.Key)(tDim - 1) - InputData(sKV.Key)(tDim - 2)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
                                         If ErrDat Then
-                                            fInfWarErr(9, False, "The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
+                                            logme(9, False, "The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
                                             BWorker.CancelAsync()
                                             Return False
                                         Else
@@ -367,7 +366,7 @@ Public Module input
                                     If Not ZoneChange Then
                                         If tDim > 1 Then
                                             If CalcData(tCompCali.zone_UTM).Last <> UTMCoord.Zone Then
-                                                fInfWarErr(8, False, "The coordinates lie in different UTM Zones. A zone adjustment will be done!")
+                                                logme(8, False, "The coordinates lie in different UTM Zones. A zone adjustment will be done!")
                                                 ZoneChange = True
                                             End If
                                         End If
@@ -385,7 +384,7 @@ Public Module input
                                     If Not ZoneChange Then
                                         If tDim > 1 Then
                                             If CalcData(tCompCali.zone_UTM).Last <> UTMCoord.Zone Then
-                                                fInfWarErr(8, False, "The coordinates lie in different UTM Zones. A zone adjustment will be done!")
+                                                logme(8, False, "The coordinates lie in different UTM Zones. A zone adjustment will be done!")
                                                 ZoneChange = True
                                             End If
                                         End If
@@ -422,7 +421,7 @@ Public Module input
                     Next
                 Loop
             Catch ex As Exception
-                fInfWarErr(9, False, "Error during file read! Line number: " & tDim + 1 & " (" & Datafile & ")")
+                logme(9, False, "Error during file read! Line number: " & tDim + 1 & " (" & Datafile & ")")
                 BWorker.CancelAsync()
                 Return False
             End Try
@@ -445,7 +444,7 @@ Public Module input
                     CalcData(tCompCali.longi_UTM)(i) = UTMCoord.Easting
                 Next i
                 If Zone1CentralMeridian > 180 Then
-                    fInfWarErr(9, False, "The adjustment is not possible because the data lie to far away from each other to fit into one UTM stripe")
+                    logme(9, False, "The adjustment is not possible because the data lie to far away from each other to fit into one UTM stripe")
                     BWorker.CancelAsync()
                     Return False
                 End If
@@ -474,7 +473,7 @@ Public Module input
             ' Open the shape generic file
             If Not FileInGenShp.OpenRead(GenShpFile) Then
                 ' Falls File nicht vorhanden, abbrechen mit Fehler
-                fInfWarErr(9, True, "Can´t find the generic shape file: " & GenShpFile)
+                logme(9, True, "Can´t find the generic shape file: " & GenShpFile)
                 Return False
             End If
 
@@ -496,7 +495,7 @@ Public Module input
                 If GenShape.veh_class.Contains(Line(pos)) Then
                     For j = 0 To GenShape.veh_class.Count - 1
                         If GenShape.veh_class(j) = Line(pos) And GenShape.veh_conf(j) = Line2(pos) Then
-                            fInfWarErr(9, True, "The vehicle class with this configuration is already defined. Please control your generic shape file!")
+                            logme(9, True, "The vehicle class with this configuration is already defined. Please control your generic shape file!")
                             Return False
                         End If
                     Next

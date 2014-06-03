@@ -1157,7 +1157,7 @@ Partial Class F_Main
         Me.TabPageMSG.Padding = New System.Windows.Forms.Padding(2)
         Me.TabPageMSG.Size = New System.Drawing.Size(522, 93)
         Me.TabPageMSG.TabIndex = 0
-        Me.TabPageMSG.Text = "Messages"
+        Me.TabPageMSG.Text = "Messages(0)"
         Me.TabPageMSG.UseVisualStyleBackColor = True
         '
         'ListBoxMSG

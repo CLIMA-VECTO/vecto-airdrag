@@ -27,71 +27,86 @@
         End Sub
 
         Private Sub MyApplication_Startup(ByVal sender As Object, ByVal e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) Handles Me.Startup
-            ' Declaration
-            Dim fiAss As New IO.FileInfo(joinPaths(Application.Info.DirectoryPath, Application.Info.AssemblyName & ".exe"))
+            Try
+                ' Declaration
+                Dim fiAss As New IO.FileInfo(joinPaths(Application.Info.DirectoryPath, Application.Info.AssemblyName & ".exe"))
 
-            AppPreferences = New cPreferences(True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
+                Prefs = New cPreferences(True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
+                'F_Main.installJob(New cJob()) NO! cannot instantiate form without JOB/Crt.
+                Job = New cJob(True)  ' !!!Skip schema
+                Crt = Job.Criteria
 
-            ' Path to the *.exe 
-            MyPath = My.Application.Info.DirectoryPath & "\"
-            PreferencesPath = joinPaths(MyPath, "config", "preferences.json")
 
-            ' Generateion of folder for the file history if not exists
-            FB_FilHisDir = joinPaths(MyPath, "config", "fileHistory\")
-            If Not IO.Directory.Exists(FB_FilHisDir) Then IO.Directory.CreateDirectory(FB_FilHisDir)
+                ' Path to the *.exe 
+                MyPath = My.Application.Info.DirectoryPath & "\"
+                PrefsPath = joinPaths(MyPath, "config", "preferences.json")
 
-            ' compile date
-            AppDate = fiAss.LastWriteTime.Date
+                ' Generateion of folder for the file history if not exists
+                FB_FilHisDir = joinPaths(MyPath, "config", "fileHistory\")
+                If Not IO.Directory.Exists(FB_FilHisDir) Then IO.Directory.CreateDirectory(FB_FilHisDir)
 
-            ' Licencemodul
-            Lic.FilePath = joinPaths(MyPath, "License.dat")
-            Lic.AppVersion = AppVers
+                ' compile date
+                AppDate = fiAss.LastWriteTime.Date
 
-            ' Declaration from the filebrowser optionen
-            fbVECTO = New cFileBrowser("CSE")
-            fbVECTO.Extensions = New String() {"csjob.json", "csjob"}
+                ' Licencemodul
+                Lic.FilePath = joinPaths(MyPath, "License.dat")
+                Lic.AppVersion = AppVers
 
-            fbTXT = New cFileBrowser("TXT")
-            fbTXT.Extensions = New String() {"txt"}
+                ' Declaration from the filebrowser optionen
+                fbVECTO = New cFileBrowser("CSE")
+                fbVECTO.Extensions = New String() {"csjob.json", "csjob"}
 
-            fbExe = New cFileBrowser("EXE")
-            fbExe.Extensions = New String() {"exe"}
+                fbTXT = New cFileBrowser("TXT")
+                fbTXT.Extensions = New String() {"txt"}
 
-            fbCSV = New cFileBrowser("CSV")
-            fbCSV.Extensions = New String() {"csv", "txt"}
+                fbExe = New cFileBrowser("EXE")
+                fbExe.Extensions = New String() {"exe"}
 
-            fbDir = New cFileBrowser("DIR", True)
+                fbCSV = New cFileBrowser("CSV")
+                fbCSV.Extensions = New String() {"csv", "txt"}
 
-            fbWorkDir = New cFileBrowser("DIR", True)
+                fbDir = New cFileBrowser("DIR", True)
 
-            fbVEH = New cFileBrowser("VEH.json")
-            fbVEH.Extensions = New String() {"csveh.json"}
+                fbWorkDir = New cFileBrowser("DIR", True)
 
-            fbAMB = New cFileBrowser("AMB")
-            fbAMB.Extensions = New String() {"csamb"}
+                fbVEH = New cFileBrowser("VEH.json")
+                fbVEH.Extensions = New String() {"csveh.json"}
 
-            fbALT = New cFileBrowser("ALT")
-            fbALT.Extensions = New String() {"csalt"}
+                fbAMB = New cFileBrowser("AMB")
+                fbAMB.Extensions = New String() {"csamb"}
 
-            fbVEL = New cFileBrowser("VEL")
-            fbVEL.Extensions = New String() {"csdat"}
+                fbALT = New cFileBrowser("ALT")
+                fbALT.Extensions = New String() {"csalt"}
 
-            fbMSC = New cFileBrowser("MSC")
-            fbMSC.Extensions = New String() {"csms"}
+                fbVEL = New cFileBrowser("VEL")
+                fbVEL.Extensions = New String() {"csdat"}
 
-            ' Initialise the key array
-            sKey = New csKey
+                fbMSC = New cFileBrowser("MSC")
+                fbMSC.Extensions = New String() {"csms"}
 
-            'Dim currentDomain As AppDomain = AppDomain.CurrentDomain
-            'AddHandler currentDomain.UnhandledException, AddressOf Me.MyApplicationDomain_UnhandledException
+                ' Initialise the key array
+                sKey = New csKey
+
+                'Dim currentDomain As AppDomain = AppDomain.CurrentDomain
+                'AddHandler currentDomain.UnhandledException, AddressOf Me.MyApplicationDomain_UnhandledException
+            Catch ex As Exception
+                MsgBox(format("{0} failed on init due to: \n\i{1}", AppName, ex), MsgBoxStyle.Critical, format("{0} failed to Start!", AppName))
+            End Try
+
         End Sub
 
         Private Sub MyApplication_UnhandledException(ByVal sender As Object, ByVal ev As Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs) Handles Me.UnhandledException
-            fInfWarErr(9, False, format("Unhandled exception: {0}", ev.Exception.Message), ev.Exception)
+            Dim ex As Exception = ev.Exception
+            If AppFormStarted Then
+                logme(9, False, format("Unhandled exception: \i{0}", ex.Message), ex)
+                ev.ExitApplication = False
+            Else
+                MsgBox(format("{0} failed after init due to: \n\i{1}", AppName, ex), MsgBoxStyle.Critical, format("{0} failed to Start!", AppName))
+            End If
         End Sub
         'Private Sub MyApplicationDomain_UnhandledException(ByVal sender As Object, ByVal ev As UnhandledExceptionEventArgs)
         '    Dim ex As Exception = DirectCast(ev.ExceptionObject, Exception)
-        '    fInfWarErr(9, False, format("Worked's unhandled exception: {0}", ex.Message), ex)
+        '    logme(9, False, format("Worked's unhandled exception: {0}", ex.Message), ex)
         'End Sub
     End Class
 

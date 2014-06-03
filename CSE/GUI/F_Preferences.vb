@@ -24,7 +24,7 @@ Public Class F_Preferences
             updateControlsFromSchema(schema, ctrl, Label)
         Next
 
-        UI_PopulateFrom(AppPreferences)
+        UI_PopulateFrom(Prefs)
     End Sub
 
     Private Sub UI_PopulateFrom(ByVal value As cPreferences)
@@ -60,22 +60,22 @@ Public Class F_Preferences
     ' Ok button
     Private Sub StorePrefs(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
         Try
-            Dim newPrefs As cPreferences = AppPreferences.Clone()
+            Dim newPrefs As cPreferences = Prefs.Clone()
             UI_PopulateTo(newPrefs)
 
             ' Write the config file
-            newPrefs.Store(PreferencesPath)
-            AppPreferences = newPrefs           ' Replace active prefs if successful.
+            newPrefs.Store(PrefsPath)
+            Prefs = newPrefs           ' Replace active prefs if successful.
 
             ' Message for the restart of VECTO
             RestartN = True
-            fInfWarErr(7, True, format("Stored Preferences({0}). \n\nDo you want to restart VECTO now?", PreferencesPath))
+            logme(7, True, format("Stored Preferences({0}). \n\nDo you want to restart VECTO now?", PrefsPath))
 
             ' Close the window
             Me.Close()
         Catch ex As Exception
-            fInfWarErr(9, True, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", _
-                                        PreferencesPath, ex.Message), ex)
+            logme(9, True, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", _
+                                        PrefsPath, ex.Message), ex)
         End Try
 
     End Sub
@@ -83,11 +83,11 @@ Public Class F_Preferences
     ' Ok button
     Private Sub ReloadPrefs(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonReload.Click
         Try
-            AppPreferences = New cPreferences(PreferencesPath)
-            UI_PopulateFrom(AppPreferences)
+            Prefs = New cPreferences(PrefsPath)
+            UI_PopulateFrom(Prefs)
         Catch ex As Exception
-            fInfWarErr(9, True, format("Failed loading Preferences({0}) due to: {1}", _
-                                        PreferencesPath, ex.Message), ex)
+            logme(9, True, format("Failed loading Preferences({0}) due to: {1}", _
+                                        PrefsPath, ex.Message), ex)
         End Try
     End Sub
 
@@ -114,7 +114,7 @@ Public Class F_Preferences
 
     ' Set the MSG box to default if it is leave without an input
     Private Sub TextBoxMSG_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles logLevel.Leave
-        If Me.logLevel.Text = Nothing Then Me.logLevel.Text = AppPreferences.PropDefault("logLevel")
+        If Me.logLevel.Text = Nothing Then Me.logLevel.Text = Prefs.PropDefault("logLevel")
     End Sub
 
     ' Changes in the MSG --> Change the lable
@@ -148,7 +148,7 @@ Public Class F_Preferences
 
     ' Set the LogSize to default if it is leave without an input
     Private Sub TextBoxLogSize_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles logSize.Leave, TextBox1.Leave
-        If Me.logSize.Text = Nothing Then Me.logSize.Text = AppPreferences.PropDefault("logSize")
+        If Me.logSize.Text = Nothing Then Me.logSize.Text = Prefs.PropDefault("logSize")
     End Sub
 End Class
 

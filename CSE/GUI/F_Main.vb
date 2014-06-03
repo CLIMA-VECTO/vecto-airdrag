@@ -3,7 +3,6 @@
 Public Class F_Main
     ' Declarations
     Private ToolstripSave As Boolean = False
-    Private ToolstripSaveAs As Boolean = False
     Private Formname As String = "Job configurations"
     Private ErrorExit As Boolean = True
     Private Cali As Boolean = True
@@ -15,7 +14,7 @@ Public Class F_Main
         Dim NoLegFile As Boolean = False
 
         ' Initialisation
-        hz_out = 1
+        crt.hz_out = 1
         PBInfoIcon.Visible = False
         TBInfo.Visible = False
 
@@ -27,15 +26,16 @@ Public Class F_Main
 
         ' Write the beginning in the Log
         fWriteLog(1)
+        AppFormStarted = True
 
         ' Load the config file
         '
         Try
-            AppPreferences = New cPreferences(PreferencesPath)
+            Prefs = New cPreferences(PrefsPath)
         Catch ex As Exception
-            fInfWarErr(9, False, format( _
+            logme(9, False, format( _
                     "Failed loading Preferences({0}) due to: {1}\n\iThis is normal the first time you launch the application.", _
-                    PreferencesPath, ex.Message), ex)
+                    PrefsPath, ex.Message), ex)
             configL = False
         End Try
 
@@ -46,13 +46,13 @@ Public Class F_Main
 
         '' Create working dir if not exists.
         ''
-        If Not IO.Directory.Exists(AppPreferences.workingDir) Then
-            IO.Directory.CreateDirectory(AppPreferences.workingDir)
+        If Not IO.Directory.Exists(Prefs.workingDir) Then
+            IO.Directory.CreateDirectory(Prefs.workingDir)
         End If
 
         'Lizenz checken
         If Not Lic.LICcheck() Then
-            fInfWarErr(9, True, Lic.FailMsg)
+            logme(9, True, Lic.FailMsg)
             CreatActivationFileToolStripMenuItem_Click(sender, e)
             Me.Close()
         End If
@@ -61,15 +61,14 @@ Public Class F_Main
         ''
         If Not configL Then
             Try
-                AppPreferences.Store(PreferencesPath)
-                fInfWarErr(7, False, format("Stored new Preferences({0}).", PreferencesPath))
+                Prefs.Store(PrefsPath)
+                logme(7, False, format("Stored new Preferences({0}).", PrefsPath))
             Catch ex As Exception
-                fInfWarErr(9, False, format("Failed storing default Preferences({0}) due to: {1}", PreferencesPath, ex.Message), ex)
+                logme(9, False, format("Failed storing default Preferences({0}) due to: {1}", PrefsPath, ex.Message), ex)
             End Try
         End If
     End Sub
 
-    ' Main Tab
 #Region "Main"
     ' Close the GUI
     Private Sub CSEMain_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
@@ -80,7 +79,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the vehiclefile
     Private Sub ButtonSelectVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectVeh.Click
         ' Open the filebrowser with the *.csveh parameter
-        If fbVEH.OpenDialog(AppPreferences.workingDir, False) Then
+        If fbVEH.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEH.Files(0) <> Nothing) Then
                 Me.TextBoxVeh1.Text = fbVEH.Files(0)
             End If
@@ -90,16 +89,16 @@ Public Class F_Main
     ' Open the vehiclefile in the Notepad
     Private Sub ButtonVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonVeh.Click
         If IO.File.Exists(Me.TextBoxVeh1.Text) Then
-            System.Diagnostics.Process.Start(AppPreferences.editor, Me.TextBoxVeh1.Text)
+            System.Diagnostics.Process.Start(Prefs.editor, Me.TextBoxVeh1.Text)
         Else
-            fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxVeh1.Text)
+            logme(9, True, "No such Inputfile: " & Me.TextBoxVeh1.Text)
         End If
     End Sub
 
     ' Open the filebrowser for the selection of the weatherfile
     Private Sub ButtonSelectWeather_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectWeather.Click
         ' Open the filebrowser with the *.cswea parameter
-        If fbAMB.OpenDialog(AppPreferences.workingDir, False) Then
+        If fbAMB.OpenDialog(Prefs.workingDir, False) Then
             If (fbAMB.Files(0) <> Nothing) Then
                 Me.TextBoxWeather.Text = fbAMB.Files(0)
             End If
@@ -109,9 +108,9 @@ Public Class F_Main
     ' Open the weatherfile in the Notepad
     Private Sub ButtonWeather_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWeather.Click
         If IO.File.Exists(Me.TextBoxWeather.Text) Then
-            System.Diagnostics.Process.Start(AppPreferences.editor, Me.TextBoxWeather.Text)
+            System.Diagnostics.Process.Start(Prefs.editor, Me.TextBoxWeather.Text)
         Else
-            fInfWarErr(9, True, "No such Inputfile: " & Me.TextBoxWeather.Text)
+            logme(9, True, "No such Inputfile: " & Me.TextBoxWeather.Text)
         End If
     End Sub
 
@@ -123,7 +122,7 @@ Public Class F_Main
 
     ' Save button
     Private Sub ButtonSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSave.Click
-        ToolStripMenuItemSave_Click(sender, e)
+        SaveJobImpl(False)
     End Sub
 
     ' Calibration elements
@@ -131,7 +130,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the datafile from the calibration run
     Private Sub ButtonSelectDataC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataC.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
+        If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataC.Text = fbVEL.Files(0)
             End If
@@ -155,7 +154,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the measure section config file (MSC)
     Private Sub ButtonSelectMSCC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCC.Click
         ' Open the filebrowser with the *.csmsc parameter
-        If fbMSC.OpenDialog(AppPreferences.workingDir, False) Then
+        If fbMSC.OpenDialog(Prefs.workingDir, False) Then
             If (fbMSC.Files(0) <> Nothing) Then
                 Me.TextBoxMSCC.Text = fbMSC.Files(0)
             End If
@@ -199,7 +198,7 @@ Public Class F_Main
             Cali = True
 
             ' Save the Jobfiles
-            ToolStripMenuItemSave_Click(sender, e)
+            SaveJobImpl(False)
 
             ' Check if outfolder exist. If not then generate the folder
             If Not System.IO.Directory.Exists(OutFolder) Then
@@ -213,7 +212,7 @@ Public Class F_Main
                         Exit Sub
                     End If
                 Else
-                    fInfWarErr(9, False, "No outputfolder is given!")
+                    logme(9, False, "No outputfolder is given!")
                     Exit Sub
                 End If
             End If
@@ -222,7 +221,7 @@ Public Class F_Main
             Me.ListBoxMSG.Items.Clear()
             fClear_VECTO_Form(False, False)
 
-            fInfWarErr(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
+            logme(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
             ' Start the calculation in the backgroundworker
             Me.BackgroundWorkerVECTO.RunWorkerAsync()
@@ -239,7 +238,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the measure section file from the test run
     Private Sub ButtonSelectMSCT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCT.Click
         ' Open the filebrowser with the *.csmsc parameter
-        If fbMSC.OpenDialog(AppPreferences.workingDir, False) Then
+        If fbMSC.OpenDialog(Prefs.workingDir, False) Then
             If (fbMSC.Files(0) <> Nothing) Then
                 Me.TextBoxMSCT.Text = fbMSC.Files(0)
             End If
@@ -263,7 +262,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the first low speed data file from the test run
     Private Sub ButtonSelectDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS1.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
+        If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataLS1.Text = fbVEL.Files(0)
             End If
@@ -287,7 +286,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the high speed data file from the test run
     Private Sub ButtonSelectDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataHS.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
+        If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataHS.Text = fbVEL.Files(0)
             End If
@@ -311,7 +310,7 @@ Public Class F_Main
     ' Open the filebrowser for the selection of the second low speed data file from the test run
     Private Sub ButtonSelectDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS2.Click
         ' Open the filebrowser with the *.csdat parameter
-        If fbVEL.OpenDialog(AppPreferences.workingDir, False) Then
+        If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
                 Me.TextBoxDataLS2.Text = fbVEL.Files(0)
             End If
@@ -354,7 +353,7 @@ Public Class F_Main
             fWriteLog(2, 4, "----- Speed runs ")
 
             ' Save the Jobfiles
-            ToolStripMenuItemSave_Click(sender, e)
+            SaveJobImpl(False)
 
             ' Check if outfolder exist. If not then generate the folder
             If Not System.IO.Directory.Exists(OutFolder) Then
@@ -368,7 +367,7 @@ Public Class F_Main
                         Exit Sub
                     End If
                 Else
-                    fInfWarErr(9, False, "No outputfolder is given!")
+                    logme(9, False, "No outputfolder is given!")
                     Exit Sub
                 End If
             End If
@@ -377,7 +376,7 @@ Public Class F_Main
             fClear_VECTO_Form(False, False)
 
             ' Write the Calculation status in the Messageoutput and in the Log
-            fInfWarErr(7, False, format("Starting EVALUATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
+            logme(7, False, format("Starting EVALUATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
             ' Start the calculation in the backgroundworker
             Me.BackgroundWorkerVECTO.RunWorkerAsync()
@@ -400,7 +399,7 @@ Public Class F_Main
     ' Menu open
     Private Sub ToolStripMenuItemOpen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click
         ' Open the filebrowser with the *.csjob parameter
-        If fbVECTO.OpenDialog(AppPreferences.workingDir, False) Then
+        If fbVECTO.OpenDialog(Prefs.workingDir, False) Then
 
             JobFile = fbVECTO.Files(0)
             If (JobFile <> Nothing) Then
@@ -412,26 +411,36 @@ Public Class F_Main
                 '' Read Jobfile and populate GUI
                 ''
                 Try
+                    Dim newJob As cJob
                     If JobFile.EndsWith(".csjob.json") Then
-                        Dim job = New cJob(JobFile)
-                        job.Validate()
-                        job.PopulateApp()
-                        UI_PopulateFromJob()
-                        UI_PopulateFromCriteria()
+                        newJob = New cJob(JobFile)
                     Else
-                        cJob.fReadOldJobFile()
+                        newJob = New cJob(True)
+                        newJob.fReadOldJobFile()
                     End If
+                    newJob.Validate()
+                    installJob(newJob)
+                    UI_PopulateFromJob()
+                    UI_PopulateFromCriteria()
                 Catch ex As Exception
-                    fInfWarErr(9, False, format("Failed reading Job-file({0}) due to: {1}", JobFile, ex.Message), ex)
+                    logme(9, False, format("Failed reading Job-file({0}) due to: {1}", JobFile, ex.Message), ex)
                 End Try
             End If
         End If
     End Sub
 
     ' Menu Save
-    Private Sub ToolStripMenuItemSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSave.Click
+    Private Sub MenuItemSaveJob(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSave.Click
+        SaveJobImpl(False)
+    End Sub
+    ' Menu Save as
+    Private Sub MenuItemSaveAs(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSaveAs.Click
+        SaveJobImpl(True)
+    End Sub
+
+    Private Sub SaveJobImpl(ByVal isSaveAs As Boolean)
         ' Identify if the file should save under a new name
-        If JobFile = Nothing Or ToolstripSaveAs Then
+        If JobFile = Nothing Or isSaveAs Then
             ' Open the filebrowser to select the folder and name of the Jobfile
             If fbVECTO.SaveDialog(JobFile) Then
                 JobFile = fbVECTO.Files(0)
@@ -448,23 +457,10 @@ Public Class F_Main
         UI_PopulateToCriteria()
 
         ' Write the file
-        Dim job As New cJob()
         If Not JobFile.EndsWith(".csjob.json", StringComparison.OrdinalIgnoreCase) Then
             JobFile = joinPaths(fPath(JobFile), fName(JobFile, False) & ".csjob.json")
         End If
-        job.Store(JobFile)
-    End Sub
-
-    ' Menu Save as
-    Private Sub ToolStripMenuItemSaveAs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSaveAs.Click
-        ' Define that the file should save under an other name
-        ToolstripSaveAs = True
-
-        ' Save the File
-        ToolStripMenuItemSave_Click(sender, e)
-
-        ' Reset the value
-        ToolstripSaveAs = False
+        Job.Store(JobFile)
     End Sub
 
     ' Menu Exit
@@ -477,7 +473,7 @@ Public Class F_Main
 #Region "Tools"
     ' Menu open the Log
     Private Sub ToolStripMenuItemLog_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemLog.Click
-        System.Diagnostics.Process.Start(AppPreferences.editor, joinPaths(MyPath, "log.txt"))
+        System.Diagnostics.Process.Start(Prefs.editor, joinPaths(MyPath, "log.txt"))
     End Sub
 
     ' Menu open the config file
@@ -491,7 +487,7 @@ Public Class F_Main
     ' Create activation file
     Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreatActivationFileToolStripMenuItem.Click
         Lic.CreateActFile(MyPath & "ActivationCode.dat")
-        fInfWarErr(7, True, "Activation code created under: " & MyPath & "ActivationCode.dat")
+        logme(7, True, "Activation code created under: " & MyPath & "ActivationCode.dat")
     End Sub
 
     ' Menu open the Infobox
@@ -506,7 +502,7 @@ Public Class F_Main
         Try
             System.Diagnostics.Process.Start(manual_fname)
         Catch ex As Exception
-            fInfWarErr(8, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
+            logme(8, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
         End Try
     End Sub
 #End Region
@@ -532,8 +528,9 @@ Public Class F_Main
     ' Set all textboxes to standard
     Private Sub ButtonToStd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonToStd.Click
         ' Set the parameter to standard
-        StdParameter()
-        ' Write parameter on GUI
+
+        installJob(New cJob())
+        UI_PopulateFromJob()
         UI_PopulateFromCriteria()
     End Sub
 
@@ -551,29 +548,29 @@ Public Class F_Main
 
     ' CheckBox for the acceleration calibration
     Private Sub CheckBoxAcc_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxAcc.CheckedChanged
-        accel_correction = CheckBoxAcc.Checked
+        crt.accel_correction = CheckBoxAcc.Checked
     End Sub
 
     ' Checkbox for the gradient correction
     Private Sub CheckBoxGrd_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxGrd.CheckedChanged
-        gradient_correction = CheckBoxGrd.Checked
+        crt.gradient_correction = CheckBoxGrd.Checked
     End Sub
 
     ' Change in the 1Hz radio button
     Private Sub RB1Hz_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RB1Hz.CheckedChanged
         If RB1Hz.Checked Then
-            hz_out = 1
+            crt.hz_out = 1
         Else
-            hz_out = 100
+            crt.hz_out = 100
         End If
     End Sub
 
     ' Change in the 100Hz radio button
     Private Sub RB100Hz_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RB100Hz.CheckedChanged
         If RB100Hz.Checked Then
-            hz_out = 100
+            crt.hz_out = 100
         Else
-            hz_out = 1
+            crt.hz_out = 1
         End If
     End Sub
 #End Region
@@ -587,6 +584,7 @@ Public Class F_Main
 
         '##### START THE CALCULATION #####
         '#################################
+        '' FIXME:  Stop abusing worker-Thread with Globals, use DoWorkEventArgsfor that instead!!
         calculation(Cali)
 
         '#################################
@@ -614,16 +612,16 @@ Public Class F_Main
 
         ' If an Error is detected
         If e.Error IsNot Nothing Then
-            fInfWarErr(8, False, format("{0} ended with exception: {1}", op, e.Error), e.Error)
+            logme(8, False, format("{0} ended with exception: {1}", op, e.Error.Message), e.Error)
         Else
             If e.Cancelled Then
                 If ErrorExit Then
-                    fInfWarErr(8, False, format("{0} ended with exception: {1}", op, e.Error), e.Error)
+                    logme(8, False, format("{0} ended with some unknown error!", op))
                 Else
-                    fInfWarErr(7, False, format("{0} aborted by user.", op))
+                    logme(7, False, format("{0} aborted by user.", op))
                 End If
             Else
-                fInfWarErr(7, False, format("{0} ended OK.", op))
+                logme(7, False, format("{0} ended OK.", op))
                 If Cali Then Me.ButtonEval.Enabled = True
             End If
         End If
@@ -645,39 +643,27 @@ Public Class F_Main
 
     ' Function to get all parameter from the GUI
     Function UI_PopulateToJob(Optional ByVal validate As Boolean = False, Optional ByVal calib As Boolean = True) As Boolean
-        ' Declaration
-        Dim i As Integer
-
         ' Read the data from the textboxes (General)
-        Vehspez = TextBoxVeh1.Text
-        Ambspez = TextBoxWeather.Text
-        AnemIC(0) = TextBoxAirf.Text
-        AnemIC(1) = TextBoxAird.Text
-        AnemIC(2) = TextBoxbetaf.Text
-        AnemIC(3) = TextBoxbetad.Text
+        Job.vehicle_fpath = TextBoxVeh1.Text
+        Job.ambient_fpath = TextBoxWeather.Text
+        Job.Anemometer(0) = TextBoxAirf.Text
+        Job.Anemometer(1) = TextBoxAird.Text
+        Job.Anemometer(2) = TextBoxbetaf.Text
+        Job.Anemometer(3) = TextBoxbetad.Text
 
         ' Appropriate the inputfiles from calibration run
-        DataSpez(0) = TextBoxDataC.Text
-        MSCCSpez = TextBoxMSCC.Text
+        Job.calibration_fpath = TextBoxDataC.Text
+        Job.track_fpath = TextBoxMSCC.Text
 
         ' Appropriate the inputfiles from test run
-        DataSpez(1) = TextBoxDataLS1.Text
-        DataSpez(2) = TextBoxDataHS.Text
-        DataSpez(3) = TextBoxDataLS2.Text
-        MSCTSpez = TextBoxMSCT.Text
-        rr_corr_factor = TextBoxRRC.Text
+        Job.low1_fpath = TextBoxDataLS1.Text
+        Job.high_fpath = TextBoxDataHS.Text
+        Job.low2_fpath = TextBoxDataLS2.Text
+        Job.MSCTSpez = TextBoxMSCT.Text
+        Crt.rr_corr_factor = TextBoxRRC.Text
 
         If validate Then
-            ' Control the input
-            fControlPath(Vehspez, 1)
-            fControlPath(Ambspez, 2)
-            fControlPath(MSCCSpez, 3)
-            If Not calib Then
-                ''fControlPath(MSCTSpez, 4)
-                For i = 0 To UBound(DataSpez)
-                    fControlPath(DataSpez(i), 4 + i + 1)
-                Next i
-            End If
+            Job.Validate()
         End If
 
         Return True
@@ -686,77 +672,77 @@ Public Class F_Main
     ' Get the parameters from option tab
     Sub UI_PopulateToCriteria()
         ' Evaluation box
-        accel_correction = CheckBoxAcc.Checked
-        gradient_correction = CheckBoxGrd.Checked
+        crt.accel_correction = CheckBoxAcc.Checked
+        crt.gradient_correction = CheckBoxGrd.Checked
 
         ' Output box
-        If RB1Hz.Checked Then hz_out = 1
-        If RB100Hz.Checked Then hz_out = 100
+        If RB1Hz.Checked Then crt.hz_out = 1
+        If RB100Hz.Checked Then crt.hz_out = 100
 
         'Parameter boxes
         ' General valid criteria
-        delta_t_tyre_max = TBDeltaTTireMax.Text
-        delta_rr_corr_max = TBDeltaRRCMax.Text
-        t_amb_var = TBTambVar.Text
-        t_amb_tarmac = TBTambTamac.Text
-        t_amb_max = TBTambMax.Text
-        t_amb_min = TBTambMin.Text
+        crt.delta_t_tyre_max = TBDeltaTTireMax.Text
+        crt.delta_rr_corr_max = TBDeltaRRCMax.Text
+        crt.t_amb_var = TBTambVar.Text
+        crt.t_amb_tarmac = TBTambTamac.Text
+        crt.t_amb_max = TBTambMax.Text
+        crt.t_amb_min = TBTambMin.Text
         ' General
-        delta_Hz_max = TBDeltaHzMax.Text
-        roh_air_ref = TBRhoAirRef.Text
-        acc_corr_avg = TBAccCorrAve.Text
-        delta_parallel_max = TBDeltaParaMax.Text
+        crt.delta_Hz_max = TBDeltaHzMax.Text
+        crt.roh_air_ref = TBRhoAirRef.Text
+        crt.acc_corr_avg = TBAccCorrAve.Text
+        crt.delta_parallel_max = TBDeltaParaMax.Text
         ' Identification of measurement section
-        trigger_delta_x_max = TBDeltaXMax.Text
-        trigger_delta_y_max = TBDeltaYMax.Text
-        delta_head_max = TBDeltaHeadMax.Text
+        crt.trigger_delta_x_max = TBDeltaXMax.Text
+        crt.trigger_delta_y_max = TBDeltaYMax.Text
+        crt.delta_head_max = TBDeltaHeadMax.Text
         ' Requirements on number of valid datasets
-        segruns_min_CAL = TBDsMinCAL.Text
-        segruns_min_LS = TBDsMinLS.Text
-        segruns_min_HS = TBDsMinHS.Text
-        segruns_min_head_MS = TBDsMinHeadHS.Text
+        crt.segruns_min_CAL = TBDsMinCAL.Text
+        crt.segruns_min_LS = TBDsMinLS.Text
+        crt.segruns_min_HS = TBDsMinHS.Text
+        crt.segruns_min_head_MS = TBDsMinHeadHS.Text
         ' DataSet validity criteria
-        dist_float = TBDistFloat.Text
+        crt.dist_float = TBDistFloat.Text
         ' Calibration
-        v_wind_avg_max_CAL = TBvWindAveCALMax.Text
-        v_wind_1s_max_CAL = TBvWind1sCALMax.Text
-        beta_avg_max_CAL = TBBetaAveCALMax.Text
+        crt.v_wind_avg_max_CAL = TBvWindAveCALMax.Text
+        crt.v_wind_1s_max_CAL = TBvWind1sCALMax.Text
+        crt.beta_avg_max_CAL = TBBetaAveCALMax.Text
         ' Low and high speed test
-        leng_crit = TBLengCrit.Text
+        crt.leng_crit = TBLengCrit.Text
         ' Low speed test
-        v_wind_avg_max_LS = TBvWindAveLSMax.Text
-        v_wind_1s_max_LS = TBvWind1sLSMax.Text
-        v_veh_avg_max_LS = TBvVehAveLSMax.Text
-        v_veh_avg_min_LS = TBvVehAveLSMin.Text
-        v_veh_float_delta_LS = TBvVehFloatD.Text
-        tq_sum_float_delta_LS = TBTqSumFloatD.Text
+        crt.v_wind_avg_max_LS = TBvWindAveLSMax.Text
+        crt.v_wind_1s_max_LS = TBvWind1sLSMax.Text
+        crt.v_veh_avg_max_LS = TBvVehAveLSMax.Text
+        crt.v_veh_avg_min_LS = TBvVehAveLSMin.Text
+        crt.v_veh_float_delta_LS = TBvVehFloatD.Text
+        crt.tq_sum_float_delta_LS = TBTqSumFloatD.Text
         ' High speed test
-        v_wind_avg_max_HS = TBvWindAveHSMax.Text
-        v_wind_1s_max_HS = TBvWind1sHSMax.Text
-        v_veh_avg_min_HS = TBvVehAveHSMin.Text
-        beta_avg_max_HS = TBBetaAveHSMax.Text
-        v_veh_1s_delta_HS = TBvVeh1sD.Text
-        tq_sum_1s_delta_HS = TBTq1sD.Text
+        crt.v_wind_avg_max_HS = TBvWindAveHSMax.Text
+        crt.v_wind_1s_max_HS = TBvWind1sHSMax.Text
+        crt.v_veh_avg_min_HS = TBvVehAveHSMin.Text
+        crt.beta_avg_max_HS = TBBetaAveHSMax.Text
+        crt.v_veh_1s_delta_HS = TBvVeh1sD.Text
+        crt.tq_sum_1s_delta_HS = TBTq1sD.Text
     End Sub
 
     Sub UI_PopulateFromJob()
         ' Transfer the data to the GUI
         ' General
-        TextBoxVeh1.Text = Vehspez
-        TextBoxAirf.Text = AnemIC(0)
-        TextBoxAird.Text = AnemIC(1)
-        TextBoxbetaf.Text = AnemIC(2)
-        TextBoxbetad.Text = AnemIC(3)
-        TextBoxWeather.Text = Ambspez
+        TextBoxVeh1.Text = Job.vehicle_fpath
+        TextBoxAirf.Text = Job.Anemometer(0)
+        TextBoxAird.Text = Job.Anemometer(1)
+        TextBoxbetaf.Text = Job.Anemometer(2)
+        TextBoxbetad.Text = Job.Anemometer(3)
+        TextBoxWeather.Text = Job.ambient_fpath
         ' Calibration
-        TextBoxMSCC.Text = MSCCSpez
-        TextBoxDataC.Text = DataSpez(0)
+        TextBoxMSCC.Text = Job.track_fpath
+        TextBoxDataC.Text = Job.calibration_fpath
         ' Test
-        TextBoxMSCT.Text = MSCTSpez
-        TextBoxRRC.Text = rr_corr_factor
-        TextBoxDataLS1.Text = DataSpez(1)
-        TextBoxDataHS.Text = DataSpez(2)
-        TextBoxDataLS2.Text = DataSpez(3)
+        TextBoxMSCT.Text = Job.MSCTSpez
+        TextBoxRRC.Text = Crt.rr_corr_factor
+        TextBoxDataLS1.Text = Job.low1_fpath
+        TextBoxDataHS.Text = Job.high_fpath
+        TextBoxDataLS2.Text = Job.low2_fpath
 
     End Sub
 
@@ -764,56 +750,56 @@ Public Class F_Main
     Sub UI_PopulateFromCriteria()
         ' Write the Standard values in the textboxes
         ' General valid criteria
-        TBDeltaTTireMax.Text = delta_t_tyre_max
-        TBDeltaRRCMax.Text = delta_rr_corr_max
-        TBTambVar.Text = t_amb_var
-        TBTambTamac.Text = t_amb_tarmac
-        TBTambMax.Text = t_amb_max
-        TBTambMin.Text = t_amb_min
+        TBDeltaTTireMax.Text = crt.delta_t_tyre_max
+        TBDeltaRRCMax.Text = crt.delta_rr_corr_max
+        TBTambVar.Text = crt.t_amb_var
+        TBTambTamac.Text = crt.t_amb_tarmac
+        TBTambMax.Text = crt.t_amb_max
+        TBTambMin.Text = crt.t_amb_min
         ' General
-        TBDeltaHzMax.Text = delta_Hz_max
-        TBRhoAirRef.Text = roh_air_ref
-        TBAccCorrAve.Text = acc_corr_avg
-        TBDeltaParaMax.Text = delta_parallel_max
+        TBDeltaHzMax.Text = crt.delta_Hz_max
+        TBRhoAirRef.Text = crt.roh_air_ref
+        TBAccCorrAve.Text = crt.acc_corr_avg
+        TBDeltaParaMax.Text = crt.delta_parallel_max
         ' Identification of measurement section
-        TBDeltaXMax.Text = trigger_delta_x_max
-        TBDeltaYMax.Text = trigger_delta_y_max
-        TBDeltaHeadMax.Text = delta_head_max
+        TBDeltaXMax.Text = crt.trigger_delta_x_max
+        TBDeltaYMax.Text = crt.trigger_delta_y_max
+        TBDeltaHeadMax.Text = crt.delta_head_max
         ' Requirements on number of valid datasets
-        TBDsMinCAL.Text = segruns_min_CAL
-        TBDsMinLS.Text = segruns_min_LS
-        TBDsMinHS.Text = segruns_min_HS
-        TBDsMinHeadHS.Text = segruns_min_head_MS
+        TBDsMinCAL.Text = crt.segruns_min_CAL
+        TBDsMinLS.Text = crt.segruns_min_LS
+        TBDsMinHS.Text = crt.segruns_min_HS
+        TBDsMinHeadHS.Text = crt.segruns_min_head_MS
         ' DataSet validity criteria
-        TBDistFloat.Text = dist_float
+        TBDistFloat.Text = crt.dist_float
         ' Calibration
-        TBvWindAveCALMax.Text = v_wind_avg_max_CAL
-        TBvWind1sCALMax.Text = v_wind_1s_max_CAL
-        TBBetaAveCALMax.Text = beta_avg_max_CAL
+        TBvWindAveCALMax.Text = crt.v_wind_avg_max_CAL
+        TBvWind1sCALMax.Text = crt.v_wind_1s_max_CAL
+        TBBetaAveCALMax.Text = crt.beta_avg_max_CAL
         ' Low and high speed test
-        TBLengCrit.Text = leng_crit
+        TBLengCrit.Text = crt.leng_crit
         ' Low speed test
-        TBvWindAveLSMax.Text = v_wind_avg_max_LS
-        TBvWind1sLSMax.Text = v_wind_1s_max_LS
-        TBvVehAveLSMax.Text = v_veh_avg_max_LS
-        TBvVehAveLSMin.Text = v_veh_avg_min_LS
-        TBvVehFloatD.Text = v_veh_float_delta_LS
-        TBTqSumFloatD.Text = tq_sum_float_delta_LS
+        TBvWindAveLSMax.Text = crt.v_wind_avg_max_LS
+        TBvWind1sLSMax.Text = crt.v_wind_1s_max_LS
+        TBvVehAveLSMax.Text = crt.v_veh_avg_max_LS
+        TBvVehAveLSMin.Text = crt.v_veh_avg_min_LS
+        TBvVehFloatD.Text = crt.v_veh_float_delta_LS
+        TBTqSumFloatD.Text = crt.tq_sum_float_delta_LS
         ' High speed test
-        TBvWindAveHSMax.Text = v_wind_avg_max_HS
-        TBvWind1sHSMax.Text = v_wind_1s_max_HS
-        TBvVehAveHSMin.Text = v_veh_avg_min_HS
-        TBBetaAveHSMax.Text = beta_avg_max_HS
-        TBvVeh1sD.Text = v_veh_1s_delta_HS
-        TBTq1sD.Text = tq_sum_1s_delta_HS
+        TBvWindAveHSMax.Text = crt.v_wind_avg_max_HS
+        TBvWind1sHSMax.Text = crt.v_wind_1s_max_HS
+        TBvVehAveHSMin.Text = crt.v_veh_avg_min_HS
+        TBBetaAveHSMax.Text = crt.beta_avg_max_HS
+        TBvVeh1sD.Text = crt.v_veh_1s_delta_HS
+        TBTq1sD.Text = crt.tq_sum_1s_delta_HS
         ' Evaluation box
-        CheckBoxAcc.Checked = accel_correction
-        CheckBoxGrd.Checked = gradient_correction
+        CheckBoxAcc.Checked = crt.accel_correction
+        CheckBoxGrd.Checked = crt.gradient_correction
 
         ' Output
-        If hz_out = 1 Then
+        If crt.hz_out = 1 Then
             RB1Hz.Checked = True
-        ElseIf hz_out = 100 Then
+        ElseIf crt.hz_out = 100 Then
             RB100Hz.Checked = True
         End If
     End Sub
@@ -852,7 +838,8 @@ Public Class F_Main
             ButtonEval.Enabled = False
 
             ' Option parameters to standard
-            StdParameter()
+            installJob(New cJob)
+            UI_PopulateFromJob()
             UI_PopulateFromCriteria()
         End If
 

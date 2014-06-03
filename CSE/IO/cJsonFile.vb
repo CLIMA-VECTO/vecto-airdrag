@@ -121,7 +121,7 @@ Public MustInherit Class cJsonFile
         Dim strictHeader = True
 
         strictHeader = False   '' Try to read even bad headers.
-        fInfWarErr(4, False, format("Reading JSON-file({0})...", inputFilePath))
+        logme(4, False, format("Reading JSON-file({0})...", inputFilePath))
 
         Me.Content = ReadJsonFile(inputFilePath)
         'Me.Header = Content("Header")
@@ -153,7 +153,7 @@ Public MustInherit Class cJsonFile
     End Sub
 
     ''' <summary>Validates and Writing to the config file</summary>
-    Sub Store(ByVal fpath As String)
+    Overridable Sub Store(ByVal fpath As String)
         Me.UpdateHeader()
 
         Me.Validate(Me.StrictBody)
@@ -170,7 +170,7 @@ Public MustInherit Class cJsonFile
         '' Decide whether to add username in "CreatedBy".
         ''
         Dim username = ""
-        If AppPreferences Is Nothing OrElse Not AppPreferences.hideUsername Then
+        If Prefs Is Nothing OrElse Not Prefs.hideUsername Then
             username = System.Security.Principal.WindowsIdentity.GetCurrent().Name & "@"
         End If
         h("CreatedBy") = format("{0}{1}(lic: {2})", username, Lic.LicString, Lic.GUID)
@@ -190,8 +190,8 @@ Public MustInherit Class cJsonFile
         Dim bodySchema = h("BodySchema")
         If bodySchema IsNot Nothing AndAlso bodySchema.Type = JTokenType.Boolean Then
             isIncludeSchema = bodySchema
-        ElseIf AppPreferences IsNot Nothing Then
-            isIncludeSchema = AppPreferences.IncludeSchemas
+        ElseIf Prefs IsNot Nothing Then
+            isIncludeSchema = Prefs.includeSchemas
         Else
             isIncludeSchema = False
         End If
@@ -225,7 +225,7 @@ Public MustInherit Class cJsonFile
 
         '' Validate Body by subclass
         Dim hsb = Me.Header("StrictBody")
-        Dim strictBody As Boolean = IIf(hsb Is Nothing, AppPreferences.StrictBodies, hsb)
+        Dim strictBody As Boolean = IIf(hsb Is Nothing, Prefs.strictBodies, hsb)
         Me.ValidateBody(strictBody, validateMsgs)
 
         If (validateMsgs.Any()) Then

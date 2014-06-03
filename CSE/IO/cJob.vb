@@ -15,11 +15,14 @@ Public Class cJob
     ' Defaults specified here.
     Protected Shared Function BuildBody() As JObject
         Dim b As Object = New JObject()
-        b.fpathVehicle = Vehspez
-        b.fpathAmbient = Ambspez
-        b.Anemometer = New JArray(AnemIC.ToList())
-        b.fpathTrack = MSCCSpez
-        b.fpathRunData = New JArray(DataSpez.ToList())
+        b.vehicle_fpath = ""
+        b.ambient_fpath = ""
+        b.Anemometer = New JArray(0, 0, 0, 0)
+        b.track_fpath = ""
+        b.calibration_fpath = ""
+        b.low1_fpath = ""
+        b.high_fpath = ""
+        b.low2_fpath = ""
         b.Criteria = New cCriteria().Body
         Return b
     End Function
@@ -32,9 +35,9 @@ Public Class cJob
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
             "required": true,
             "properties": {
-                "fpathVehicle": {
+                "vehicle_fpath": {
                     "type": "string", 
-                    "pattern": "\\.csveh(\\.json)?$", 
+                    <!-- "pattern": "\\.csveh(\\.json)?$", -->
                     "required": true, 
                     "description": "File-path to Vehicle file (*.csveh)", 
                 }, 
@@ -47,28 +50,41 @@ Public Class cJob
                     "minItems": 4, "maxItems": 4, 
                     "description": "The 4 Anemomenter instrument calibration factors in this order: v_air f, v_air d, beta f, beta d", 
                 }, 
-                "fpathAmbient": {
+                "ambient_fpath": {
                     "type": "string", 
-                    "pattern": "\\.csamb$", 
+                    <!-- "pattern": "\\.csamb$", -->
                     "required": true, 
                     "description": "File-path to the Ambient(Weather) file (*.csamb)", 
                 }, 
-                "fpathTrack": {
+                "track_fpath": {
                     "type": "string", 
-                    "pattern": "\\.csms$", 
+                    <!-- "pattern": "\\.csms$", -->
                     "required": true, 
                     "description": "File-path to Track-sections (*.csmsc).", 
                 }, 
-                "fpathRunData": {
-                    "type": "array", 
+                "calibration_fpath": {
+                    "type": "string", 
+                    <!-- "pattern": "\\.csdat$", -->
                     "required": true, 
-                    "items": {
-                        "type": "string", 
-                        "pattern": "\\.csdat$", 
-                        "description": "File-path to a measurement-file (*.csdat)", 
-                    },
-                    "minItems": 4, "maxItems": 4, 
-                    "description": "The 4 File-paths to the measurement-files (*.csdat) in this order: Calibration, Low1, High, Low2", 
+                    "description": "File-path to a measurement-file (*.csdat)", 
+                }, 
+                "low1_fpath": {
+                    "type": "string", 
+                    <!-- "pattern": "\\.csdat$", -->
+                    "required": true, 
+                    "description": "File-path to a measurement-file (*.csdat)", 
+                }, 
+                "high_fpath": {
+                    "type": "string", 
+                    <!-- "pattern": "\\.csdat$", -->
+                    "required": true, 
+                    "description": "File-path to a measurement-file (*.csdat)", 
+                }, 
+                "low2_fpath": {
+                    "type": "string", 
+                    <!-- "pattern": "\\.csdat$", -->
+                    "required": true, 
+                    "description": "File-path to a measurement-file (*.csdat)", 
                 }, 
                 "Criteria": <%= cCriteria.JSchemaStr(allowAdditionalProps) %>,
             }
@@ -123,79 +139,174 @@ Public Class cJob
 
 #Region "json props"
 
-    Sub PopulateApp()
-        Dim b As JToken
-        b = Me.Body
+    Public Property vehicle_fpath As String
+        Get
+            Return getRootedPath(Me.Body("vehicle_fpath"), Prefs.workingDir)
+        End Get
+        Set(ByVal value As String)
+            value = getAnySubPath(value, Prefs.workingDir)
 
-        Vehspez = b("fpathVehicle")
-        Ambspez = b("fpathAmbient")
-        MSCCSpez = b("fpathTrack")
-        MSCTSpez = b("fpathTrack")
-        AnemIC = (From i In b("Anemometer") Select (Single.Parse(i))).ToArray
-        DataSpez = (From i In b("fpathRunData") Select (i.ToString)).ToArray
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
+            If value Is Nothing Then Me.Body("vehicle_fpath") = Nothing Else Me.Body("vehicle_fpath") = value
+        End Set
+    End Property
 
-        Dim crtBody = b("Criteria")
 
-        Dim crt As cCriteria = New cCriteria(crtBody, True)
+    Public Property ambient_fpath As String
+        Get
+            Return getRootedPath(Me.Body("ambient_fpath"), Prefs.workingDir)
+        End Get
+        Set(ByVal value As String)
+            value = getAnySubPath(value, Prefs.workingDir)
 
-        crt.PopulateApp()
-    End Sub
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
+            If value Is Nothing Then Me.Body("ambient_fpath") = Nothing Else Me.Body("ambient_fpath") = value
+        End Set
+    End Property
+    Public Property track_fpath As String
+        Get
+            Return getRootedPath(Me.Body("track_fpath"), Prefs.workingDir)
+        End Get
+        Set(ByVal value As String)
+            value = getAnySubPath(value, Prefs.workingDir)
+
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
+            If value Is Nothing Then Me.Body("track_fpath") = Nothing Else Me.Body("track_fpath") = value
+        End Set
+    End Property
+    Public Property MSCTSpez As String
+        Get
+            Return getRootedPath(Me.Body("track_fpath"), Prefs.workingDir)
+        End Get
+        Set(ByVal value As String)
+            value = getAnySubPath(value, Prefs.workingDir)
+
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
+            If value Is Nothing Then Me.Body("track_fpath") = Nothing Else Me.Body("track_fpath") = value
+        End Set
+    End Property
+    Public Property Anemometer As Single()
+        Get
+            Return (From i In Me.Body("Anemometer") Select (Single.Parse(i))).ToArray
+        End Get
+        Set(ByVal value As Single())
+            Me.Body("Anemometer") = New JArray(value.ToList())
+        End Set
+    End Property
+
+    Public Property calibration_fpath As String
+        Get
+            Return getRootedPath(Me.Body("calibration_fpath"), Prefs.workingDir)
+        End Get
+        Set(ByVal value As String)
+            value = getAnySubPath(value, Prefs.workingDir)
+
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
+            If value Is Nothing Then Me.Body("calibration_fpath") = Nothing Else Me.Body("calibration_fpath") = value
+        End Set
+    End Property
+    Public Property low1_fpath As String
+        Get
+            Return getRootedPath(Me.Body("low1_fpath"), Prefs.workingDir)
+        End Get
+        Set(ByVal value As String)
+            value = getAnySubPath(value, Prefs.workingDir)
+
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
+            If value Is Nothing Then Me.Body("low1_fpath") = Nothing Else Me.Body("low1_fpath") = value
+        End Set
+    End Property
+    Public Property high_fpath As String
+        Get
+            Return getRootedPath(Me.Body("high_fpath"), Prefs.workingDir)
+        End Get
+        Set(ByVal value As String)
+            value = getAnySubPath(value, Prefs.workingDir)
+
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
+            If value Is Nothing Then Me.Body("high_fpath") = Nothing Else Me.Body("high_fpath") = value
+        End Set
+    End Property
+    Public Property low2_fpath As String
+        Get
+            Return getRootedPath(Me.Body("low2_fpath"), Prefs.workingDir)
+        End Get
+        Set(ByVal value As String)
+            value = getAnySubPath(value, Prefs.workingDir)
+
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
+            If value Is Nothing Then Me.Body("low2_fpath") = Nothing Else Me.Body("low2_fpath") = value
+        End Set
+    End Property
+
+    Public ReadOnly Property coasting_fpaths As String()
+        Get
+            Return {low1_fpath, high_fpath, low2_fpath}
+        End Get
+    End Property
+
+
+    ''' <summary>Do not invoke this method in vain...</summary>
+    ReadOnly Property Criteria As cCriteria
+        Get
+            Return New cCriteria(Me.Body("Criteria"), True)
+        End Get
+    End Property
+
+
 
     ' Function for reading the jobfile
-    Public Shared Sub fReadOldJobFile()
+    Public Sub fReadOldJobFile()
         ' Declarations
-        Dim lauf, i As Integer
-        Dim Info As String = ""
+        Dim i As Integer
         Dim Line() As String
+        Dim crt As Object = Me.Criteria
+
+
         Using FileInVECTO As New cFile_V3
-
-            ' Initialisation
-            lauf = 0
-
             ' Open the jobfile
             FileInVECTO.OpenReadWithEx(JobFile)
 
             ' Read the data from the jobfile
-            Vehspez = FileInVECTO.ReadLine(0)
-            Ambspez = FileInVECTO.ReadLine(0)
+            vehicle_fpath = FileInVECTO.ReadLine(0)
+            ambient_fpath = FileInVECTO.ReadLine(0)
 
             Line = FileInVECTO.ReadLine
-            For i = 0 To UBound(AnemIC) - 1
-                AnemIC(i) = Line(i)
+            Dim factors(3) As Single
+            For i = 0 To UBound(factors) - 1
+                factors(i) = Line(i)
             Next i
+            Anemometer = factors
 
             ' Calibration test files
-            MSCCSpez = FileInVECTO.ReadLine(0)
-            DataSpez(0) = FileInVECTO.ReadLine(0)
+            track_fpath = FileInVECTO.ReadLine(0)
+            calibration_fpath = FileInVECTO.ReadLine(0)
 
             ' Test run files
             MSCTSpez = FileInVECTO.ReadLine(0)
-            rr_corr_factor = FileInVECTO.ReadLine(0)
-            For i = 1 To UBound(DataSpez)
-                DataSpez(i) = FileInVECTO.ReadLine(0)
-            Next i
+            crt.rr_corr_factor = FileInVECTO.ReadLine(0)
+
+            low1_fpath = FileInVECTO.ReadLine(0)
+            high_fpath = FileInVECTO.ReadLine(0)
+            low2_fpath = FileInVECTO.ReadLine(0)
 
             ' Appropriate the Checkboxes
             ' Acceleration Correction
             Line = FileInVECTO.ReadLine
-            accel_correction = CBool(Line(0))
+            crt.accel_correction = CBool(Line(0))
             'CSEMain.CheckBoxAcc.Checked = False
 
             ' Gradient correction
             Line = FileInVECTO.ReadLine
-            gradient_correction = CBool(Line(0))
+            crt.gradient_correction = CBool(Line(0))
             'CSEMain.CheckBoxGrd.Checked = False
 
             ' Output sequence
             Line = FileInVECTO.ReadLine
-            If IsNumeric(Line(0)) Then
-                If Line(0) = 1 Then
-                    hz_out = 1
-                ElseIf Line(0) = 100 Then
-                    hz_out = 100
-                Else
-                    hz_out = 1
-                End If
+            If Line(0) = 1 OrElse Line(0) = 100 Then
+                crt.hz_out = Line(0)
+            Else
+                crt.hz_out = 1
             End If
 
             ' Read the parameters
@@ -208,73 +319,73 @@ Public Class cJob
                     If IsNumeric(Line(0)) Then
                         Select Case i
                             Case 1 ' TBDeltaTTireMax
-                                delta_t_tyre_max = Line(0)
+                                crt.delta_t_tyre_max = Line(0)
                             Case 2 ' TBDeltaRRCMax.Text
-                                delta_rr_corr_max = Line(0)
+                                crt.delta_rr_corr_max = Line(0)
                             Case 3 ' TBTambVar
-                                t_amb_var = Line(0)
+                                crt.t_amb_var = Line(0)
                             Case 4 ' TBTambTamac
-                                t_amb_tarmac = Line(0)
+                                crt.t_amb_tarmac = Line(0)
                             Case 5 ' TBTambMax
-                                t_amb_max = Line(0)
+                                crt.t_amb_max = Line(0)
                             Case 6 ' TBTambMin
-                                t_amb_min = Line(0)
+                                crt.t_amb_min = Line(0)
                             Case 7 ' TBContHz
-                                delta_Hz_max = Line(0)
+                                crt.delta_Hz_max = Line(0)
                             Case 8 ' TBRhoAirRef
-                                roh_air_ref = Line(0)
+                                crt.roh_air_ref = Line(0)
                             Case 9 ' TBAveSecAcc
-                                acc_corr_avg = Line(0)
+                                crt.acc_corr_avg = Line(0)
                             Case 10 ' TBDeltaHeadMax
-                                delta_parallel_max = Line(0)
+                                crt.delta_parallel_max = Line(0)
                             Case 11 ' TBContSecL
-                                trigger_delta_x_max = Line(0)
+                                crt.trigger_delta_x_max = Line(0)
                             Case 12 ' TBLRec
-                                trigger_delta_y_max = Line(0)
+                                crt.trigger_delta_y_max = Line(0)
                             Case 13 ' TBContAng
-                                delta_head_max = Line(0)
+                                crt.delta_head_max = Line(0)
                             Case 14 ' TBNSecAnz
-                                segruns_min_CAL = Line(0)
+                                crt.segruns_min_CAL = Line(0)
                             Case 15 ' TBNSecAnzLS
-                                segruns_min_LS = Line(0)
+                                crt.segruns_min_LS = Line(0)
                             Case 16 ' TBNSecAnzHS
-                                segruns_min_HS = Line(0)
+                                crt.segruns_min_HS = Line(0)
                             Case 17 ' TBMSHSMin
-                                segruns_min_head_MS = Line(0)
+                                crt.segruns_min_head_MS = Line(0)
                             Case 18 ' TBDistFloat
-                                dist_float = Line(0)
+                                crt.dist_float = Line(0)
                             Case 19 ' TBvWindAveCALMax
-                                v_wind_avg_max_CAL = Line(0)
+                                crt.v_wind_avg_max_CAL = Line(0)
                             Case 20 ' TBvWind1sCALMax
-                                v_wind_1s_max_CAL = Line(0)
+                                crt.v_wind_1s_max_CAL = Line(0)
                             Case 21 ' TBBetaAveCALMax
-                                beta_avg_max_CAL = Line(0)
+                                crt.beta_avg_max_CAL = Line(0)
                             Case 22 ' TBLengCrit
-                                leng_crit = Line(0)
+                                crt.leng_crit = Line(0)
                             Case 23 ' TBvWindAveLSMax
-                                v_wind_avg_max_LS = Line(0)
+                                crt.v_wind_avg_max_LS = Line(0)
                             Case 24 ' TBvWind1sLSMin
-                                v_wind_1s_max_LS = Line(0)
+                                crt.v_wind_1s_max_LS = Line(0)
                             Case 25 ' TBvVehAveLSMax
-                                v_veh_avg_max_LS = Line(0)
+                                crt.v_veh_avg_max_LS = Line(0)
                             Case 26 ' TBvVehAveLSMin
-                                v_veh_avg_min_LS = Line(0)
+                                crt.v_veh_avg_min_LS = Line(0)
                             Case 27 ' TBvVehFloatD
-                                v_veh_float_delta_LS = Line(0)
+                                crt.v_veh_float_delta_LS = Line(0)
                             Case 28 ' TBTqSumFloatD
-                                tq_sum_float_delta_LS = Line(0)
+                                crt.tq_sum_float_delta_LS = Line(0)
                             Case 29 ' TBvWindAveHSMax
-                                v_wind_avg_max_HS = Line(0)
+                                crt.v_wind_avg_max_HS = Line(0)
                             Case 30 ' TBvWind1sHSMax
-                                v_wind_1s_max_HS = Line(0)
+                                crt.v_wind_1s_max_HS = Line(0)
                             Case 31 ' TBvVehAveHSMin
-                                v_veh_avg_min_HS = Line(0)
+                                crt.v_veh_avg_min_HS = Line(0)
                             Case 32 ' TBBetaAveHSMax
-                                beta_avg_max_HS = Line(0)
+                                crt.beta_avg_max_HS = Line(0)
                             Case 33 ' TBvVeh1sD
-                                v_veh_1s_delta_HS = Line(0)
+                                crt.v_veh_1s_delta_HS = Line(0)
                             Case 34 ' TBTq1sD
-                                tq_sum_1s_delta_HS = Line(0)
+                                crt.tq_sum_1s_delta_HS = Line(0)
                         End Select
                     Else
                         Throw New ArgumentException(format("The given value in the Job-file({0}) at position({1}) is not a number!", JobFile, i))
@@ -289,15 +400,6 @@ Public Class cJob
                 Throw New ArgumentException(format("Premature ending of the Job-file({0})!", JobFile))
             End If
 
-            ' Control the input files
-            '' TDOD: Use Validate()
-            fControlInput(Vehspez, 1, "csveh.json")
-            fControlInput(Ambspez, 2, "csamb")
-            fControlInput(MSCCSpez, 3, "csms")
-            fControlInput(MSCTSpez, 4, "csms")
-            For i = 0 To UBound(DataSpez)
-                fControlInput(DataSpez(i), 4 + i + 1, "csdat")
-            Next i
 
         End Using
 

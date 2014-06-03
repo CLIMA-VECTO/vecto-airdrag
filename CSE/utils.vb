@@ -90,16 +90,54 @@ Module utils
         Return obj.Aggregate(Function(x, y) IO.Path.Combine(x.ToString(), y.ToString()))
     End Function
 
-    Function StripBackslash(ByVal path As String) As String
+    Function StripFinalBackslash(ByVal path As String) As String
         If path Is Nothing Then
             Return Nothing
-        ElseIf (path.Last = "\"c) Then
-            Return path.Substring(0, path.Length - 1)
+        ElseIf (path.EndsWith("\")) Then
+            Return path.Remove(path.Length - 1)
         Else
             Return path
         End If
     End Function
 
+    ''' <summary>Add root to the path if it is a relative one</summary>
+    ''' <returns>the root if path null/empty</returns>
+    Function getRootedPath(ByVal pathToRoot, ByVal root)
+        If String.IsNullOrWhiteSpace(pathToRoot) Then
+            Return root
+        ElseIf IO.Path.IsPathRooted(pathToRoot) Then
+            Return pathToRoot
+        End If
+        Return joinPaths(root, pathToRoot)
+    End Function
+
+    ''' <summary>Check if path has the specified as parent and return it as relative then</summary>
+    ''' <returns>the parent if path null/empty/invalid, null if path = parent</returns>
+    ''' <exception cref="ArgumentException">if parent not a valid path</exception>
+    Function getAnySubPath(ByVal pathToCheck As String, ByVal parent As String)
+        If String.IsNullOrWhiteSpace(pathToCheck) Then Return parent
+
+        '' Prepare Absolute-paths for comparison, and 
+        ''  scream if parent invalid.
+        ''
+        parent = IO.Path.GetFullPath(StripFinalBackslash(parent))
+        Try
+            pathToCheck = IO.Path.GetFullPath(pathToCheck)
+        Catch ex As Exception
+            Return parent
+        End Try
+
+        If pathToCheck.StartsWith(parent, StringComparison.OrdinalIgnoreCase) Then
+            pathToCheck = pathToCheck.Substring(parent.Length)
+
+            If pathToCheck.StartsWith(IO.Path.DirectorySeparatorChar) Then pathToCheck = pathToCheck.Substring(1)
+            If pathToCheck.Length = 0 OrElse pathToCheck = IO.Path.DirectorySeparatorChar Then
+                pathToCheck = Nothing
+            End If
+        End If
+
+        Return pathToCheck
+    End Function
 #End Region ' File paths'
 
     ' Function for a linear interpolation
@@ -163,7 +201,7 @@ Module utils
     ' Functions for the information depiction on the GUI with the backgroundworker (Info, Warning, Error)
 #Region "Logging"
     ''' <summary>Output from Informations\Warnings\Errors on the GUI, even from within the Backgoundworker</summary>
-    Sub fInfWarErr(ByVal logLevel As Integer, ByVal MsgBoxOut As Boolean, _
+    Sub logme(ByVal logLevel As Integer, ByVal MsgBoxOut As Boolean, _
                    ByVal text As String, Optional ByVal ex As Exception = Nothing)
 
         ' Declaration
@@ -175,14 +213,14 @@ Module utils
         Select Case logLevel
             Case 5 To 7 ' Info
                 logFileLevel = 1
-                tabLabel = "Info"
+                tabLabel = "Messages"
             Case 8 ' Warning
                 logFileLevel = 2
-                tabLabel = "Warning"
+                tabLabel = "Warnings"
                 StyleOut = MsgBoxStyle.Exclamation
             Case 9 ' Error
                 logFileLevel = 3
-                tabLabel = "Error"
+                tabLabel = "Errors"
                 StyleOut = MsgBoxStyle.Critical
         End Select
 
@@ -191,7 +229,7 @@ Module utils
 
         '' Print only filtered msgs in log-window
         ''
-        If logLevel >= AppPreferences.logLevel Then
+        If logLevel >= Prefs.logLevel Then
             Dim wintext = AnzeigeMessage(logLevel) & text
             If BWorker.IsBusy Then
                 '' If in Worker-thread, update GUI through a ProgressChanged event
@@ -229,20 +267,18 @@ Module utils
 
         ' Write to Log-windows
         Select Case logFileLevel
-            Case 1 ' Info
-                F_Main.ListBoxMSG.Items.Add(text)
             Case 2 ' Warning
                 F_Main.ListBoxMSG.Items.Add(text)
                 F_Main.ListBoxWar.Items.Add(text)
-                F_Main.TabPageWar.Text = tabLabel & " (" & F_Main.ListBoxWar.Items.Count & ")"
+                F_Main.TabPageWar.Text = format("Warnings({0})", F_Main.ListBoxWar.Items.Count)
             Case 3 ' Error
-                F_Main.ListBoxMSG.Items.Add(text)
                 F_Main.ListBoxErr.Items.Add(text)
-                F_Main.TabPageErr.Text = tabLabel & " (" & F_Main.ListBoxErr.Items.Count & ")"
-                F_Main.TabControlOutMsg.SelectTab(2)
+                F_Main.TabPageErr.Text = format("Errors({0})", F_Main.ListBoxErr.Items.Count)
             Case Else
                 '' ignored
         End Select
+        F_Main.ListBoxMSG.Items.Add(text)
+        F_Main.TabPageMSG.Text = format("Messages({0})", F_Main.ListBoxMSG.Items.Count)
 
         ' Set the Scrollbars in the Listboxes at the end
         F_Main.ListBoxMSG.TopIndex = F_Main.ListBoxMSG.Items.Count - 1
@@ -281,7 +317,7 @@ Module utils
     Function fWriteLog(ByVal eventType As Integer, Optional ByVal logLevel As Integer = 4, Optional ByVal text As String = "", _
                        Optional ByVal ex As Exception = Nothing) As Boolean
 
-        If Not AppPreferences.writeLog Then Return True
+        If Not Prefs.writeLog Then Return True
 
         Dim LogFilenam As String = joinPaths(MyPath, "log.txt")
 
@@ -292,7 +328,7 @@ Module utils
             '' Truncate log-file if size exceeded on session-start.
             ''
             Dim fInf As New System.IO.FileInfo(LogFilenam)
-            If fInf.Exists AndAlso fInf.Length > AppPreferences.logSize * Math.Pow(10, 6) Then
+            If fInf.Exists AndAlso fInf.Length > Prefs.logSize * Math.Pow(10, 6) Then
                 fLoeschZeilen(LogFilenam, System.IO.File.ReadAllLines(LogFilenam).Length / 2)
             End If
         ElseIf eventType = 3 Then
@@ -545,35 +581,11 @@ Module utils
 
 #Region "GUI"
 
-    Sub fControlPath(ByVal fpath As String, ByVal fileKindNumber As Integer)
-        Dim fileKind = NameFK(fileKindNumber)
-        If (fpath = Nothing) Then
-            Throw New ArgumentException(format("Unspecified {0} Input-file!", fileKind))
-        ElseIf Not IO.File.Exists(fpath) Then '' TODO: Drop this needless check after all files are read with bubbling exceptions.
-            Throw New ArgumentException(format("Cannot find {0} Input-file({1})!", fileKind, fpath))
-        End If
-
-        fWriteLog(2, 4, fileKind & " File: " & fpath)
-    End Sub
-
-    ' Polling after the right fileending
-    Function fControlInput(ByVal File As String, ByVal position As Integer, ByVal endung As String) As Boolean
-        ' If no file, file with the wrong ending or the default is given then writes a warning
-        If (File = Nothing) Then
-            fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
-            Return False
-        ElseIf (Not File.EndsWith(endung, StringComparison.OrdinalIgnoreCase)) Then
-            fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
-            Return False
-        End If
-        Return True
-    End Function
-
     Sub updateControlsFromSchema(ByVal schema As JObject, ByVal ctrl As Control, ByVal label As Control)
         Try
             Dim pschema = schema.SelectToken(".properties." & ctrl.Name)
             If pschema Is Nothing Then
-                fInfWarErr(8, False, format("Schema2GUI: Could not find schema for Control({0})!\n\iSchema: {1}", ctrl.Name, schema))
+                logme(8, False, format("Schema2GUI: Could not find schema for Control({0})!\n\iSchema: {1}", ctrl.Name, schema))
                 Return
             End If
 
@@ -610,7 +622,7 @@ Module utils
 
 
         Catch ex As Exception
-            fInfWarErr(8, False, format("Schema2GUI: Skipped exception: {0} ", ex.Message), ex)
+            logme(8, False, format("Schema2GUI: Skipped exception: {0} ", ex.Message), ex)
         End Try
     End Sub
 

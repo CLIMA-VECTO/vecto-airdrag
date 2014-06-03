@@ -174,7 +174,6 @@
     <Compile Include="utils.vb" />
     <Compile Include="Classes\cFile_v3.vb" />
     <Compile Include="CSE_Globals.vb" />
-    <Compile Include="CSE_Types.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GUI\F_Preferences.resx">

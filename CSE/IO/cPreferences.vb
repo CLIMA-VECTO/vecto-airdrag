@@ -142,53 +142,14 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 #Region "json props"
     Public Property workingDir As String
         Get
-            Dim value As String = Me.Body("workingDir")
-            If value Is Nothing OrElse String.IsNullOrWhiteSpace(value) Then
-                Return MyPath
-            ElseIf IO.Path.IsPathRooted(value) Then
-                Return value
-            Else
-                Return joinPaths(MyPath, value)
-            End If
+            Return getRootedPath(Me.Body("workingDir"), MyPath)
         End Get
         Set(ByVal value As String)
-            If value IsNot Nothing Then
-                '' Convert emtpy-paths into MyPath and store them as null.
-                ''
-                value = value.Trim()
-                If value.Length = 0 Then
-                    value = Nothing
-                Else
-                    '' Convert MyPath-prefixed paths into relative ones.
-                    ''
-                    Dim myPlainPath = IO.Path.GetFullPath(StripBackslash(MyPath))
-                    value = IO.Path.GetFullPath(value)
-                    If value.StartsWith(myPlainPath, StringComparison.OrdinalIgnoreCase) Then
-                        value = value.Substring(myPlainPath.Length)
-                        If (value.StartsWith("\")) Then
-                            value = value.Substring(1)
-                        End If
+            value = getAnySubPath(value, MyPath)
 
-                        If value.Length = 0 Then
-                            value = Nothing
-                        End If
-                    End If
-
-                    '' Store MyPath as null.
-                    ''
-                    If String.Equals(value, MyPath, StringComparison.OrdinalIgnoreCase) Then
-                        value = Nothing
-                    End If
-                End If
-            End If
-
-            '' NOTE: Early-binding makes Nulls end-up as 'string' schema-type.
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
             ''
-            If value Is Nothing Then
-                Me.Body("workingDir") = Nothing
-            Else
-                Me.Body("workingDir") = value
-            End If
+            If value Is Nothing Then Me.Body("workingDir") = Nothing Else Me.Body("workingDir") = value
         End Set
     End Property
 

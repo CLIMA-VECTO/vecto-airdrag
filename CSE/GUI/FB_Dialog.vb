@@ -131,7 +131,7 @@ Public Class FB_Dialog
                         HasExt = True
                     Else
                         'Check ob Datei mit Ext angegeben
-                        HasExt = (Microsoft.VisualBasic.Len(IO.Path.GetExtension(path)) > 1)
+                        HasExt = (Microsoft.VisualBasic.Len(fEXT(path)) > 1)
                     End If
                     'Falls Datei ohne Endung (nach bForceExt-Abfrage) und nicht existiert dann primäre Endung hinzufügen
                     If Not HasExt Then
@@ -687,7 +687,7 @@ Public Class FB_Dialog
 
     'ButtonWorkDir_Click
     Private Sub ButtonWorkDir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWorkDir.Click
-        SetFolder(AppPreferences.workingDir)
+        SetFolder(Prefs.workingDir)
     End Sub
 
     'ButtonDesktop_Click

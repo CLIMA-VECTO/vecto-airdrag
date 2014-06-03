@@ -12,8 +12,9 @@ TODO: 2014-06-??: v2.0.1
   * Possible to use any editor (not only notepad.exe) for viewing files.
   * Welcome developers with README.md, CHANGES.md and COPYING.txt files.
 ##### Internal:
-  * Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
   * Implement an API for writing Header/Body json-files.
+  * Apply Object-oriented design weith resource-management when I/O files.
+  * Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
   * General restructuring of the folders and names in the project.
 
 More analytically:

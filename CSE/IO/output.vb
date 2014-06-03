@@ -17,7 +17,7 @@
             ErgEntriesC = New Dictionary(Of tCompCali, CResult)
             ErgEntryListC = New List(Of tCompCali)
             GenErgOutData(calibration)
-            If hz_out = 1 Then
+            If Crt.hz_out = 1 Then
                 ConvTo1Hz(InputData(tComp.t), InputUndefData)
                 ConvTo1Hz(InputData)
                 ConvTo1Hz(CalcData)
@@ -29,11 +29,11 @@
             End If
 
             ' Write on GUI
-            fInfWarErr(5, False, "Writing output-file (*.csv)")
+            logme(5, False, "Writing output-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = ""
-            Select Case hz_out
+            Select Case Crt.hz_out
                 Case 1
                     NameOutFile = OutFolder & fName(Datafile, False) & "_1Hz.csv"
                 Case 100
@@ -80,16 +80,16 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            logme(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True
     End Function
 
     ' Function for the output of the result data
-    Function fOutCalcRes(ByVal Datafile() As String, ByVal calibration As Boolean) As Boolean
-        ' Declaration
-        Dim i As Integer
+    Function fOutCalcRes(ByVal calibration As Boolean) As Boolean
+        Dim calibration_fpath = Job.calibration_fpath
+        Dim coasting_fpaths() = Job.coasting_fpaths
         Dim NameOutFile, key As String
         Using FileOut As New cFile_V3
             Dim first As Boolean
@@ -109,7 +109,7 @@
             End If
 
             ' Write on GUI
-            fInfWarErr(5, False, "Writing result-file (*.csv)")
+            logme(5, False, "Writing result-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = OutFolder & fName(JobFile, False) & "_MS_CAL.csv"
@@ -123,11 +123,11 @@
             ' Filekopf
             FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
             If calibration Then
-                FileOut.WriteLine("Datafile: ", Datafile(1))
+                FileOut.WriteLine("Datafile: ", calibration_fpath)
             Else
-                FileOut.WriteLine("Datafile LS1: ", Datafile(2))
-                FileOut.WriteLine("Datafile HS: ", Datafile(3))
-                FileOut.WriteLine("Datafile LS2: ", Datafile(4))
+                FileOut.WriteLine("Datafile LS1: ", coasting_fpaths(0))
+                FileOut.WriteLine("Datafile HS: ", coasting_fpaths(1))
+                FileOut.WriteLine("Datafile LS2: ", coasting_fpaths(2))
             End If
             FileOut.WriteLine("")
             FileOut.WriteLine("Results")
@@ -183,16 +183,15 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            logme(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True
     End Function
 
     ' Function for the output of the result data of the regression
-    Function fOutCalcResReg(ByVal Datafile() As String) As Boolean
-        ' Declaration
-        Dim i As Integer
+    Function fOutCalcResReg() As Boolean
+        Dim coasting_fpaths() = Job.coasting_fpaths
         Dim NameOutFile, key As String
         Using FileOut As New cFile_V3
             Dim first As Boolean
@@ -210,7 +209,7 @@
             End If
 
             ' Write on GUI
-            fInfWarErr(5, False, "Writing result-file (*.csv)")
+            logme(5, False, "Writing result-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = OutFolder & fName(JobFile, False) & "_CSE.csv"
@@ -220,9 +219,9 @@
 
             ' Filekopf
             FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-            FileOut.WriteLine("Datafile LS1: ", Datafile(2))
-            FileOut.WriteLine("Datafile HS: ", Datafile(3))
-            FileOut.WriteLine("Datafile LS2: ", Datafile(4))
+            FileOut.WriteLine("Datafile LS1: ", coasting_fpaths(0))
+            FileOut.WriteLine("Datafile HS: ", coasting_fpaths(1))
+            FileOut.WriteLine("Datafile LS2: ", coasting_fpaths(2))
             FileOut.WriteLine("")
             FileOut.WriteLine("Results")
             FileOut.WriteLine("fv_veh:", fv_veh, "[-] calibration factor for vehicle speed")
@@ -277,7 +276,7 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            logme(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True
@@ -653,7 +652,7 @@
         For z = 1 To ValuesX.Item(tCompCali.t).Count - 1
             If fTime(z) < fTime(z - 1) Then
                 If Sprung Then
-                    fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
+                    logme(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
                     Return False
                 Else
                     Sprung = True
@@ -844,7 +843,7 @@
         For z = 1 To ValuesX.Item(tComp.t).Count - 1
             If fTime(z) < fTime(z - 1) Then
                 If Sprung Then
-                    fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
+                    logme(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
                     Return False
                 Else
                     Sprung = True
@@ -1035,7 +1034,7 @@
         For z = 1 To ValuesX.Item(ValuesX.First.Key).Count - 1
             If fTime(z) < fTime(z - 1) Then
                 If Sprung Then
-                    fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
+                    logme(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
                     Return False
                 Else
                     Sprung = True
