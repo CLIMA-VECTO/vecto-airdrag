@@ -7,7 +7,6 @@
 
     ' Control variables
     Public Const komment = "C"                                  ' Symbol for a comment in the input files
-    Public Const varOutStr As String = "C:\..."                 ' String in the outfiles when no path is given
     Public NameFK() As String = ({"", "Vehicle", "Weather", "Altitude", "MS Config calibration", "MS Config test", "Data Calib", "Data LS1", "Data HS", "Data LS2"})
     Public AnzeigeMessage() As String = ({"", "", "", "         + ", "      ~ ", "   * ", " - ", "", "", ""})
 
@@ -67,9 +66,8 @@
     Public t_amb_min As Single                                  ' [°C]; Minimum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)
 
     ' Constances for the array declaration and the program control
-    Public Const JBerF = 4                                      ' Number of calculation files
     Public RRC As Double                                        ' Rolling resistance correction factor
-    Public AnemIC(4) As Single                                  ' Anemometer instrument calibration factors
+    Public AnemIC(3) As Single                                  ' Anemometer instrument calibration factors
     Public JumpPoint As Integer = -1                            ' Point at that a jump in the time-resolved data is detected
     Public OptPar() As Boolean = ({True, True, True})           ' Array to identify if optional parameters are given
     Public HzOut As Integer = 1                                 ' Hz result file output
@@ -77,7 +75,7 @@
     ' Spezification files
     Public Vehspez As String                                    ' Vehicle specification file
     Public Ambspez As String                                    ' Ambient conditions file
-    Public DataSpez(JBerF) As String                            ' Data specification file
+    Public DataSpez(3) As String                            ' Data specification file
     Public MSCCSpez As String                                   ' Measurement section configuration file (Calibration run)
     Public MSCTSpez As String                                   ' Measurement section configuration file (Test run)
 

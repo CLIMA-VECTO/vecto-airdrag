@@ -385,8 +385,8 @@
 
         ' Calculate the section average values
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
-            CalcData(tCompCali.vair_ic).Add(InputData(tComp.vair_ar)(i) * AnemIC(1) + AnemIC(2))
-            CalcData(tCompCali.beta_ic).Add(InputData(tComp.beta_ar)(i) * AnemIC(3) + AnemIC(4))
+            CalcData(tCompCali.vair_ic).Add(InputData(tComp.vair_ar)(i) * AnemIC(0) + AnemIC(1))
+            CalcData(tCompCali.beta_ic).Add(InputData(tComp.beta_ar)(i) * AnemIC(2) + AnemIC(3))
             For Each sKVC In CalcData
                 If CalcData(sKVC.Key).Count <= i Then
                     CalcData(sKVC.Key).Add(0)

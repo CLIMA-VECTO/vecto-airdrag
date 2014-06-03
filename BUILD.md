@@ -27,7 +27,7 @@ Checklist to build a new release:
       * executable (`.EXE`) (from bin/Debug when pre/beta release)
       * vectolic.dll (check correct version)
       * Newtonsoft.Json.dll 6.0.0
-      * Declaration/
+      * Declaration/ (With all its files marked as READONLY!!)
       * DemoData/
       * Docs/CSE-User Manual.pdf (generated from Word-file)
       * Docs/GenericData.xlsx

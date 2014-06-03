@@ -734,7 +734,7 @@
     End Function
 
     ' Function with the standard parameter
-    Public Function StdParameter() As Boolean
+    Public Sub StdParameter()
         ' Standard values
         delta_x_max = 10                               ' [m]; +/- size of the control area around a MS start/end point where a trigger signal is valid (driving direction)
         delta_y_max = 100                              ' [m]; +/- size of the control area around a MS start/end point where a trigger signal is valid (perpendicular to driving direction)
@@ -779,7 +779,5 @@
 
         ' Output
         HzOut = 1
-
-        Return True
-    End Function
+    End Sub
 End Module

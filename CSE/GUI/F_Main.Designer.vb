@@ -233,6 +233,8 @@ Partial Class F_Main
         Me.Label30 = New System.Windows.Forms.Label()
         Me.LDeltaXMax = New System.Windows.Forms.Label()
         Me.TBDeltaXMax = New System.Windows.Forms.TextBox()
+        Me.exportOptions = New System.Windows.Forms.Button()
+        Me.importOptions = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
@@ -1263,6 +1265,8 @@ Partial Class F_Main
         Me.TPOptions.Controls.Add(Me.TBInfo)
         Me.TPOptions.Controls.Add(Me.PBInfoIcon)
         Me.TPOptions.Controls.Add(Me.GroupBox14)
+        Me.TPOptions.Controls.Add(Me.importOptions)
+        Me.TPOptions.Controls.Add(Me.exportOptions)
         Me.TPOptions.Controls.Add(Me.ButtonToStd)
         Me.TPOptions.Controls.Add(Me.GroupBox10)
         Me.TPOptions.Controls.Add(Me.GroupBox9)
@@ -1280,16 +1284,16 @@ Partial Class F_Main
         '
         'TBInfo
         '
-        Me.TBInfo.Location = New System.Drawing.Point(488, 275)
+        Me.TBInfo.Location = New System.Drawing.Point(481, 356)
         Me.TBInfo.Multiline = True
         Me.TBInfo.Name = "TBInfo"
-        Me.TBInfo.Size = New System.Drawing.Size(136, 146)
+        Me.TBInfo.Size = New System.Drawing.Size(155, 198)
         Me.TBInfo.TabIndex = 83
         '
         'PBInfoIcon
         '
         Me.PBInfoIcon.Image = Global.CSE.My.Resources.Resources.Info
-        Me.PBInfoIcon.Location = New System.Drawing.Point(488, 245)
+        Me.PBInfoIcon.Location = New System.Drawing.Point(481, 323)
         Me.PBInfoIcon.Name = "PBInfoIcon"
         Me.PBInfoIcon.Size = New System.Drawing.Size(25, 24)
         Me.PBInfoIcon.TabIndex = 81
@@ -2409,6 +2413,24 @@ Partial Class F_Main
         Me.TBDeltaXMax.Text = "10"
         Me.TBDeltaXMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'exportOptions
+        '
+        Me.exportOptions.Location = New System.Drawing.Point(509, 223)
+        Me.exportOptions.Name = "exportOptions"
+        Me.exportOptions.Size = New System.Drawing.Size(75, 42)
+        Me.exportOptions.TabIndex = 46
+        Me.exportOptions.Text = "Export Options"
+        Me.exportOptions.UseVisualStyleBackColor = True
+        '
+        'importOptions
+        '
+        Me.importOptions.Location = New System.Drawing.Point(509, 271)
+        Me.importOptions.Name = "importOptions"
+        Me.importOptions.Size = New System.Drawing.Size(75, 42)
+        Me.importOptions.TabIndex = 46
+        Me.importOptions.Text = "Import Options"
+        Me.importOptions.UseVisualStyleBackColor = True
+        '
         'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2687,5 +2709,7 @@ Partial Class F_Main
     Friend WithEvents CreatActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PBInfoIcon As System.Windows.Forms.PictureBox
     Friend WithEvents TBInfo As System.Windows.Forms.TextBox
+    Friend WithEvents importOptions As System.Windows.Forms.Button
+    Friend WithEvents exportOptions As System.Windows.Forms.Button
 
 End Class

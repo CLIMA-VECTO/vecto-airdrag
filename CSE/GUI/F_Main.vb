@@ -184,49 +184,57 @@ Public Class F_Main
             Exit Sub
         End If
 
-        ' Change the Calculate button in a cancel button
-        Me.ButtonCalC.Text = "Cancel"
-        Me.TextBoxRVeh.Text = 0
-        Me.TextBoxRAirPos.Text = 0
-        Me.TextBoxRBetaMis.Text = 0
-        Cali = True
-
         ' Read the data from the GUI
-        If Not fGetOpt(True, Cali) Then
-            Me.ButtonCalC.Text = "Calibrate"
-            Exit Sub
-        End If
+        Try
+            UI_PopulateToJob(True, Cali)
+            UI_PopulateToCriteria()
+        Catch ex As Exception
+            fInfWarErr(9, False, format("Cannot start calculation due to: {0}", ex.Message), ex)
+            Return
+        End Try
 
-        ' Save the Jobfiles
-        ToolStripMenuItemSave_Click(sender, e)
+        Dim ok = False
+        Try
+            ' Change the Calculate button in a cancel button
+            Me.ButtonCalC.Text = "Cancel"
+            Me.TextBoxRVeh.Text = 0
+            Me.TextBoxRAirPos.Text = 0
+            Me.TextBoxRBetaMis.Text = 0
+            Cali = True
 
-        ' Check if outfolder exist. If not then generate the folder
-        If Not System.IO.Directory.Exists(OutFolder) Then
-            If OutFolder <> Nothing Then
-                ' Generate the folder if it is desired
-                Dim resEx As MsgBoxResult
-                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                If resEx = MsgBoxResult.Yes Then
-                    MkDir(OutFolder)
+            ' Save the Jobfiles
+            ToolStripMenuItemSave_Click(sender, e)
+
+            ' Check if outfolder exist. If not then generate the folder
+            If Not System.IO.Directory.Exists(OutFolder) Then
+                If OutFolder <> Nothing Then
+                    ' Generate the folder if it is desired
+                    Dim resEx As MsgBoxResult
+                    resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
+                    If resEx = MsgBoxResult.Yes Then
+                        MkDir(OutFolder)
+                    Else
+                        Exit Sub
+                    End If
                 Else
-                    Me.ButtonCalC.Text = "Calibrate"
+                    fInfWarErr(9, False, "No outputfolder is given!")
                     Exit Sub
                 End If
-            Else
-                fInfWarErr(9, False, "No outputfolder is given!")
-                Me.ButtonCalC.Text = "Calibrate"
-                Exit Sub
             End If
-        End If
 
-        ' Clear the MSG on the GUI
-        Me.ListBoxMSG.Items.Clear()
-        fClear_VECTO_Form(False, False)
+            ' Clear the MSG on the GUI
+            Me.ListBoxMSG.Items.Clear()
+            fClear_VECTO_Form(False, False)
 
-        fInfWarErr(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
+            fInfWarErr(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
-        ' Start the calculation in the backgroundworker
-        Me.BackgroundWorkerVECTO.RunWorkerAsync()
+            ' Start the calculation in the backgroundworker
+            Me.BackgroundWorkerVECTO.RunWorkerAsync()
+
+            ok = True
+        Finally
+            If Not ok Then Me.ButtonEval.Text = "Calibrate"
+        End Try
     End Sub
 #End Region
 
@@ -337,48 +345,56 @@ Public Class F_Main
             Exit Sub
         End If
 
-        ' Change the Calculate button in a cancel button
-        Me.ButtonEval.Text = "Cancel"
-        Cali = False
-
-        fWriteLog(2, 4, "----- Speed runs ")
-
         ' Read the data from the GUI
-        If Not fGetOpt(True, Cali) Then
-            Me.ButtonCalC.Text = "Evaluate"
-            Exit Sub
-        End If
+        Try
+            UI_PopulateToJob(True, Cali)
+            UI_PopulateToCriteria()
+        Catch ex As Exception
+            fInfWarErr(9, False, format("Cannot start calculation due to: {0}", ex.Message), ex)
+            Return
+        End Try
 
-        ' Save the Jobfiles
-        ToolStripMenuItemSave_Click(sender, e)
+        Dim ok = False
+        Try
+            ' Change the Calculate button in a cancel button
+            Me.ButtonEval.Text = "Cancel"
+            Cali = False
 
-        ' Check if outfolder exist. If not then generate the folder
-        If Not System.IO.Directory.Exists(OutFolder) Then
-            If OutFolder <> Nothing Then
-                ' Generate the folder if it is desired
-                Dim resEx As MsgBoxResult
-                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                If resEx = MsgBoxResult.Yes Then
-                    MkDir(OutFolder)
+            fWriteLog(2, 4, "----- Speed runs ")
+
+            ' Save the Jobfiles
+            ToolStripMenuItemSave_Click(sender, e)
+
+            ' Check if outfolder exist. If not then generate the folder
+            If Not System.IO.Directory.Exists(OutFolder) Then
+                If OutFolder <> Nothing Then
+                    ' Generate the folder if it is desired
+                    Dim resEx As MsgBoxResult
+                    resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
+                    If resEx = MsgBoxResult.Yes Then
+                        MkDir(OutFolder)
+                    Else
+                        Exit Sub
+                    End If
                 Else
-                    Me.ButtonEval.Text = "Evaluate"
+                    fInfWarErr(9, False, "No outputfolder is given!")
                     Exit Sub
                 End If
-            Else
-                fInfWarErr(9, False, "No outputfolder is given!")
-                Me.ButtonEval.Text = "Evaluate"
-                Exit Sub
             End If
-        End If
 
-        ' Clear the MSG on the GUI
-        fClear_VECTO_Form(False, False)
+            ' Clear the MSG on the GUI
+            fClear_VECTO_Form(False, False)
 
-        ' Write the Calculation status in the Messageoutput and in the Log
-        fInfWarErr(7, False, format("Starting EVALUATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
+            ' Write the Calculation status in the Messageoutput and in the Log
+            fInfWarErr(7, False, format("Starting EVALUATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
-        ' Start the calculation in the backgroundworker
-        Me.BackgroundWorkerVECTO.RunWorkerAsync()
+            ' Start the calculation in the backgroundworker
+            Me.BackgroundWorkerVECTO.RunWorkerAsync()
+
+            ok = True
+        Finally
+            If Not ok Then Me.ButtonEval.Text = "Evaluate"
+        End Try
     End Sub
 #End Region
 
@@ -394,6 +410,7 @@ Public Class F_Main
     Private Sub ToolStripMenuItemOpen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click
         ' Open the filebrowser with the *.csjob parameter
         If fbVECTO.OpenDialog(AppPreferences.workingDir, False) Then
+
             JobFile = fbVECTO.Files(0)
             If (JobFile <> Nothing) Then
                 ' Clear the GUI
@@ -401,12 +418,21 @@ Public Class F_Main
                 OutFolder = joinPaths(fPath(JobFile), "Results\")
 
                 ' Identify the given Jobfile
-                If fEXT(JobFile) <> ".txt" And fEXT(JobFile) <> ".csjob" Then
-                    fInfWarErr(8, False, "The Inputfile is not a regular VECTO-File: " & JobFile)
-                Else
-                    ' Read the Jobfile and insert the data in the GUI
-                    fReadJobFile()
-                End If
+                '' Read Jobfile and populate GUI
+                ''
+                Try
+                    If JobFile.EndsWith(".csjob.json") Then
+                        Dim job = New cJob(JobFile)
+                        job.Validate()
+                        job.PopulateApp()
+                        UI_PopulateFromJob()
+                        UI_PopulateFromCriteria()
+                    Else
+                        cJob.fReadOldJobFile()
+                    End If
+                Catch ex As Exception
+                    fInfWarErr(9, False, format("Failed reading Job-file({0}) due to: {1}", JobFile, ex.Message), ex)
+                End Try
             End If
         End If
     End Sub
@@ -426,11 +452,20 @@ Public Class F_Main
             End If
         End If
 
-        ' Get all data from the GUI
-        fGetOpt()
+        Try
+            ' Get all data from the GUI
+            UI_PopulateToJob()
+            UI_PopulateToCriteria()
+        Catch ex As Exception
+            fInfWarErr(8, False, format("Will store Invalid Job-file due to: {0}", ex.Message), ex)
+        End Try
 
         ' Write the file
-        fAusgVECTO()
+        Dim job As New cJob()
+        If Not JobFile.EndsWith(".csjob.json", StringComparison.OrdinalIgnoreCase) Then
+            JobFile = joinPaths(fPath(JobFile), fName(JobFile, False) & ".csjob.json")
+        End If
+        job.Store(JobFile)
     End Sub
 
     ' Menu Save as
@@ -512,29 +547,29 @@ Public Class F_Main
         ' Set the parameter to standard
         StdParameter()
         ' Write parameter on GUI
-        WriteParToTB()
+        UI_PopulateFromCriteria()
+    End Sub
+
+    ' Set all textboxes to standard
+    Private Sub doExportOptions(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles exportOptions.Click
+        UI_PopulateToCriteria()
+        MsgBox("Not implemented yet!")
+    End Sub
+
+    ' Set all textboxes to standard
+    Private Sub doImportOptions(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles importOptions.Click
+        UI_PopulateFromCriteria()
+        MsgBox("Not implemented yet!")
     End Sub
 
     ' CheckBox for the acceleration calibration
     Private Sub CheckBoxAcc_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxAcc.CheckedChanged
-        ' Inquiry if the checkbox is checked or unchecked
-        If CheckBoxAcc.Checked Then
-            ' Set the check states
-            AccC = True
-        Else
-            AccC = False
-        End If
+        AccC = CheckBoxAcc.Checked
     End Sub
 
     ' Checkbox for the gradient correction
     Private Sub CheckBoxGrd_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxGrd.CheckedChanged
-        ' Inquiry if the checkbox is checked or unchecked
-        If CheckBoxGrd.Checked Then
-            ' Set the check states
-            GradC = True
-        Else
-            GradC = False
-        End If
+        GradC = CheckBoxGrd.Checked
     End Sub
 
     ' Change in the 1Hz radio button
@@ -623,6 +658,234 @@ Public Class F_Main
         ErrorExit = True
         FileBlock = False
     End Sub
+
+#Region "UI populate"
+
+    ' Function to get all parameter from the GUI
+    Function UI_PopulateToJob(Optional ByVal validate As Boolean = False, Optional ByVal calib As Boolean = True) As Boolean
+        ' Declaration
+        Dim i As Integer
+
+        ' Read the data from the textboxes (General)
+        Vehspez = TextBoxVeh1.Text
+        Ambspez = TextBoxWeather.Text
+        AnemIC(0) = TextBoxAirf.Text
+        AnemIC(1) = TextBoxAird.Text
+        AnemIC(2) = TextBoxbetaf.Text
+        AnemIC(3) = TextBoxbetad.Text
+
+        ' Appropriate the inputfiles from calibration run
+        DataSpez(0) = TextBoxDataC.Text
+        MSCCSpez = TextBoxMSCC.Text
+
+        ' Appropriate the inputfiles from test run
+        DataSpez(1) = TextBoxDataLS1.Text
+        DataSpez(2) = TextBoxDataHS.Text
+        DataSpez(3) = TextBoxDataLS2.Text
+        MSCTSpez = TextBoxMSCT.Text
+        RRC = TextBoxRRC.Text
+
+        If validate Then
+            ' Control the input
+            fControlPath(Vehspez, 1)
+            fControlPath(Ambspez, 2)
+            fControlPath(MSCCSpez, 3)
+            If Not calib Then
+                ''fControlPath(MSCTSpez, 4)
+                For i = 0 To UBound(DataSpez)
+                    fControlPath(DataSpez(i), 4 + i + 1)
+                Next i
+            End If
+        End If
+
+        Return True
+    End Function
+
+    ' Get the parameters from option tab
+    Sub UI_PopulateToCriteria()
+        ' Evaluation box
+        If CheckBoxAcc.Checked Then AccC = True
+        If CheckBoxGrd.Checked Then GradC = True
+
+        ' Output box
+        If RB1Hz.Checked Then HzOut = 1
+        If RB100Hz.Checked Then HzOut = 100
+
+        'Parameter boxes
+        ' General valid criteria
+        delta_t_tire_max = TBDeltaTTireMax.Text
+        delta_RRC_max = TBDeltaRRCMax.Text
+        t_amb_var = TBTambVar.Text
+        t_amb_tarmac = TBTambTamac.Text
+        t_amb_max = TBTambMax.Text
+        t_amb_min = TBTambMin.Text
+        ' General
+        delta_Hz_max = TBDeltaHzMax.Text
+        roh_air_ref = TBRhoAirRef.Text
+        acc_corr_ave = TBAccCorrAve.Text
+        delta_parallel_max = TBDeltaParaMax.Text
+        ' Identification of measurement section
+        delta_x_max = TBDeltaXMax.Text
+        delta_y_max = TBDeltaYMax.Text
+        delta_head_max = TBDeltaHeadMax.Text
+        ' Requirements on number of valid datasets
+        ds_min_CAL = TBDsMinCAL.Text
+        ds_min_LS = TBDsMinLS.Text
+        ds_min_HS = TBDsMinHS.Text
+        ds_min_head_MS = TBDsMinHeadHS.Text
+        ' DataSet validity criteria
+        dist_float = TBDistFloat.Text
+        ' Calibration
+        v_wind_ave_CAL_max = TBvWindAveCALMax.Text
+        v_wind_1s_CAL_max = TBvWind1sCALMax.Text
+        beta_ave_CAL_max = TBBetaAveCALMax.Text
+        ' Low and high speed test
+        leng_crit = TBLengCrit.Text
+        ' Low speed test
+        v_wind_ave_LS_max = TBvWindAveLSMax.Text
+        v_wind_1s_LS_max = TBvWind1sLSMax.Text
+        v_veh_ave_LS_max = TBvVehAveLSMax.Text
+        v_veh_ave_LS_min = TBvVehAveLSMin.Text
+        v_veh_float_delta = TBvVehFloatD.Text
+        tq_sum_float_delta = TBTqSumFloatD.Text
+        ' High speed test
+        v_wind_ave_HS_max = TBvWindAveHSMax.Text
+        v_wind_1s_HS_max = TBvWind1sHSMax.Text
+        v_veh_ave_HS_min = TBvVehAveHSMin.Text
+        beta_ave_HS_max = TBBetaAveHSMax.Text
+        v_veh_1s_delta = TBvVeh1sD.Text
+        tq_sum_1s_delta = TBTq1sD.Text
+    End Sub
+
+    Sub UI_PopulateFromJob()
+        ' Transfer the data to the GUI
+        ' General
+        TextBoxVeh1.Text = Vehspez
+        TextBoxAirf.Text = AnemIC(0)
+        TextBoxAird.Text = AnemIC(1)
+        TextBoxbetaf.Text = AnemIC(2)
+        TextBoxbetad.Text = AnemIC(3)
+        TextBoxWeather.Text = Ambspez
+        ' Calibration
+        TextBoxMSCC.Text = MSCCSpez
+        TextBoxDataC.Text = DataSpez(0)
+        ' Test
+        TextBoxMSCT.Text = MSCTSpez
+        TextBoxRRC.Text = RRC
+        TextBoxDataLS1.Text = DataSpez(1)
+        TextBoxDataHS.Text = DataSpez(2)
+        TextBoxDataLS2.Text = DataSpez(3)
+
+    End Sub
+
+    ' Function to set the parameters to standard
+    Sub UI_PopulateFromCriteria()
+        ' Write the Standard values in the textboxes
+        ' General valid criteria
+        TBDeltaTTireMax.Text = delta_t_tire_max
+        TBDeltaRRCMax.Text = delta_RRC_max
+        TBTambVar.Text = t_amb_var
+        TBTambTamac.Text = t_amb_tarmac
+        TBTambMax.Text = t_amb_max
+        TBTambMin.Text = t_amb_min
+        ' General
+        TBDeltaHzMax.Text = delta_Hz_max
+        TBRhoAirRef.Text = roh_air_ref
+        TBAccCorrAve.Text = acc_corr_ave
+        TBDeltaParaMax.Text = delta_parallel_max
+        ' Identification of measurement section
+        TBDeltaXMax.Text = delta_x_max
+        TBDeltaYMax.Text = delta_y_max
+        TBDeltaHeadMax.Text = delta_head_max
+        ' Requirements on number of valid datasets
+        TBDsMinCAL.Text = ds_min_CAL
+        TBDsMinLS.Text = ds_min_LS
+        TBDsMinHS.Text = ds_min_HS
+        TBDsMinHeadHS.Text = ds_min_head_MS
+        ' DataSet validity criteria
+        TBDistFloat.Text = dist_float
+        ' Calibration
+        TBvWindAveCALMax.Text = v_wind_ave_CAL_max
+        TBvWind1sCALMax.Text = v_wind_1s_CAL_max
+        TBBetaAveCALMax.Text = beta_ave_CAL_max
+        ' Low and high speed test
+        TBLengCrit.Text = leng_crit
+        ' Low speed test
+        TBvWindAveLSMax.Text = v_wind_ave_LS_max
+        TBvWind1sLSMax.Text = v_wind_1s_LS_max
+        TBvVehAveLSMax.Text = v_veh_ave_LS_max
+        TBvVehAveLSMin.Text = v_veh_ave_LS_min
+        TBvVehFloatD.Text = v_veh_float_delta
+        TBTqSumFloatD.Text = tq_sum_float_delta
+        ' High speed test
+        TBvWindAveHSMax.Text = v_wind_ave_HS_max
+        TBvWind1sHSMax.Text = v_wind_1s_HS_max
+        TBvVehAveHSMin.Text = v_veh_ave_HS_min
+        TBBetaAveHSMax.Text = beta_ave_HS_max
+        TBvVeh1sD.Text = v_veh_1s_delta
+        TBTq1sD.Text = tq_sum_1s_delta
+        ' Evaluation box
+        CheckBoxAcc.Checked = AccC
+        CheckBoxGrd.Checked = GradC
+
+        ' Output
+        If HzOut = 1 Then
+            RB1Hz.Checked = True
+        ElseIf HzOut = 100 Then
+            RB100Hz.Checked = True
+        End If
+    End Sub
+
+
+    ' Clear the GUI
+    Public Function fClear_VECTO_Form(ByVal Komplet As Boolean, Optional ByVal Fields As Boolean = True) As Boolean
+        If Komplet Then
+            ' Clear the Jobfile and the output folder
+            JobFile = Nothing
+            OutFolder = Nothing
+        End If
+
+        If Fields Then
+            ' Clear the Textboxes or set them to default
+            TextBoxVeh1.Clear()
+            TextBoxWeather.Clear()
+            TextBoxAirf.Text = 1
+            TextBoxAird.Text = 0
+            TextBoxbetaf.Text = 1
+            TextBoxbetad.Text = 0
+            CheckBoxAcc.Checked = True
+            CheckBoxGrd.Checked = False
+
+            ' Calibration fields
+            TextBoxDataC.Clear()
+            TextBoxMSCC.Clear()
+            TextBoxRRC.Text = 1.0
+
+            ' Test run fields
+            TextBoxMSCT.Clear()
+            TextBoxDataLS1.Clear()
+            TextBoxDataHS.Clear()
+            TextBoxDataLS2.Clear()
+
+            ButtonEval.Enabled = False
+
+            ' Option parameters to standard
+            StdParameter()
+            UI_PopulateFromCriteria()
+        End If
+
+        ' Clear the Warning and Error box
+        ListBoxWar.Items.Clear()
+        ListBoxErr.Items.Clear()
+        TabControlOutMsg.SelectTab(0)
+        TabPageErr.Text = "Errors (0)"
+        TabPageWar.Text = "Warnings (0)"
+        Return True
+    End Function
+
+
+#End Region ' UI populate
+
 
 #Region "Infobox"
     ' Deactivate the message

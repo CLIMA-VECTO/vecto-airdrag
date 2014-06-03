@@ -457,4 +457,89 @@ Public Module input
 
         Return True
     End Function
+
+
+    ' Function to read the generic shape file
+    Function fGenShpLoad() As Boolean
+        ' Declarations
+        Dim i, j, anz, pos, num As Integer
+        Dim Info As String = ""
+        Dim Line(), Line2(), Line3(), GenShpFile As String
+        Dim XVal(,), YVal(,), XClone(), YClone() As Double
+        Using FileInGenShp As New cFile_V3
+
+            ' Initialisation
+            GenShpFile = joinPaths(MyPath, "Declaration", "GenShape.shp")
+
+            ' Open the shape generic file
+            If Not FileInGenShp.OpenRead(GenShpFile) Then
+                ' Falls File nicht vorhanden, abbrechen mit Fehler
+                fInfWarErr(9, True, "Can´t find the generic shape file: " & GenShpFile)
+                Return False
+            End If
+
+            ' Read the line
+            Line = FileInGenShp.ReadLine()
+            Line2 = FileInGenShp.ReadLine()
+            Line3 = FileInGenShp.ReadLine()
+            anz = Int(Line.Length / 2)
+
+            ' Initialise
+            pos = 1
+            num = 0
+            ReDim XVal(anz - 1, 0)
+            ReDim YVal(anz - 1, 0)
+
+            ' Read the Head data
+            For i = 0 To anz - 1
+                ' Control if the vehicle class and configuration is already defined
+                If GenShape.veh_class.Contains(Line(pos)) Then
+                    For j = 0 To GenShape.veh_class.Count - 1
+                        If GenShape.veh_class(j) = Line(pos) And GenShape.veh_conf(j) = Line2(pos) Then
+                            fInfWarErr(9, True, "The vehicle class with this configuration is already defined. Please control your generic shape file!")
+                            Return False
+                        End If
+                    Next
+                End If
+                ' Add the data
+                GenShape.veh_class.Add(Line(pos))
+                GenShape.veh_conf.Add(Line2(pos))
+                GenShape.fa_pe.Add(Line3(pos))
+                pos += 2
+            Next i
+
+            ' Read the shape values
+            Do While Not FileInGenShp.EndOfFile
+                pos = 1
+                num += 1
+                Line = FileInGenShp.ReadLine()
+                ReDim Preserve XVal(anz - 1, UBound(XVal, 2) + 1)
+                ReDim Preserve YVal(anz - 1, UBound(YVal, 2) + 1)
+                For i = 0 To anz - 1
+                    XVal(i, UBound(XVal, 2)) = Line(pos)
+                    YVal(i, UBound(YVal, 2)) = Line(pos + 1)
+                    pos += 2
+                Next i
+            Loop
+
+            ' Clone and add the arrays
+            For i = 0 To anz - 1
+                ' Initialise
+                ReDim XClone(num - 1)
+                ReDim YClone(num - 1)
+
+                ' Copy the arrays
+                For j = 1 To num
+                    XClone(j - 1) = XVal(i, j)
+                    YClone(j - 1) = YVal(i, j)
+                Next j
+                ' Add the arrays
+                GenShape.x_val.Add(XClone.Clone)
+                GenShape.y_val.Add(YClone.Clone)
+            Next i
+        End Using
+
+        Return True
+    End Function
+
 End Module

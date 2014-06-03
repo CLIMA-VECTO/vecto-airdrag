@@ -199,7 +199,7 @@ Module utils
                 Dim WorkerMsg As New cLogMsg(logFileLevel, MsgBoxOut, wintext, ex, tabLabel)
                 BWorker.ReportProgress(0, WorkerMsg)
             Else
-                updateLogWindow(logFileLevel, wintext, tabLabel)
+                updateLogWindow(logFileLevel, wintext, tabLabel, ex)
             End If
         End If
 
@@ -220,8 +220,12 @@ Module utils
         End If
     End Sub
 
-    Private Sub updateLogWindow(ByVal logFileLevel As Integer, ByVal text As String, ByVal tabLabel As String)
+    Private Sub updateLogWindow(ByVal logFileLevel As Integer, ByVal text As String, ByVal tabLabel As String, ByVal ex As Exception)
         ' Established the text wit the symbol from the style
+
+        If (ex IsNot Nothing) Then
+            text = text & " (Check log-file for details)"
+        End If
 
         ' Write to Log-windows
         Select Case logFileLevel
@@ -266,7 +270,7 @@ Module utils
 
         ' Call for the output from Informations\Warnings\Errors with the backgoundworker
         Public Sub forwardLog()
-            updateLogWindow(LogLevel, Text, TabLabel)
+            updateLogWindow(LogLevel, Text, TabLabel, Ex)
         End Sub
     End Class
 
@@ -326,6 +330,40 @@ Module utils
         End Try
 
         Return True
+    End Function
+
+    ' Delete lines from the Log
+    Function fLoeschZeilen(ByVal File As String, ByVal Anzahl As Integer, Optional ByVal Zeichen As String = "-") As Boolean
+        ' Declarations
+        Dim i, k As Integer
+        Dim inhalt() = System.IO.File.ReadAllLines(File)
+        Dim inhalt2() As String
+
+        ' Search till the given string is found
+        For i = Anzahl To UBound(inhalt)
+            If Trim(inhalt(i)).StartsWith(Zeichen) Then
+                Exit For
+            End If
+        Next i
+
+        ' Redimension from the array
+        ReDim inhalt2(UBound(inhalt) - i + 3)
+
+        ' Write the actualize file
+        inhalt2(1) = "Cleared Log " & CDate(DateAndTime.Now)
+        inhalt2(2) = "-----"
+
+        k = 3
+        For j = i To UBound(inhalt)
+            inhalt2(k) = inhalt(j)
+            k += 1
+        Next j
+
+        ' Write the textfile
+        System.IO.File.WriteAllLines(File, inhalt2)
+
+        Return True
+
     End Function
 
 #End Region ' Logging
@@ -493,6 +531,89 @@ Module utils
         Return str
     End Function
 
+    Function JoinSingles(ByVal vars As Single())
+        Dim svars As Object() = (From a In vars Select CStr(a)).ToArray()
+
+        Return Join(svars, ", ")
+    End Function
+    Function MyJoinQuoted(ByVal vars As Object())
+        Dim svars As String() = (From a In vars Select sa = String.Format("""{0}""", New JValue(a))).ToArray()
+
+        Return Join(svars, ", ")
+    End Function
 #End Region ' Strings
+
+#Region "GUI"
+
+    Sub fControlPath(ByVal fpath As String, ByVal fileKindNumber As Integer)
+        Dim fileKind = NameFK(fileKindNumber)
+        If (fpath = Nothing) Then
+            Throw New ArgumentException(format("Unspecified {0} Input-file!", fileKind))
+        ElseIf Not IO.File.Exists(fpath) Then '' TODO: Drop this needless check after all files are read with bubbling exceptions.
+            Throw New ArgumentException(format("Cannot find {0} Input-file({1})!", fileKind, fpath))
+        End If
+
+        fWriteLog(2, 4, fileKind & " File: " & fpath)
+    End Sub
+
+    ' Polling after the right fileending
+    Function fControlInput(ByVal File As String, ByVal position As Integer, ByVal endung As String) As Boolean
+        ' If no file, file with the wrong ending or the default is given then writes a warning
+        If (File = Nothing) Then
+            fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
+            Return False
+        ElseIf (Not File.EndsWith(endung, StringComparison.OrdinalIgnoreCase)) Then
+            fInfWarErr(8, False, "The " & NameFK(position) & "-Inputfile is not a regular " & NameFK(position) & "-File")
+            Return False
+        End If
+        Return True
+    End Function
+
+    Sub updateControlsFromSchema(ByVal schema As JObject, ByVal ctrl As Control, ByVal label As Control)
+        Try
+            Dim pschema = schema.SelectToken(".properties." & ctrl.Name)
+            If pschema Is Nothing Then
+                fInfWarErr(8, False, format("Schema2GUI: Could not find schema for Control({0})!\n\iSchema: {1}", ctrl.Name, schema))
+                Return
+            End If
+
+            '' Set title on control/label
+            ''
+            Dim title = pschema("title")
+            If title IsNot Nothing Then
+                If label IsNot Nothing Then
+                    label.Text = title
+                Else
+                    If TypeOf ctrl Is CheckBox Then
+                        title = title.ToString() & "?"
+                    End If
+                End If
+                ctrl.Text = title
+            End If
+
+            '' Build tooltip.
+            ''
+            Dim infos = _
+                From pname In {"title", "description", "type", "enum", "default", _
+                               "minimum", "exclusiveMinimum", "maximum", "exclusiveMaximum"}
+                Select pschema(pname)
+
+            ''TODO: Include other schema-props in tooltips.
+
+            If infos.Any() Then
+                Dim msg = schemaInfos2helpMsg(infos.ToArray())
+                Dim t = New ToolTip()
+                t.SetToolTip(ctrl, msg)
+                t.AutomaticDelay = 300
+                t.AutoPopDelay = 10000
+            End If
+
+
+        Catch ex As Exception
+            fInfWarErr(8, False, format("Schema2GUI: Skipped exception: {0} ", ex.Message), ex)
+        End Try
+    End Sub
+
+#End Region 'GUI
 
 End Module

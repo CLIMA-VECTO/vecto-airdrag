@@ -23,7 +23,7 @@
             fInfWarErr(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Vehspez)
             ReadInputMSC(MSC, MSCCSpez, isCalibrate)
-            ReadDataFile(DataSpez(1), MSC)
+            ReadDataFile(DataSpez(0), MSC)
 
             ' Exit function if error is detected
             If BWorker.CancellationPending Then Return False
@@ -50,7 +50,7 @@
             fInfWarErr(7, False, "Writing the output files...")
 
             ' Output
-            fOutDataCalc1Hz(DataSpez(1), isCalibrate)
+            fOutDataCalc1Hz(DataSpez(0), isCalibrate)
             fOutCalcRes(DataSpez, isCalibrate)
         Else
             ' Declarations
@@ -73,7 +73,7 @@
             If BWorker.CancellationPending Then Return False
 
             ' Output which test are calculated
-            For i = 2 To UBound(DataSpez)
+            For i = 1 To UBound(DataSpez)
                 If i = 2 Or i = 4 Then
                     ' Output on the GUI
                     If i = 2 Then

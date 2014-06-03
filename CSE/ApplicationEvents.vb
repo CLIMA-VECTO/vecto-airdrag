@@ -30,7 +30,7 @@
             ' Declaration
             Dim fiAss As New IO.FileInfo(joinPaths(Application.Info.DirectoryPath, Application.Info.AssemblyName & ".exe"))
 
-            AppPreferences = New cPreferences(, True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
+            AppPreferences = New cPreferences(True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
 
             ' Path to the *.exe 
             MyPath = My.Application.Info.DirectoryPath & "\"
@@ -49,7 +49,7 @@
 
             ' Declaration from the filebrowser optionen
             fbVECTO = New cFileBrowser("CSE")
-            fbVECTO.Extensions = New String() {"csjob"}
+            fbVECTO.Extensions = New String() {"csjob.json", "csjob"}
 
             fbTXT = New cFileBrowser("TXT")
             fbTXT.Extensions = New String() {"txt"}

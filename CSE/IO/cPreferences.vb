@@ -14,7 +14,7 @@ Public Class cPreferences
     End Function
 
     ' Defaults specified here.
-    Protected Overrides Function BodyContent() As JObject
+    Protected Shared Function BuildBody() As JObject
         '' Return empty body since all proprs are optional.
         '' They will become concrete on the 1st store.
         Return New JObject()
@@ -27,13 +27,9 @@ Public Class cPreferences
         '    }</json>.Value)
     End Function
 
-    Public Overrides Function BodySchema() As JObject
-        Return JObject.Parse(JSchemaStr())
-    End Function
-
     ''' <param name="allowAdditionalProps">when false, more strict validation</param>
     Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
-        Dim allowAdditionalProps_str As String = IIf(allowAdditionalProps, "true", "false")
+        Dim allowAdditionalProps_str As String = allowAdditionalProps.ToString.ToLower
         Return <json>{
             "title": "Schema for vecto-cse PREFERENCES",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
@@ -106,13 +102,21 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 
 
 
-    ''' <summary>Reads from file or creates defaults</summary>
-    ''' <param name="inputFilePath">If unspecifed, default prefs used, otherwise data read from file</param>
+    ''' <summary>creates defaults</summary>
     ''' <remarks>See cJsonFile() constructor</remarks>
-    Sub New(Optional ByVal inputFilePath As String = Nothing, Optional ByVal skipValidation As Boolean = False)
+    Sub New(Optional ByVal skipValidation As Boolean = False)
+        MyBase.New(BuildBody, skipValidation)
+    End Sub
+    ''' <summary>Reads from file or creates defaults</summary>
+    ''' <param name="inputFilePath">the fpath of the file to read data from</param>
+    Sub New(ByVal inputFilePath As String, Optional ByVal skipValidation As Boolean = False)
         MyBase.New(inputFilePath, skipValidation)
     End Sub
 
+
+    Public Overrides Function BodySchema() As JObject
+        Return JObject.Parse(JSchemaStr())
+    End Function
 
     ''' <exception cref="SystemException">includes all validation errors</exception>
     ''' <param name="strictBody">when True, no additional json-properties allowed in the data, when nothing, use value from Header</param>

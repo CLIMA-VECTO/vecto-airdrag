@@ -96,10 +96,6 @@ Public MustInherit Class cJsonFile
 
     ''' <summary>When a instance_with_defauls is Created, it gets its /Body from this method</summary>
     ''' <remarks>The result json must be valid after replacing with this body.</remarks>
-    Protected MustOverride Function BodyContent() As JObject
-
-    ''' <summary>When a instance_with_defauls is Created, it gets its /Body from this method</summary>
-    ''' <remarks>The result json must be valid after replacing with this body.</remarks>
     Public MustOverride Function BodySchema() As JObject
 
     ''' <summary>Invoked by this class for subclasses to validate file</summary>
@@ -116,33 +112,40 @@ Public MustInherit Class cJsonFile
     ' ''' <summary>Cached instance from 'Content', used (tentatively) for perfomance.</summary>
     'Public ReadOnly Body As JObject
 
-    ''' <summary>Reads from a file (aka "Load") or creates an instance with defaults
-    ''' 
-    ''' When reading, it optionally checks version and validates its body with ValidateVersionAndBody().
-    ''' When defaulting, the resulted file-version is retrieved from 'CodeVersion' prop and the body from 'BodyStr' prop.
-    ''' </summary>
-    ''' <param name="inputFilePath">If unspecifed, create instance_with_defaults, otherwise read json-contents from file</param>
+
+
+    ''' <summary>Reads from a JSON-file (aka "Load")</summary>
     ''' <param name="skipValidation">When false (the default), validates json-contents in both cases (reading or creating-defaults)</param>
-    ''' <remarks></remarks>
-    Protected Sub New(Optional ByVal inputFilePath As String = Nothing, Optional ByVal skipValidation As Boolean = False)
+    ''' <remarks>It optionally checks version and validates its body with ValidateVersionAndBody().</remarks>
+    Protected Sub New(ByVal inputFilePath As String, Optional ByVal skipValidation As Boolean = False)
         Dim strictHeader = True
 
-        If (inputFilePath Is Nothing) Then
-            Dim jstr = JsonStr_FileContents()
-            Me.Content = JObject.Parse(jstr)
-            'Me.Header = Content("Header")
-            UpdateHeader()
+        strictHeader = False   '' Try to read even bad headers.
+        fInfWarErr(4, False, format("Reading JSON-file({0})...", inputFilePath))
 
-            Me.Content("Body") = Me.BodyContent
-            'Me.Body = Content("Body")
-        Else
-            strictHeader = False   '' Try to read even bad headers.
-            fInfWarErr(4, False, format("Reading JSON-file({0})...", inputFilePath))
+        Me.Content = ReadJsonFile(inputFilePath)
+        'Me.Header = Content("Header")
+        'Me.Body = Content("Body")
 
-            Me.Content = ReadJsonFile(inputFilePath)
-            'Me.Header = Content("Header")
-            'Me.Body = Content("Body")
+        If Not skipValidation Then
+            Me.Validate(strictHeader)
         End If
+    End Sub
+
+    ''' <summary>Creates an instance with defaults</summary>
+    ''' <param name="body">The /Body content with defaults</param>
+    ''' <param name="skipValidation">When false (the default), validates json-contents in both cases (reading or creating-defaults)</param>
+    ''' <remarks>When defaulting, the resulted file-version is retrieved from 'CodeVersion' prop and the body from 'BodyStr' prop.</remarks>
+    Protected Sub New(ByVal body As JToken, Optional ByVal skipValidation As Boolean = False)
+        Dim strictHeader = True
+
+        Dim jstr = JsonStr_FileContents()
+        Me.Content = JObject.Parse(jstr)
+        'Me.Header = Content("Header")
+        UpdateHeader()
+
+        Me.Content("Body") = body
+        'Me.Body = Content("Body")
 
         If Not skipValidation Then
             Me.Validate(strictHeader)
@@ -279,12 +282,12 @@ Public MustInherit Class cJsonFile
     End Function
 
 #Region "json props"
-    Protected ReadOnly Property Header() As JObject
+    Public ReadOnly Property Header() As JObject
         Get
             Return Me.Content("Header")
         End Get
     End Property
-    Protected ReadOnly Property Body() As JObject
+    Public ReadOnly Property Body() As JObject
         Get
             Return Me.Content("Body")
         End Get

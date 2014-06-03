@@ -108,6 +108,7 @@
     <Compile Include="IO\cJsonFile.vb" />
     <Compile Include="Classes\CResult.vb" />
     <Compile Include="IO\cJob.vb" />
+    <Compile Include="IO\cCriteria.vb" />
     <Compile Include="IO\cPreferences.vb" />
     <Compile Include="cSemanticVersion.vb" />
     <Compile Include="Classes\csKey.vb" />
@@ -122,8 +123,6 @@
     <Compile Include="Calculation\Signal_identification.vb" />
     <Compile Include="Calculation\sub_linear_regression.vb" />
     <Compile Include="IO\input.vb" />
-    <Compile Include="GUI\Export_GUI.vb" />
-    <Compile Include="GUI\utils_GUI.vb" />
     <Compile Include="GUI\cFileBrowser.vb" />
     <Compile Include="GUI\F_Preferences.designer.vb">
       <DependentUpon>F_Preferences.vb</DependentUpon>
