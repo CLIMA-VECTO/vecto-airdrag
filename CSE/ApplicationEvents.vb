@@ -109,7 +109,7 @@
         End Sub
         'Private Sub MyApplicationDomain_UnhandledException(ByVal sender As Object, ByVal ev As UnhandledExceptionEventArgs)
         '    Dim ex As Exception = DirectCast(ev.ExceptionObject, Exception)
-        '    logme(9, False, format("Worked's unhandled exception: {0}", ex.Message), ex)
+        '    logme(9, False, format("Worker's unhandled exception: {0}", ex.Message), ex)
         'End Sub
     End Class
 

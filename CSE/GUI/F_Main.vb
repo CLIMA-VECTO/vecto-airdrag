@@ -5,7 +5,6 @@ Public Class F_Main
     ' Declarations
     Private ToolstripSave As Boolean = False
     Private Formname As String = "Job configurations"
-    Private Cali As Boolean = True
 
     ' Load the GUI
     Private Sub CSEMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -78,7 +77,7 @@ Public Class F_Main
         fWriteLog(3)
     End Sub
 
-    Private Sub ClearLogsHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonClearLogs.Click
+    Private Sub ClearLogsHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemClearLog.Click
         ListBoxMSG.Items.Clear()
         TabPageMSG.Text = "Messages(0)"
         ListBoxWar.Items.Clear()
@@ -93,15 +92,15 @@ Public Class F_Main
 
 #Region "Job IO"
     ' Menu New
-    Private Sub NewJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemNew.Click
+    Private Sub NewJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemNewJob.Click
         fClear_VECTO_Form(True)
     End Sub
 
-    Private Sub ReloadJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonReloadJob.Click
+    Private Sub ReloadJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemReloadJob.Click
         Dim reload = True
         doLoadJob(reload)
     End Sub
-    Private Sub LoadJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click, ButtonLoadJob.Click
+    Private Sub LoadJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemLoadJob.Click
         Dim reload = False
         doLoadJob(reload)
     End Sub
@@ -134,7 +133,7 @@ Public Class F_Main
                 newJob = New cJob(jobFileToLoad)
             Else
                 newJob = New cJob(True)
-                newJob.fReadOldJobFile()
+                newJob.fReadOldJobFile(jobFileToLoad)
             End If
             newJob.Validate()
 
@@ -147,11 +146,11 @@ Public Class F_Main
         End Try
     End Sub
 
-    Private Sub SaveJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSave.Click, ButtonSaveJob.Click
+    Private Sub SaveJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemSaveJob.Click
         Dim saveAs = False
         doSaveJob(saveAs)
     End Sub
-    Private Sub SaveJobAsHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSaveAs.Click, ButtonSaveNewJob.Click
+    Private Sub SaveJobAsHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemSaveAsJob.Click
         Dim saveAs = True
         doSaveJob(saveAs)
     End Sub
@@ -233,6 +232,29 @@ Public Class F_Main
 
 
 #Region "Calibration"
+
+    '####################################################################
+    '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
+    '####################################################################
+    Private _CalibrationState As Boolean = False
+    Private _CalibrationTxts = {"Calibrate", "Cancel"}
+    Private _CalibrationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private Property CalibrationState As Boolean
+        Get
+            Return _CalibrationState
+        End Get
+        Set(ByVal value As Boolean)
+            If _CalibrationState Xor value Then
+                Dim indx = -CInt(value)
+                Me.ButtonCalC.Text = _CalibrationTxts(indx)
+                Me.ButtonCalC.Image = _CalibrationImgs(indx)
+                Me.ButtonCalC.UseWaitCursor = value
+            End If
+            _CalibrationState = value
+        End Set
+    End Property
+
+
     ' Open the filebrowser for the selection of the datafile from the calibration run
     Private Sub ButtonSelectDataC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataC.Click
         ' Open the filebrowser with the *.csdat parameter
@@ -282,46 +304,46 @@ Public Class F_Main
     End Sub
 
     ' Calculate button calibration test
-    Private Sub ButtonCalc_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCalC.Click
+    Private Sub CalibrationHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCalC.Click
         ' Generate cancel butten if the backgroundworker is busy
         If BWorker.IsBusy Then
-            logme(8, False, "Calibration not started! Another operation still running in the background")
             BWorker.CancelAsync()
-            Exit Sub
+            logme(8, False, "Cancel requested for background-operation...")
+            Return
         End If
 
         ' Read the data from the GUI
         UI_PopulateToJob(True)
         UI_PopulateToCriteria()
 
+        Me.TextBoxRVeh.Text = 0
+        Me.TextBoxRAirPos.Text = 0
+        Me.TextBoxRBetaMis.Text = 0
+
+        ' Check if outfolder exist. If not then generate the folder
+        If Not System.IO.Directory.Exists(OutFolder) Then
+            If OutFolder <> Nothing Then
+                ' Generate the folder if it is desired
+                Dim resEx As MsgBoxResult
+                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
+                If resEx = MsgBoxResult.Yes Then
+                    IO.Directory.CreateDirectory(OutFolder)
+                Else
+                    Exit Sub
+                End If
+            Else
+                logme(9, False, "No outputfolder is given!")
+                Exit Sub
+            End If
+        End If
+
         Dim ok = False
         Try
-            ' Change the Calculate button in a cancel button
-            Me.ButtonCalC.Text = "Cancel"
-            Me.TextBoxRVeh.Text = 0
-            Me.TextBoxRAirPos.Text = 0
-            Me.TextBoxRBetaMis.Text = 0
-            Cali = True
+            ' Change the button "Exec" --> "Cancel" 
+            Me.CalibrationState = True
 
             ' Save the Jobfiles
             doSaveJob(False)
-
-            ' Check if outfolder exist. If not then generate the folder
-            If Not System.IO.Directory.Exists(OutFolder) Then
-                If OutFolder <> Nothing Then
-                    ' Generate the folder if it is desired
-                    Dim resEx As MsgBoxResult
-                    resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                    If resEx = MsgBoxResult.Yes Then
-                        IO.Directory.CreateDirectory(OutFolder)
-                    Else
-                        Exit Sub
-                    End If
-                Else
-                    logme(9, False, "No outputfolder is given!")
-                    Exit Sub
-                End If
-            End If
 
             ' Clear the MSG on the GUI
             Me.ListBoxMSG.Items.Clear()
@@ -330,17 +352,41 @@ Public Class F_Main
             logme(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
             ' Start the calculation in the backgroundworker
-            Me.BackgroundWorkerVECTO.RunWorkerAsync()
+            Dim jobType = OpType.Calibration
+            Me.BackgroundWorkerVECTO.RunWorkerAsync(New cAsyncJob(jobType))
 
             ok = True
         Finally
-            If Not ok Then Me.ButtonEval.Text = "Calibrate"
+            '' Re-enable "Exec" button on failures.
+            If Not ok Then CalibrationState = False
         End Try
     End Sub
 #End Region ' Calibration
 
 
-#Region "Coasting"
+#Region "Evaluation"
+    '####################################################################
+    '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
+    '####################################################################
+    Private _EvaluationState As Boolean = False
+    Private _EvaluationTxts = {"Evaluate", "Cancel"}
+    Private _EvaluationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private Property EvaluationState As Boolean
+        Get
+            Return _EvaluationState
+        End Get
+        Set(ByVal value As Boolean)
+            If _EvaluationState Xor value Then
+                Dim indx = -CInt(value)
+                Me.ButtonEval.Text = _EvaluationTxts(indx)
+                Me.ButtonEval.Image = _EvaluationImgs(indx)
+                Me.ButtonEval.UseWaitCursor = value
+            End If
+            _EvaluationState = value
+        End Set
+    End Property
+
+
     ' Open the filebrowser for the selection of the measure section file from the test run
     Private Sub ButtonSelectMSCT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCT.Click
         ' Open the filebrowser with the *.csmsc parameter
@@ -438,45 +484,46 @@ Public Class F_Main
     End Sub
 
     ' Evaluate button test run
-    Private Sub ButtonEvaluate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonEval.Click
+    Private Sub EvaluationHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonEval.Click
         ' Generate cancel butten if the backgroundworker is busy
         If BWorker.IsBusy Then
             BWorker.CancelAsync()
-            logme(8, False, "Evaluation not started! Another operation still running in the background")
-            Exit Sub
+            logme(8, False, "Cancel requested for background-operation...")
+
+            Return
         End If
 
         ' Read the data from the GUI
         UI_PopulateToJob(True)
         UI_PopulateToCriteria()
 
+        ' Check if outfolder exist. If not then generate the folder
+        If Not System.IO.Directory.Exists(OutFolder) Then
+            If OutFolder <> Nothing Then
+                ' Generate the folder if it is desired
+                Dim resEx As MsgBoxResult
+                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
+                If resEx = MsgBoxResult.Yes Then
+                    IO.Directory.CreateDirectory(OutFolder)
+                Else
+                    Exit Sub
+                End If
+            Else
+                logme(9, False, "No outputfolder is given!")
+                Exit Sub
+            End If
+        End If
+
+
         Dim ok = False
         Try
-            ' Change the Calculate button in a cancel button
-            Me.ButtonEval.Text = "Cancel"
-            Cali = False
+            ' Change the button "Exec" --> "Cancel" 
+            Me.EvaluationState = True
 
             fWriteLog(2, 4, "----- Speed runs ")
 
             ' Save the Jobfiles
             doSaveJob(False)
-
-            ' Check if outfolder exist. If not then generate the folder
-            If Not System.IO.Directory.Exists(OutFolder) Then
-                If OutFolder <> Nothing Then
-                    ' Generate the folder if it is desired
-                    Dim resEx As MsgBoxResult
-                    resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                    If resEx = MsgBoxResult.Yes Then
-                        IO.Directory.CreateDirectory(OutFolder)
-                    Else
-                        Exit Sub
-                    End If
-                Else
-                    logme(9, False, "No outputfolder is given!")
-                    Exit Sub
-                End If
-            End If
 
             ' Clear the MSG on the GUI
             fClear_VECTO_Form(False, False)
@@ -485,14 +532,16 @@ Public Class F_Main
             logme(7, False, format("Starting EVALUATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
             ' Start the calculation in the backgroundworker
-            Me.BackgroundWorkerVECTO.RunWorkerAsync()
+            Dim jobType = OpType.Evaluation
+            Me.BackgroundWorkerVECTO.RunWorkerAsync(New cAsyncJob(jobType))
 
             ok = True
         Finally
-            If Not ok Then Me.ButtonEval.Text = "Evaluate"
+            '' Re-enable "Exec" button on failures.
+            If Not ok Then EvaluationState = False
         End Try
     End Sub
-#End Region ' Coasting
+#End Region ' Evaluation
 
 
 #Region "Tools menu"
@@ -616,20 +665,46 @@ Public Class F_Main
 #End Region 'Options tab
 
 
+#Region "AsynJob"
+
+    Private Enum OpType
+        Calibration
+        Evaluation
+    End Enum
+
+    ''' <summary>The Datum exchanged in the 3 AsyncWorked methods</summary>
+    Private Class cAsyncJob
+
+        Public ReadOnly Operation As OpType
+
+        Sub New(ByVal type As OpType)
+            Me.Operation = type
+        End Sub
+
+        Public ReadOnly Property IsCalibration As Boolean
+            Get
+                Return Me.Operation = OpType.Calibration
+            End Get
+        End Property
+
+    End Class
+
     '*********Backgroundworker*********
 
     ' Backgroundworker for the calculation in the background
     Private Sub BackgroundWorkerVECTO_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) _
         Handles BackgroundWorkerVECTO.DoWork
 
+        Dim asyncJob As cAsyncJob = e.Argument
+        '' Pass the async-job datum down the road.
+        e.Result = asyncJob
+
         '##### START THE CALCULATION #####
         '#################################
-        '' FIXME:  Stop abusing worker-Thread with Globals, use DoWorkEventArgsfor that instead!!
-        calculation(Cali)
-
+        calculation(asyncJob.IsCalibration)
         '#################################
 
-        ' Polling if the backgroundworker was canceled
+        ' Cancel if cancel requested...
         If Me.BackgroundWorkerVECTO.CancellationPending Then e.Cancel = True
 
     End Sub
@@ -647,32 +722,30 @@ Public Class F_Main
     ' Identify the ending from the backgroundworker
     Private Sub BackgroundWorkerVECTO_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
         Handles BackgroundWorkerVECTO.RunWorkerCompleted
-
-        Dim op = IIf(Cali, "Calibration", "Evaluation")
-
         ' If an Error is detected
         If e.Error IsNot Nothing Then
-            logme(8, False, format("{0} ended with exception: {1}", op, e.Error.Message), e.Error)
+            logme(8, False, format("Backround operation ended with exception: {0}", e.Error.Message), e.Error)
+        ElseIf e.Cancelled Then
+            logme(7, False, "Backround operation  aborted by user.")
         Else
-            If e.Cancelled Then
-                logme(7, False, format("{0} aborted by user.", op))
-            Else
-                logme(7, False, format("{0} ended OK.", op))
-                If Cali Then Me.ButtonEval.Enabled = True
-            End If
+            logme(7, False, "Backround operation ended OK.")
+            Dim asyncJob As cAsyncJob = e.Result
+            If asyncJob.IsCalibration Then Me.ButtonEval.Enabled = True
         End If
 
-        ' Reset the calculate button to calculate
-        If Cali Then
-            Me.ButtonCalC.Text = "Calibrate"
-            Me.TextBoxRVeh.Text = Math.Round(fv_veh, 3).ToString
-            Me.TextBoxRAirPos.Text = Math.Round(fv_pe, 3).ToString
-            Me.TextBoxRBetaMis.Text = Math.Round(beta_ame, 2).ToString
-        Else
-            Me.ButtonEval.Text = "Evaluate"
-        End If
         FileBlock = False
+
+        '' Re-enable all "Exec" buttons
+        CalibrationState = False
+        EvaluationState = False
+
+        Me.TextBoxRVeh.Text = Math.Round(fv_veh, 3).ToString
+        Me.TextBoxRAirPos.Text = Math.Round(fv_pe, 3).ToString
+        Me.TextBoxRBetaMis.Text = Math.Round(beta_ame, 2).ToString
+
+
     End Sub
+#End Region ' AsynJob
 
 #Region "UI populate"
 
@@ -681,11 +754,12 @@ Public Class F_Main
         ' Read the data from the textboxes (General)
         Job.vehicle_fpath = TextBoxVeh1.Text
         Job.ambient_fpath = TextBoxWeather.Text
-        Job.Anemometer(0) = TextBoxAirf.Text
-        Job.Anemometer(1) = TextBoxAird.Text
-        Job.Anemometer(2) = TextBoxbetaf.Text
-        Job.Anemometer(3) = TextBoxbetad.Text
-
+        If UBound(Job.Anemometer) = 3 Then
+            Job.Anemometer(0) = TextBoxAirf.Text
+            Job.Anemometer(1) = TextBoxAird.Text
+            Job.Anemometer(2) = TextBoxbetaf.Text
+            Job.Anemometer(3) = TextBoxbetad.Text
+        End If
         ' Appropriate the inputfiles from calibration run
         Job.calib_run_fpath = TextBoxDataC.Text
         Job.calib_track_fpath = TextBoxMSCC.Text
@@ -871,6 +945,8 @@ Public Class F_Main
             TextBoxDataLS2.Clear()
 
             ButtonEval.Enabled = False
+            EvaluationState = False
+
 
             ' Option parameters to standard
             installJob(New cJob)
@@ -962,4 +1038,7 @@ Public Class F_Main
 
 #End Region
 
+    Private Sub ClearLogToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemClearLog.Click
+
+    End Sub
 End Class

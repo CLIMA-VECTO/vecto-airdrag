@@ -20,7 +20,8 @@ JRC contributions (see VECTO-29):
   * Implement an API for writing Header/Body json-files.
   * Apply Object-oriented design weith resource-management when I/O files.
   * Sporadic fixes to work with filenames having 2-part extensions (ie `some_file.csjob.json`).
-  * Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
+  * Log: Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
+  * async: Stop abusing worker-Thread with Globals, use DoWorkEventArgs instead.
   * General restructuring of the folders and names in the project.
 
 
@@ -36,6 +37,7 @@ JRC contributions:
 ##### Internal:
   * Log unhandled exceptions.
   * Gather all infos related to Job-properties (type, description, units) in a single place, the JSON-schema for the job-file.
+  * async: Stop abusing worker-Thread with Globals, use DoWorkEventArgs instead.
   * Sporadic fixes to work with filenames having 2-part extensions (ie `some_file.csjob.json`).
   * More refactorings to simplify structure of source files and folders.
 

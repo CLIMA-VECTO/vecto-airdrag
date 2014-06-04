@@ -261,7 +261,7 @@ Public Class cJob
 
 
     ' Function for reading the jobfile
-    Public Sub fReadOldJobFile()
+    Public Sub fReadOldJobFile(ByVal jobFile As String)
         ' Declarations
         Dim i As Integer
         Dim Line() As String
@@ -270,7 +270,7 @@ Public Class cJob
 
         Using FileInVECTO As New cFile_V3
             ' Open the jobfile
-            FileInVECTO.OpenReadWithEx(JobFile)
+            FileInVECTO.OpenReadWithEx(jobFile)
 
             ' Read the data from the jobfile
             vehicle_fpath = FileInVECTO.ReadLine(0)
@@ -393,7 +393,7 @@ Public Class cJob
                                 crt.tq_sum_1s_delta_HS = Line(0)
                         End Select
                     Else
-                        Throw New ArgumentException(format("The given value in the Job-file({0}) at position({1}) is not a number!", JobFile, i))
+                        Throw New ArgumentException(format("The given value in the Job-file({0}) at position({1}) is not a number!", jobFile, i))
                     End If
                 Loop
             Catch ex As Exception
@@ -402,7 +402,7 @@ Public Class cJob
 
             ' Look if enough parameters are given
             If i < 34 Then
-                Throw New ArgumentException(format("Premature ending of the Job-file({0})!", JobFile))
+                Throw New ArgumentException(format("Premature ending of the Job-file({0})!", jobFile))
             End If
 
 

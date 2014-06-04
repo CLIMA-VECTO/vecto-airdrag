@@ -34,7 +34,7 @@ Public Class F_Preferences
 
     Private Sub FormClosingHandler(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If Me.Dirty Then
-            Dim res = MsgBox("Save changes?", MsgBoxStyle.YesNoCancel, "Preferences Changed")
+            Dim res = MsgBox(format("Preferences have changed.\nSave changes?"), MsgBoxStyle.YesNoCancel, "Save Preferences?")
             Select Case res
                 Case MsgBoxResult.No
                 Case MsgBoxResult.Yes
