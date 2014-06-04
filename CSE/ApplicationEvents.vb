@@ -56,6 +56,9 @@
                 fbVECTO = New cFileBrowser("CSE")
                 fbVECTO.Extensions = New String() {"csjob.json", "csjob"}
 
+                fbCRT = New cFileBrowser("CRT.json")
+                fbCRT.Extensions = New String() {"cscrt.json"}
+
                 fbTXT = New cFileBrowser("TXT")
                 fbTXT.Extensions = New String() {"txt"}
 

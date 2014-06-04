@@ -4,13 +4,14 @@ VECTO-CSE: Changes
 
 TODO: 2014-06-??: v2.0.1
 -----------------
-  * JSON-ize preferences, vehicle-file, job-file, criteria-file
+  * JSON-ize preferences, vehicle, job & criteria-files, ...
   * Provide default-values and help-messages in GUI/files with infos from "schemas".
-  * Start improving error-reporting by including stack-traces and timestamps into the log-file, for post-mortem examination.
+  * Improving error-reporting by including stack-traces and timestamps into the log-file, for post-mortem examination.
   * Separate config/ from Declaration/ folders.
-  * Standarize versinong using [SemanticVersioning](http://semver.org/).
+  * Use "clever" WorkingDir for all file-paths, so that Job-files cen be ported to other computers.
   * Possible to use any editor (not only notepad.exe) for viewing files.
-  * Welcome developers with README.md, CHANGES.md and COPYING.txt files.
+  * Standarize versioning using [SemanticVersioning](http://semver.org/).
+  * Welcome developers and users with README.md, CHANGES.md and COPYING.txt files.
 ##### Internal:
   * Implement an API for writing Header/Body json-files.
   * Apply Object-oriented design weith resource-management when I/O files.
@@ -19,9 +20,18 @@ TODO: 2014-06-??: v2.0.1
 
 More analytically:
 
+#### 2014-06-04: v2.0.1-pre2 ####
+JRC contributions:
+  * Convert Job & Criteria files to JSON and possible to store them separately.
+  * Still supporting old format for reading.
+  * Use "clever" WorkingDir for all file-paths, so that Job-files cen be ported to other computers.
+  * UI work.
+##### Internal:
+  * Log unhandled exceptions
+  * More refactorings to simplify structure of source files and folders.
 
 
-#### 2014-06-03: v2.0.1-pre1 ####
+#### 2014-05-30: v2.0.1-pre1 ####
 JRC contributions:
 
   * Read/write Vehicle-file as JSON.

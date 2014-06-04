@@ -154,6 +154,7 @@ Public MustInherit Class cJsonFile
 
     ''' <summary>Validates and Writing to the config file</summary>
     Overridable Sub Store(ByVal fpath As String)
+        logme(4, False, format("Writting JSON-file({0})...", fpath))
         Me.UpdateHeader()
 
         Me.Validate(Me.StrictBody)

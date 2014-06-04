@@ -70,8 +70,6 @@ Public Class cFile_V3
         Dim line0 As String
         Dim gogo As Boolean = True
 
-        endofall = False
-
         line = PreLine
 
 lb10:
@@ -95,8 +93,6 @@ lb10:
             If StopE Then FileEnd = (line0 = "E")
 
         End If
-
-        If Equals(PreLine, line) And FileEnd And Not gogo Then endofall = True
 
         Return line
 

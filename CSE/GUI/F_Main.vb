@@ -4,7 +4,6 @@ Public Class F_Main
     ' Declarations
     Private ToolstripSave As Boolean = False
     Private Formname As String = "Job configurations"
-    Private ErrorExit As Boolean = True
     Private Cali As Boolean = True
 
     ' Load the GUI
@@ -114,17 +113,6 @@ Public Class F_Main
         End If
     End Sub
 
-    ' Exit button
-    Private Sub ButtonExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonExit.Click
-        ' Close the GUI
-        Me.Close()
-    End Sub
-
-    ' Save button
-    Private Sub ButtonSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSave.Click
-        SaveJobImpl(False)
-    End Sub
-
     ' Calibration elements
 #Region "Calibration"
     ' Open the filebrowser for the selection of the datafile from the calibration run
@@ -179,13 +167,13 @@ Public Class F_Main
     Private Sub ButtonCalc_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCalC.Click
         ' Generate cancel butten if the backgroundworker is busy
         If BWorker.IsBusy Then
+            logme(8, False, "Calibration not started! Another operation still running in the background")
             BWorker.CancelAsync()
-            ErrorExit = False
             Exit Sub
         End If
 
         ' Read the data from the GUI
-        UI_PopulateToJob(True, Cali)
+        UI_PopulateToJob(True)
         UI_PopulateToCriteria()
 
         Dim ok = False
@@ -207,7 +195,7 @@ Public Class F_Main
                     Dim resEx As MsgBoxResult
                     resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
                     If resEx = MsgBoxResult.Yes Then
-                        MkDir(OutFolder)
+                        IO.Directory.CreateDirectory(OutFolder)
                     Else
                         Exit Sub
                     End If
@@ -260,7 +248,7 @@ Public Class F_Main
     End Sub
 
     ' Open the filebrowser for the selection of the first low speed data file from the test run
-    Private Sub ButtonSelectDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS1.Click
+    Private Sub ButtonSelectDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         ' Open the filebrowser with the *.csdat parameter
         If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
@@ -270,7 +258,7 @@ Public Class F_Main
     End Sub
 
     ' Open the first low speed data file in Excel
-    Private Sub ButtonDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataLS1.Click
+    Private Sub ButtonDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -284,7 +272,7 @@ Public Class F_Main
     End Sub
 
     ' Open the filebrowser for the selection of the high speed data file from the test run
-    Private Sub ButtonSelectDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataHS.Click
+    Private Sub ButtonSelectDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         ' Open the filebrowser with the *.csdat parameter
         If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
@@ -294,7 +282,7 @@ Public Class F_Main
     End Sub
 
     ' Open the high speed data file in Excel
-    Private Sub ButtonDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataHS.Click
+    Private Sub ButtonDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -308,7 +296,7 @@ Public Class F_Main
     End Sub
 
     ' Open the filebrowser for the selection of the second low speed data file from the test run
-    Private Sub ButtonSelectDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS2.Click
+    Private Sub ButtonSelectDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         ' Open the filebrowser with the *.csdat parameter
         If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
@@ -318,7 +306,7 @@ Public Class F_Main
     End Sub
 
     ' Open the second low speed data file in Excel
-    Private Sub ButtonDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataLS2.Click
+    Private Sub ButtonDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -336,12 +324,12 @@ Public Class F_Main
         ' Generate cancel butten if the backgroundworker is busy
         If BWorker.IsBusy Then
             BWorker.CancelAsync()
-            ErrorExit = False
+            logme(8, False, "Evaluation not started! Another operation still running in the background")
             Exit Sub
         End If
 
         ' Read the data from the GUI
-        UI_PopulateToJob(True, Cali)
+        UI_PopulateToJob(True)
         UI_PopulateToCriteria()
 
         Dim ok = False
@@ -362,7 +350,7 @@ Public Class F_Main
                     Dim resEx As MsgBoxResult
                     resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
                     If resEx = MsgBoxResult.Yes Then
-                        MkDir(OutFolder)
+                        IO.Directory.CreateDirectory(OutFolder)
                     Else
                         Exit Sub
                     End If
@@ -397,7 +385,7 @@ Public Class F_Main
     End Sub
 
     ' Menu open
-    Private Sub ToolStripMenuItemOpen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click
+    Private Sub ToolStripMenuItemOpen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click, ButtonLoadJob.Click
         ' Open the filebrowser with the *.csjob parameter
         If fbVECTO.OpenDialog(Prefs.workingDir, False) Then
 
@@ -430,11 +418,11 @@ Public Class F_Main
     End Sub
 
     ' Menu Save
-    Private Sub MenuItemSaveJob(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSave.Click
+    Private Sub Event_SaveJob(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSave.Click
         SaveJobImpl(False)
     End Sub
     ' Menu Save as
-    Private Sub MenuItemSaveAs(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSaveAs.Click
+    Private Sub Event_SaveJobAs(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSaveAs.Click, ButtonSaveAsNew.Click
         SaveJobImpl(True)
     End Sub
 
@@ -515,9 +503,7 @@ Public Class F_Main
     ' Check if the input is a number
     Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TBDeltaTTireMax.KeyPress, TBDeltaRRCMax.KeyPress, TBTambVar.KeyPress, _
         TBTambTamac.KeyPress, TBTambMax.KeyPress, TBTambMin.KeyPress, TBDeltaHzMax.KeyPress, TBRhoAirRef.KeyPress, TBAccCorrAve.KeyPress, TBDeltaParaMax.KeyPress, TBDeltaXMax.KeyPress, TBDeltaYMax.KeyPress, _
-        TBDeltaHeadMax.KeyPress, TBDsMinCAL.KeyPress, TBDsMinLS.KeyPress, TBDsMinHS.KeyPress, TBDsMinHeadHS.KeyPress, TBTq1sD.KeyPress, TBvVeh1sD.KeyPress, TBBetaAveHSMax.KeyPress, TBvVehAveHSMin.KeyPress, _
-        TBvWind1sHSMax.KeyPress, TBvWindAveHSMax.KeyPress, TBTqSumFloatD.KeyPress, TBvVehFloatD.KeyPress, TBvVehAveLSMin.KeyPress, TBvVehAveLSMax.KeyPress, TBvWind1sLSMax.KeyPress, TBvWindAveLSMax.KeyPress, _
-        TBLengCrit.KeyPress, TBBetaAveCALMax.KeyPress, TBvWind1sCALMax.KeyPress, TBvWindAveCALMax.KeyPress, TBDistFloat.KeyPress
+        TBDeltaHeadMax.KeyPress, TBDsMinCAL.KeyPress, TBDsMinLS.KeyPress, TBDsMinHS.KeyPress, TBDsMinHeadHS.KeyPress, TBvWindAveLSMax.KeyPress, TBvWindAveHSMax.KeyPress, TBvWindAveCALMax.KeyPress, TBvWind1sLSMax.KeyPress, TBvWind1sHSMax.KeyPress, TBvWind1sCALMax.KeyPress, TBvVehFloatD.KeyPress, TBvVehAveLSMin.KeyPress, TBvVehAveLSMax.KeyPress, TBvVehAveHSMin.KeyPress, TBvVeh1sD.KeyPress, TBTqSumFloatD.KeyPress, TBTq1sD.KeyPress, TBLengCrit.KeyPress, TBDistFloat.KeyPress, TBBetaAveHSMax.KeyPress, TBBetaAveCALMax.KeyPress
         Select Case Asc(e.KeyChar)
             Case 48 To 57, 46 ' Zahlen zulassen (ASCII)
             Case Else ' Alles andere Unterdrücken
@@ -526,7 +512,7 @@ Public Class F_Main
     End Sub
 
     ' Set all textboxes to standard
-    Private Sub ButtonToStd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonToStd.Click
+    Private Sub doResetCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs)
         ' Set the parameter to standard
 
         installJob(New cJob())
@@ -535,15 +521,29 @@ Public Class F_Main
     End Sub
 
     ' Set all textboxes to standard
-    Private Sub doExportOptions(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles exportOptions.Click
+    Private Sub doExportCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        UI_PopulateToJob(False)
         UI_PopulateToCriteria()
-        MsgBox("Not implemented yet!")
+        If fbCRT.SaveDialog(Prefs.workingDir) Then
+            Dim fname = fbCRT.Files(0)
+            If fname Is Nothing Then Return
+            Crt.Store(fname)
+        End If
     End Sub
 
     ' Set all textboxes to standard
-    Private Sub doImportOptions(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles importOptions.Click
+    Private Sub doImportCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        If fbCRT.OpenDialog(Prefs.workingDir) Then
+            Dim fname = fbCRT.Files(0)
+            If fname Is Nothing Then
+                Return
+            End If
+            Dim newCrt = New cCriteria(fname)
+            Job.Criteria = newCrt
+            Crt = newCrt
+        End If
+        UI_PopulateFromJob()
         UI_PopulateFromCriteria()
-        MsgBox("Not implemented yet!")
     End Sub
 
     ' CheckBox for the acceleration calibration
@@ -615,11 +615,7 @@ Public Class F_Main
             logme(8, False, format("{0} ended with exception: {1}", op, e.Error.Message), e.Error)
         Else
             If e.Cancelled Then
-                If ErrorExit Then
-                    logme(8, False, format("{0} ended with some unknown error!", op))
-                Else
-                    logme(7, False, format("{0} aborted by user.", op))
-                End If
+                logme(7, False, format("{0} aborted by user.", op))
             Else
                 logme(7, False, format("{0} ended OK.", op))
                 If Cali Then Me.ButtonEval.Enabled = True
@@ -635,14 +631,13 @@ Public Class F_Main
         Else
             Me.ButtonEval.Text = "Evaluate"
         End If
-        ErrorExit = True
         FileBlock = False
     End Sub
 
 #Region "UI populate"
 
     ' Function to get all parameter from the GUI
-    Function UI_PopulateToJob(Optional ByVal validate As Boolean = False, Optional ByVal calib As Boolean = True) As Boolean
+    Function UI_PopulateToJob(Optional ByVal validate As Boolean = False) As Boolean
         ' Read the data from the textboxes (General)
         Job.vehicle_fpath = TextBoxVeh1.Text
         Job.ambient_fpath = TextBoxWeather.Text
@@ -672,57 +667,57 @@ Public Class F_Main
     ' Get the parameters from option tab
     Sub UI_PopulateToCriteria()
         ' Evaluation box
-        crt.accel_correction = CheckBoxAcc.Checked
-        crt.gradient_correction = CheckBoxGrd.Checked
+        Crt.accel_correction = CheckBoxAcc.Checked
+        Crt.gradient_correction = CheckBoxGrd.Checked
 
         ' Output box
-        If RB1Hz.Checked Then crt.hz_out = 1
-        If RB100Hz.Checked Then crt.hz_out = 100
+        If RB1Hz.Checked Then Crt.hz_out = 1
+        If RB100Hz.Checked Then Crt.hz_out = 100
 
         'Parameter boxes
         ' General valid criteria
-        crt.delta_t_tyre_max = TBDeltaTTireMax.Text
-        crt.delta_rr_corr_max = TBDeltaRRCMax.Text
-        crt.t_amb_var = TBTambVar.Text
-        crt.t_amb_tarmac = TBTambTamac.Text
-        crt.t_amb_max = TBTambMax.Text
-        crt.t_amb_min = TBTambMin.Text
+        Crt.delta_t_tyre_max = TBDeltaTTireMax.Text
+        Crt.delta_rr_corr_max = TBDeltaRRCMax.Text
+        Crt.t_amb_var = TBTambVar.Text
+        Crt.t_amb_tarmac = TBTambTamac.Text
+        Crt.t_amb_max = TBTambMax.Text
+        Crt.t_amb_min = TBTambMin.Text
         ' General
-        crt.delta_Hz_max = TBDeltaHzMax.Text
-        crt.roh_air_ref = TBRhoAirRef.Text
-        crt.acc_corr_avg = TBAccCorrAve.Text
-        crt.delta_parallel_max = TBDeltaParaMax.Text
+        Crt.delta_Hz_max = TBDeltaHzMax.Text
+        Crt.roh_air_ref = TBRhoAirRef.Text
+        Crt.acc_corr_avg = TBAccCorrAve.Text
+        Crt.delta_parallel_max = TBDeltaParaMax.Text
         ' Identification of measurement section
-        crt.trigger_delta_x_max = TBDeltaXMax.Text
-        crt.trigger_delta_y_max = TBDeltaYMax.Text
-        crt.delta_head_max = TBDeltaHeadMax.Text
+        Crt.trigger_delta_x_max = TBDeltaXMax.Text
+        Crt.trigger_delta_y_max = TBDeltaYMax.Text
+        Crt.delta_head_max = TBDeltaHeadMax.Text
         ' Requirements on number of valid datasets
-        crt.segruns_min_CAL = TBDsMinCAL.Text
-        crt.segruns_min_LS = TBDsMinLS.Text
-        crt.segruns_min_HS = TBDsMinHS.Text
-        crt.segruns_min_head_MS = TBDsMinHeadHS.Text
+        Crt.segruns_min_CAL = TBDsMinCAL.Text
+        Crt.segruns_min_LS = TBDsMinLS.Text
+        Crt.segruns_min_HS = TBDsMinHS.Text
+        Crt.segruns_min_head_MS = TBDsMinHeadHS.Text
         ' DataSet validity criteria
-        crt.dist_float = TBDistFloat.Text
+        Crt.dist_float = TBDistFloat.Text
         ' Calibration
-        crt.v_wind_avg_max_CAL = TBvWindAveCALMax.Text
-        crt.v_wind_1s_max_CAL = TBvWind1sCALMax.Text
-        crt.beta_avg_max_CAL = TBBetaAveCALMax.Text
+        Crt.v_wind_avg_max_CAL = TBvWindAveCALMax.Text
+        Crt.v_wind_1s_max_CAL = TBvWind1sCALMax.Text
+        Crt.beta_avg_max_CAL = TBBetaAveCALMax.Text
         ' Low and high speed test
-        crt.leng_crit = TBLengCrit.Text
+        Crt.leng_crit = TBLengCrit.Text
         ' Low speed test
-        crt.v_wind_avg_max_LS = TBvWindAveLSMax.Text
-        crt.v_wind_1s_max_LS = TBvWind1sLSMax.Text
-        crt.v_veh_avg_max_LS = TBvVehAveLSMax.Text
-        crt.v_veh_avg_min_LS = TBvVehAveLSMin.Text
-        crt.v_veh_float_delta_LS = TBvVehFloatD.Text
-        crt.tq_sum_float_delta_LS = TBTqSumFloatD.Text
+        Crt.v_wind_avg_max_LS = TBvWindAveLSMax.Text
+        Crt.v_wind_1s_max_LS = TBvWind1sLSMax.Text
+        Crt.v_veh_avg_max_LS = TBvVehAveLSMax.Text
+        Crt.v_veh_avg_min_LS = TBvVehAveLSMin.Text
+        Crt.v_veh_float_delta_LS = TBvVehFloatD.Text
+        Crt.tq_sum_float_delta_LS = TBTqSumFloatD.Text
         ' High speed test
-        crt.v_wind_avg_max_HS = TBvWindAveHSMax.Text
-        crt.v_wind_1s_max_HS = TBvWind1sHSMax.Text
-        crt.v_veh_avg_min_HS = TBvVehAveHSMin.Text
-        crt.beta_avg_max_HS = TBBetaAveHSMax.Text
-        crt.v_veh_1s_delta_HS = TBvVeh1sD.Text
-        crt.tq_sum_1s_delta_HS = TBTq1sD.Text
+        Crt.v_wind_avg_max_HS = TBvWindAveHSMax.Text
+        Crt.v_wind_1s_max_HS = TBvWind1sHSMax.Text
+        Crt.v_veh_avg_min_HS = TBvVehAveHSMin.Text
+        Crt.beta_avg_max_HS = TBBetaAveHSMax.Text
+        Crt.v_veh_1s_delta_HS = TBvVeh1sD.Text
+        Crt.tq_sum_1s_delta_HS = TBTq1sD.Text
     End Sub
 
     Sub UI_PopulateFromJob()
@@ -858,16 +853,16 @@ Public Class F_Main
 
 #Region "Infobox"
     ' Deactivate the message
-    Private Sub DeacMsg(ByVal sender As Object, ByVal e As System.EventArgs) Handles LDistFloat.MouseLeave, TBDistFloat.MouseLeave, LvWindAveCALMax.MouseLeave, TBvWindAveCALMax.MouseLeave, _
-        LvWind1sCALMax.MouseLeave, TBvWind1sCALMax.MouseLeave, LBetaAveCALMax.MouseLeave, TBBetaAveCALMax.MouseLeave, LLengCrit.MouseLeave, TBLengCrit.MouseLeave, LvWindAveLSMax.MouseLeave, _
-        TBvWindAveLSMax.MouseLeave, LvWind1sLSMax.MouseLeave, TBvWind1sLSMax.MouseLeave, LvVehAveLSMax.MouseLeave, TBvVehAveLSMax.MouseLeave, LvVehAveLSMin.MouseLeave, TBvVehAveLSMin.MouseLeave, _
-        LvVehFloatD.MouseLeave, TBvVehFloatD.MouseLeave, LTqSumFloatD.MouseLeave, TBTqSumFloatD.MouseLeave, LvWindAveHSMax.MouseLeave, TBvWindAveHSMax.MouseLeave, LvWind1sHSMax.MouseLeave, _
-        TBvWind1sHSMax.MouseLeave, LvVehAveHSMin.MouseLeave, TBvVehAveHSMin.MouseLeave, LBetaAveHSMax.MouseLeave, TBBetaAveHSMax.MouseLeave, LvVeh1sD.MouseLeave, TBvVeh1sD.MouseLeave, _
-        LTq1sD.MouseLeave, TBTq1sD.MouseLeave, LDeltaTTireMax.MouseLeave, TBDeltaTTireMax.MouseLeave, LDeltaRRCMax.MouseLeave, TBDeltaRRCMax.MouseLeave, LTambVar.MouseLeave, TBTambVar.MouseLeave, _
+    Private Sub DeacMsg(ByVal sender As Object, ByVal e As System.EventArgs) Handles _
+ _
+ _
+ _
+ _
+         LDeltaTTireMax.MouseLeave, TBDeltaTTireMax.MouseLeave, LDeltaRRCMax.MouseLeave, TBDeltaRRCMax.MouseLeave, LTambVar.MouseLeave, TBTambVar.MouseLeave, _
         LTambTamac.MouseLeave, TBTambTamac.MouseLeave, LTambMax.MouseLeave, TBTambMax.MouseLeave, LTambMin.MouseLeave, TBTambMin.MouseLeave, LDeltaHzMax.MouseLeave, TBDeltaHzMax.MouseLeave, _
         LRhoAirRef.MouseLeave, TBRhoAirRef.MouseLeave, LAccCorrAve.MouseLeave, TBAccCorrAve.MouseLeave, LDeltaParaMax.MouseLeave, TBDeltaParaMax.MouseLeave, LDeltaXMax.MouseLeave, TBDeltaXMax.MouseLeave, _
         LDeltaYMax.MouseLeave, TBDeltaYMax.MouseLeave, LContAng.MouseLeave, TBDeltaHeadMax.MouseLeave, LDsMinCAL.MouseLeave, TBDsMinCAL.MouseLeave, LDsMinLS.MouseLeave, TBDsMinLS.MouseLeave, LDsMinHS.MouseLeave, _
-        TBDsMinHS.MouseLeave, LDsMinHeadMS.MouseLeave, TBDsMinHeadHS.MouseLeave
+        TBDsMinHS.MouseLeave, LDsMinHeadMS.MouseLeave, TBDsMinHeadHS.MouseLeave, TBvWindAveLSMax.MouseLeave, TBvWindAveHSMax.MouseLeave, TBvWindAveCALMax.MouseLeave, TBvWind1sLSMax.MouseLeave, TBvWind1sHSMax.MouseLeave, TBvWind1sCALMax.MouseLeave, TBvVehFloatD.MouseLeave, TBvVehAveLSMin.MouseLeave, TBvVehAveLSMax.MouseLeave, TBvVehAveHSMin.MouseLeave, TBvVeh1sD.MouseLeave, TBTqSumFloatD.MouseLeave, TBTq1sD.MouseLeave, TBLengCrit.MouseLeave, TBDistFloat.MouseLeave, TBBetaAveHSMax.MouseLeave, TBBetaAveCALMax.MouseLeave, LvWindAveLSMax.MouseLeave, LvWindAveHSMax.MouseLeave, LvWindAveCALMax.MouseLeave, LvWind1sLSMax.MouseLeave, LvWind1sHSMax.MouseLeave, LvWind1sCALMax.MouseLeave, LvVehFloatD.MouseLeave, LvVehAveLSMin.MouseLeave, LvVehAveLSMax.MouseLeave, LvVehAveHSMin.MouseLeave, LvVeh1sD.MouseLeave, LTqSumFloatD.MouseLeave, LTq1sD.MouseLeave, LLengCrit.MouseLeave, LDistFloat.MouseLeave, LBetaAveHSMax.MouseLeave, LBetaAveCALMax.MouseLeave
         TBInfo.Visible = False
         PBInfoIcon.Visible = False
     End Sub
@@ -883,119 +878,119 @@ Public Class F_Main
 
 #Region "FloatDist"
     ' Show the message
-    Private Sub ShowMsgFloatDist(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDistFloat.MouseMove, TBDistFloat.MouseMove
+    Private Sub ShowMsgFloatDist(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBDistFloat.MouseMove, LDistFloat.MouseMove
         InfActivat("Distance used for calculation of floatinig average signal used for stabilitay criteria in low speed tests")
     End Sub
 #End Region
 
 #Region "vWindAveCALMax"
     ' Show the message
-    Private Sub ShowMsgvWindAveCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWindAveCALMax.MouseMove, TBvWindAveCALMax.MouseMove
+    Private Sub ShowMsgvWindAveCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWindAveCALMax.MouseMove, LvWindAveCALMax.MouseMove
         InfActivat("Maximum average wind speed during calibration test")
     End Sub
 #End Region
 
 #Region "vWind1sCALMax"
     ' Show the message
-    Private Sub ShowMsgvWind1sCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWind1sCALMax.MouseMove, TBvWind1sCALMax.MouseMove
+    Private Sub ShowMsgvWind1sCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWind1sCALMax.MouseMove, LvWind1sCALMax.MouseMove
         InfActivat("Maximum gust wind speed during calibration test")
     End Sub
 #End Region
 
 #Region "BetaAveCALMax"
     ' Show the message
-    Private Sub ShowMsgBetaAveCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LBetaAveCALMax.MouseMove, TBBetaAveCALMax.MouseMove
+    Private Sub ShowMsgBetaAveCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBBetaAveCALMax.MouseMove, LBetaAveCALMax.MouseMove
         InfActivat("Maximum average beta during calibration test")
     End Sub
 #End Region
 
 #Region "LengCrit"
     ' Show the message
-    Private Sub ShowMsgLengCrit(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LLengCrit.MouseMove, TBLengCrit.MouseMove
+    Private Sub ShowMsgLengCrit(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBLengCrit.MouseMove, LLengCrit.MouseMove
         InfActivat("Maximum absolute difference of distance driven with lenght of section as specified in configuration")
     End Sub
 #End Region
 
 #Region "vWindAveLSMax"
     ' Show the message
-    Private Sub ShowMsgvWindAveLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWindAveLSMax.MouseMove, TBvWindAveLSMax.MouseMove
+    Private Sub ShowMsgvWindAveLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWindAveLSMax.MouseMove, LvWindAveLSMax.MouseMove
         InfActivat("Maximum average wind speed during low speed test")
     End Sub
 #End Region
 
 #Region "vWind1sLSMax"
     ' Show the message
-    Private Sub ShowMsgvWind1sLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWind1sLSMax.MouseMove, TBvWind1sLSMax.MouseMove
+    Private Sub ShowMsgvWind1sLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWind1sLSMax.MouseMove, LvWind1sLSMax.MouseMove
         InfActivat("Maximum gust wind speed during low speed test")
     End Sub
 #End Region
 
 #Region "vVehAveLSMax"
     ' Show the message
-    Private Sub ShowMsgvVehAveLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVehAveLSMax.MouseMove, TBvVehAveLSMax.MouseMove
+    Private Sub ShowMsgvVehAveLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVehAveLSMax.MouseMove, LvVehAveLSMax.MouseMove
         InfActivat("Maximum average vehicle speed for low speed test")
     End Sub
 #End Region
 
 #Region "vVehAveLSMin"
     ' Show the message
-    Private Sub ShowMsgvVehAveLSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVehAveLSMin.MouseMove, TBvVehAveLSMin.MouseMove
+    Private Sub ShowMsgvVehAveLSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVehAveLSMin.MouseMove, LvVehAveLSMin.MouseMove
         InfActivat("Minimum average vehicle speed for low speed test")
     End Sub
 #End Region
 
 #Region "vVehFloatD"
     ' Show the message
-    Private Sub ShowMsgvVehFloatD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVehFloatD.MouseMove, TBvVehFloatD.MouseMove
+    Private Sub ShowMsgvVehFloatD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVehFloatD.MouseMove, LvVehFloatD.MouseMove
         InfActivat("+/- Maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed test)")
     End Sub
 #End Region
 
 #Region "TqSumFloatD"
     ' Show the message
-    Private Sub ShowMsgTqSumFloatD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTqSumFloatD.MouseMove, TBTqSumFloatD.MouseMove
+    Private Sub ShowMsgTqSumFloatD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBTqSumFloatD.MouseMove, LTqSumFloatD.MouseMove
         InfActivat("+/- Maximum relative deviation of floating average torque from average torque over entire section (low speed test)")
     End Sub
 #End Region
 
 #Region "vWindAveHSMax"
     ' Show the message
-    Private Sub ShowMsgvWindAveHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWindAveHSMax.MouseMove, TBvWindAveHSMax.MouseMove
+    Private Sub ShowMsgvWindAveHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWindAveHSMax.MouseMove, LvWindAveHSMax.MouseMove
         InfActivat("Maximum average wind speed during high speed test")
     End Sub
 #End Region
 
 #Region "vWind1sHSMax"
     ' Show the message
-    Private Sub ShowMsgvWind1sHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvWind1sHSMax.MouseMove, TBvWind1sHSMax.MouseMove
+    Private Sub ShowMsgvWind1sHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWind1sHSMax.MouseMove, LvWind1sHSMax.MouseMove
         InfActivat("Maximum gust wind speed during high speed test")
     End Sub
 #End Region
 
 #Region "vVehAveHSMin"
     ' Show the message
-    Private Sub ShowMsgvVehAveHSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVehAveHSMin.MouseMove, TBvVehAveHSMin.MouseMove
+    Private Sub ShowMsgvVehAveHSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVehAveHSMin.MouseMove, LvVehAveHSMin.MouseMove
         InfActivat("Minimum average vehicle speed for high speed test")
     End Sub
 #End Region
 
 #Region "BetaAveHSMax"
     ' Show the message
-    Private Sub ShowMsgBetaAveHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LBetaAveHSMax.MouseMove, TBBetaAveHSMax.MouseMove
+    Private Sub ShowMsgBetaAveHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBBetaAveHSMax.MouseMove, LBetaAveHSMax.MouseMove
         InfActivat("Maximum average beta during high speed test")
     End Sub
 #End Region
 
 #Region "vVeh1sD"
     ' Show the message
-    Private Sub ShowMsgvVeh1sD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LvVeh1sD.MouseMove, TBvVeh1sD.MouseMove
+    Private Sub ShowMsgvVeh1sD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVeh1sD.MouseMove, LvVeh1sD.MouseMove
         InfActivat("+/- Maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (high speed test)")
     End Sub
 #End Region
 
 #Region "Tq1sD"
     ' Show the message
-    Private Sub ShowMsgTq1sD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTq1sD.MouseMove, TBTq1sD.MouseMove
+    Private Sub ShowMsgTq1sD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBTq1sD.MouseMove, LTq1sD.MouseMove
         InfActivat("+/- Maximum relative deviation of 1s average torque from average torque over entire section (high speed test)")
     End Sub
 #End Region
@@ -1119,4 +1114,13 @@ Public Class F_Main
     End Sub
 #End Region
 #End Region
+
+    Private Sub ButtonClearLogs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonClearLogs.Click
+        ListBoxMSG.Items.Clear()
+        TabPageMSG.Text = "Messages(0)"
+        ListBoxWar.Items.Clear()
+        TabPageWar.Text = "Warnings(0)"
+        ListBoxErr.Items.Clear()
+        TabPageErr.Text = "Errors(0)"
+    End Sub
 End Class

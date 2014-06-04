@@ -247,10 +247,13 @@ Public Class cJob
 
 
     ''' <summary>Do not invoke this method in vain...</summary>
-    ReadOnly Property Criteria As cCriteria
+    Property Criteria As cCriteria
         Get
             Return New cCriteria(Me.Body("Criteria"), True)
         End Get
+        Set(ByVal value As cCriteria)
+            Me.Body("Criteria") = value.Body
+        End Set
     End Property
 
 

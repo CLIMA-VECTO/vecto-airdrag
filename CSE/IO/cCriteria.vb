@@ -237,7 +237,7 @@ Public Class cCriteria
         Dim g, b As Object
         b = Me.Body
 
-        g = b.Processing
+        g = b("Processing")
         g.roh_air_ref = Me.roh_air_ref
         g.accel_correction = Me.accel_correction
         g.gradient_correction = Me.gradient_correction
@@ -246,7 +246,7 @@ Public Class cCriteria
         g.acc_corr_avg = Me.acc_corr_avg
         g.dist_float = Me.dist_float
 
-        g = b.Validation
+        g = b("Validation")
         g.trigger_delta_x_max = Me.trigger_delta_x_max
         g.trigger_delta_y_max = Me.trigger_delta_y_max
         g.delta_head_max = Me.delta_head_max

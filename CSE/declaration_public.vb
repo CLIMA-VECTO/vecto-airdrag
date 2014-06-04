@@ -2,12 +2,11 @@
 
     ' Description of the form
     Public Const AppName As String = "VECTO_CSE"                ' Name of the programm
-    Public Const AppVers As String = "2.0.1-pre1"                     ' Version of the Programm
+    Public Const AppVers As String = "2.0.1-pre2"                     ' Version of the Programm
     Public AppDate As String                                    ' Date of the compilation of the programm
 
     ' Control variables
     Public Const komment = "C"                                  ' Symbol for a comment in the input files
-    Public NameFK() As String = ({"", "Vehicle", "Weather", "Altitude", "MS Config calibration", "MS Config test", "Data Calib", "Data LS1", "Data HS", "Data LS2"})
     Public AnzeigeMessage() As String = ({"", "", "", "         + ", "      ~ ", "   * ", " - ", "", "", ""})
 
     Public AppFormStarted = False
@@ -44,7 +43,6 @@
     Public OptPar() As Boolean = ({True, True, True})           ' Array to identify if optional parameters are given
 
     ' Boolean for the programm control
-    Public endofall As Boolean = False                          ' Variable if enough input data in the files
     Public FileBlock As Boolean = False                         ' Variable if a file is blocked by an other process
 
 
@@ -56,6 +54,7 @@
 
     Public fbTXT As cFileBrowser
     Public fbVECTO As cFileBrowser
+    Public fbCRT As cFileBrowser
     Public fbCSV As cFileBrowser
     Public fbDir As cFileBrowser
     Public fbWorkDir As cFileBrowser
