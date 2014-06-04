@@ -233,7 +233,7 @@ Public Class cCriteria
     Public t_amb_tarmac As Single                               ' [°C]; Maximum temperature below which no documentation of tarmac conditions is necessary
 
 
-    Overrides Sub Store(ByVal fpath As String)
+    Overrides Sub Store(ByVal fpath As String, Optional ByVal prefs As cPreferences = Nothing)
         Dim g, b As Object
         b = Me.Body
 
@@ -284,7 +284,7 @@ Public Class cCriteria
         g.t_amb_max = Me.t_amb_max
         g.t_amb_min = Me.t_amb_min
 
-        MyBase.Store(fpath)
+        MyBase.Store(fpath, prefs)
     End Sub
 
     Sub PopulateApp()

@@ -114,6 +114,9 @@ Partial Class F_Main
         Me.TPMain = New System.Windows.Forms.TabPage()
         Me.TPCriteria = New System.Windows.Forms.TabPage()
         Me.GroupBox9 = New System.Windows.Forms.GroupBox()
+        Me.ButtonCrtImport = New System.Windows.Forms.Button()
+        Me.ButtonCrtExport = New System.Windows.Forms.Button()
+        Me.ButtonCrtReset = New System.Windows.Forms.Button()
         Me.LDistFloat = New System.Windows.Forms.Label()
         Me.TBDistFloat = New System.Windows.Forms.TextBox()
         Me.Label81 = New System.Windows.Forms.Label()
@@ -231,9 +234,6 @@ Partial Class F_Main
         Me.TBDeltaXMax = New System.Windows.Forms.TextBox()
         Me.ButtonClearLogs = New System.Windows.Forms.Button()
         Me.ButtonLoadJob = New System.Windows.Forms.Button()
-        Me.ButtonImportOpts = New System.Windows.Forms.Button()
-        Me.ButtonExportOpts = New System.Windows.Forms.Button()
-        Me.ButtonOptsToStd = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
@@ -852,12 +852,14 @@ Partial Class F_Main
         Me.ButtonSaveAsNew.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
                     Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSaveAsNew.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSaveAsNew.Location = New System.Drawing.Point(855, 557)
+        Me.ButtonSaveAsNew.Image = Global.CSE.My.Resources.Resources.Speichern_unter
+        Me.ButtonSaveAsNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ButtonSaveAsNew.Location = New System.Drawing.Point(819, 557)
         Me.ButtonSaveAsNew.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSaveAsNew.Name = "ButtonSaveAsNew"
-        Me.ButtonSaveAsNew.Size = New System.Drawing.Size(73, 112)
+        Me.ButtonSaveAsNew.Size = New System.Drawing.Size(109, 112)
         Me.ButtonSaveAsNew.TabIndex = 32
-        Me.ButtonSaveAsNew.Text = "Save as new Job"
+        Me.ButtonSaveAsNew.Text = "Save Job"
         Me.ButtonSaveAsNew.UseVisualStyleBackColor = True
         '
         'ButtonCalC
@@ -1074,7 +1076,7 @@ Partial Class F_Main
         Me.TabControlOutMsg.Margin = New System.Windows.Forms.Padding(2)
         Me.TabControlOutMsg.Name = "TabControlOutMsg"
         Me.TabControlOutMsg.SelectedIndex = 0
-        Me.TabControlOutMsg.Size = New System.Drawing.Size(842, 186)
+        Me.TabControlOutMsg.Size = New System.Drawing.Size(807, 186)
         Me.TabControlOutMsg.TabIndex = 34
         '
         'TabPageMSG
@@ -1085,7 +1087,7 @@ Partial Class F_Main
         Me.TabPageMSG.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageMSG.Name = "TabPageMSG"
         Me.TabPageMSG.Padding = New System.Windows.Forms.Padding(2)
-        Me.TabPageMSG.Size = New System.Drawing.Size(834, 160)
+        Me.TabPageMSG.Size = New System.Drawing.Size(799, 160)
         Me.TabPageMSG.TabIndex = 0
         Me.TabPageMSG.Text = "Messages(0)"
         Me.TabPageMSG.UseVisualStyleBackColor = True
@@ -1101,7 +1103,7 @@ Partial Class F_Main
         Me.ListBoxMSG.Location = New System.Drawing.Point(2, 4)
         Me.ListBoxMSG.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxMSG.Name = "ListBoxMSG"
-        Me.ListBoxMSG.Size = New System.Drawing.Size(828, 147)
+        Me.ListBoxMSG.Size = New System.Drawing.Size(793, 147)
         Me.ListBoxMSG.TabIndex = 23
         '
         'TabPageWar
@@ -1111,7 +1113,7 @@ Partial Class F_Main
         Me.TabPageWar.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageWar.Name = "TabPageWar"
         Me.TabPageWar.Padding = New System.Windows.Forms.Padding(2)
-        Me.TabPageWar.Size = New System.Drawing.Size(834, 160)
+        Me.TabPageWar.Size = New System.Drawing.Size(799, 160)
         Me.TabPageWar.TabIndex = 1
         Me.TabPageWar.Text = "Warnings (0)"
         Me.TabPageWar.UseVisualStyleBackColor = True
@@ -1136,7 +1138,7 @@ Partial Class F_Main
         Me.TabPageErr.Location = New System.Drawing.Point(4, 4)
         Me.TabPageErr.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageErr.Name = "TabPageErr"
-        Me.TabPageErr.Size = New System.Drawing.Size(834, 160)
+        Me.TabPageErr.Size = New System.Drawing.Size(799, 160)
         Me.TabPageErr.TabIndex = 2
         Me.TabPageErr.Text = "Errors (0)"
         Me.TabPageErr.UseVisualStyleBackColor = True
@@ -1209,9 +1211,9 @@ Partial Class F_Main
         '
         'GroupBox9
         '
-        Me.GroupBox9.Controls.Add(Me.ButtonImportOpts)
-        Me.GroupBox9.Controls.Add(Me.ButtonExportOpts)
-        Me.GroupBox9.Controls.Add(Me.ButtonOptsToStd)
+        Me.GroupBox9.Controls.Add(Me.ButtonCrtImport)
+        Me.GroupBox9.Controls.Add(Me.ButtonCrtExport)
+        Me.GroupBox9.Controls.Add(Me.ButtonCrtReset)
         Me.GroupBox9.Controls.Add(Me.LDistFloat)
         Me.GroupBox9.Controls.Add(Me.TBDistFloat)
         Me.GroupBox9.Controls.Add(Me.Label81)
@@ -1223,6 +1225,38 @@ Partial Class F_Main
         Me.GroupBox9.TabIndex = 44
         Me.GroupBox9.TabStop = False
         Me.GroupBox9.Text = "Dataset validity criteria"
+        '
+        'ButtonCrtImport
+        '
+        Me.ButtonCrtImport.Image = Global.CSE.My.Resources.Resources.Öffnen
+        Me.ButtonCrtImport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ButtonCrtImport.Location = New System.Drawing.Point(305, 62)
+        Me.ButtonCrtImport.Name = "ButtonCrtImport"
+        Me.ButtonCrtImport.Size = New System.Drawing.Size(143, 43)
+        Me.ButtonCrtImport.TabIndex = 87
+        Me.ButtonCrtImport.Text = "Import Criteria"
+        Me.ButtonCrtImport.UseVisualStyleBackColor = True
+        '
+        'ButtonCrtExport
+        '
+        Me.ButtonCrtExport.Image = Global.CSE.My.Resources.Resources.Speichern_unter
+        Me.ButtonCrtExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ButtonCrtExport.Location = New System.Drawing.Point(306, 111)
+        Me.ButtonCrtExport.Name = "ButtonCrtExport"
+        Me.ButtonCrtExport.Size = New System.Drawing.Size(142, 43)
+        Me.ButtonCrtExport.TabIndex = 86
+        Me.ButtonCrtExport.Text = "Export Criteria"
+        Me.ButtonCrtExport.UseVisualStyleBackColor = True
+        '
+        'ButtonCrtReset
+        '
+        Me.ButtonCrtReset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ButtonCrtReset.Location = New System.Drawing.Point(306, 13)
+        Me.ButtonCrtReset.Name = "ButtonCrtReset"
+        Me.ButtonCrtReset.Size = New System.Drawing.Size(142, 43)
+        Me.ButtonCrtReset.TabIndex = 85
+        Me.ButtonCrtReset.Text = "Reset Criteria"
+        Me.ButtonCrtReset.UseVisualStyleBackColor = True
         '
         'LDistFloat
         '
@@ -2334,10 +2368,11 @@ Partial Class F_Main
         '
         Me.ButtonClearLogs.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonClearLogs.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonClearLogs.Location = New System.Drawing.Point(855, 674)
+        Me.ButtonClearLogs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ButtonClearLogs.Location = New System.Drawing.Point(819, 674)
         Me.ButtonClearLogs.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonClearLogs.Name = "ButtonClearLogs"
-        Me.ButtonClearLogs.Size = New System.Drawing.Size(73, 32)
+        Me.ButtonClearLogs.Size = New System.Drawing.Size(109, 32)
         Me.ButtonClearLogs.TabIndex = 36
         Me.ButtonClearLogs.Text = "Clear log"
         Me.ButtonClearLogs.UseVisualStyleBackColor = True
@@ -2346,40 +2381,15 @@ Partial Class F_Main
         '
         Me.ButtonLoadJob.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonLoadJob.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonLoadJob.Location = New System.Drawing.Point(855, 520)
+        Me.ButtonLoadJob.Image = Global.CSE.My.Resources.Resources.Öffnen
+        Me.ButtonLoadJob.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ButtonLoadJob.Location = New System.Drawing.Point(819, 520)
         Me.ButtonLoadJob.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonLoadJob.Name = "ButtonLoadJob"
-        Me.ButtonLoadJob.Size = New System.Drawing.Size(73, 33)
+        Me.ButtonLoadJob.Size = New System.Drawing.Size(109, 33)
         Me.ButtonLoadJob.TabIndex = 37
         Me.ButtonLoadJob.Text = "Load Job"
         Me.ButtonLoadJob.UseVisualStyleBackColor = True
-        '
-        'ButtonImportOpts
-        '
-        Me.ButtonImportOpts.Location = New System.Drawing.Point(312, 110)
-        Me.ButtonImportOpts.Name = "ButtonImportOpts"
-        Me.ButtonImportOpts.Size = New System.Drawing.Size(136, 43)
-        Me.ButtonImportOpts.TabIndex = 87
-        Me.ButtonImportOpts.Text = "Import Criteria"
-        Me.ButtonImportOpts.UseVisualStyleBackColor = True
-        '
-        'ButtonExportOpts
-        '
-        Me.ButtonExportOpts.Location = New System.Drawing.Point(313, 61)
-        Me.ButtonExportOpts.Name = "ButtonExportOpts"
-        Me.ButtonExportOpts.Size = New System.Drawing.Size(135, 43)
-        Me.ButtonExportOpts.TabIndex = 86
-        Me.ButtonExportOpts.Text = "Export Criteria"
-        Me.ButtonExportOpts.UseVisualStyleBackColor = True
-        '
-        'ButtonOptsToStd
-        '
-        Me.ButtonOptsToStd.Location = New System.Drawing.Point(313, 13)
-        Me.ButtonOptsToStd.Name = "ButtonOptsToStd"
-        Me.ButtonOptsToStd.Size = New System.Drawing.Size(135, 43)
-        Me.ButtonOptsToStd.TabIndex = 85
-        Me.ButtonOptsToStd.Text = "Reset Criteria"
-        Me.ButtonOptsToStd.UseVisualStyleBackColor = True
         '
         'F_Main
         '
@@ -2657,8 +2667,8 @@ Partial Class F_Main
     Friend WithEvents ButtonDataHS As System.Windows.Forms.Button
     Friend WithEvents ButtonClearLogs As System.Windows.Forms.Button
     Friend WithEvents ButtonLoadJob As System.Windows.Forms.Button
-    Friend WithEvents ButtonImportOpts As System.Windows.Forms.Button
-    Friend WithEvents ButtonExportOpts As System.Windows.Forms.Button
-    Friend WithEvents ButtonOptsToStd As System.Windows.Forms.Button
+    Friend WithEvents ButtonCrtImport As System.Windows.Forms.Button
+    Friend WithEvents ButtonCrtExport As System.Windows.Forms.Button
+    Friend WithEvents ButtonCrtReset As System.Windows.Forms.Button
 
 End Class

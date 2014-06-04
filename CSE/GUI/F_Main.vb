@@ -248,7 +248,7 @@ Public Class F_Main
     End Sub
 
     ' Open the filebrowser for the selection of the first low speed data file from the test run
-    Private Sub ButtonSelectDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub ButtonSelectDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS1.Click
         ' Open the filebrowser with the *.csdat parameter
         If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
@@ -258,7 +258,7 @@ Public Class F_Main
     End Sub
 
     ' Open the first low speed data file in Excel
-    Private Sub ButtonDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub ButtonDataLS1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataLS1.Click
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -272,7 +272,7 @@ Public Class F_Main
     End Sub
 
     ' Open the filebrowser for the selection of the high speed data file from the test run
-    Private Sub ButtonSelectDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub ButtonSelectDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataHS.Click
         ' Open the filebrowser with the *.csdat parameter
         If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
@@ -282,7 +282,7 @@ Public Class F_Main
     End Sub
 
     ' Open the high speed data file in Excel
-    Private Sub ButtonDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub ButtonDataHS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataHS.Click
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -296,7 +296,7 @@ Public Class F_Main
     End Sub
 
     ' Open the filebrowser for the selection of the second low speed data file from the test run
-    Private Sub ButtonSelectDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub ButtonSelectDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataLS2.Click
         ' Open the filebrowser with the *.csdat parameter
         If fbVEL.OpenDialog(Prefs.workingDir, False) Then
             If (fbVEL.Files(0) <> Nothing) Then
@@ -306,7 +306,7 @@ Public Class F_Main
     End Sub
 
     ' Open the second low speed data file in Excel
-    Private Sub ButtonDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub ButtonDataLS2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDataLS2.Click
         ' Declarations
         Dim PSI As New ProcessStartInfo
 
@@ -503,7 +503,9 @@ Public Class F_Main
     ' Check if the input is a number
     Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TBDeltaTTireMax.KeyPress, TBDeltaRRCMax.KeyPress, TBTambVar.KeyPress, _
         TBTambTamac.KeyPress, TBTambMax.KeyPress, TBTambMin.KeyPress, TBDeltaHzMax.KeyPress, TBRhoAirRef.KeyPress, TBAccCorrAve.KeyPress, TBDeltaParaMax.KeyPress, TBDeltaXMax.KeyPress, TBDeltaYMax.KeyPress, _
-        TBDeltaHeadMax.KeyPress, TBDsMinCAL.KeyPress, TBDsMinLS.KeyPress, TBDsMinHS.KeyPress, TBDsMinHeadHS.KeyPress, TBvWindAveLSMax.KeyPress, TBvWindAveHSMax.KeyPress, TBvWindAveCALMax.KeyPress, TBvWind1sLSMax.KeyPress, TBvWind1sHSMax.KeyPress, TBvWind1sCALMax.KeyPress, TBvVehFloatD.KeyPress, TBvVehAveLSMin.KeyPress, TBvVehAveLSMax.KeyPress, TBvVehAveHSMin.KeyPress, TBvVeh1sD.KeyPress, TBTqSumFloatD.KeyPress, TBTq1sD.KeyPress, TBLengCrit.KeyPress, TBDistFloat.KeyPress, TBBetaAveHSMax.KeyPress, TBBetaAveCALMax.KeyPress
+        TBDeltaHeadMax.KeyPress, TBDsMinCAL.KeyPress, TBDsMinLS.KeyPress, TBDsMinHS.KeyPress, TBDsMinHeadHS.KeyPress, TBTq1sD.KeyPress, TBvVeh1sD.KeyPress, TBBetaAveHSMax.KeyPress, TBvVehAveHSMin.KeyPress, _
+        TBvWind1sHSMax.KeyPress, TBvWindAveHSMax.KeyPress, TBTqSumFloatD.KeyPress, TBvVehFloatD.KeyPress, TBvVehAveLSMin.KeyPress, TBvVehAveLSMax.KeyPress, TBvWind1sLSMax.KeyPress, TBvWindAveLSMax.KeyPress, _
+        TBLengCrit.KeyPress, TBBetaAveCALMax.KeyPress, TBvWind1sCALMax.KeyPress, TBvWindAveCALMax.KeyPress, TBDistFloat.KeyPress
         Select Case Asc(e.KeyChar)
             Case 48 To 57, 46 ' Zahlen zulassen (ASCII)
             Case Else ' Alles andere Unterdrücken
@@ -512,7 +514,7 @@ Public Class F_Main
     End Sub
 
     ' Set all textboxes to standard
-    Private Sub doResetCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub doResetCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCrtReset.Click
         ' Set the parameter to standard
 
         installJob(New cJob())
@@ -521,7 +523,7 @@ Public Class F_Main
     End Sub
 
     ' Set all textboxes to standard
-    Private Sub doExportCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub doExportCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCrtExport.Click
         UI_PopulateToJob(False)
         UI_PopulateToCriteria()
         If fbCRT.SaveDialog(Prefs.workingDir) Then
@@ -532,7 +534,7 @@ Public Class F_Main
     End Sub
 
     ' Set all textboxes to standard
-    Private Sub doImportCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub doImportCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCrtImport.Click
         If fbCRT.OpenDialog(Prefs.workingDir) Then
             Dim fname = fbCRT.Files(0)
             If fname Is Nothing Then
@@ -853,16 +855,16 @@ Public Class F_Main
 
 #Region "Infobox"
     ' Deactivate the message
-    Private Sub DeacMsg(ByVal sender As Object, ByVal e As System.EventArgs) Handles _
- _
- _
- _
- _
-         LDeltaTTireMax.MouseLeave, TBDeltaTTireMax.MouseLeave, LDeltaRRCMax.MouseLeave, TBDeltaRRCMax.MouseLeave, LTambVar.MouseLeave, TBTambVar.MouseLeave, _
+    Private Sub DeacMsg(ByVal sender As Object, ByVal e As System.EventArgs) Handles LDistFloat.MouseLeave, TBDistFloat.MouseLeave, LvWindAveCALMax.MouseLeave, TBvWindAveCALMax.MouseLeave, _
+        LvWind1sCALMax.MouseLeave, TBvWind1sCALMax.MouseLeave, LBetaAveCALMax.MouseLeave, TBBetaAveCALMax.MouseLeave, LLengCrit.MouseLeave, TBLengCrit.MouseLeave, LvWindAveLSMax.MouseLeave, _
+        TBvWindAveLSMax.MouseLeave, LvWind1sLSMax.MouseLeave, TBvWind1sLSMax.MouseLeave, LvVehAveLSMax.MouseLeave, TBvVehAveLSMax.MouseLeave, LvVehAveLSMin.MouseLeave, TBvVehAveLSMin.MouseLeave, _
+        LvVehFloatD.MouseLeave, TBvVehFloatD.MouseLeave, LTqSumFloatD.MouseLeave, TBTqSumFloatD.MouseLeave, LvWindAveHSMax.MouseLeave, TBvWindAveHSMax.MouseLeave, LvWind1sHSMax.MouseLeave, _
+        TBvWind1sHSMax.MouseLeave, LvVehAveHSMin.MouseLeave, TBvVehAveHSMin.MouseLeave, LBetaAveHSMax.MouseLeave, TBBetaAveHSMax.MouseLeave, LvVeh1sD.MouseLeave, TBvVeh1sD.MouseLeave, _
+        LTq1sD.MouseLeave, TBTq1sD.MouseLeave, LDeltaTTireMax.MouseLeave, TBDeltaTTireMax.MouseLeave, LDeltaRRCMax.MouseLeave, TBDeltaRRCMax.MouseLeave, LTambVar.MouseLeave, TBTambVar.MouseLeave, _
         LTambTamac.MouseLeave, TBTambTamac.MouseLeave, LTambMax.MouseLeave, TBTambMax.MouseLeave, LTambMin.MouseLeave, TBTambMin.MouseLeave, LDeltaHzMax.MouseLeave, TBDeltaHzMax.MouseLeave, _
         LRhoAirRef.MouseLeave, TBRhoAirRef.MouseLeave, LAccCorrAve.MouseLeave, TBAccCorrAve.MouseLeave, LDeltaParaMax.MouseLeave, TBDeltaParaMax.MouseLeave, LDeltaXMax.MouseLeave, TBDeltaXMax.MouseLeave, _
         LDeltaYMax.MouseLeave, TBDeltaYMax.MouseLeave, LContAng.MouseLeave, TBDeltaHeadMax.MouseLeave, LDsMinCAL.MouseLeave, TBDsMinCAL.MouseLeave, LDsMinLS.MouseLeave, TBDsMinLS.MouseLeave, LDsMinHS.MouseLeave, _
-        TBDsMinHS.MouseLeave, LDsMinHeadMS.MouseLeave, TBDsMinHeadHS.MouseLeave, TBvWindAveLSMax.MouseLeave, TBvWindAveHSMax.MouseLeave, TBvWindAveCALMax.MouseLeave, TBvWind1sLSMax.MouseLeave, TBvWind1sHSMax.MouseLeave, TBvWind1sCALMax.MouseLeave, TBvVehFloatD.MouseLeave, TBvVehAveLSMin.MouseLeave, TBvVehAveLSMax.MouseLeave, TBvVehAveHSMin.MouseLeave, TBvVeh1sD.MouseLeave, TBTqSumFloatD.MouseLeave, TBTq1sD.MouseLeave, TBLengCrit.MouseLeave, TBDistFloat.MouseLeave, TBBetaAveHSMax.MouseLeave, TBBetaAveCALMax.MouseLeave, LvWindAveLSMax.MouseLeave, LvWindAveHSMax.MouseLeave, LvWindAveCALMax.MouseLeave, LvWind1sLSMax.MouseLeave, LvWind1sHSMax.MouseLeave, LvWind1sCALMax.MouseLeave, LvVehFloatD.MouseLeave, LvVehAveLSMin.MouseLeave, LvVehAveLSMax.MouseLeave, LvVehAveHSMin.MouseLeave, LvVeh1sD.MouseLeave, LTqSumFloatD.MouseLeave, LTq1sD.MouseLeave, LLengCrit.MouseLeave, LDistFloat.MouseLeave, LBetaAveHSMax.MouseLeave, LBetaAveCALMax.MouseLeave
+        TBDsMinHS.MouseLeave, LDsMinHeadMS.MouseLeave, TBDsMinHeadHS.MouseLeave
         TBInfo.Visible = False
         PBInfoIcon.Visible = False
     End Sub

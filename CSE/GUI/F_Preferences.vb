@@ -64,7 +64,7 @@ Public Class F_Preferences
             UI_PopulateTo(newPrefs)
 
             ' Write the config file
-            newPrefs.Store(PrefsPath)
+            newPrefs.Store(PrefsPath, newPrefs)
             Prefs = newPrefs           ' Replace active prefs if successful.
 
             ' Message for the restart of VECTO

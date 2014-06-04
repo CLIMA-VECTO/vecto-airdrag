@@ -153,17 +153,19 @@ Public MustInherit Class cJsonFile
     End Sub
 
     ''' <summary>Validates and Writing to the config file</summary>
-    Overridable Sub Store(ByVal fpath As String)
+    Overridable Sub Store(ByVal fpath As String, Optional ByVal prefs As cPreferences = Nothing)
         logme(4, False, format("Writting JSON-file({0})...", fpath))
-        Me.UpdateHeader()
+        Me.UpdateHeader(prefs)
 
         Me.Validate(Me.StrictBody)
         WriteJsonFile(fpath, Content)
     End Sub
 
     ''' <summary>Maintains header's standard props and overlays any props from subclass.</summary>
+    ''' <param name="prefs">It is there to be used when storing cPreferences themselfs.</param>
     ''' <remarks>Note that it is invoked early enough, before the new file has acquired a Body and before AppPreferences exist(!).</remarks>
-    Sub UpdateHeader()
+    Sub UpdateHeader(Optional ByVal prefs As cPreferences = Nothing)
+        If prefs Is Nothing Then prefs = CSE.Prefs
         Dim h As JObject = Me.Header
 
         h("ModifiedDate") = DateTime.Now.ToString(dateFrmt)
@@ -171,7 +173,7 @@ Public MustInherit Class cJsonFile
         '' Decide whether to add username in "CreatedBy".
         ''
         Dim username = ""
-        If Prefs Is Nothing OrElse Not Prefs.hideUsername Then
+        If prefs Is Nothing OrElse Not prefs.hideUsername Then
             username = System.Security.Principal.WindowsIdentity.GetCurrent().Name & "@"
         End If
         h("CreatedBy") = format("{0}{1}(lic: {2})", username, Lic.LicString, Lic.GUID)
@@ -191,8 +193,8 @@ Public MustInherit Class cJsonFile
         Dim bodySchema = h("BodySchema")
         If bodySchema IsNot Nothing AndAlso bodySchema.Type = JTokenType.Boolean Then
             isIncludeSchema = bodySchema
-        ElseIf Prefs IsNot Nothing Then
-            isIncludeSchema = Prefs.includeSchemas
+        ElseIf prefs IsNot Nothing Then
+            isIncludeSchema = prefs.includeSchemas
         Else
             isIncludeSchema = False
         End If
@@ -210,8 +212,10 @@ Public MustInherit Class cJsonFile
     End Sub
 
     ''' <exception cref="FormatException">includes all validation errors</exception>
+    ''' <param name="prefs">It is there to be used when storing cPreferences themselfs.</param>
     ''' <param name="strictHeader">when false, relaxes Header's schema (used on Loading to be more accepting)</param>
-    Friend Sub Validate(Optional ByVal strictHeader As Boolean = False)
+    Friend Sub Validate(Optional ByVal strictHeader As Boolean = False, Optional ByVal prefs As cPreferences = Nothing)
+        If prefs Is Nothing Then prefs = CSE.Prefs
         Dim validateMsgs As IList(Of String) = New List(Of String)
 
         Dim fileSchema = JsonSchema.Parse(JSchemaStr_Header(strictHeader))
