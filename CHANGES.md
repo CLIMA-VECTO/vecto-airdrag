@@ -3,7 +3,7 @@ VECTO-CSE: Changes
 
 
 TODO: 2014-06-??: v2.0.1
------------------
+--------------------
   * JSON-ize preferences, vehicle, job & criteria-files, ...
   * Provide default-values and help-messages in GUI/files with infos from "schemas".
   * Improving error-reporting by including stack-traces and timestamps into the log-file, for post-mortem examination.
@@ -18,6 +18,7 @@ TODO: 2014-06-??: v2.0.1
   * Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
   * General restructuring of the folders and names in the project.
 
+
 More analytically:
 
 #### 2014-06-04: v2.0.1-pre2 ####
@@ -27,7 +28,8 @@ JRC contributions:
   * Use "clever" WorkingDir for all file-paths, so that Job-files cen be ported to other computers.
   * UI work.
 ##### Internal:
-  * Log unhandled exceptions
+  * Log unhandled exceptions.
+  * Gather all infos related to Job-properties (type, description, units) in a single place, the JSON-schema for the job-file.
   * More refactorings to simplify structure of source files and folders.
 
 

@@ -2,9 +2,9 @@
   "Header": {
     "Title": "vecto-cse JOB",
     "FileVersion": "1.0.0",
-    "AppVersion": "2.0.1-pre1",
-    "ModifiedDate": "2014/06/04 02:48:10 +02:00",
-    "CreatedBy": "ISIS\\ankostis@JRC(lic: 04c137c0-24df-4d90-a3e2-b02fe3dba8ea)",
+    "AppVersion": "2.0.1-pre2",
+    "ModifiedDate": "2014/06/04 07:27:54 +02:00",
+    "CreatedBy": "JRC(lic: 04c137c0-24df-4d90-a3e2-b02fe3dba8ea)",
     "StrictBody": false,
     "BodySchema": null
   },
@@ -19,9 +19,9 @@
     ],
     "track_fpath": "TrackDemo.csms",
     "calibration_fpath": "DataDemo_CAL.csdat",
-    "low1_fpath": "DataDemo_CAL.csdat",
-    "high_fpath": "DataDemo_CAL.csdat",
-    "low2_fpath": "DataDemo_CAL.csdat",
+    "low1_fpath": "DataDemo_LS1.csdat",
+    "high_fpath": "DataDemo_HS.csdat",
+    "low2_fpath": "DataDemo_LS2.csdat",
     "Criteria": {
       "Processing": {
         "roh_air_ref": 1.1884,

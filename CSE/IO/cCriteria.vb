@@ -87,13 +87,31 @@ Public Class cCriteria
                     "required": true,
                     "additionalProperties": <%= allowAdditionalProps_str %>, 
                     "properties": {
-                        "roh_air_ref": {"type": "number", "required": true, },
-                        "accel_correction": {"type": "boolean", "required": true, },
-                        "gradient_correction": {"type": "boolean", "required": true, },
-                        "hz_out": {"type": "integer", "required": true, },
-                        "rr_corr_factor": {"type": "number", "required": true, },
-                        "acc_corr_avg": {"type": "number", "required": true, },
-                        "dist_float": {"type": "number", "required": true, },
+                        "roh_air_ref": {"type": "number", "required": true, 
+                            "description": "Reference air density.", 
+                            "units": "kg/m^3", 
+                        },
+                        "accel_correction": {"type": "boolean", "required": true, 
+                            "description": "When True, applies acceleration correction.", 
+                        },
+                        "gradient_correction": {"type": "boolean", "required": true, 
+                            "description": "When True, applies gradient correction.", 
+                        },
+                        "hz_out": {"type": "integer", "required": true, 
+                            "description": "The sampling-rate of the result files.",
+                            "units": "Hz",
+                        },
+                        "rr_corr_factor": {"type": "number", "required": true, 
+                            "description": "Rolling resistance correction factor",
+                        },
+                        "acc_corr_avg": {"type": "number", "required": true, 
+                            "description": "Averaging of vehicle speed for correction of acceleration forces.",
+                            "units": "s",
+                        },
+                        "dist_float": {"type": "number", "required": true, 
+                            "description": "Distance used for calculation of floatinig average signal used for stability criteria in low speeds.",
+                            "units": "m",
+                        },
                     }
                 },
                 "Validation": {
@@ -101,42 +119,129 @@ Public Class cCriteria
                     "required": true,
                     "additionalProperties": <%= allowAdditionalProps_str %>, 
                     "properties": {
-                        "trigger_delta_x_max": {"type": "number", "required": true, },
-                        "trigger_delta_y_max": {"type": "number", "required": true, },
-                        "delta_head_max": {"type": "number", "required": true, },
-                        "segruns_min_CAL": {"type": "integer", "required": true, },
-                        "segruns_min_LS": {"type": "integer", "required": true, },
-                        "segruns_min_HS": {"type": "integer", "required": true, },
-                        "segruns_min_head_MS": {"type": "integer", "required": true, },
-                        "delta_Hz_max": {"type": "number", "required": true, },
-                        "delta_parallel_max": {"type": "number", "required": true, },
+                        "trigger_delta_x_max": {"type": "number", "required": true, 
+                            "description": "+/- size of the control area around a MS start/end point where a trigger signal is valid (driving direction).", 
+                            "units": "m", 
+                        },
+                        "trigger_delta_y_max": {"type": "number", "required": true, 
+                            "description": "+/- size of the control area around a MS start/end point where a trigger signal is valid (perpendicular to driving direction)", 
+                            "units": "m", 
+                        },
+                        "delta_head_max": {"type": "number", "required": true, 
+                            "description": "+/- maximum deviation from heading as read from the csdat-file to the heading from csms-file for a valid dataset.", 
+                            "units": "°", 
+                        },
+                        "segruns_min_CAL": {"type": "integer", "required": true, 
+                            "description": "Minimum number of valid datasets required for the calibration test (per combination of MS ID and DIR ID).", 
+                        },
+                        "segruns_min_LS": {"type": "integer", "required": true, 
+                            "description": "Minimum number of valid datasets required for the low speed (per combination of MS ID and DIR ID).", 
+                        },
+                        "segruns_min_HS": {"type": "integer", "required": true, 
+                            "description": "Minimum number of valid datasets required for the high speed (per combination of MS ID and DIR ID).", 
+                        },
+                        "segruns_min_head_MS": {"type": "integer", "required": true, 
+                            "description": "Minimum TOTAL number of valid datasets required for the high speed per heading.", 
+                        },
+                        "delta_Hz_max": {"type": "number", "required": true, 
+                            "description": "Maximum allowed deviation of timestep-size in csdat-file from 100Hz.", 
+                            "units": "%", 
+                        },
+                        "delta_parallel_max": {"type": "number", "required": true, 
+                            "description": "Maximum heading difference for measurement section (parallelism criteria for test track layout).", 
+                            "units": "°", 
+                        },
 
-                        "v_wind_avg_max_CAL": {"type": "number", "required": true, },
-                        "v_wind_1s_max_CAL": {"type": "number", "required": true, },
-                        "beta_avg_max_CAL": {"type": "number", "required": true, },
+                        "v_wind_avg_max_CAL": {"type": "number", "required": true, 
+                            "description": "Maximum average wind speed (calibration).", 
+                            "units": "m/s", 
+                        },
+                        "v_wind_1s_max_CAL": {"type": "number", "required": true, 
+                            "description": "Maximum gust wind speed (calibration).", 
+                            "units": "m/s", 
+                        },
+                        "beta_avg_max_CAL": {"type": "number", "required": true, 
+                            "description": "Maximum average beta (calibration).", 
+                            "units": "°", 
+                        },
 
-                        "leng_crit": {"type": "number", "required": true, },
+                        "leng_crit": {"type": "number", "required": true, 
+                            "description": "Maximum absolute difference of distance driven with lenght of section as specified in configuration", 
+                            "units": "M", 
+                        },
 
-                        "v_wind_avg_max_LS": {"type": "number", "required": true, },
-                        "v_wind_1s_max_LS": {"type": "number", "required": true, },
-                        "v_veh_avg_min_LS": {"type": "number", "required": true, },
-                        "v_veh_avg_max_LS": {"type": "number", "required": true, },
-                        "v_veh_float_delta_LS": {"type": "number", "required": true, },
-                        "tq_sum_float_delta_LS": {"type": "number", "required": true, },
+                        "v_wind_avg_max_LS": {"type": "number", "required": true, 
+                            "description": "Maximum average wind speed during (low speed).", 
+                            "units": "m/s", 
+                        },
+                        "v_wind_1s_max_LS": {"type": "number", "required": true, 
+                            "description": "Maximum gust wind speed (low speed).", 
+                            "units": "m/s", 
+                        },
+                        "v_veh_avg_min_LS": {"type": "number", "required": true, 
+                            "description": "Minimum average vehicle speed (low speed).", 
+                            "units": "km/h", 
+                        },
+                        "v_veh_avg_max_LS": {"type": "number", "required": true, 
+                            "description": "Maximum average vehicle speed (low speed).", 
+                            "units": "km/h", 
+                        },
+                        "v_veh_float_delta_LS": {"type": "number", "required": true, 
+                            "description": "+/- maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed)", 
+                            "units": "km/h", 
+                        },
+                                                "tq_sum_float_delta_LS": {"type": "number", "required": true, 
+                            "description": "+/- maximum relative deviation of floating average torque from average torque over entire section (low speed)", 
+                        },
 
-                        "v_wind_avg_max_HS": {"type": "number", "required": true, },
-                        "v_wind_1s_max_HS": {"type": "number", "required": true, },
-                        "beta_avg_max_HS": {"type": "number", "required": true, },
-                        "v_veh_avg_min_HS": {"type": "number", "required": true, },
-                        "v_veh_1s_delta_HS": {"type": "number", "required": true, },
-                        "tq_sum_1s_delta_HS": {"type": "number", "required": true, },
+                        "v_wind_avg_max_HS": {"type": "number", "required": true, 
+                            "description": "Maximum average wind speed (high speed).", 
+                            "units": "m/s", 
+                        },
+                        "v_wind_1s_max_HS": {"type": "number", "required": true, 
+                            "description": "Maximum gust wind speed (high speed).", 
+                            "units": "m/s", 
+                        },
+                        "beta_avg_max_HS": {"type": "number", "required": true, 
+                            "description": "Maximum average beta during (high speed).", 
+                            "units": "°", 
+                        },
+                        "v_veh_avg_min_HS": {"type": "number", "required": true, 
+                            "description": "Minimum average vehicle speed (high speed).", 
+                            "units": "km/h", 
+                        },
+                        "v_veh_1s_delta_HS": {"type": "number", "required": true, 
+                            "description": "+/- maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (high speed).", 
+                            "units": "km/h", 
+                        },
+                        "tq_sum_1s_delta_HS": {"type": "number", "required": true, 
+                            "description": "+/- maximum relative deviation of 1s average torque from average torque over entire section (high speed).", 
+                        },
 
-                        "delta_t_tyre_max": {"type": "number", "required": true, },
-                        "delta_rr_corr_max": {"type": "number", "required": true, },
-                        "t_amb_min": {"type": "number", "required": true, },
-                        "t_amb_max": {"type": "number", "required": true, },
-                        "t_amb_var": {"type": "number", "required": true, },
-                        "t_amb_tarmac": {"type": "number", "required": true, },
+                        "delta_t_tyre_max": {"type": "number", "required": true, 
+                            "description": "Maximum variation of tyre temperature between high speeds and low speeds.", 
+                            "units": "°C", 
+                        },
+                        "delta_rr_corr_max": {"type": "number", "required": true, 
+                            "description": "Maximum difference of RRC from the two low speed runs.", 
+                            "units": "kg/t", 
+                        },
+                        "t_amb_min": {"type": "number", "required": true, 
+                            "description": "Minimum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)", 
+                            "units": "°C", 
+                        },
+                        "t_amb_max": {"type": "number", "required": true, 
+                            "description": "Maximum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only) .", 
+                            "units": "°C", 
+                        },
+                        "t_amb_var": {"type": "number", "required": true, 
+                            "description": "Maximum variation of ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only).", 
+                            "units": "°C", 
+                        },
+                        "t_amb_tarmac": {"type": "number", "required": true, 
+                            "description": "Maximum temperature below which no documentation of tarmac conditions is necessary.", 
+                            "units": "°C", 
+                        },
                     }
                 },
             },
@@ -162,8 +267,8 @@ Public Class cCriteria
     End Sub
 
 
-    Public Overrides Function BodySchema() As JObject
-        Return JObject.Parse(JSchemaStr())
+    Protected Overrides Function BodySchemaStr() As String
+        Return JSchemaStr()
     End Function
 
     ''' <exception cref="SystemException">includes all validation errors</exception>
@@ -196,7 +301,7 @@ Public Class cCriteria
     Public gradient_correction As Boolean = False                   ' Variable for the gradient correction
     Public hz_out As Integer = 1                                 ' Hz result file output
     Public acc_corr_avg As Single                               ' [s] averaging of vehicle speed for correction of acceleration forces
-    Public dist_float As Single                                 ' [m]; Distance used for calculation of floatinig average signal used for stabilitay criteria in low speed tests
+    Public dist_float As Single                                 ' [m]; Distance used for calculation of floatinig average signal used for stabilitay criteria in low speeds
     Public roh_air_ref As Single                                ' [kg/m^3] Reference air density 
 
     ' Criteria
@@ -204,28 +309,28 @@ Public Class cCriteria
     Public trigger_delta_y_max As Single                        ' [m]; +/- size of the control area around a MS start/end point where a trigger signal is valid (perpendicular to driving direction)
     Public delta_head_max As Single                             ' [°]; +/- maximum deviation from heading as read from the csdat-file to the heading from csms-file for a valid dataset
     Public segruns_min_CAL As Integer                           ' [#]; Minimum number of valid datasets required for the calibration test (per combination of MS ID and DIR ID)
-    Public segruns_min_LS As Integer                            ' [#]; Minimum number of valid datasets required for the low speed test (per combination of MS ID and DIR ID)
-    Public segruns_min_HS As Integer                            ' [#]; Minimum number of valid datasets required for the high speed test (per combination of MS ID and DIR ID)
-    Public segruns_min_head_MS As Integer                       ' [#]; Minimum TOTAL number of valid datasets required for the high speed test per heading
+    Public segruns_min_LS As Integer                            ' [#]; Minimum number of valid datasets required for the low speed (per combination of MS ID and DIR ID)
+    Public segruns_min_HS As Integer                            ' [#]; Minimum number of valid datasets required for the high speed (per combination of MS ID and DIR ID)
+    Public segruns_min_head_MS As Integer                       ' [#]; Minimum TOTAL number of valid datasets required for the high speed per heading
     Public delta_Hz_max As Single                               ' [%]; maximum allowed deviation of timestep-size in csdat-file from 100Hz
     Public delta_parallel_max As Single                         ' [°]; maximum heading difference for measurement section (parallelism criteria for test track layout)
     Public leng_crit As Single                                  ' [m]; maximum absolute difference of distance driven with lenght of section as specified in configuration
     Public v_wind_avg_max_CAL As Single                         ' [m/s]; maximum average wind speed during calibration test
     Public v_wind_1s_max_CAL As Single                          ' [m/s]; maximum gust wind speed during calibration test
     Public beta_avg_max_CAL As Single                           ' [°]; maximum average beta during calibration test
-    Public v_wind_avg_max_LS As Single                          ' [m/s]; maximum average wind speed during low speed test
-    Public v_wind_1s_max_LS As Single                           ' [m/s]; maximum gust wind speed during low speed test
-    Public v_veh_avg_max_LS As Single                           ' [km/h]; maximum average vehicle speed for low speed test
-    Public v_veh_avg_min_LS As Single                           ' [km/h]; minimum average vehicle speed for low speed test
-    Public v_veh_float_delta_LS As Single                       ' [km/h]; +/- maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed test)
-    Public tq_sum_float_delta_LS As Single                      ' [-]; +/- maximum relative deviation of floating average torque from average torque over entire section (low speed test)
-    Public v_wind_avg_max_HS As Single                          ' [m/s]; maximum average wind speed during high speed test
-    Public v_wind_1s_max_HS As Single                           ' [m/s]; maximum gust wind speed during high speed test
-    Public v_veh_avg_min_HS As Single                           ' [km/h]; minimum average vehicle speed for high speed test
-    Public beta_avg_max_HS As Single                            ' [°]; maximum average beta during high speed test
-    Public v_veh_1s_delta_HS As Single                          ' [km/h]; +/- maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (high speed test)
-    Public tq_sum_1s_delta_HS As Single                         ' [-]; +/- maximum relative deviation of 1s average torque from average torque over entire section (high speed test)
-    Public delta_t_tyre_max As Single                           ' [°C]; maximum variation of tyre temperature between high speed tests and low speed tests
+    Public v_wind_avg_max_LS As Single                          ' [m/s]; maximum average wind speed during low speed
+    Public v_wind_1s_max_LS As Single                           ' [m/s]; maximum gust wind speed during low speed
+    Public v_veh_avg_max_LS As Single                           ' [km/h]; maximum average vehicle speed for low speed
+    Public v_veh_avg_min_LS As Single                           ' [km/h]; minimum average vehicle speed for low speed
+    Public v_veh_float_delta_LS As Single                       ' [km/h]; +/- maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed)
+    Public tq_sum_float_delta_LS As Single                      ' [-]; +/- maximum relative deviation of floating average torque from average torque over entire section (low speed)
+    Public v_wind_avg_max_HS As Single                          ' [m/s]; maximum average wind speed during high speed
+    Public v_wind_1s_max_HS As Single                           ' [m/s]; maximum gust wind speed during high speed
+    Public v_veh_avg_min_HS As Single                           ' [km/h]; minimum average vehicle speed for high speed
+    Public beta_avg_max_HS As Single                            ' [°]; maximum average beta during high speed
+    Public v_veh_1s_delta_HS As Single                          ' [km/h]; +/- maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (high speed)
+    Public tq_sum_1s_delta_HS As Single                         ' [-]; +/- maximum relative deviation of 1s average torque from average torque over entire section (high speed)
+    Public delta_t_tyre_max As Single                           ' [°C]; maximum variation of tyre temperature between high speeds and low speeds
     Public delta_rr_corr_max As Single                          ' [kg/t]; maximum difference of RRC from the two low speed runs 
     Public t_amb_min As Single                                  ' [°C]; Minimum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)
     Public t_amb_max As Single                                  ' [°C]; Maximum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only) 

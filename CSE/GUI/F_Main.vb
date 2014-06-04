@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports Newtonsoft.Json.Linq
 
 Public Class F_Main
     ' Declarations
@@ -13,9 +14,12 @@ Public Class F_Main
         Dim NoLegFile As Boolean = False
 
         ' Initialisation
-        crt.hz_out = 1
+        Crt.hz_out = 1
+
         PBInfoIcon.Visible = False
         TBInfo.Visible = False
+        TBInfo.BackColor = System.Drawing.Color.LightYellow
+        setupInfoBox()
 
         ' Connect the Backgroundworker with the GUI
         BWorker = Me.BackgroundWorkerVECTO
@@ -501,11 +505,11 @@ Public Class F_Main
 #Region "Options"
 
     ' Check if the input is a number
-    Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TBDeltaTTireMax.KeyPress, TBDeltaRRCMax.KeyPress, TBTambVar.KeyPress, _
-        TBTambTamac.KeyPress, TBTambMax.KeyPress, TBTambMin.KeyPress, TBDeltaHzMax.KeyPress, TBRhoAirRef.KeyPress, TBAccCorrAve.KeyPress, TBDeltaParaMax.KeyPress, TBDeltaXMax.KeyPress, TBDeltaYMax.KeyPress, _
-        TBDeltaHeadMax.KeyPress, TBDsMinCAL.KeyPress, TBDsMinLS.KeyPress, TBDsMinHS.KeyPress, TBDsMinHeadHS.KeyPress, TBTq1sD.KeyPress, TBvVeh1sD.KeyPress, TBBetaAveHSMax.KeyPress, TBvVehAveHSMin.KeyPress, _
-        TBvWind1sHSMax.KeyPress, TBvWindAveHSMax.KeyPress, TBTqSumFloatD.KeyPress, TBvVehFloatD.KeyPress, TBvVehAveLSMin.KeyPress, TBvVehAveLSMax.KeyPress, TBvWind1sLSMax.KeyPress, TBvWindAveLSMax.KeyPress, _
-        TBLengCrit.KeyPress, TBBetaAveCALMax.KeyPress, TBvWind1sCALMax.KeyPress, TBvWindAveCALMax.KeyPress, TBDistFloat.KeyPress
+    Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_delta_t_tyre_max.KeyPress, TB_delta_rr_corr_max.KeyPress, TB_t_amb_var.KeyPress, _
+        TB_t_amb_tarmac.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_roh_air_ref.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
+        TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_MS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
+        TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_v_wind_1s_max_LS.KeyPress, TB_v_wind_avg_max_LS.KeyPress, _
+        TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress
         Select Case Asc(e.KeyChar)
             Case 48 To 57, 46 ' Zahlen zulassen (ASCII)
             Case Else ' Alles andere Unterdrücken
@@ -549,30 +553,30 @@ Public Class F_Main
     End Sub
 
     ' CheckBox for the acceleration calibration
-    Private Sub CheckBoxAcc_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxAcc.CheckedChanged
-        crt.accel_correction = CheckBoxAcc.Checked
+    Private Sub CheckBoxAcc_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CB_accel_correction.CheckedChanged
+        Crt.accel_correction = CB_accel_correction.Checked
     End Sub
 
     ' Checkbox for the gradient correction
-    Private Sub CheckBoxGrd_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxGrd.CheckedChanged
-        crt.gradient_correction = CheckBoxGrd.Checked
+    Private Sub CheckBoxGrd_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CB_gradient_correction.CheckedChanged
+        Crt.gradient_correction = CB_gradient_correction.Checked
     End Sub
 
     ' Change in the 1Hz radio button
     Private Sub RB1Hz_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RB1Hz.CheckedChanged
         If RB1Hz.Checked Then
-            crt.hz_out = 1
+            Crt.hz_out = 1
         Else
-            crt.hz_out = 100
+            Crt.hz_out = 100
         End If
     End Sub
 
     ' Change in the 100Hz radio button
     Private Sub RB100Hz_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RB100Hz.CheckedChanged
         If RB100Hz.Checked Then
-            crt.hz_out = 100
+            Crt.hz_out = 100
         Else
-            crt.hz_out = 1
+            Crt.hz_out = 1
         End If
     End Sub
 #End Region
@@ -657,7 +661,7 @@ Public Class F_Main
         Job.high_fpath = TextBoxDataHS.Text
         Job.low2_fpath = TextBoxDataLS2.Text
         Job.MSCTSpez = TextBoxMSCT.Text
-        Crt.rr_corr_factor = TextBoxRRC.Text
+        Crt.rr_corr_factor = TB_rr_corr_factor.Text
 
         If validate Then
             Job.Validate()
@@ -669,8 +673,8 @@ Public Class F_Main
     ' Get the parameters from option tab
     Sub UI_PopulateToCriteria()
         ' Evaluation box
-        Crt.accel_correction = CheckBoxAcc.Checked
-        Crt.gradient_correction = CheckBoxGrd.Checked
+        Crt.accel_correction = CB_accel_correction.Checked
+        Crt.gradient_correction = CB_gradient_correction.Checked
 
         ' Output box
         If RB1Hz.Checked Then Crt.hz_out = 1
@@ -678,48 +682,48 @@ Public Class F_Main
 
         'Parameter boxes
         ' General valid criteria
-        Crt.delta_t_tyre_max = TBDeltaTTireMax.Text
-        Crt.delta_rr_corr_max = TBDeltaRRCMax.Text
-        Crt.t_amb_var = TBTambVar.Text
-        Crt.t_amb_tarmac = TBTambTamac.Text
-        Crt.t_amb_max = TBTambMax.Text
-        Crt.t_amb_min = TBTambMin.Text
+        Crt.delta_t_tyre_max = TB_delta_t_tyre_max.Text
+        Crt.delta_rr_corr_max = TB_delta_rr_corr_max.Text
+        Crt.t_amb_var = TB_t_amb_var.Text
+        Crt.t_amb_tarmac = TB_t_amb_tarmac.Text
+        Crt.t_amb_max = TB_t_amb_max.Text
+        Crt.t_amb_min = TB_t_amb_min.Text
         ' General
-        Crt.delta_Hz_max = TBDeltaHzMax.Text
-        Crt.roh_air_ref = TBRhoAirRef.Text
-        Crt.acc_corr_avg = TBAccCorrAve.Text
-        Crt.delta_parallel_max = TBDeltaParaMax.Text
+        Crt.delta_Hz_max = TB_delta_Hz_max.Text
+        Crt.roh_air_ref = TB_roh_air_ref.Text
+        Crt.acc_corr_avg = TB_acc_corr_avg.Text
+        Crt.delta_parallel_max = TB_delta_parallel_max.Text
         ' Identification of measurement section
-        Crt.trigger_delta_x_max = TBDeltaXMax.Text
-        Crt.trigger_delta_y_max = TBDeltaYMax.Text
-        Crt.delta_head_max = TBDeltaHeadMax.Text
+        Crt.trigger_delta_x_max = TB_trigger_delta_x_max.Text
+        Crt.trigger_delta_y_max = TB_trigger_delta_y_max.Text
+        Crt.delta_head_max = TB_delta_head_max.Text
         ' Requirements on number of valid datasets
-        Crt.segruns_min_CAL = TBDsMinCAL.Text
-        Crt.segruns_min_LS = TBDsMinLS.Text
-        Crt.segruns_min_HS = TBDsMinHS.Text
-        Crt.segruns_min_head_MS = TBDsMinHeadHS.Text
+        Crt.segruns_min_CAL = TB_segruns_min_CAL.Text
+        Crt.segruns_min_LS = TB_segruns_min_LS.Text
+        Crt.segruns_min_HS = TB_segruns_min_HS.Text
+        Crt.segruns_min_head_MS = TB_segruns_min_head_MS.Text
         ' DataSet validity criteria
-        Crt.dist_float = TBDistFloat.Text
+        Crt.dist_float = TB_dist_float.Text
         ' Calibration
-        Crt.v_wind_avg_max_CAL = TBvWindAveCALMax.Text
-        Crt.v_wind_1s_max_CAL = TBvWind1sCALMax.Text
-        Crt.beta_avg_max_CAL = TBBetaAveCALMax.Text
+        Crt.v_wind_avg_max_CAL = TB_v_wind_avg_max_CAL.Text
+        Crt.v_wind_1s_max_CAL = TB_v_wind_1s_max_CAL.Text
+        Crt.beta_avg_max_CAL = TB_beta_avg_max_CAL.Text
         ' Low and high speed test
-        Crt.leng_crit = TBLengCrit.Text
+        Crt.leng_crit = TB_leng_crit.Text
         ' Low speed test
-        Crt.v_wind_avg_max_LS = TBvWindAveLSMax.Text
-        Crt.v_wind_1s_max_LS = TBvWind1sLSMax.Text
-        Crt.v_veh_avg_max_LS = TBvVehAveLSMax.Text
-        Crt.v_veh_avg_min_LS = TBvVehAveLSMin.Text
-        Crt.v_veh_float_delta_LS = TBvVehFloatD.Text
-        Crt.tq_sum_float_delta_LS = TBTqSumFloatD.Text
+        Crt.v_wind_avg_max_LS = TB_v_wind_avg_max_LS.Text
+        Crt.v_wind_1s_max_LS = TB_v_wind_1s_max_LS.Text
+        Crt.v_veh_avg_max_LS = TB_v_veh_avg_max_LS.Text
+        Crt.v_veh_avg_min_LS = TB_v_veh_avg_min_LS.Text
+        Crt.v_veh_float_delta_LS = TB_v_veh_float_delta_LS.Text
+        Crt.tq_sum_float_delta_LS = TB_tq_sum_float_delta_LS.Text
         ' High speed test
-        Crt.v_wind_avg_max_HS = TBvWindAveHSMax.Text
-        Crt.v_wind_1s_max_HS = TBvWind1sHSMax.Text
-        Crt.v_veh_avg_min_HS = TBvVehAveHSMin.Text
-        Crt.beta_avg_max_HS = TBBetaAveHSMax.Text
-        Crt.v_veh_1s_delta_HS = TBvVeh1sD.Text
-        Crt.tq_sum_1s_delta_HS = TBTq1sD.Text
+        Crt.v_wind_avg_max_HS = TB_v_wind_avg_max_HS.Text
+        Crt.v_wind_1s_max_HS = TB_v_wind_1s_max_HS.Text
+        Crt.v_veh_avg_min_HS = TB_v_veh_avg_min_HS.Text
+        Crt.beta_avg_max_HS = TB_beta_avg_max_HS.Text
+        Crt.v_veh_1s_delta_HS = TB_v_veh_1s_delta_HS.Text
+        Crt.tq_sum_1s_delta_HS = TB_tq_sum_1s_delta_HS.Text
     End Sub
 
     Sub UI_PopulateFromJob()
@@ -736,7 +740,7 @@ Public Class F_Main
         TextBoxDataC.Text = Job.calibration_fpath
         ' Test
         TextBoxMSCT.Text = Job.MSCTSpez
-        TextBoxRRC.Text = Crt.rr_corr_factor
+        TB_rr_corr_factor.Text = Crt.rr_corr_factor
         TextBoxDataLS1.Text = Job.low1_fpath
         TextBoxDataHS.Text = Job.high_fpath
         TextBoxDataLS2.Text = Job.low2_fpath
@@ -747,56 +751,56 @@ Public Class F_Main
     Sub UI_PopulateFromCriteria()
         ' Write the Standard values in the textboxes
         ' General valid criteria
-        TBDeltaTTireMax.Text = crt.delta_t_tyre_max
-        TBDeltaRRCMax.Text = crt.delta_rr_corr_max
-        TBTambVar.Text = crt.t_amb_var
-        TBTambTamac.Text = crt.t_amb_tarmac
-        TBTambMax.Text = crt.t_amb_max
-        TBTambMin.Text = crt.t_amb_min
+        TB_delta_t_tyre_max.Text = Crt.delta_t_tyre_max
+        TB_delta_rr_corr_max.Text = Crt.delta_rr_corr_max
+        TB_t_amb_var.Text = Crt.t_amb_var
+        TB_t_amb_tarmac.Text = Crt.t_amb_tarmac
+        TB_t_amb_max.Text = Crt.t_amb_max
+        TB_t_amb_min.Text = Crt.t_amb_min
         ' General
-        TBDeltaHzMax.Text = crt.delta_Hz_max
-        TBRhoAirRef.Text = crt.roh_air_ref
-        TBAccCorrAve.Text = crt.acc_corr_avg
-        TBDeltaParaMax.Text = crt.delta_parallel_max
+        TB_delta_Hz_max.Text = Crt.delta_Hz_max
+        TB_roh_air_ref.Text = Crt.roh_air_ref
+        TB_acc_corr_avg.Text = Crt.acc_corr_avg
+        TB_delta_parallel_max.Text = Crt.delta_parallel_max
         ' Identification of measurement section
-        TBDeltaXMax.Text = crt.trigger_delta_x_max
-        TBDeltaYMax.Text = crt.trigger_delta_y_max
-        TBDeltaHeadMax.Text = crt.delta_head_max
+        TB_trigger_delta_x_max.Text = Crt.trigger_delta_x_max
+        TB_trigger_delta_y_max.Text = Crt.trigger_delta_y_max
+        TB_delta_head_max.Text = Crt.delta_head_max
         ' Requirements on number of valid datasets
-        TBDsMinCAL.Text = crt.segruns_min_CAL
-        TBDsMinLS.Text = crt.segruns_min_LS
-        TBDsMinHS.Text = crt.segruns_min_HS
-        TBDsMinHeadHS.Text = crt.segruns_min_head_MS
+        TB_segruns_min_CAL.Text = Crt.segruns_min_CAL
+        TB_segruns_min_LS.Text = Crt.segruns_min_LS
+        TB_segruns_min_HS.Text = Crt.segruns_min_HS
+        TB_segruns_min_head_MS.Text = Crt.segruns_min_head_MS
         ' DataSet validity criteria
-        TBDistFloat.Text = crt.dist_float
+        TB_dist_float.Text = Crt.dist_float
         ' Calibration
-        TBvWindAveCALMax.Text = crt.v_wind_avg_max_CAL
-        TBvWind1sCALMax.Text = crt.v_wind_1s_max_CAL
-        TBBetaAveCALMax.Text = crt.beta_avg_max_CAL
+        TB_v_wind_avg_max_CAL.Text = Crt.v_wind_avg_max_CAL
+        TB_v_wind_1s_max_CAL.Text = Crt.v_wind_1s_max_CAL
+        TB_beta_avg_max_CAL.Text = Crt.beta_avg_max_CAL
         ' Low and high speed test
-        TBLengCrit.Text = crt.leng_crit
+        TB_leng_crit.Text = Crt.leng_crit
         ' Low speed test
-        TBvWindAveLSMax.Text = crt.v_wind_avg_max_LS
-        TBvWind1sLSMax.Text = crt.v_wind_1s_max_LS
-        TBvVehAveLSMax.Text = crt.v_veh_avg_max_LS
-        TBvVehAveLSMin.Text = crt.v_veh_avg_min_LS
-        TBvVehFloatD.Text = crt.v_veh_float_delta_LS
-        TBTqSumFloatD.Text = crt.tq_sum_float_delta_LS
+        TB_v_wind_avg_max_LS.Text = Crt.v_wind_avg_max_LS
+        TB_v_wind_1s_max_LS.Text = Crt.v_wind_1s_max_LS
+        TB_v_veh_avg_min_LS.Text = Crt.v_veh_avg_min_LS
+        TB_v_veh_avg_max_LS.Text = Crt.v_veh_avg_max_LS
+        TB_v_veh_float_delta_LS.Text = Crt.v_veh_float_delta_LS
+        TB_tq_sum_float_delta_LS.Text = Crt.tq_sum_float_delta_LS
         ' High speed test
-        TBvWindAveHSMax.Text = crt.v_wind_avg_max_HS
-        TBvWind1sHSMax.Text = crt.v_wind_1s_max_HS
-        TBvVehAveHSMin.Text = crt.v_veh_avg_min_HS
-        TBBetaAveHSMax.Text = crt.beta_avg_max_HS
-        TBvVeh1sD.Text = crt.v_veh_1s_delta_HS
-        TBTq1sD.Text = crt.tq_sum_1s_delta_HS
+        TB_v_wind_avg_max_HS.Text = Crt.v_wind_avg_max_HS
+        TB_v_wind_1s_max_HS.Text = Crt.v_wind_1s_max_HS
+        TB_v_veh_avg_min_HS.Text = Crt.v_veh_avg_min_HS
+        TB_beta_avg_max_HS.Text = Crt.beta_avg_max_HS
+        TB_v_veh_1s_delta_HS.Text = Crt.v_veh_1s_delta_HS
+        TB_tq_sum_1s_delta_HS.Text = Crt.tq_sum_1s_delta_HS
         ' Evaluation box
-        CheckBoxAcc.Checked = crt.accel_correction
-        CheckBoxGrd.Checked = crt.gradient_correction
+        CB_accel_correction.Checked = Crt.accel_correction
+        CB_gradient_correction.Checked = Crt.gradient_correction
 
         ' Output
-        If crt.hz_out = 1 Then
+        If Crt.hz_out = 1 Then
             RB1Hz.Checked = True
-        ElseIf crt.hz_out = 100 Then
+        ElseIf Crt.hz_out = 100 Then
             RB100Hz.Checked = True
         End If
     End Sub
@@ -818,13 +822,13 @@ Public Class F_Main
             TextBoxAird.Text = 0
             TextBoxbetaf.Text = 1
             TextBoxbetad.Text = 0
-            CheckBoxAcc.Checked = True
-            CheckBoxGrd.Checked = False
+            CB_accel_correction.Checked = True
+            CB_gradient_correction.Checked = False
 
             ' Calibration fields
             TextBoxDataC.Clear()
             TextBoxMSCC.Clear()
-            TextBoxRRC.Text = 1.0
+            TB_rr_corr_factor.Text = 1.0
 
             ' Test run fields
             TextBoxMSCT.Clear()
@@ -854,267 +858,74 @@ Public Class F_Main
 
 
 #Region "Infobox"
-    ' Deactivate the message
-    Private Sub DeacMsg(ByVal sender As Object, ByVal e As System.EventArgs) Handles LDistFloat.MouseLeave, TBDistFloat.MouseLeave, LvWindAveCALMax.MouseLeave, TBvWindAveCALMax.MouseLeave, _
-        LvWind1sCALMax.MouseLeave, TBvWind1sCALMax.MouseLeave, LBetaAveCALMax.MouseLeave, TBBetaAveCALMax.MouseLeave, LLengCrit.MouseLeave, TBLengCrit.MouseLeave, LvWindAveLSMax.MouseLeave, _
-        TBvWindAveLSMax.MouseLeave, LvWind1sLSMax.MouseLeave, TBvWind1sLSMax.MouseLeave, LvVehAveLSMax.MouseLeave, TBvVehAveLSMax.MouseLeave, LvVehAveLSMin.MouseLeave, TBvVehAveLSMin.MouseLeave, _
-        LvVehFloatD.MouseLeave, TBvVehFloatD.MouseLeave, LTqSumFloatD.MouseLeave, TBTqSumFloatD.MouseLeave, LvWindAveHSMax.MouseLeave, TBvWindAveHSMax.MouseLeave, LvWind1sHSMax.MouseLeave, _
-        TBvWind1sHSMax.MouseLeave, LvVehAveHSMin.MouseLeave, TBvVehAveHSMin.MouseLeave, LBetaAveHSMax.MouseLeave, TBBetaAveHSMax.MouseLeave, LvVeh1sD.MouseLeave, TBvVeh1sD.MouseLeave, _
-        LTq1sD.MouseLeave, TBTq1sD.MouseLeave, LDeltaTTireMax.MouseLeave, TBDeltaTTireMax.MouseLeave, LDeltaRRCMax.MouseLeave, TBDeltaRRCMax.MouseLeave, LTambVar.MouseLeave, TBTambVar.MouseLeave, _
-        LTambTamac.MouseLeave, TBTambTamac.MouseLeave, LTambMax.MouseLeave, TBTambMax.MouseLeave, LTambMin.MouseLeave, TBTambMin.MouseLeave, LDeltaHzMax.MouseLeave, TBDeltaHzMax.MouseLeave, _
-        LRhoAirRef.MouseLeave, TBRhoAirRef.MouseLeave, LAccCorrAve.MouseLeave, TBAccCorrAve.MouseLeave, LDeltaParaMax.MouseLeave, TBDeltaParaMax.MouseLeave, LDeltaXMax.MouseLeave, TBDeltaXMax.MouseLeave, _
-        LDeltaYMax.MouseLeave, TBDeltaYMax.MouseLeave, LContAng.MouseLeave, TBDeltaHeadMax.MouseLeave, LDsMinCAL.MouseLeave, TBDsMinCAL.MouseLeave, LDsMinLS.MouseLeave, TBDsMinLS.MouseLeave, LDsMinHS.MouseLeave, _
-        TBDsMinHS.MouseLeave, LDsMinHeadMS.MouseLeave, TBDsMinHeadHS.MouseLeave
+    ''' <summary>NOTE that the name of the controls below after the 3rd char is equal to the schema-property</summary>
+    Private Sub setupInfoBox()
+        Dim processingControls = New Control() {
+                Me.TB_roh_air_ref, LRhoAirRef, _
+                Me.CB_accel_correction, Nothing, _
+                Me.CB_gradient_correction, Nothing, _
+                Me.TB_rr_corr_factor, Me.Label2, _
+                Me.GB_hz_out, Nothing, _
+                Me.TB_acc_corr_avg, Me.LAccCorrAve, _
+                Me.TB_dist_float, Me.LDistFloat
+        }
+        Dim validationControls = New Control() {
+            TB_trigger_delta_x_max, LDeltaXMax, _
+            TB_trigger_delta_y_max, LDeltaYMax, _
+            TB_delta_head_max, LContAng, _
+            TB_segruns_min_CAL, LDsMinCAL, _
+            TB_segruns_min_LS, LDsMinLS, _
+            TB_segruns_min_HS, Me.LDsMinHS, _
+            TB_segruns_min_head_MS, LDsMinHeadMS, _
+            TB_delta_Hz_max, LDeltaHzMax, _
+            TB_delta_parallel_max, LDeltaParaMax, _
+            TB_v_wind_avg_max_CAL, LvWindAveCALMax, _
+            TB_v_wind_1s_max_CAL, LvWind1sCALMax, _
+            TB_beta_avg_max_CAL, LBetaAveCALMax, _
+            TB_leng_crit, LLengCrit, _
+            TB_v_wind_avg_max_LS, LvWindAveLSMax, _
+            TB_v_wind_1s_max_LS, LvWind1sLSMax, _
+            TB_v_veh_avg_min_LS, LB_v_veh_avg_min_LS, _
+            TB_v_veh_avg_max_LS, LB_v_veh_avg_max_LS, _
+            TB_v_veh_float_delta_LS, LB_v_veh_float_delta_LS, _
+            TB_tq_sum_float_delta_LS, LB_tq_sum_float_delta_LS, _
+            TB_v_wind_avg_max_HS, LB_v_wind_avg_max_HS, _
+            TB_v_wind_1s_max_HS, LB_v_wind_1s_max_HS, _
+            TB_beta_avg_max_HS, LB_beta_avg_max_HS, _
+            TB_v_veh_avg_min_HS, LB_v_veh_avg_min_HS, _
+            TB_v_veh_1s_delta_HS, LB_v_veh_1s_delta_HS, _
+            TB_tq_sum_1s_delta_HS, LB_tq_sum_1s_delta_HS, _
+            TB_delta_t_tyre_max, LB_delta_t_tyre_max, _
+            TB_delta_rr_corr_max, LB_delta_rr_corr_max, _
+            TB_t_amb_min, LB_t_amb_min, _
+            TB_t_amb_max, LB_t_amb_max, _
+            TB_t_amb_var, LB_t_amb_var, _
+            TB_t_amb_tarmac, LB_t_amb_tarmac _
+            }
+
+
+        Dim schema As JObject
+
+        schema = New cCriteria(True).BodySchema.SelectToken("properties.Processing")
+        armControlsWithInfoBox(schema, processingControls, AddressOf showInfoBox, AddressOf hideInfoBox)
+
+        schema = New cCriteria(True).BodySchema.SelectToken("properties.Validation")
+        armControlsWithInfoBox(schema, validationControls, AddressOf showInfoBox, AddressOf hideInfoBox)
+    End Sub
+
+    Private Sub showInfoBox(ByVal sender As Object, ByVal e As System.EventArgs)
+        TBInfo.Text = sender.Tag
+        TBInfo.Visible = True
+        PBInfoIcon.Visible = True
+    End Sub
+
+    Private Sub hideInfoBox(ByVal sender As Object, ByVal e As System.EventArgs)
         TBInfo.Visible = False
         PBInfoIcon.Visible = False
     End Sub
 
-    ' Show the message in the infobox
-    Private Function InfActivat(ByVal Text As String) As Boolean
-        TBInfo.Visible = True
-        PBInfoIcon.Visible = True
-        TBInfo.BackColor = System.Drawing.Color.LightYellow
-        TBInfo.Text = Text
-        Return True
-    End Function
 
-#Region "FloatDist"
-    ' Show the message
-    Private Sub ShowMsgFloatDist(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBDistFloat.MouseMove, LDistFloat.MouseMove
-        InfActivat("Distance used for calculation of floatinig average signal used for stabilitay criteria in low speed tests")
-    End Sub
-#End Region
 
-#Region "vWindAveCALMax"
-    ' Show the message
-    Private Sub ShowMsgvWindAveCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWindAveCALMax.MouseMove, LvWindAveCALMax.MouseMove
-        InfActivat("Maximum average wind speed during calibration test")
-    End Sub
-#End Region
-
-#Region "vWind1sCALMax"
-    ' Show the message
-    Private Sub ShowMsgvWind1sCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWind1sCALMax.MouseMove, LvWind1sCALMax.MouseMove
-        InfActivat("Maximum gust wind speed during calibration test")
-    End Sub
-#End Region
-
-#Region "BetaAveCALMax"
-    ' Show the message
-    Private Sub ShowMsgBetaAveCALMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBBetaAveCALMax.MouseMove, LBetaAveCALMax.MouseMove
-        InfActivat("Maximum average beta during calibration test")
-    End Sub
-#End Region
-
-#Region "LengCrit"
-    ' Show the message
-    Private Sub ShowMsgLengCrit(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBLengCrit.MouseMove, LLengCrit.MouseMove
-        InfActivat("Maximum absolute difference of distance driven with lenght of section as specified in configuration")
-    End Sub
-#End Region
-
-#Region "vWindAveLSMax"
-    ' Show the message
-    Private Sub ShowMsgvWindAveLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWindAveLSMax.MouseMove, LvWindAveLSMax.MouseMove
-        InfActivat("Maximum average wind speed during low speed test")
-    End Sub
-#End Region
-
-#Region "vWind1sLSMax"
-    ' Show the message
-    Private Sub ShowMsgvWind1sLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWind1sLSMax.MouseMove, LvWind1sLSMax.MouseMove
-        InfActivat("Maximum gust wind speed during low speed test")
-    End Sub
-#End Region
-
-#Region "vVehAveLSMax"
-    ' Show the message
-    Private Sub ShowMsgvVehAveLSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVehAveLSMax.MouseMove, LvVehAveLSMax.MouseMove
-        InfActivat("Maximum average vehicle speed for low speed test")
-    End Sub
-#End Region
-
-#Region "vVehAveLSMin"
-    ' Show the message
-    Private Sub ShowMsgvVehAveLSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVehAveLSMin.MouseMove, LvVehAveLSMin.MouseMove
-        InfActivat("Minimum average vehicle speed for low speed test")
-    End Sub
-#End Region
-
-#Region "vVehFloatD"
-    ' Show the message
-    Private Sub ShowMsgvVehFloatD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVehFloatD.MouseMove, LvVehFloatD.MouseMove
-        InfActivat("+/- Maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed test)")
-    End Sub
-#End Region
-
-#Region "TqSumFloatD"
-    ' Show the message
-    Private Sub ShowMsgTqSumFloatD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBTqSumFloatD.MouseMove, LTqSumFloatD.MouseMove
-        InfActivat("+/- Maximum relative deviation of floating average torque from average torque over entire section (low speed test)")
-    End Sub
-#End Region
-
-#Region "vWindAveHSMax"
-    ' Show the message
-    Private Sub ShowMsgvWindAveHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWindAveHSMax.MouseMove, LvWindAveHSMax.MouseMove
-        InfActivat("Maximum average wind speed during high speed test")
-    End Sub
-#End Region
-
-#Region "vWind1sHSMax"
-    ' Show the message
-    Private Sub ShowMsgvWind1sHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvWind1sHSMax.MouseMove, LvWind1sHSMax.MouseMove
-        InfActivat("Maximum gust wind speed during high speed test")
-    End Sub
-#End Region
-
-#Region "vVehAveHSMin"
-    ' Show the message
-    Private Sub ShowMsgvVehAveHSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVehAveHSMin.MouseMove, LvVehAveHSMin.MouseMove
-        InfActivat("Minimum average vehicle speed for high speed test")
-    End Sub
-#End Region
-
-#Region "BetaAveHSMax"
-    ' Show the message
-    Private Sub ShowMsgBetaAveHSMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBBetaAveHSMax.MouseMove, LBetaAveHSMax.MouseMove
-        InfActivat("Maximum average beta during high speed test")
-    End Sub
-#End Region
-
-#Region "vVeh1sD"
-    ' Show the message
-    Private Sub ShowMsgvVeh1sD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBvVeh1sD.MouseMove, LvVeh1sD.MouseMove
-        InfActivat("+/- Maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (high speed test)")
-    End Sub
-#End Region
-
-#Region "Tq1sD"
-    ' Show the message
-    Private Sub ShowMsgTq1sD(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles TBTq1sD.MouseMove, LTq1sD.MouseMove
-        InfActivat("+/- Maximum relative deviation of 1s average torque from average torque over entire section (high speed test)")
-    End Sub
-#End Region
-
-#Region "DeltaTTireMax"
-    ' Show the message
-    Private Sub ShowMsgDeltaTTireMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaTTireMax.MouseMove, TBDeltaTTireMax.MouseMove
-        InfActivat("Maximum variation of tyre temperature between high speed tests and low speed tests")
-    End Sub
-#End Region
-
-#Region "DeltaRRCMax"
-    ' Show the message
-    Private Sub ShowMsgDeltaRRCMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaRRCMax.MouseMove, TBDeltaRRCMax.MouseMove
-        InfActivat("Maximum difference of RRC from the two low speed runs")
-    End Sub
-#End Region
-
-#Region "TambVar"
-    ' Show the message
-    Private Sub ShowMsgTambVar(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTambVar.MouseMove, TBTambVar.MouseMove
-        InfActivat("Maximum variation of ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)")
-    End Sub
-#End Region
-
-#Region "TambTamac"
-    ' Show the message
-    Private Sub ShowMsgTambTamac(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTambTamac.MouseMove, TBTambTamac.MouseMove
-        InfActivat("Maximum temperature below which no documentation of tarmac conditions is necessary")
-    End Sub
-#End Region
-
-#Region "TambMax"
-    ' Show the message
-    Private Sub ShowMsgTambMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTambMax.MouseMove, TBTambMax.MouseMove
-        InfActivat("Maximum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)")
-    End Sub
-#End Region
-
-#Region "TambMin"
-    ' Show the message
-    Private Sub ShowMsgTambMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LTambMin.MouseMove, TBTambMin.MouseMove
-        InfActivat("Minimum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)")
-    End Sub
-#End Region
-
-#Region "ContHz"
-    ' Show the message
-    Private Sub ShowMsgContHz(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaHzMax.MouseMove, TBDeltaHzMax.MouseMove
-        InfActivat("Maximum allowed deviation of timestep-size in csdat-file from 100Hz")
-    End Sub
-#End Region
-
-#Region "RhoAirRef"
-    ' Show the message
-    Private Sub ShowMsgRhoAirRef(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LRhoAirRef.MouseMove, TBRhoAirRef.MouseMove
-        InfActivat("Reference air density")
-    End Sub
-#End Region
-
-#Region "AveSecAcc"
-    ' Show the message
-    Private Sub ShowMsgAveSecAcc(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LAccCorrAve.MouseMove, TBAccCorrAve.MouseMove
-        InfActivat("Averaging of vehicle speed for correction of acceleration forces")
-    End Sub
-#End Region
-
-#Region "DeltaHeadMax"
-    ' Show the message
-    Private Sub ShowMsgDeltaHeadMax(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaParaMax.MouseMove, TBDeltaParaMax.MouseMove
-        InfActivat("Maximum heading difference for measurement section (parallelism criteria for test track layout)")
-    End Sub
-#End Region
-
-#Region "ContSecL"
-    ' Show the message
-    Private Sub ShowMsgContSecL(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaXMax.MouseMove, TBDeltaXMax.MouseMove
-        InfActivat("+/- Size of the control area around a MS start/end point where a trigger signal is valid (driving direction)")
-    End Sub
-#End Region
-
-#Region "LRec"
-    ' Show the message
-    Private Sub ShowMsgLRec(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDeltaYMax.MouseMove, TBDeltaYMax.MouseMove
-        InfActivat("+/- Size of the control area around a MS start/end point where a trigger signal is valid (perpendicular to driving direction)")
-    End Sub
-#End Region
-
-#Region "ContAng"
-    ' Show the message
-    Private Sub ShowMsgContAng(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LContAng.MouseMove, TBDeltaHeadMax.MouseMove
-        InfActivat("+/- Maximum deviation from heading as read from the csdat-file to the heading from csms-file for a valid dataset")
-    End Sub
-#End Region
-
-#Region "NSecAnz"
-    ' Show the message
-    Private Sub ShowMsgNSecAnz(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDsMinCAL.MouseMove, TBDsMinCAL.MouseMove
-        InfActivat("Minimum number of valid datasets required for the calibration test (per combination of MS ID and DIR ID)")
-    End Sub
-#End Region
-
-#Region "NSecAnzLS"
-    ' Show the message
-    Private Sub ShowMsgNSecAnzLS(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDsMinLS.MouseMove, TBDsMinLS.MouseMove
-        InfActivat("Minimum number of valid datasets required for the low speed test (per combination of MS ID and DIR ID)")
-    End Sub
-#End Region
-
-#Region "NSecAnzHS"
-    ' Show the message
-    Private Sub ShowMsgNSecAnzHS(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDsMinHS.MouseMove, TBDsMinHS.MouseMove
-        InfActivat("Minimum number of valid datasets required for the high speed test (per combination of MS ID and DIR ID)")
-    End Sub
-#End Region
-
-#Region "MSHSMin"
-    ' Show the message
-    Private Sub ShowMsgMSHSMin(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles LDsMinHeadMS.MouseMove, TBDsMinHeadHS.MouseMove
-        InfActivat("Minimum TOTAL number of valid datasets required for the high speed test per heading")
-    End Sub
-#End Region
 #End Region
 
     Private Sub ButtonClearLogs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonClearLogs.Click
@@ -1125,4 +936,5 @@ Public Class F_Main
         ListBoxErr.Items.Clear()
         TabPageErr.Text = "Errors(0)"
     End Sub
+
 End Class

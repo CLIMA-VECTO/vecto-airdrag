@@ -201,7 +201,7 @@ Module utils
     ' Functions for the information depiction on the GUI with the backgroundworker (Info, Warning, Error)
 #Region "Logging"
     ''' <summary>Output from Informations\Warnings\Errors on the GUI, even from within the Backgoundworker</summary>
-    Sub logme(ByVal logLevel As Integer, ByVal MsgBoxOut As Boolean, _
+    Sub logme(ByVal logLevel As Integer, ByVal asMsgBox As Boolean, _
                    ByVal text As String, Optional ByVal ex As Exception = Nothing)
 
         ' Declaration
@@ -231,10 +231,10 @@ Module utils
         ''
         If logLevel >= Prefs.logLevel Then
             Dim wintext = AnzeigeMessage(logLevel) & text
-            If BWorker.IsBusy Then
+            If BWorker IsNot Nothing AndAlso BWorker.IsBusy Then
                 '' If in Worker-thread, update GUI through a ProgressChanged event
                 ''
-                Dim WorkerMsg As New cLogMsg(logFileLevel, MsgBoxOut, wintext, ex, tabLabel)
+                Dim WorkerMsg As New cLogMsg(logFileLevel, asMsgBox, wintext, ex, tabLabel)
                 BWorker.ReportProgress(0, WorkerMsg)
             Else
                 updateLogWindow(logFileLevel, wintext, tabLabel, ex)
@@ -243,7 +243,7 @@ Module utils
 
         '' Output as an messagebox (if requested)
         ''
-        If MsgBoxOut Then
+        If asMsgBox Then
             ' Output in a MsgBox
             If RestartN Then
                 ' By changes in the confic use other output
@@ -473,22 +473,31 @@ Module utils
     End Function
 
     ''' <summary>Builds a human-readable help-string from any non-null schema-properties.</summary>
-    Function schemaInfos2helpMsg(ByVal ParamArray propSchemaInfos() As JToken) As String
-        Dim titl = propSchemaInfos(0)
-        Dim desc = propSchemaInfos(1)
-        Dim type = propSchemaInfos(2)
-        Dim chce = propSchemaInfos(3)
-        Dim dflt = propSchemaInfos(4)
-        Dim mini = propSchemaInfos(5)
-        Dim miex = propSchemaInfos(6) '' exclusiveMin
-        Dim maxi = propSchemaInfos(7)
-        Dim maex = propSchemaInfos(8) '' exclusiveMax
+    Function schemaInfos2helpMsg(ByVal schema As JObject) As String
+        Dim infos() As JToken = (From pname In { _
+                                 "title", "description", "type", "enum", "default", _
+                                 "minimum", "exclusiveMinimum", "maximum", "exclusiveMaximum", "units"}
+                    Select schema(pname)).ToArray()
+
+        ''TODO: Include other schema-props in hlp-msg.
+
+        Dim titl = infos(0)
+        Dim desc = infos(1)
+        Dim type = infos(2)
+        Dim chce = infos(3)
+        Dim dflt = infos(4)
+        Dim mini = infos(5)
+        Dim miex = infos(6) '' exclusiveMin
+        Dim maxi = infos(7)
+        Dim maex = infos(8) '' exclusiveMax
+        Dim unit = infos(9) '' exclusiveMax
 
         Dim sdesc As String = ""
         Dim stype As String = ""
         Dim senum As String = ""
         Dim sdflt As String = ""
         Dim slimt As String = ""
+        Dim sunit As String = ""
 
         If desc IsNot Nothing Then
             sdesc = format(desc.ToString())
@@ -516,8 +525,9 @@ Module utils
             slimt = format("\n- limits : {0}{1}, {2}{3}", _
                            open, smin, smax, clos)
         End If
+        If unit IsNot Nothing Then sunit = format("\n-  units : {0}", unit)
 
-        Return String.Join("", stype, sdesc, senum, sdflt, slimt)
+        Return String.Join("", stype, sdesc, sunit, senum, sdflt, slimt)
     End Function
 
 #End Region ' Json
@@ -580,51 +590,77 @@ Module utils
 #End Region ' Strings
 
 #Region "GUI"
+    ''' <param name="infoboxControls">An array with even number of controls, made up of pairs (ctrl, label) where label can be null</param>
+    Sub armControlsWithInfoBox(ByVal schema As JObject, ByVal infoboxControls As Control(), ByVal showInfoBox As EventHandler, ByVal hideInfoBox As EventHandler)
+        For i = 0 To UBound(infoboxControls) Step 2
+            Dim ctrl = infoboxControls(i)
+            Dim lbl = infoboxControls(i + 1)
 
-    Sub updateControlsFromSchema(ByVal schema As JObject, ByVal ctrl As Control, ByVal label As Control)
+            Dim ctrlName As String = ctrl.Name
+            Dim propName = ctrlName.Substring(3)
+
+            Dim helpMsg = updateControlsFromSchema(schema, ctrl, lbl, propName, True, True)
+            ctrl.Tag = helpMsg
+            AddHandler ctrl.MouseEnter, showInfoBox
+            AddHandler ctrl.MouseLeave, hideInfoBox
+
+            If lbl IsNot Nothing Then
+                lbl.Tag = helpMsg
+                AddHandler lbl.MouseEnter, showInfoBox
+                AddHandler lbl.MouseLeave, hideInfoBox
+            End If
+        Next
+
+    End Sub
+
+
+    Function updateControlsFromSchema(ByVal schema As JObject, ByVal ctrl As Control, ByVal label As Control, _
+                                 Optional ByVal propName As String = Nothing, Optional ByVal skipToolTip As Boolean = False, _
+                                 Optional ByVal usePropNameAsTitle As Boolean = False) As String
+        Dim msg As String = Nothing
         Try
-            Dim pschema = schema.SelectToken(".properties." & ctrl.Name)
+            If propName Is Nothing Then propName = ctrl.Name
+
+            Dim pschema = schema.SelectToken(".properties." & propName)
             If pschema Is Nothing Then
-                logme(8, False, format("Schema2GUI: Could not find schema for Control({0})!\n\iSchema: {1}", ctrl.Name, schema))
-                Return
+                logme(8, False, format("Schema2GUI: Could not find schema for Control({0})!", propName))
+                Return msg
             End If
 
             '' Set title on control/label
             ''
             Dim title = pschema("title")
+            If title Is Nothing AndAlso usePropNameAsTitle Then title = propName
+
             If title IsNot Nothing Then
                 If label IsNot Nothing Then
                     label.Text = title
                 Else
                     If TypeOf ctrl Is CheckBox Then
-                        title = title.ToString() & "?"
+                        ctrl.Text = title.ToString() & "?"
                     End If
                 End If
-                ctrl.Text = title
             End If
 
-            '' Build tooltip.
-            ''
-            Dim infos = _
-                From pname In {"title", "description", "type", "enum", "default", _
-                               "minimum", "exclusiveMinimum", "maximum", "exclusiveMaximum"}
-                Select pschema(pname)
+            msg = schemaInfos2helpMsg(pschema)
+            If msg IsNot Nothing Then
+                If Not skipToolTip Then
 
-            ''TODO: Include other schema-props in tooltips.
+                    Dim t = New ToolTip()
+                    t.SetToolTip(ctrl, msg)
+                    t.AutomaticDelay = 300
+                    t.AutoPopDelay = 10000
+                End If
 
-            If infos.Any() Then
-                Dim msg = schemaInfos2helpMsg(infos.ToArray())
-                Dim t = New ToolTip()
-                t.SetToolTip(ctrl, msg)
-                t.AutomaticDelay = 300
-                t.AutoPopDelay = 10000
             End If
 
+            Return msg
 
         Catch ex As Exception
             logme(8, False, format("Schema2GUI: Skipped exception: {0} ", ex.Message), ex)
+            Return msg
         End Try
-    End Sub
+    End Function
 
 #End Region 'GUI
 

@@ -111,8 +111,8 @@ The generic parameters for classes are stored in the GenShape.shp",
     End Sub
 
 
-    Public Overrides Function BodySchema() As JObject
-        Return JObject.Parse(JSchemaStr())
+    Protected Overrides Function BodySchemaStr() As String
+        Return JSchemaStr()
     End Function
 
     ''' <exception cref="SystemException">includes all validation errors</exception>

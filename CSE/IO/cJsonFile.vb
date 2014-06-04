@@ -94,9 +94,7 @@ Public MustInherit Class cJsonFile
     ''' <remarks>The result json must be valid overlaying this header.</remarks>
     Protected MustOverride Function HeaderOverlay() As JObject
 
-    ''' <summary>When a instance_with_defauls is Created, it gets its /Body from this method</summary>
-    ''' <remarks>The result json must be valid after replacing with this body.</remarks>
-    Public MustOverride Function BodySchema() As JObject
+    Protected MustOverride Function BodySchemaStr() As String
 
     ''' <summary>Invoked by this class for subclasses to validate file</summary>
     ''' <remarks>To signify validation-failure it can throw an exception or add err-messages into the supplied list</remarks>
@@ -199,7 +197,7 @@ Public MustInherit Class cJsonFile
             isIncludeSchema = False
         End If
         If isIncludeSchema Then
-            h("BodySchema") = Me.BodySchema
+            h("BodySchema") = New JRaw(Me.BodySchemaStr)
         ElseIf bodySchema Is Nothing Then
             h("BodySchema") = Nothing
         End If
@@ -285,6 +283,17 @@ Public MustInherit Class cJsonFile
             Return value
         End If
     End Function
+
+    Private _BodySchema As JObject
+    Public ReadOnly Property BodySchema As JObject
+        Get
+            If _BodySchema Is Nothing Then
+                _BodySchema = JObject.Parse(Me.BodySchemaStr)
+            End If
+            Return _BodySchema
+        End Get
+    End Property
+
 
 #Region "json props"
     Public ReadOnly Property Header() As JObject

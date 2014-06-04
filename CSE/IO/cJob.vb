@@ -109,8 +109,8 @@ Public Class cJob
     End Sub
 
 
-    Public Overrides Function BodySchema() As JObject
-        Return JObject.Parse(JSchemaStr())
+    Protected Overrides Function BodySchemaStr() As String
+        Return JSchemaStr()
     End Function
 
     ''' <param name="strictBody">when true, no additional json-properties allowed in the data, when nothing, use value from Header</param>

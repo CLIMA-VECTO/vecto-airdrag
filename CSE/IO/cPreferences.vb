@@ -59,7 +59,7 @@ Public Class cPreferences
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 10, "exclusiveMaximum": true,
-                    "default": 5,
+                    "default": 2,
                     "description": "Sets the threshold(Level) above (inclusive) from which log-messages are shown in the log-window.
     0     : All
     3-7   : No infos
@@ -114,8 +114,8 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
     End Sub
 
 
-    Public Overrides Function BodySchema() As JObject
-        Return JObject.Parse(JSchemaStr())
+    Protected Overrides Function BodySchemaStr() As String
+        Return JSchemaStr()
     End Function
 
     ''' <exception cref="SystemException">includes all validation errors</exception>

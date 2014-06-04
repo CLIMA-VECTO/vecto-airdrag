@@ -216,7 +216,7 @@ lb10:
     Public Sub WriteLine(ByVal x As String)
         ' Polling if the file is blocked
         If IsNothing(StrWrter) Then
-            BWorker.CancelAsync()
+            If BWorker IsNot Nothing Then BWorker.CancelAsync()
             FileBlock = True
             Exit Sub
         End If
