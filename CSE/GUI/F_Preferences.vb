@@ -2,8 +2,7 @@ Imports Newtonsoft.Json.Linq
 
 Public Class F_Preferences
 
-    ' Load confic
-    Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+    Private Sub FormLoadHandler(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim controlPairs As IList(Of Control()) = New List(Of Control())
         ''                CONTROL        LABEL
         controlPairs.Add({Me.workingDir, Me.GroupBoxWorDir})
@@ -15,37 +14,82 @@ Public Class F_Preferences
         controlPairs.Add({Me.strictBodies, Nothing})
         controlPairs.Add({Me.hideUsername, Nothing})
 
-        '' Add help-tooltips from Json-Schema.
+        '' Add help-tooltips from Json-Schema and 
+        '' dirty-check them.
         ''
         Dim schema = JObject.Parse(cPreferences.JSchemaStr)
         For Each row In controlPairs
             Dim ctrl = row(0)
             Dim Label = row(1)
             updateControlsFromSchema(schema, ctrl, Label)
+            If TypeOf ctrl Is CheckBox Then
+                AddHandler DirectCast(ctrl, CheckBox).CheckedChanged, AddressOf DirtyHandler
+            Else
+                AddHandler ctrl.TextChanged, AddressOf DirtyHandler
+            End If
         Next
 
         UI_PopulateFrom(Prefs)
     End Sub
 
+    Private Sub FormClosingHandler(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        If Me.Dirty Then
+            Dim res = MsgBox("Save changes?", MsgBoxStyle.YesNoCancel, "Preferences Changed")
+            Select Case res
+                Case MsgBoxResult.No
+                Case MsgBoxResult.Yes
+                    Try
+                        StorePrefs()
+                    Catch ex As Exception
+                        e.Cancel = True
+                        logme(9, True, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", _
+                                                    PrefsPath, ex.Message), ex)
+                    End Try
+                Case Else
+                    e.Cancel = True
+            End Select
+        End If
+    End Sub
+
+    Private _Dirty
+    Private Property Dirty As Boolean
+        Get
+            Return _Dirty
+        End Get
+        Set(ByVal value As Boolean)
+            If _Dirty Xor value Then
+                Me.Text = "Preferences" & IIf(value, "*", "")
+            End If
+            _Dirty = value
+        End Set
+    End Property
+
+
+    Private Sub DirtyHandler(ByVal sender As Object, ByVal e As System.EventArgs)
+        Dirty = True
+    End Sub
+
     Private Sub UI_PopulateFrom(ByVal value As cPreferences)
         ' Allocate the data from the confic file (Only by the start)
         Me.workingDir.Text = value.workingDir
-        Me.editor.Text = value.Editor
-        Me.writeLog.Checked = value.WriteLog
-        Me.logLevel.Text = value.LogLevel
-        Me.logSize.Text = value.LogSize
-        Me.includeSchemas.Checked = value.IncludeSchemas
+        Me.editor.Text = value.editor
+        Me.writeLog.Checked = value.writeLog
+        Me.logLevel.Text = value.logLevel
+        Me.logSize.Text = value.logSize
+        Me.includeSchemas.Checked = value.includeSchemas
         Me.strictBodies.Checked = value.strictBodies
         Me.hideUsername.Checked = value.hideUsername
+
+        Me.Dirty = False
     End Sub
 
     Private Sub UI_PopulateTo(ByVal value As cPreferences)
         value.workingDir = Me.workingDir.Text
-        value.Editor = Me.editor.Text
-        value.WriteLog = Me.writeLog.Checked
-        value.LogLevel = Me.logLevel.Text
-        value.LogSize = Me.logSize.Text
-        value.IncludeSchemas = Me.includeSchemas.Checked
+        value.editor = Me.editor.Text
+        value.writeLog = Me.writeLog.Checked
+        value.logLevel = Me.logLevel.Text
+        value.logSize = Me.logSize.Text
+        value.includeSchemas = Me.includeSchemas.Checked
         value.strictBodies = Me.strictBodies.Checked
         value.hideUsername = Me.hideUsername.Checked
     End Sub
@@ -57,27 +101,33 @@ Public Class F_Preferences
         End If
     End Sub
 
-    ' Ok button
-    Private Sub StorePrefs(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
+    Private Sub SaveHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click, ButtonSave.Click
         Try
-            Dim newPrefs As cPreferences = Prefs.Clone()
-            UI_PopulateTo(newPrefs)
+            '' OK-btn save when dirty, always closes-form.
+            '' Save-btn: always saves, burt not closes-form.
+            ''
+            If sender IsNot ButtonOK OrElse Me.Dirty Then
+                StorePrefs()
+            End If
 
-            ' Write the config file
-            newPrefs.Store(PrefsPath, newPrefs)
-            Prefs = newPrefs           ' Replace active prefs if successful.
-
-            ' Message for the restart of VECTO
-            RestartN = True
-            logme(7, True, format("Stored Preferences({0}). \n\nDo you want to restart VECTO now?", PrefsPath))
-
-            ' Close the window
-            Me.Close()
+            If sender Is ButtonOK Then Me.Close()
         Catch ex As Exception
             logme(9, True, format("Failed storing Preferences({0}) due to: {1} \n  Preferences left unmodified!", _
                                         PrefsPath, ex.Message), ex)
         End Try
 
+    End Sub
+    Private Sub StorePrefs()
+        Dim newPrefs As cPreferences = Prefs.Clone()
+        UI_PopulateTo(newPrefs)
+
+        ' Write the config file
+        newPrefs.Store(PrefsPath, newPrefs)
+        Prefs = newPrefs           ' Replace active prefs if successful.
+        Me.Dirty = False
+
+        ' Message for the restart of VECTO
+        logme(7, False, format("Stored Preferences({0}).", PrefsPath))
     End Sub
 
     ' Ok button
@@ -150,5 +200,6 @@ Public Class F_Preferences
     Private Sub TextBoxLogSize_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles logSize.Leave, TextBox1.Leave
         If Me.logSize.Text = Nothing Then Me.logSize.Text = Prefs.PropDefault("logSize")
     End Sub
+
 End Class
 

@@ -41,13 +41,14 @@ Partial Class F_Preferences
         Me.ButtonSelectNotepad = New System.Windows.Forms.Button()
         Me.editor = New System.Windows.Forms.TextBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.hideUsername = New System.Windows.Forms.CheckBox()
         Me.strictBodies = New System.Windows.Forms.CheckBox()
         Me.includeSchemas = New System.Windows.Forms.CheckBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.ButtonReload = New System.Windows.Forms.Button()
-        Me.hideUsername = New System.Windows.Forms.CheckBox()
+        Me.ButtonSave = New System.Windows.Forms.Button()
         Me.GroupBoxWorDir.SuspendLayout()
         Me.GroupBoxInterface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
@@ -92,14 +93,14 @@ Partial Class F_Preferences
         Me.ButtonOK.Name = "ButtonOK"
         Me.ButtonOK.Size = New System.Drawing.Size(75, 23)
         Me.ButtonOK.TabIndex = 0
-        Me.ButtonOK.Text = "Save"
+        Me.ButtonOK.Text = "OK"
         Me.ButtonOK.UseVisualStyleBackColor = True
         '
         'ButtonCancel
         '
         Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButtonCancel.Location = New System.Drawing.Point(99, 248)
+        Me.ButtonCancel.Location = New System.Drawing.Point(355, 248)
         Me.ButtonCancel.Name = "ButtonCancel"
         Me.ButtonCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButtonCancel.TabIndex = 1
@@ -241,6 +242,16 @@ Partial Class F_Preferences
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "JSON"
         '
+        'hideUsername
+        '
+        Me.hideUsername.AutoSize = True
+        Me.hideUsername.Location = New System.Drawing.Point(6, 67)
+        Me.hideUsername.Name = "hideUsername"
+        Me.hideUsername.Size = New System.Drawing.Size(94, 17)
+        Me.hideUsername.TabIndex = 12
+        Me.hideUsername.Text = "hideUsername"
+        Me.hideUsername.UseVisualStyleBackColor = True
+        '
         'strictBodies
         '
         Me.strictBodies.AutoSize = True
@@ -297,15 +308,16 @@ Partial Class F_Preferences
         Me.ButtonReload.Text = "Reload"
         Me.ButtonReload.UseVisualStyleBackColor = True
         '
-        'hideUsername
+        'ButtonSave
         '
-        Me.hideUsername.AutoSize = True
-        Me.hideUsername.Location = New System.Drawing.Point(6, 67)
-        Me.hideUsername.Name = "hideUsername"
-        Me.hideUsername.Size = New System.Drawing.Size(94, 17)
-        Me.hideUsername.TabIndex = 12
-        Me.hideUsername.Text = "hideUsername"
-        Me.hideUsername.UseVisualStyleBackColor = True
+        Me.ButtonSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonSave.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.ButtonSave.Location = New System.Drawing.Point(99, 248)
+        Me.ButtonSave.Name = "ButtonSave"
+        Me.ButtonSave.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonSave.TabIndex = 13
+        Me.ButtonSave.Text = "Save"
+        Me.ButtonSave.UseVisualStyleBackColor = True
         '
         'F_Preferences
         '
@@ -314,6 +326,7 @@ Partial Class F_Preferences
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButtonCancel
         Me.ClientSize = New System.Drawing.Size(515, 283)
+        Me.Controls.Add(Me.ButtonSave)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.ButtonCancel)
         Me.Controls.Add(Me.ButtonReload)
@@ -363,4 +376,5 @@ Partial Class F_Preferences
     Friend WithEvents strictBodies As System.Windows.Forms.CheckBox
     Friend WithEvents includeSchemas As System.Windows.Forms.CheckBox
     Friend WithEvents hideUsername As System.Windows.Forms.CheckBox
+    Friend WithEvents ButtonSave As System.Windows.Forms.Button
 End Class

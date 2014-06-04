@@ -260,9 +260,11 @@ Module utils
 
     Private Sub updateLogWindow(ByVal logFileLevel As Integer, ByVal text As String, ByVal tabLabel As String, ByVal ex As Exception)
         ' Established the text wit the symbol from the style
+        Dim printEx = False
 
         If (ex IsNot Nothing) Then
-            text = text & " (Check log-file for details)"
+            printEx = (logFileLevel > 1 AndAlso Prefs.logLevel <= 2)
+            text = format("{0} (Check {1} for details)", text, IIf(printEx, "error/warn tab", "log-file"))
         End If
 
         ' Write to Log-windows
@@ -271,8 +273,14 @@ Module utils
                 F_Main.ListBoxMSG.Items.Add(text)
                 F_Main.ListBoxWar.Items.Add(text)
                 F_Main.TabPageWar.Text = format("Warnings({0})", F_Main.ListBoxWar.Items.Count)
+                If printEx Then
+                    F_Main.ListBoxWar.Items.Add(format("\i{0}", ex))
+                End If
             Case 3 ' Error
                 F_Main.ListBoxErr.Items.Add(text)
+                If printEx Then
+                    F_Main.ListBoxErr.Items.Add(format("\i{0}", ex))
+                End If
                 F_Main.TabPageErr.Text = format("Errors({0})", F_Main.ListBoxErr.Items.Count)
             Case Else
                 '' ignored

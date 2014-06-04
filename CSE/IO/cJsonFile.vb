@@ -10,8 +10,17 @@ Imports System.Globalization
 ''' and delegates the Body-building and its validation almost entirely to sub-classes.
 ''' </summary>
 ''' <remarks>
-''' The /Header/Strict boolean controls whether to allow additional-properties in Body, 
-''' so it can be used to debug input-files by manually setting it to 'true' with a text-editor.
+''' JSON files do not support comments, but help is provided by their accompanying json-schemas (see below).  
+''' They are splitted in two sections, Header and Body. The Header contains administrational fields or fields 
+''' related to the actual parsing of the file.
+''' 
+''' Of interest are the following 2 of Header’s properties:
+''' •	/Header/StrictBody: Controls whether the application will accept any unknown body-properties 
+'''     while reading the file. Set it to true to debug malformed input-files, ie to detect accidentally 
+'''     renamed properties.
+''' •	/Header/BodySchema: The JSON-schema of the body will be placed HERE, for documenting file.  
+'''     When true, it is always replaced by the Body's schema on the next save. When false, it overrides 
+''' application's choice and is not replaced ever.
 ''' </remarks>
 Public MustInherit Class cJsonFile
     Implements ICloneable
@@ -28,7 +37,7 @@ Public MustInherit Class cJsonFile
                 "AppVersion":   null,
                 "ModifiedDate": null,
                 "CreatedBy": null,
-                "StrictBody":   false,
+                "StrictBody":   null,
                 "BodySchema":   null,
             },
             "Body": null
@@ -70,17 +79,19 @@ Public MustInherit Class cJsonFile
                         },
                         "StrictBody": {
                             "title": "Validate body strictly",
-                            "type": "boolean",
-                            "description": "When True, the 'Body' does not accept unknown properties.",
-                            "default": false,
+                            "type": ["boolean", "null"],
+                            "description": "If set to true, the application will not accept any unknown body-properties while reading this file.
+When null/property missing, the application decides what to do.
+It is useful for debugging malformed input-files, ie to detect accidentally renamed properties.",
+                            "default": null,
                         },
                         "BodySchema": {
                             "title": "Body schema",
                             "type": ["boolean", "object", "null"],
-                            "description": "Body schema is included HERE, for documenting file. \n _
-                              When null/property missing, application decides what to do. \n _
-                              When True, it is always replaced by the Body's schema on the next save.\n _
-                              When False, it overrides Application's choice and is not replaced ever.", 
+                            "description": "Body schema is included HERE, for documenting file. 
+When null/property missing, the application decides what to do. 
+When True, it is always replaced by the Body's schema on the next save.
+When False, it overrides Application's choice and is not replaced ever.", 
                             "default": null,
                         },
                     }
@@ -177,8 +188,11 @@ Public MustInherit Class cJsonFile
         h("CreatedBy") = format("{0}{1}(lic: {2})", username, Lic.LicString, Lic.GUID)
 
         h("AppVersion") = AppVers
+
+        '' Ensure StrictBody element always there.
+        
         If h("StrictBody") Is Nothing Then
-            h("StrictBody") = False
+            h("StrictBody") = Nothing
         End If
 
         '' Decide whether to include body-schema in header (for documenting file),
@@ -210,8 +224,8 @@ Public MustInherit Class cJsonFile
     End Sub
 
     ''' <exception cref="FormatException">includes all validation errors</exception>
-    ''' <param name="prefs">It is there to be used when storing cPreferences themselfs.</param>
     ''' <param name="strictHeader">when false, relaxes Header's schema (used on Loading to be more accepting)</param>
+    ''' <param name="prefs">It is there just to be used when storing cPreferences themselfs.</param>
     Friend Sub Validate(Optional ByVal strictHeader As Boolean = False, Optional ByVal prefs As cPreferences = Nothing)
         If prefs Is Nothing Then prefs = CSE.Prefs
         Dim validateMsgs As IList(Of String) = New List(Of String)
@@ -227,9 +241,7 @@ Public MustInherit Class cJsonFile
         Dim dummy = New cSemanticVersion(Me.FileVersion) '' Just to ensure its syntax.
 
         '' Validate Body by subclass
-        Dim hsb = Me.Header("StrictBody")
-        Dim strictBody As Boolean = IIf(hsb Is Nothing, Prefs.strictBodies, hsb)
-        Me.ValidateBody(strictBody, validateMsgs)
+        Me.ValidateBody(Me.StrictBody, validateMsgs)
 
         If (validateMsgs.Any()) Then
             Throw New FormatException(format("Validating /Body failed due to: {0}", String.Join(vbCrLf, validateMsgs)))
@@ -249,7 +261,17 @@ Public MustInherit Class cJsonFile
         If obj Is Nothing OrElse Not Me.GetType().Equals(obj.GetType()) Then
             Return False
         Else
-            Return JToken.DeepEquals(Me.Content, DirectCast(obj, cJsonFile).Content)
+            Dim oj As cJsonFile = DirectCast(obj, cJsonFile)
+            If Not JToken.DeepEquals(Me.Body, oj.Body) Then Return False
+
+            '' Compare Headers without the 'ModifiedDate' field 
+            '' which would undoublfully different each time.
+            Dim mh As New JObject(Me.Header)
+            Dim oh As New JObject(oj.Header)
+
+            mh.Remove("ModifiedDate")
+            oh.Remove("ModifiedDate")
+            Return JToken.DeepEquals(mh, oh)
         End If
     End Function
 
@@ -331,12 +353,18 @@ Public MustInherit Class cJsonFile
 
     Public ReadOnly Property StrictBody As Boolean
         Get
-            Dim value = Me.Body("StrictBody")
-            Return IIf(value Is Nothing OrElse value.Type = JTokenType.Null, False, value)
+            Dim value = False
+            Dim jt = Me.Header("StrictBody")
+            If jt IsNot Nothing AndAlso jt.Type <> JTokenType.Null Then
+                value = jt
+            ElseIf Prefs IsNot Nothing Then
+                value = Prefs.strictBodies
+            End If
+            Return value
         End Get
     End Property
 
-    '' NO, logic behind it more complex, see UpdateHeader() instead.
+    '' NO, logic behind it too complex, see UpdateHeader() instead.
     'Public ReadOnly Property BodySchema As Boolean
     '    Get
     '        Dim value = Me.Body("BodySchema")

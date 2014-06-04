@@ -60,7 +60,7 @@ Public Class cPreferences
                     "minimum": 0,
                     "maximum": 10, "exclusiveMaximum": true,
                     "default": 2,
-                    "description": "Sets the threshold(Level) above (inclusive) from which log-messages are shown in the log-window.
+                    "description": "Sets the threshold(Level) above (inclusive) from which log-messages are shown in the log-window. 
     0     : All
     3-7   : No infos
     8     : No warnings
@@ -76,17 +76,17 @@ Public Class cPreferences
                     "title": "Strict Bodies",
                     "type": "boolean",
                     "default": false,
-                    "description": "When set to true, any unknown body-properties are not accepted when reading JSON-files. 
-It is useful for debugging malformed input-files, ie to detect 
-accidentally renamed properties.
+                    "description": "If set to true, the application will not accept any unknown body-properties when reading JSON-files. 
+It is useful for debugging malformed input-files, ie to detect accidentally renamed properties.
 Each file can override it by setting its `/Header/StrictBody` property.",
                 }, 
                 "includeSchemas": {
                     "title": "Include Schemas",
                     "type": "boolean",
                     "default": false,
-                    "description": "When set to true the JSON-files are self-documented by populating their `/Header/BodySchema` property.
-Each file can override it by setting its `/Header/BodySchema` property to false/true.",
+                    "description": "When set to true the JSON-files are self-documented by 
+populating their `/Header/BodySchema` property.  Each file can override it by 
+setting its `/Header/BodySchema` property to false/true.",
                 }, 
                 "hideUsername": {
                     "title": "Hide Username",
