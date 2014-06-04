@@ -18,8 +18,9 @@ Public Class cJob
         b.vehicle_fpath = ""
         b.ambient_fpath = ""
         b.Anemometer = New JArray(0, 0, 0, 0)
-        b.track_fpath = ""
-        b.calibration_fpath = ""
+        b.calib_track_fpath = ""
+        b.calib_run_fpath = ""
+        b.coast_track_fpath = ""
         b.low1_fpath = ""
         b.high_fpath = ""
         b.low2_fpath = ""
@@ -27,18 +28,19 @@ Public Class cJob
         Return b
     End Function
 
-    ''' <param name="allowAdditionalProps">when false, more strict validation</param>
-    Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
-        Dim allowAdditionalProps_str As String = allowAdditionalProps.ToString.ToLower
+    ''' <param name="isStrictBody">when true, more no additionalProps accepted and fpaths must have correct extensions</param>
+    Public Shared Function JSchemaStr(Optional ByVal isStrictBody As Boolean = False) As String
+
+        Dim allowAdditionalProps_str As String = (Not isStrictBody).ToString.ToLower
+        Dim requireFPathExts = isStrictBody
         Return <json>{
-            "title": "Schema for vecto-cse VEHICLE",
+            'title': "Schema for vecto-cse VEHICLE",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
             "required": true,
             "properties": {
                 "vehicle_fpath": {
-                    "type": "string", 
-                    <!-- "pattern": "\\.csveh(\\.json)?$", -->
-                    "required": true, 
+                    "type": ["null", "string"], 
+                    <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csveh(\\.json)?$', ", "") %>
                     "description": "File-path to Vehicle file (*.csveh)", 
                 }, 
                 "Anemometer": {
@@ -51,42 +53,41 @@ Public Class cJob
                     "description": "The 4 Anemomenter instrument calibration factors in this order: v_air f, v_air d, beta f, beta d", 
                 }, 
                 "ambient_fpath": {
-                    "type": "string", 
-                    <!-- "pattern": "\\.csamb$", -->
-                    "required": true, 
+                    "type": ["null", "string"], 
+                    <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csamb$', ", "") %>
                     "description": "File-path to the Ambient(Weather) file (*.csamb)", 
                 }, 
-                "track_fpath": {
-                    "type": "string", 
-                    <!-- "pattern": "\\.csms$", -->
-                    "required": true, 
+                "calib_track_fpath": {
+                    "type": ["null", "string"], 
+                    <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csms$', ", "") %>
                     "description": "File-path to Track-sections (*.csmsc).", 
                 }, 
-                "calibration_fpath": {
-                    "type": "string", 
-                    <!-- "pattern": "\\.csdat$", -->
-                    "required": true, 
+                "calib_run_fpath": {
+                    "type": ["null", "string"], 
+                    <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csdat$', ", "") %>
                     "description": "File-path to a measurement-file (*.csdat)", 
                 }, 
+                "coast_track_fpath": {
+                    "type": ["null", "string"], 
+                    <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csms$', ", "") %>
+                    "description": "File-path to Track-sections (*.csmsc).", 
+                }, 
                 "low1_fpath": {
-                    "type": "string", 
-                    <!-- "pattern": "\\.csdat$", -->
-                    "required": true, 
+                    "type": ["null", "string"], 
+                    <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csdat$', ", "") %>
                     "description": "File-path to a measurement-file (*.csdat)", 
                 }, 
                 "high_fpath": {
-                    "type": "string", 
-                    <!-- "pattern": "\\.csdat$", -->
-                    "required": true, 
+                    "type": ["null", "string"], 
+                    <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csdat$', ", "") %>
                     "description": "File-path to a measurement-file (*.csdat)", 
                 }, 
                 "low2_fpath": {
-                    "type": "string", 
-                    <!-- "pattern": "\\.csdat$", -->
-                    "required": true, 
+                    "type": ["null", "string"], 
+                    <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csdat$', ", "") %>
                     "description": "File-path to a measurement-file (*.csdat)", 
                 }, 
-                "Criteria": <%= cCriteria.JSchemaStr(allowAdditionalProps) %>,
+                "Criteria": <%= cCriteria.JSchemaStr(Not isStrictBody) %>,
             }
         }</json>.Value
         '"": {
@@ -126,7 +127,7 @@ Public Class cJob
 
         '' Check schema
         ''
-        Dim schema = JsonSchema.Parse(JSchemaStr(Not strictBody))
+        Dim schema = JsonSchema.Parse(JSchemaStr(strictBody))
         ValidateJson(Body, schema, validateMsgs)
 
         If validateMsgs.Any() Then Return
@@ -150,6 +151,15 @@ Public Class cJob
             If value Is Nothing Then Me.Body("vehicle_fpath") = Nothing Else Me.Body("vehicle_fpath") = value
         End Set
     End Property
+    Public Property Anemometer As Single()
+        Get
+            Return (From i In Me.Body("Anemometer") Select (Single.Parse(i))).ToArray
+        End Get
+        Set(ByVal value As Single())
+            Me.Body("Anemometer") = New JArray(value.ToList())
+        End Set
+    End Property
+
 
 
     Public Property ambient_fpath As String
@@ -163,46 +173,38 @@ Public Class cJob
             If value Is Nothing Then Me.Body("ambient_fpath") = Nothing Else Me.Body("ambient_fpath") = value
         End Set
     End Property
-    Public Property track_fpath As String
+    Public Property calib_track_fpath As String
         Get
-            Return getRootedPath(Me.Body("track_fpath"), Prefs.workingDir)
+            Return getRootedPath(Me.Body("calib_track_fpath"), Prefs.workingDir)
         End Get
         Set(ByVal value As String)
             value = getAnySubPath(value, Prefs.workingDir)
 
             '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
-            If value Is Nothing Then Me.Body("track_fpath") = Nothing Else Me.Body("track_fpath") = value
+            If value Is Nothing Then Me.Body("calib_track_fpath") = Nothing Else Me.Body("calib_track_fpath") = value
         End Set
     End Property
-    Public Property MSCTSpez As String
+    Public Property calib_run_fpath As String
         Get
-            Return getRootedPath(Me.Body("track_fpath"), Prefs.workingDir)
+            Return getRootedPath(Me.Body("calib_run_fpath"), Prefs.workingDir)
         End Get
         Set(ByVal value As String)
             value = getAnySubPath(value, Prefs.workingDir)
 
             '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
-            If value Is Nothing Then Me.Body("track_fpath") = Nothing Else Me.Body("track_fpath") = value
-        End Set
-    End Property
-    Public Property Anemometer As Single()
-        Get
-            Return (From i In Me.Body("Anemometer") Select (Single.Parse(i))).ToArray
-        End Get
-        Set(ByVal value As Single())
-            Me.Body("Anemometer") = New JArray(value.ToList())
+            If value Is Nothing Then Me.Body("calib_run_fpath") = Nothing Else Me.Body("calib_run_fpath") = value
         End Set
     End Property
 
-    Public Property calibration_fpath As String
+    Public Property coast_track_fpath As String
         Get
-            Return getRootedPath(Me.Body("calibration_fpath"), Prefs.workingDir)
+            Return getRootedPath(Me.Body("coast_track_fpath"), Prefs.workingDir)
         End Get
         Set(ByVal value As String)
             value = getAnySubPath(value, Prefs.workingDir)
 
             '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
-            If value Is Nothing Then Me.Body("calibration_fpath") = Nothing Else Me.Body("calibration_fpath") = value
+            If value Is Nothing Then Me.Body("coast_track_fpath") = Nothing Else Me.Body("coast_track_fpath") = value
         End Set
     End Property
     Public Property low1_fpath As String
@@ -282,11 +284,11 @@ Public Class cJob
             Anemometer = factors
 
             ' Calibration test files
-            track_fpath = FileInVECTO.ReadLine(0)
-            calibration_fpath = FileInVECTO.ReadLine(0)
+            calib_track_fpath = FileInVECTO.ReadLine(0)
+            calib_run_fpath = FileInVECTO.ReadLine(0)
 
             ' Test run files
-            MSCTSpez = FileInVECTO.ReadLine(0)
+            coast_track_fpath = FileInVECTO.ReadLine(0)
             crt.rr_corr_factor = FileInVECTO.ReadLine(0)
 
             low1_fpath = FileInVECTO.ReadLine(0)

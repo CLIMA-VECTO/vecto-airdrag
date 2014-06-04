@@ -4,17 +4,22 @@ VECTO-CSE: Changes
 
 TODO: 2014-06-??: v2.0.1
 --------------------
-  * JSON-ize preferences, vehicle, job & criteria-files, ...
-  * Provide default-values and help-messages in GUI/files with infos from "schemas".
-  * Improving error-reporting by including stack-traces and timestamps into the log-file, for post-mortem examination.
-  * Separate config/ from Declaration/ folders.
-  * Use "clever" WorkingDir for all file-paths, so that Job-files cen be ported to other computers.
-  * Possible to use any editor (not only notepad.exe) for viewing files.
+JRC contributions (see VECTO-29):
+
+  * IO: JSON-ize preferences, vehicle, job & criteria-files, ...
+  * IO: Separate config/ from Declaration/ folders.
+  * UI: Provide default-values and help-messages in GUI/files with infos fetched from JSON-schemas.
+  * UI: Make the Log-window visible at all times (more necessary now that unhandled exceptions are appropriately reported).
+  * Log: Gather all unhandled exceptions and report them into log-window and log-file.
+  * Log: Improving error-reporting by including stack-traces and timestamps into the log-file, for post-mortem examination.
+  * Translate all file-paths against `Prefs.WorkingDir`, so that i.e. Job-files can be ported to other computers.
+  * Possible to specify any editor (not only notepad.exe) for viewing files.
   * Standarize versioning using [SemanticVersioning](http://semver.org/).
   * Welcome developers and users with README.md, CHANGES.md and COPYING.txt files.
 ##### Internal:
   * Implement an API for writing Header/Body json-files.
   * Apply Object-oriented design weith resource-management when I/O files.
+  * Sporadic fixes to work with filenames having 2-part extensions (ie `some_file.csjob.json`).
   * Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
   * General restructuring of the folders and names in the project.
 
@@ -25,11 +30,13 @@ More analytically:
 JRC contributions:
   * Convert Job & Criteria files to JSON and possible to store them separately.
   * Still supporting old format for reading.
-  * Use "clever" WorkingDir for all file-paths, so that Job-files cen be ported to other computers.
-  * UI work.
+  * Use Use WorkingDir trick for all job-file paths, so that Job-files can be ported to other computers.
+  * UI: Make the Log-window visible at all times (more necessary now that unhandled exceptions are appropriately reported).
+  * UI: Setup criteria-infobox from JSON-schema.
 ##### Internal:
   * Log unhandled exceptions.
   * Gather all infos related to Job-properties (type, description, units) in a single place, the JSON-schema for the job-file.
+  * Sporadic fixes to work with filenames having 2-part extensions (ie `some_file.csjob.json`).
   * More refactorings to simplify structure of source files and folders.
 
 

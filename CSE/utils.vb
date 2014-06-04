@@ -102,7 +102,7 @@ Module utils
 
     ''' <summary>Add root to the path if it is a relative one</summary>
     ''' <returns>the root if path null/empty</returns>
-    Function getRootedPath(ByVal pathToRoot, ByVal root)
+    Function getRootedPath(ByVal pathToRoot As String, ByVal root As String)
         If String.IsNullOrWhiteSpace(pathToRoot) Then
             Return root
         ElseIf IO.Path.IsPathRooted(pathToRoot) Then

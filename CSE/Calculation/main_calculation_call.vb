@@ -22,8 +22,8 @@
             ' Read the input data
             logme(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
-            ReadInputMSC(MSC, Job.track_fpath, isCalibrate)
-            ReadDataFile(Job.calibration_fpath, MSC)
+            ReadInputMSC(MSC, Job.calib_track_fpath, isCalibrate)
+            ReadDataFile(Job.calib_run_fpath, MSC)
 
             ' Exit function if error is detected
             If BWorker.CancellationPending Then Return False
@@ -50,7 +50,7 @@
             logme(7, False, "Writing the output files...")
 
             ' Output
-            fOutDataCalc1Hz(Job.calibration_fpath, isCalibrate)
+            fOutDataCalc1Hz(Job.calib_run_fpath, isCalibrate)
             fOutCalcRes(isCalibrate)
         Else
             Dim MSC As New cMSC
@@ -62,7 +62,7 @@
             ' Read the input files
             logme(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
-            ReadInputMSC(MSC, Job.MSCTSpez, isCalibrate)
+            ReadInputMSC(MSC, Job.coast_track_fpath, isCalibrate)
             ReadWeather(Job.ambient_fpath)
 
             ' Calculation of the virtual MSC points

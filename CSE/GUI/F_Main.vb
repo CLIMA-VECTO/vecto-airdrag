@@ -72,12 +72,124 @@ Public Class F_Main
         End If
     End Sub
 
-#Region "Main"
     ' Close the GUI
-    Private Sub CSEMain_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
+    Private Sub FormClosedHandler(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
         ' Write the end into the Log
         fWriteLog(3)
     End Sub
+
+    Private Sub ClearLogsHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonClearLogs.Click
+        ListBoxMSG.Items.Clear()
+        TabPageMSG.Text = "Messages(0)"
+        ListBoxWar.Items.Clear()
+        TabPageWar.Text = "Warnings(0)"
+        ListBoxErr.Items.Clear()
+        TabPageErr.Text = "Errors(0)"
+    End Sub
+
+
+
+#Region "Main tab"
+
+#Region "Job IO"
+    ' Menu New
+    Private Sub NewJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemNew.Click
+        fClear_VECTO_Form(True)
+    End Sub
+
+    Private Sub ReloadJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonReloadJob.Click
+        Dim reload = True
+        doLoadJob(reload)
+    End Sub
+    Private Sub LoadJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click, ButtonLoadJob.Click
+        Dim reload = False
+        doLoadJob(reload)
+    End Sub
+    Private Sub doLoadJob(ByVal isReload As Boolean)
+        Dim jobFileToLoad As String = Nothing
+
+        If isReload Then
+            jobFileToLoad = JobFile
+        Else
+            ' Open the filebrowser with the *.csjob parameter
+            If fbVECTO.OpenDialog(Prefs.workingDir, False) Then
+
+                jobFileToLoad = fbVECTO.Files(0)
+                If (jobFileToLoad <> Nothing) Then
+                    ' Clear the GUI
+                    fClear_VECTO_Form(False)
+                    OutFolder = joinPaths(fPath(jobFileToLoad), "Results\")
+                End If
+            End If
+        End If
+
+        If jobFileToLoad Is Nothing Then Return
+
+        '' Read Jobfile according to its version and 
+        ''  populate GUI.
+        ''
+        Try
+            Dim newJob As cJob
+            If jobFileToLoad.EndsWith(".csjob.json") Then
+                newJob = New cJob(jobFileToLoad)
+            Else
+                newJob = New cJob(True)
+                newJob.fReadOldJobFile()
+            End If
+            newJob.Validate()
+
+            JobFile = jobFileToLoad
+            installJob(newJob)
+            UI_PopulateFromJob()
+            UI_PopulateFromCriteria()
+        Catch ex As Exception
+            logme(9, False, format("Failed reading Job-file({0}) due to: {1}", JobFile, ex.Message), ex)
+        End Try
+    End Sub
+
+    Private Sub SaveJobHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSave.Click, ButtonSaveJob.Click
+        Dim saveAs = False
+        doSaveJob(saveAs)
+    End Sub
+    Private Sub SaveJobAsHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSaveAs.Click, ButtonSaveNewJob.Click
+        Dim saveAs = True
+        doSaveJob(saveAs)
+    End Sub
+
+    Private Sub doSaveJob(ByVal isSaveAs As Boolean)
+        ' Identify if the file should save under a new name
+        If JobFile = Nothing Or isSaveAs Then
+            ' Open the filebrowser to select the folder and name of the Jobfile
+            If fbVECTO.SaveDialog(JobFile) Then
+                JobFile = fbVECTO.Files(0)
+                OutFolder = joinPaths(fPath(JobFile), "Results\")
+                Me.Text = Formname & " " & JobFile
+            End If
+            If (JobFile = Nothing) Then
+                Exit Sub
+            End If
+        End If
+
+        ' Get all data from the GUI
+        UI_PopulateToJob()
+        UI_PopulateToCriteria()
+
+        ' Write the file
+        If Not JobFile.EndsWith(".csjob.json", StringComparison.OrdinalIgnoreCase) Then
+            JobFile = joinPaths(fPath(JobFile), fName(JobFile, False) & ".csjob.json")
+        End If
+        Job.Store(JobFile)
+    End Sub
+
+    ' Menu Exit
+    Private Sub ToolStripMenuItemExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemExit.Click
+        ' Close the GUI
+        Me.Close()
+    End Sub
+#End Region ' Job IO
+
+
+#Region "Vehicle"
 
     ' Open the filebrowser for the selection of the vehiclefile
     Private Sub ButtonSelectVeh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectVeh.Click
@@ -117,7 +229,9 @@ Public Class F_Main
         End If
     End Sub
 
-    ' Calibration elements
+#End Region ' Vehicle
+
+
 #Region "Calibration"
     ' Open the filebrowser for the selection of the datafile from the calibration run
     Private Sub ButtonSelectDataC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataC.Click
@@ -190,7 +304,7 @@ Public Class F_Main
             Cali = True
 
             ' Save the Jobfiles
-            SaveJobImpl(False)
+            doSaveJob(False)
 
             ' Check if outfolder exist. If not then generate the folder
             If Not System.IO.Directory.Exists(OutFolder) Then
@@ -223,10 +337,10 @@ Public Class F_Main
             If Not ok Then Me.ButtonEval.Text = "Calibrate"
         End Try
     End Sub
-#End Region
+#End Region ' Calibration
 
-    ' Test elements
-#Region "Test"
+
+#Region "Coasting"
     ' Open the filebrowser for the selection of the measure section file from the test run
     Private Sub ButtonSelectMSCT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCT.Click
         ' Open the filebrowser with the *.csmsc parameter
@@ -345,7 +459,7 @@ Public Class F_Main
             fWriteLog(2, 4, "----- Speed runs ")
 
             ' Save the Jobfiles
-            SaveJobImpl(False)
+            doSaveJob(False)
 
             ' Check if outfolder exist. If not then generate the folder
             If Not System.IO.Directory.Exists(OutFolder) Then
@@ -378,91 +492,10 @@ Public Class F_Main
             If Not ok Then Me.ButtonEval.Text = "Evaluate"
         End Try
     End Sub
-#End Region
+#End Region ' Coasting
 
-    ' Programmcode Menustrip
-#Region "Menustrip"
-#Region "Datei"
-    ' Menu New
-    Private Sub ToolStripMenuItemNew_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemNew.Click
-        fClear_VECTO_Form(True)
-    End Sub
 
-    ' Menu open
-    Private Sub ToolStripMenuItemOpen_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemOpen.Click, ButtonLoadJob.Click
-        ' Open the filebrowser with the *.csjob parameter
-        If fbVECTO.OpenDialog(Prefs.workingDir, False) Then
-
-            JobFile = fbVECTO.Files(0)
-            If (JobFile <> Nothing) Then
-                ' Clear the GUI
-                fClear_VECTO_Form(False)
-                OutFolder = joinPaths(fPath(JobFile), "Results\")
-
-                ' Identify the given Jobfile
-                '' Read Jobfile and populate GUI
-                ''
-                Try
-                    Dim newJob As cJob
-                    If JobFile.EndsWith(".csjob.json") Then
-                        newJob = New cJob(JobFile)
-                    Else
-                        newJob = New cJob(True)
-                        newJob.fReadOldJobFile()
-                    End If
-                    newJob.Validate()
-                    installJob(newJob)
-                    UI_PopulateFromJob()
-                    UI_PopulateFromCriteria()
-                Catch ex As Exception
-                    logme(9, False, format("Failed reading Job-file({0}) due to: {1}", JobFile, ex.Message), ex)
-                End Try
-            End If
-        End If
-    End Sub
-
-    ' Menu Save
-    Private Sub Event_SaveJob(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSave.Click
-        SaveJobImpl(False)
-    End Sub
-    ' Menu Save as
-    Private Sub Event_SaveJobAs(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemSaveAs.Click, ButtonSaveAsNew.Click
-        SaveJobImpl(True)
-    End Sub
-
-    Private Sub SaveJobImpl(ByVal isSaveAs As Boolean)
-        ' Identify if the file should save under a new name
-        If JobFile = Nothing Or isSaveAs Then
-            ' Open the filebrowser to select the folder and name of the Jobfile
-            If fbVECTO.SaveDialog(JobFile) Then
-                JobFile = fbVECTO.Files(0)
-                OutFolder = joinPaths(fPath(JobFile), "Results\")
-                Me.Text = Formname & " " & JobFile
-            End If
-            If (JobFile = Nothing) Then
-                Exit Sub
-            End If
-        End If
-
-        ' Get all data from the GUI
-        UI_PopulateToJob()
-        UI_PopulateToCriteria()
-
-        ' Write the file
-        If Not JobFile.EndsWith(".csjob.json", StringComparison.OrdinalIgnoreCase) Then
-            JobFile = joinPaths(fPath(JobFile), fName(JobFile, False) & ".csjob.json")
-        End If
-        Job.Store(JobFile)
-    End Sub
-
-    ' Menu Exit
-    Private Sub ToolStripMenuItemExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemExit.Click
-        ' Close the GUI
-        Me.Close()
-    End Sub
-#End Region
-
-#Region "Tools"
+#Region "Tools menu"
     ' Menu open the Log
     Private Sub ToolStripMenuItemLog_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemLog.Click
         System.Diagnostics.Process.Start(Prefs.editor, joinPaths(MyPath, "log.txt"))
@@ -473,9 +506,10 @@ Public Class F_Main
         ' Show the confic GUI
         F_Preferences.Show()
     End Sub
-#End Region
+#End Region ' Tools menu
 
-#Region "Info"
+
+#Region "Infos menu"
     ' Create activation file
     Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreatActivationFileToolStripMenuItem.Click
         Lic.CreateActFile(MyPath & "ActivationCode.dat")
@@ -497,12 +531,12 @@ Public Class F_Main
             logme(8, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
         End Try
     End Sub
-#End Region
-#End Region
-#End Region
+#End Region  ' Infos menu
 
-    ' Option Tab
-#Region "Options"
+#End Region ' Main tab
+
+
+#Region "Options tab"
 
     ' Check if the input is a number
     Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_delta_t_tyre_max.KeyPress, TB_delta_rr_corr_max.KeyPress, TB_t_amb_var.KeyPress, _
@@ -579,7 +613,7 @@ Public Class F_Main
             Crt.hz_out = 1
         End If
     End Sub
-#End Region
+#End Region 'Options tab
 
 
     '*********Backgroundworker*********
@@ -653,14 +687,14 @@ Public Class F_Main
         Job.Anemometer(3) = TextBoxbetad.Text
 
         ' Appropriate the inputfiles from calibration run
-        Job.calibration_fpath = TextBoxDataC.Text
-        Job.track_fpath = TextBoxMSCC.Text
+        Job.calib_run_fpath = TextBoxDataC.Text
+        Job.calib_track_fpath = TextBoxMSCC.Text
 
         ' Appropriate the inputfiles from test run
         Job.low1_fpath = TextBoxDataLS1.Text
         Job.high_fpath = TextBoxDataHS.Text
         Job.low2_fpath = TextBoxDataLS2.Text
-        Job.MSCTSpez = TextBoxMSCT.Text
+        Job.coast_track_fpath = TextBoxMSCT.Text
         Crt.rr_corr_factor = TB_rr_corr_factor.Text
 
         If validate Then
@@ -736,10 +770,10 @@ Public Class F_Main
         TextBoxbetad.Text = Job.Anemometer(3)
         TextBoxWeather.Text = Job.ambient_fpath
         ' Calibration
-        TextBoxMSCC.Text = Job.track_fpath
-        TextBoxDataC.Text = Job.calibration_fpath
+        TextBoxMSCC.Text = Job.calib_track_fpath
+        TextBoxDataC.Text = Job.calib_run_fpath
         ' Test
-        TextBoxMSCT.Text = Job.MSCTSpez
+        TextBoxMSCT.Text = Job.coast_track_fpath
         TB_rr_corr_factor.Text = Crt.rr_corr_factor
         TextBoxDataLS1.Text = Job.low1_fpath
         TextBoxDataHS.Text = Job.high_fpath
@@ -927,14 +961,5 @@ Public Class F_Main
 
 
 #End Region
-
-    Private Sub ButtonClearLogs_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonClearLogs.Click
-        ListBoxMSG.Items.Clear()
-        TabPageMSG.Text = "Messages(0)"
-        ListBoxWar.Items.Clear()
-        TabPageWar.Text = "Warnings(0)"
-        ListBoxErr.Items.Clear()
-        TabPageErr.Text = "Errors(0)"
-    End Sub
 
 End Class

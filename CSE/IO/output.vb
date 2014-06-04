@@ -88,7 +88,6 @@
 
     ' Function for the output of the result data
     Function fOutCalcRes(ByVal calibration As Boolean) As Boolean
-        Dim calibration_fpath = Job.calibration_fpath
         Dim coasting_fpaths() = Job.coasting_fpaths
         Dim NameOutFile, key As String
         Using FileOut As New cFile_V3
@@ -123,7 +122,7 @@
             ' Filekopf
             FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
             If calibration Then
-                FileOut.WriteLine("Datafile: ", calibration_fpath)
+                FileOut.WriteLine("Datafile: ", Job.calib_run_fpath)
             Else
                 FileOut.WriteLine("Datafile LS1: ", coasting_fpaths(0))
                 FileOut.WriteLine("Datafile HS: ", coasting_fpaths(1))
