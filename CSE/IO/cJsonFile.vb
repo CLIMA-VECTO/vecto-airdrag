@@ -285,7 +285,7 @@ When False, it overrides Application's choice and is not replaced ever.",
     End Function
 
     ''' <summary>Reads value found by XPath and if nothing there, fetches default-value schema.</summary>
-    ''' <param name="propPath">The JSON.net's XPath for a Body property, including the starting dot('.').
+    ''' <param name="propPath">The JSON.net's XPath for a Body property, which must start with a starting dot('.')!!!
     ''' 
     ''' Examples:
     '''   PROP REQUESTED                     'propPath' ARGUMENT
@@ -294,7 +294,7 @@ When False, it overrides Application's choice and is not replaced ever.",
     '''   /Body/someGroup/somePropName   --> .someGroup.somePropName'.  
     ''' </param>
     ''' <remarks>Used by sublasses to implement Propety-Get with defaults when non-existent</remarks>
-    Protected Function BodyGetter(ByVal propPath As String) As JToken
+    Protected Function PropOrDefault(ByVal propPath As String) As JToken
         Dim value As JToken = Me.Body.SelectToken(propPath)
         If value Is Nothing Then  '' No prop existed
             '' Return a default from schema (if any).

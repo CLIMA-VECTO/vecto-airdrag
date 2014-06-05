@@ -73,10 +73,9 @@ Public Class cCriteria
         Return b
     End Function
 
-    ''' <param name="allowAdditionalProps">when false, more strict validation</param>
-    Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
-        allowAdditionalProps = True
-        Dim allowAdditionalProps_str As String = allowAdditionalProps.ToString.ToLower
+    ''' <param name="isStrictBody">when true, more strict validation</param>
+    Public Shared Function JSchemaStr(Optional ByVal isStrictBody As Boolean = False) As String
+        Dim allowAdditionalProps_str As String = (Not isStrictBody).ToString.ToLower
         Return <json>{
             "title": "Schema for vecto-cse CRITERIA",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
@@ -253,17 +252,17 @@ Public Class cCriteria
     ''' <remarks>See cJsonFile() constructor</remarks>
     Sub New(Optional ByVal skipValidation As Boolean = False)
         MyBase.New(BuildBody, skipValidation)
-        PopulateApp()
+        PopulateFields()
     End Sub
     ''' <summary>Reads from file or creates defaults</summary>
     ''' <param name="inputFilePath">the fpath of the file to read data from</param>
     Sub New(ByVal inputFilePath As String, Optional ByVal skipValidation As Boolean = False)
         MyBase.New(inputFilePath, skipValidation)
-        PopulateApp()
+        PopulateFields()
     End Sub
     Sub New(ByVal foreignBody As JToken, Optional ByVal skipValidation As Boolean = False)
         MyBase.New(foreignBody, skipValidation)
-        PopulateApp()
+        PopulateFields()
     End Sub
 
 
@@ -272,8 +271,8 @@ Public Class cCriteria
     End Function
 
     ''' <exception cref="SystemException">includes all validation errors</exception>
-    ''' <param name="strictBody">when true, no additional json-properties allowed in the data, when nothing, use value from Header</param>
-    Protected Overrides Sub ValidateBody(ByVal strictBody As Boolean, ByVal validateMsgs As IList(Of String))
+    ''' <param name="isStrictBody">when true, no additional json-properties allowed in the data, when nothing, use value from Header</param>
+    Protected Overrides Sub ValidateBody(ByVal isStrictBody As Boolean, ByVal validateMsgs As IList(Of String))
         '' Check version
         ''
         Dim fromVersion = "1.0.0--"
@@ -285,7 +284,7 @@ Public Class cCriteria
 
         '' Check schema
         ''
-        Dim schema = JsonSchema.Parse(JSchemaStr(Not strictBody))
+        Dim schema = JsonSchema.Parse(JSchemaStr(isStrictBody))
         ValidateJson(Body, schema, validateMsgs)
 
         If validateMsgs.Any() Then Return
@@ -296,48 +295,49 @@ Public Class cCriteria
 
 #Region "json props"
     ' Processing params
-    Public rr_corr_factor As Double                             ' Rolling resistance correction factor
-    Public accel_correction As Boolean = False                      ' Variable for the acceleration correction
-    Public gradient_correction As Boolean = False                   ' Variable for the gradient correction
-    Public hz_out As Integer = 1                                 ' Hz result file output
-    Public acc_corr_avg As Single                               ' [s] averaging of vehicle speed for correction of acceleration forces
-    Public dist_float As Single                                 ' [m]; Distance used for calculation of floatinig average signal used for stabilitay criteria in low speeds
-    Public roh_air_ref As Single                                ' [kg/m^3] Reference air density 
+    Public rr_corr_factor As Double
+    Public accel_correction As Boolean = False
+    Public gradient_correction As Boolean = False
+    Public hz_out As Integer = 1
+    Public acc_corr_avg As Single
+    Public dist_float As Single
+    Public roh_air_ref As Single
 
     ' Criteria
-    Public trigger_delta_x_max As Single                        ' [m]; +/- size of the control area around a MS start/end point where a trigger signal is valid (driving direction)
-    Public trigger_delta_y_max As Single                        ' [m]; +/- size of the control area around a MS start/end point where a trigger signal is valid (perpendicular to driving direction)
-    Public delta_head_max As Single                             ' [°]; +/- maximum deviation from heading as read from the csdat-file to the heading from csms-file for a valid dataset
-    Public segruns_min_CAL As Integer                           ' [#]; Minimum number of valid datasets required for the calibration test (per combination of MS ID and DIR ID)
-    Public segruns_min_LS As Integer                            ' [#]; Minimum number of valid datasets required for the low speed (per combination of MS ID and DIR ID)
-    Public segruns_min_HS As Integer                            ' [#]; Minimum number of valid datasets required for the high speed (per combination of MS ID and DIR ID)
-    Public segruns_min_head_MS As Integer                       ' [#]; Minimum TOTAL number of valid datasets required for the high speed per heading
-    Public delta_Hz_max As Single                               ' [%]; maximum allowed deviation of timestep-size in csdat-file from 100Hz
-    Public delta_parallel_max As Single                         ' [°]; maximum heading difference for measurement section (parallelism criteria for test track layout)
-    Public leng_crit As Single                                  ' [m]; maximum absolute difference of distance driven with lenght of section as specified in configuration
-    Public v_wind_avg_max_CAL As Single                         ' [m/s]; maximum average wind speed during calibration test
-    Public v_wind_1s_max_CAL As Single                          ' [m/s]; maximum gust wind speed during calibration test
-    Public beta_avg_max_CAL As Single                           ' [°]; maximum average beta during calibration test
-    Public v_wind_avg_max_LS As Single                          ' [m/s]; maximum average wind speed during low speed
-    Public v_wind_1s_max_LS As Single                           ' [m/s]; maximum gust wind speed during low speed
-    Public v_veh_avg_max_LS As Single                           ' [km/h]; maximum average vehicle speed for low speed
-    Public v_veh_avg_min_LS As Single                           ' [km/h]; minimum average vehicle speed for low speed
-    Public v_veh_float_delta_LS As Single                       ' [km/h]; +/- maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed)
-    Public tq_sum_float_delta_LS As Single                      ' [-]; +/- maximum relative deviation of floating average torque from average torque over entire section (low speed)
-    Public v_wind_avg_max_HS As Single                          ' [m/s]; maximum average wind speed during high speed
-    Public v_wind_1s_max_HS As Single                           ' [m/s]; maximum gust wind speed during high speed
-    Public v_veh_avg_min_HS As Single                           ' [km/h]; minimum average vehicle speed for high speed
-    Public beta_avg_max_HS As Single                            ' [°]; maximum average beta during high speed
-    Public v_veh_1s_delta_HS As Single                          ' [km/h]; +/- maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (high speed)
-    Public tq_sum_1s_delta_HS As Single                         ' [-]; +/- maximum relative deviation of 1s average torque from average torque over entire section (high speed)
-    Public delta_t_tyre_max As Single                           ' [°C]; maximum variation of tyre temperature between high speeds and low speeds
-    Public delta_rr_corr_max As Single                          ' [kg/t]; maximum difference of RRC from the two low speed runs 
-    Public t_amb_min As Single                                  ' [°C]; Minimum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)
-    Public t_amb_max As Single                                  ' [°C]; Maximum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only) 
-    Public t_amb_var As Single                                  ' [°C]; maximum variation of ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)
-    Public t_amb_tarmac As Single                               ' [°C]; Maximum temperature below which no documentation of tarmac conditions is necessary
+    Public trigger_delta_x_max As Single
+    Public trigger_delta_y_max As Single
+    Public delta_head_max As Single
+    Public segruns_min_CAL As Integer
+    Public segruns_min_LS As Integer
+    Public segruns_min_HS As Integer
+    Public segruns_min_head_MS As Integer
+    Public delta_Hz_max As Single
+    Public delta_parallel_max As Single
+    Public leng_crit As Single
+    Public v_wind_avg_max_CAL As Single
+    Public v_wind_1s_max_CAL As Single
+    Public beta_avg_max_CAL As Single
+    Public v_wind_avg_max_LS As Single
+    Public v_wind_1s_max_LS As Single
+    Public v_veh_avg_max_LS As Single
+    Public v_veh_avg_min_LS As Single
+    Public v_veh_float_delta_LS As Single
+    Public tq_sum_float_delta_LS As Single
+    Public v_wind_avg_max_HS As Single
+    Public v_wind_1s_max_HS As Single
+    Public v_veh_avg_min_HS As Single
+    Public beta_avg_max_HS As Single
+    Public v_veh_1s_delta_HS As Single
+    Public tq_sum_1s_delta_HS As Single
+    Public delta_t_tyre_max As Single
+    Public delta_rr_corr_max As Single
+    Public t_amb_min As Single
+    Public t_amb_max As Single
+    Public t_amb_var As Single
+    Public t_amb_tarmac As Single
 
 
+    ''' <summary>Override it to set custome fields</summary>
     Overrides Sub Store(ByVal fpath As String, Optional ByVal prefs As cPreferences = Nothing)
         Dim g, b As Object
         b = Me.Body
@@ -392,7 +392,7 @@ Public Class cCriteria
         MyBase.Store(fpath, prefs)
     End Sub
 
-    Sub PopulateApp()
+    Private Sub PopulateFields()
         Dim g, p As Object
         p = Me.Body
 

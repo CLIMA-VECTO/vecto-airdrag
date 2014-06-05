@@ -7,7 +7,7 @@ Public Class F_Main
     Private Formname As String = "Job configurations"
 
     ' Load the GUI
-    Private Sub CSEMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.Load
+    Private Sub FormLoadHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.Load
         ' Declarations
         Dim configL As Boolean = True
         Dim NoLegFile As Boolean = False
@@ -15,9 +15,11 @@ Public Class F_Main
         ' Initialisation
         Crt.hz_out = 1
 
-        PBInfoIcon.Visible = False
-        TBInfo.Visible = False
-        TBInfo.BackColor = System.Drawing.Color.LightYellow
+        PBInfoIconCrt.Visible = False
+        TBInfoMain.Visible = False
+        TBInfoMain.BackColor = System.Drawing.Color.LightYellow
+        TBInfoCrt.Visible = False
+        TBInfoCrt.BackColor = System.Drawing.Color.LightYellow
         setupInfoBox()
 
         ' Connect the Backgroundworker with the GUI
@@ -42,9 +44,13 @@ Public Class F_Main
         End Try
 
         ' Load the generic shape curve file
-        If Not fGenShpLoad() Then
+        Dim genShpFile = joinPaths(MyPath, "Declaration", "GenShape.shp")
+        Try
+            fGenShpLoad(genShpFile)
+        Catch ex As Exception
+            logme(9, True, format("Failed loading Declaration ShapeFile({0}) \n  due to: {1}", genShpFile, ex.Message), ex)
             Me.Close()
-        End If
+        End Try
 
         '' Create working dir if not exists.
         ''
@@ -71,8 +77,11 @@ Public Class F_Main
         End If
     End Sub
 
-    ' Close the GUI
-    Private Sub FormClosedHandler(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
+    Private Sub ClickExitHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemExit.Click
+        Me.Close()
+    End Sub
+
+    Private Sub AppExitedHandler(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
         ' Write the end into the Log
         fWriteLog(3)
     End Sub
@@ -86,6 +95,254 @@ Public Class F_Main
         TabPageErr.Text = "Errors(0)"
     End Sub
 
+
+
+
+#Region "AsynJob"
+
+    Private Enum OpType
+        Calibration
+        Evaluation
+    End Enum
+
+    ''' <summary>The Datum exchanged in the 3 AsyncWorked methods</summary>
+    Private Class cAsyncJob
+
+        Public ReadOnly Operation As OpType
+
+        Sub New(ByVal type As OpType)
+            Me.Operation = type
+        End Sub
+
+        Public ReadOnly Property IsCalibration As Boolean
+            Get
+                Return Me.Operation = OpType.Calibration
+            End Get
+        End Property
+
+    End Class
+
+    '*********Backgroundworker*********
+
+    ' Backgroundworker for the calculation in the background
+    Private Sub BackgroundWorkerVECTO_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) _
+        Handles BackgroundWorkerVECTO.DoWork
+
+        Dim asyncJob As cAsyncJob = e.Argument
+        '' Pass the async-job datum down the road.
+        e.Result = asyncJob
+
+        '##### START THE CALCULATION #####
+        '#################################
+        calculation(asyncJob.IsCalibration)
+        '#################################
+
+        ' Cancel if cancel requested...
+        If Me.BackgroundWorkerVECTO.CancellationPending Then e.Cancel = True
+
+    End Sub
+
+    ' Output from messages with the Backgroundworker
+    Private Sub BackgroundWorkerVECTO_ProgressChanged(ByVal sender As Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs) _
+        Handles BackgroundWorkerVECTO.ProgressChanged
+
+        Dim workerMsg As cLogMsg = e.UserState
+        If workerMsg IsNot Nothing Then
+            workerMsg.forwardLog()
+        End If
+    End Sub
+
+    ' Identify the ending from the backgroundworker
+    Private Sub BackgroundWorkerVECTO_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+        Handles BackgroundWorkerVECTO.RunWorkerCompleted
+        ' If an Error is detected
+        If e.Error IsNot Nothing Then
+            logme(8, False, format("Backround operation ended with exception: {0}", e.Error.Message), e.Error)
+        ElseIf e.Cancelled Then
+            logme(7, False, "Backround operation  aborted by user.")
+        Else
+            logme(7, False, "Backround operation ended OK.")
+            Dim asyncJob As cAsyncJob = e.Result
+            If asyncJob.IsCalibration Then Me.ButtonEval.Enabled = True
+        End If
+
+        FileBlock = False
+
+        '' Re-enable all "Exec" buttons
+        CalibrationState = False
+        EvaluationState = False
+
+        Me.TextBoxRVeh.Text = Math.Round(fv_veh, 3).ToString
+        Me.TextBoxRAirPos.Text = Math.Round(fv_pe, 3).ToString
+        Me.TextBoxRBetaMis.Text = Math.Round(beta_ame, 2).ToString
+
+
+    End Sub
+
+
+    '####################################################################
+    '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
+    '####################################################################
+    Private _CalibrationState As Boolean = False
+    Private _CalibrationTxts = {"Calibrate", "Cancel"}
+    Private _CalibrationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private Property CalibrationState As Boolean
+        Get
+            Return _CalibrationState
+        End Get
+        Set(ByVal value As Boolean)
+            If _CalibrationState Xor value Then
+                Dim indx = -CInt(value)
+                Me.ButtonCalC.Text = _CalibrationTxts(indx)
+                Me.ButtonCalC.Image = _CalibrationImgs(indx)
+                Me.ButtonCalC.UseWaitCursor = value
+            End If
+            _CalibrationState = value
+        End Set
+    End Property
+
+
+    ' Calculate button calibration test
+    Private Sub CalibrationHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCalC.Click
+        ' Generate cancel butten if the backgroundworker is busy
+        If BWorker.IsBusy Then
+            BWorker.CancelAsync()
+            logme(8, False, "Cancel requested for background-operation...")
+            Return
+        End If
+
+        ' Read the data from the GUI
+        UI_PopulateToJob(True)
+        UI_PopulateToCriteria()
+
+        Me.TextBoxRVeh.Text = 0
+        Me.TextBoxRAirPos.Text = 0
+        Me.TextBoxRBetaMis.Text = 0
+
+        ' Check if outfolder exist. If not then generate the folder
+        If Not System.IO.Directory.Exists(OutFolder) Then
+            If OutFolder <> Nothing Then
+                ' Generate the folder if it is desired
+                Dim resEx As MsgBoxResult
+                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
+                If resEx = MsgBoxResult.Yes Then
+                    IO.Directory.CreateDirectory(OutFolder)
+                Else
+                    Exit Sub
+                End If
+            Else
+                logme(9, False, "No outputfolder is given!")
+                Exit Sub
+            End If
+        End If
+
+        Dim ok = False
+        Try
+            ' Change the button "Exec" --> "Cancel" 
+            Me.CalibrationState = True
+
+            ' Save the Jobfiles
+            doSaveJob(False)
+
+            ' Clear the MSG on the GUI
+            Me.ListBoxMSG.Items.Clear()
+            fClear_VECTO_Form(False, False)
+
+            logme(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
+
+            ' Start the calculation in the backgroundworker
+            Dim jobType = OpType.Calibration
+            Me.BackgroundWorkerVECTO.RunWorkerAsync(New cAsyncJob(jobType))
+
+            ok = True
+        Finally
+            '' Re-enable "Exec" button on failures.
+            If Not ok Then CalibrationState = False
+        End Try
+    End Sub
+
+    '####################################################################
+    '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
+    '####################################################################
+    Private _EvaluationState As Boolean = False
+    Private _EvaluationTxts = {"Evaluate", "Cancel"}
+    Private _EvaluationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private Property EvaluationState As Boolean
+        Get
+            Return _EvaluationState
+        End Get
+        Set(ByVal value As Boolean)
+            If _EvaluationState Xor value Then
+                Dim indx = -CInt(value)
+                Me.ButtonEval.Text = _EvaluationTxts(indx)
+                Me.ButtonEval.Image = _EvaluationImgs(indx)
+                Me.ButtonEval.UseWaitCursor = value
+            End If
+            _EvaluationState = value
+        End Set
+    End Property
+
+
+    ' Evaluate button test run
+    Private Sub EvaluationHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonEval.Click
+        ' Generate cancel butten if the backgroundworker is busy
+        If BWorker.IsBusy Then
+            BWorker.CancelAsync()
+            logme(8, False, "Cancel requested for background-operation...")
+
+            Return
+        End If
+
+        ' Read the data from the GUI
+        UI_PopulateToJob(True)
+        UI_PopulateToCriteria()
+
+        ' Check if outfolder exist. If not then generate the folder
+        If Not System.IO.Directory.Exists(OutFolder) Then
+            If OutFolder <> Nothing Then
+                ' Generate the folder if it is desired
+                Dim resEx As MsgBoxResult
+                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
+                If resEx = MsgBoxResult.Yes Then
+                    IO.Directory.CreateDirectory(OutFolder)
+                Else
+                    Exit Sub
+                End If
+            Else
+                logme(9, False, "No outputfolder is given!")
+                Exit Sub
+            End If
+        End If
+
+
+        Dim ok = False
+        Try
+            ' Change the button "Exec" --> "Cancel" 
+            Me.EvaluationState = True
+
+            fWriteLog(2, 4, "----- Speed runs ")
+
+            ' Save the Jobfiles
+            doSaveJob(False)
+
+            ' Clear the MSG on the GUI
+            fClear_VECTO_Form(False, False)
+
+            ' Write the Calculation status in the Messageoutput and in the Log
+            logme(7, False, format("Starting EVALUATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
+
+            ' Start the calculation in the backgroundworker
+            Dim jobType = OpType.Evaluation
+            Me.BackgroundWorkerVECTO.RunWorkerAsync(New cAsyncJob(jobType))
+
+            ok = True
+        Finally
+            '' Re-enable "Exec" button on failures.
+            If Not ok Then EvaluationState = False
+        End Try
+    End Sub
+
+#End Region ' AsynJob
 
 
 #Region "Main tab"
@@ -180,11 +437,220 @@ Public Class F_Main
         Job.Store(JobFile)
     End Sub
 
-    ' Menu Exit
-    Private Sub ToolStripMenuItemExit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemExit.Click
-        ' Close the GUI
-        Me.Close()
+
+#Region "UI populate"
+
+    ' Function to get all parameter from the GUI
+    Function UI_PopulateToJob(Optional ByVal validate As Boolean = False) As Boolean
+        ' Read the data from the textboxes (General)
+        Job.vehicle_fpath = TextBoxVeh1.Text
+        Job.ambient_fpath = TextBoxWeather.Text
+
+        Job.v_air_f = TextBoxAirf.Text
+        Job.v_air_d = TextBoxAird.Text
+        Job.beta_f = TextBoxbetaf.Text
+        Job.beta_d = TextBoxbetad.Text
+
+        ' Appropriate the inputfiles from calibration run
+        Job.calib_run_fpath = TextBoxDataC.Text
+        Job.calib_track_fpath = TextBoxMSCC.Text
+
+        ' Appropriate the inputfiles from test run
+        Job.low1_fpath = TextBoxDataLS1.Text
+        Job.high_fpath = TextBoxDataHS.Text
+        Job.low2_fpath = TextBoxDataLS2.Text
+        Job.coast_track_fpath = TextBoxMSCT.Text
+        Crt.rr_corr_factor = TB_rr_corr_factor.Text
+
+        If validate Then
+            Job.Validate()
+        End If
+
+        Return True
+    End Function
+
+    ' Get the parameters from option tab
+    Sub UI_PopulateToCriteria()
+        ' Evaluation box
+        Crt.accel_correction = CB_accel_correction.Checked
+        Crt.gradient_correction = CB_gradient_correction.Checked
+
+        ' Output box
+        If RB1Hz.Checked Then Crt.hz_out = 1
+        If RB100Hz.Checked Then Crt.hz_out = 100
+
+        'Parameter boxes
+        ' General valid criteria
+        Crt.delta_t_tyre_max = TB_delta_t_tyre_max.Text
+        Crt.delta_rr_corr_max = TB_delta_rr_corr_max.Text
+        Crt.t_amb_var = TB_t_amb_var.Text
+        Crt.t_amb_tarmac = TB_t_amb_tarmac.Text
+        Crt.t_amb_max = TB_t_amb_max.Text
+        Crt.t_amb_min = TB_t_amb_min.Text
+        ' General
+        Crt.delta_Hz_max = TB_delta_Hz_max.Text
+        Crt.roh_air_ref = TB_roh_air_ref.Text
+        Crt.acc_corr_avg = TB_acc_corr_avg.Text
+        Crt.delta_parallel_max = TB_delta_parallel_max.Text
+        ' Identification of measurement section
+        Crt.trigger_delta_x_max = TB_trigger_delta_x_max.Text
+        Crt.trigger_delta_y_max = TB_trigger_delta_y_max.Text
+        Crt.delta_head_max = TB_delta_head_max.Text
+        ' Requirements on number of valid datasets
+        Crt.segruns_min_CAL = TB_segruns_min_CAL.Text
+        Crt.segruns_min_LS = TB_segruns_min_LS.Text
+        Crt.segruns_min_HS = TB_segruns_min_HS.Text
+        Crt.segruns_min_head_MS = TB_segruns_min_head_MS.Text
+        ' DataSet validity criteria
+        Crt.dist_float = TB_dist_float.Text
+        ' Calibration
+        Crt.v_wind_avg_max_CAL = TB_v_wind_avg_max_CAL.Text
+        Crt.v_wind_1s_max_CAL = TB_v_wind_1s_max_CAL.Text
+        Crt.beta_avg_max_CAL = TB_beta_avg_max_CAL.Text
+        ' Low and high speed test
+        Crt.leng_crit = TB_leng_crit.Text
+        ' Low speed test
+        Crt.v_wind_avg_max_LS = TB_v_wind_avg_max_LS.Text
+        Crt.v_wind_1s_max_LS = TB_v_wind_1s_max_LS.Text
+        Crt.v_veh_avg_max_LS = TB_v_veh_avg_max_LS.Text
+        Crt.v_veh_avg_min_LS = TB_v_veh_avg_min_LS.Text
+        Crt.v_veh_float_delta_LS = TB_v_veh_float_delta_LS.Text
+        Crt.tq_sum_float_delta_LS = TB_tq_sum_float_delta_LS.Text
+        ' High speed test
+        Crt.v_wind_avg_max_HS = TB_v_wind_avg_max_HS.Text
+        Crt.v_wind_1s_max_HS = TB_v_wind_1s_max_HS.Text
+        Crt.v_veh_avg_min_HS = TB_v_veh_avg_min_HS.Text
+        Crt.beta_avg_max_HS = TB_beta_avg_max_HS.Text
+        Crt.v_veh_1s_delta_HS = TB_v_veh_1s_delta_HS.Text
+        Crt.tq_sum_1s_delta_HS = TB_tq_sum_1s_delta_HS.Text
     End Sub
+
+    Sub UI_PopulateFromJob()
+        ' Transfer the data to the GUI
+        ' General
+        TextBoxVeh1.Text = Job.vehicle_fpath
+        TextBoxAirf.Text = Job.v_air_f
+        TextBoxAird.Text = Job.v_air_d
+        TextBoxbetaf.Text = Job.beta_f
+        TextBoxbetad.Text = Job.beta_d
+        TextBoxWeather.Text = Job.ambient_fpath
+        ' Calibration
+        TextBoxMSCC.Text = Job.calib_track_fpath
+        TextBoxDataC.Text = Job.calib_run_fpath
+        ' Test
+        TextBoxMSCT.Text = Job.coast_track_fpath
+        TB_rr_corr_factor.Text = Crt.rr_corr_factor
+        TextBoxDataLS1.Text = Job.low1_fpath
+        TextBoxDataHS.Text = Job.high_fpath
+        TextBoxDataLS2.Text = Job.low2_fpath
+
+    End Sub
+
+    ' Function to set the parameters to standard
+    Sub UI_PopulateFromCriteria()
+        ' Write the Standard values in the textboxes
+        ' General valid criteria
+        TB_delta_t_tyre_max.Text = Crt.delta_t_tyre_max
+        TB_delta_rr_corr_max.Text = Crt.delta_rr_corr_max
+        TB_t_amb_var.Text = Crt.t_amb_var
+        TB_t_amb_tarmac.Text = Crt.t_amb_tarmac
+        TB_t_amb_max.Text = Crt.t_amb_max
+        TB_t_amb_min.Text = Crt.t_amb_min
+        ' General
+        TB_delta_Hz_max.Text = Crt.delta_Hz_max
+        TB_roh_air_ref.Text = Crt.roh_air_ref
+        TB_acc_corr_avg.Text = Crt.acc_corr_avg
+        TB_delta_parallel_max.Text = Crt.delta_parallel_max
+        ' Identification of measurement section
+        TB_trigger_delta_x_max.Text = Crt.trigger_delta_x_max
+        TB_trigger_delta_y_max.Text = Crt.trigger_delta_y_max
+        TB_delta_head_max.Text = Crt.delta_head_max
+        ' Requirements on number of valid datasets
+        TB_segruns_min_CAL.Text = Crt.segruns_min_CAL
+        TB_segruns_min_LS.Text = Crt.segruns_min_LS
+        TB_segruns_min_HS.Text = Crt.segruns_min_HS
+        TB_segruns_min_head_MS.Text = Crt.segruns_min_head_MS
+        ' DataSet validity criteria
+        TB_dist_float.Text = Crt.dist_float
+        ' Calibration
+        TB_v_wind_avg_max_CAL.Text = Crt.v_wind_avg_max_CAL
+        TB_v_wind_1s_max_CAL.Text = Crt.v_wind_1s_max_CAL
+        TB_beta_avg_max_CAL.Text = Crt.beta_avg_max_CAL
+        ' Low and high speed test
+        TB_leng_crit.Text = Crt.leng_crit
+        ' Low speed test
+        TB_v_wind_avg_max_LS.Text = Crt.v_wind_avg_max_LS
+        TB_v_wind_1s_max_LS.Text = Crt.v_wind_1s_max_LS
+        TB_v_veh_avg_min_LS.Text = Crt.v_veh_avg_min_LS
+        TB_v_veh_avg_max_LS.Text = Crt.v_veh_avg_max_LS
+        TB_v_veh_float_delta_LS.Text = Crt.v_veh_float_delta_LS
+        TB_tq_sum_float_delta_LS.Text = Crt.tq_sum_float_delta_LS
+        ' High speed test
+        TB_v_wind_avg_max_HS.Text = Crt.v_wind_avg_max_HS
+        TB_v_wind_1s_max_HS.Text = Crt.v_wind_1s_max_HS
+        TB_v_veh_avg_min_HS.Text = Crt.v_veh_avg_min_HS
+        TB_beta_avg_max_HS.Text = Crt.beta_avg_max_HS
+        TB_v_veh_1s_delta_HS.Text = Crt.v_veh_1s_delta_HS
+        TB_tq_sum_1s_delta_HS.Text = Crt.tq_sum_1s_delta_HS
+        ' Evaluation box
+        CB_accel_correction.Checked = Crt.accel_correction
+        CB_gradient_correction.Checked = Crt.gradient_correction
+
+        ' Output
+        If Crt.hz_out = 1 Then
+            RB1Hz.Checked = True
+        ElseIf Crt.hz_out = 100 Then
+            RB100Hz.Checked = True
+        End If
+    End Sub
+
+
+    ' Clear the GUI
+    Public Function fClear_VECTO_Form(ByVal Komplet As Boolean, Optional ByVal Fields As Boolean = True) As Boolean
+        If Komplet Then
+            ' Clear the Jobfile and the output folder
+            JobFile = Nothing
+            OutFolder = Nothing
+        End If
+
+        If Fields Then
+            ' Clear the Textboxes or set them to default
+            TextBoxVeh1.Clear()
+            TextBoxWeather.Clear()
+            TextBoxAirf.Text = 1
+            TextBoxAird.Text = 0
+            TextBoxbetaf.Text = 1
+            TextBoxbetad.Text = 0
+            CB_accel_correction.Checked = True
+            CB_gradient_correction.Checked = False
+
+            ' Calibration fields
+            TextBoxDataC.Clear()
+            TextBoxMSCC.Clear()
+            TB_rr_corr_factor.Text = 1.0
+
+            ' Test run fields
+            TextBoxMSCT.Clear()
+            TextBoxDataLS1.Clear()
+            TextBoxDataHS.Clear()
+            TextBoxDataLS2.Clear()
+
+            ButtonEval.Enabled = False
+            EvaluationState = False
+
+
+            ' Option parameters to standard
+            installJob(New cJob)
+            UI_PopulateFromJob()
+            UI_PopulateFromCriteria()
+        End If
+
+        Return True
+    End Function
+
+
+#End Region ' UI populate
+
 #End Region ' Job IO
 
 
@@ -232,28 +698,6 @@ Public Class F_Main
 
 
 #Region "Calibration"
-
-    '####################################################################
-    '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
-    '####################################################################
-    Private _CalibrationState As Boolean = False
-    Private _CalibrationTxts = {"Calibrate", "Cancel"}
-    Private _CalibrationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
-    Private Property CalibrationState As Boolean
-        Get
-            Return _CalibrationState
-        End Get
-        Set(ByVal value As Boolean)
-            If _CalibrationState Xor value Then
-                Dim indx = -CInt(value)
-                Me.ButtonCalC.Text = _CalibrationTxts(indx)
-                Me.ButtonCalC.Image = _CalibrationImgs(indx)
-                Me.ButtonCalC.UseWaitCursor = value
-            End If
-            _CalibrationState = value
-        End Set
-    End Property
-
 
     ' Open the filebrowser for the selection of the datafile from the calibration run
     Private Sub ButtonSelectDataC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectDataC.Click
@@ -303,89 +747,10 @@ Public Class F_Main
         Process.Start(PSI)
     End Sub
 
-    ' Calculate button calibration test
-    Private Sub CalibrationHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCalC.Click
-        ' Generate cancel butten if the backgroundworker is busy
-        If BWorker.IsBusy Then
-            BWorker.CancelAsync()
-            logme(8, False, "Cancel requested for background-operation...")
-            Return
-        End If
-
-        ' Read the data from the GUI
-        UI_PopulateToJob(True)
-        UI_PopulateToCriteria()
-
-        Me.TextBoxRVeh.Text = 0
-        Me.TextBoxRAirPos.Text = 0
-        Me.TextBoxRBetaMis.Text = 0
-
-        ' Check if outfolder exist. If not then generate the folder
-        If Not System.IO.Directory.Exists(OutFolder) Then
-            If OutFolder <> Nothing Then
-                ' Generate the folder if it is desired
-                Dim resEx As MsgBoxResult
-                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                If resEx = MsgBoxResult.Yes Then
-                    IO.Directory.CreateDirectory(OutFolder)
-                Else
-                    Exit Sub
-                End If
-            Else
-                logme(9, False, "No outputfolder is given!")
-                Exit Sub
-            End If
-        End If
-
-        Dim ok = False
-        Try
-            ' Change the button "Exec" --> "Cancel" 
-            Me.CalibrationState = True
-
-            ' Save the Jobfiles
-            doSaveJob(False)
-
-            ' Clear the MSG on the GUI
-            Me.ListBoxMSG.Items.Clear()
-            fClear_VECTO_Form(False, False)
-
-            logme(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
-
-            ' Start the calculation in the backgroundworker
-            Dim jobType = OpType.Calibration
-            Me.BackgroundWorkerVECTO.RunWorkerAsync(New cAsyncJob(jobType))
-
-            ok = True
-        Finally
-            '' Re-enable "Exec" button on failures.
-            If Not ok Then CalibrationState = False
-        End Try
-    End Sub
 #End Region ' Calibration
 
 
 #Region "Evaluation"
-    '####################################################################
-    '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
-    '####################################################################
-    Private _EvaluationState As Boolean = False
-    Private _EvaluationTxts = {"Evaluate", "Cancel"}
-    Private _EvaluationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
-    Private Property EvaluationState As Boolean
-        Get
-            Return _EvaluationState
-        End Get
-        Set(ByVal value As Boolean)
-            If _EvaluationState Xor value Then
-                Dim indx = -CInt(value)
-                Me.ButtonEval.Text = _EvaluationTxts(indx)
-                Me.ButtonEval.Image = _EvaluationImgs(indx)
-                Me.ButtonEval.UseWaitCursor = value
-            End If
-            _EvaluationState = value
-        End Set
-    End Property
-
 
     ' Open the filebrowser for the selection of the measure section file from the test run
     Private Sub ButtonSelectMSCT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSelectMSCT.Click
@@ -483,64 +848,6 @@ Public Class F_Main
         Process.Start(PSI)
     End Sub
 
-    ' Evaluate button test run
-    Private Sub EvaluationHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonEval.Click
-        ' Generate cancel butten if the backgroundworker is busy
-        If BWorker.IsBusy Then
-            BWorker.CancelAsync()
-            logme(8, False, "Cancel requested for background-operation...")
-
-            Return
-        End If
-
-        ' Read the data from the GUI
-        UI_PopulateToJob(True)
-        UI_PopulateToCriteria()
-
-        ' Check if outfolder exist. If not then generate the folder
-        If Not System.IO.Directory.Exists(OutFolder) Then
-            If OutFolder <> Nothing Then
-                ' Generate the folder if it is desired
-                Dim resEx As MsgBoxResult
-                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                If resEx = MsgBoxResult.Yes Then
-                    IO.Directory.CreateDirectory(OutFolder)
-                Else
-                    Exit Sub
-                End If
-            Else
-                logme(9, False, "No outputfolder is given!")
-                Exit Sub
-            End If
-        End If
-
-
-        Dim ok = False
-        Try
-            ' Change the button "Exec" --> "Cancel" 
-            Me.EvaluationState = True
-
-            fWriteLog(2, 4, "----- Speed runs ")
-
-            ' Save the Jobfiles
-            doSaveJob(False)
-
-            ' Clear the MSG on the GUI
-            fClear_VECTO_Form(False, False)
-
-            ' Write the Calculation status in the Messageoutput and in the Log
-            logme(7, False, format("Starting EVALUATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
-
-            ' Start the calculation in the backgroundworker
-            Dim jobType = OpType.Evaluation
-            Me.BackgroundWorkerVECTO.RunWorkerAsync(New cAsyncJob(jobType))
-
-            ok = True
-        Finally
-            '' Re-enable "Exec" button on failures.
-            If Not ok Then EvaluationState = False
-        End Try
-    End Sub
 #End Region ' Evaluation
 
 
@@ -665,312 +972,22 @@ Public Class F_Main
 #End Region 'Options tab
 
 
-#Region "AsynJob"
-
-    Private Enum OpType
-        Calibration
-        Evaluation
-    End Enum
-
-    ''' <summary>The Datum exchanged in the 3 AsyncWorked methods</summary>
-    Private Class cAsyncJob
-
-        Public ReadOnly Operation As OpType
-
-        Sub New(ByVal type As OpType)
-            Me.Operation = type
-        End Sub
-
-        Public ReadOnly Property IsCalibration As Boolean
-            Get
-                Return Me.Operation = OpType.Calibration
-            End Get
-        End Property
-
-    End Class
-
-    '*********Backgroundworker*********
-
-    ' Backgroundworker for the calculation in the background
-    Private Sub BackgroundWorkerVECTO_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) _
-        Handles BackgroundWorkerVECTO.DoWork
-
-        Dim asyncJob As cAsyncJob = e.Argument
-        '' Pass the async-job datum down the road.
-        e.Result = asyncJob
-
-        '##### START THE CALCULATION #####
-        '#################################
-        calculation(asyncJob.IsCalibration)
-        '#################################
-
-        ' Cancel if cancel requested...
-        If Me.BackgroundWorkerVECTO.CancellationPending Then e.Cancel = True
-
-    End Sub
-
-    ' Output from messages with the Backgroundworker
-    Private Sub BackgroundWorkerVECTO_ProgressChanged(ByVal sender As Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs) _
-        Handles BackgroundWorkerVECTO.ProgressChanged
-
-        Dim workerMsg As cLogMsg = e.UserState
-        If workerMsg IsNot Nothing Then
-            workerMsg.forwardLog()
-        End If
-    End Sub
-
-    ' Identify the ending from the backgroundworker
-    Private Sub BackgroundWorkerVECTO_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
-        Handles BackgroundWorkerVECTO.RunWorkerCompleted
-        ' If an Error is detected
-        If e.Error IsNot Nothing Then
-            logme(8, False, format("Backround operation ended with exception: {0}", e.Error.Message), e.Error)
-        ElseIf e.Cancelled Then
-            logme(7, False, "Backround operation  aborted by user.")
-        Else
-            logme(7, False, "Backround operation ended OK.")
-            Dim asyncJob As cAsyncJob = e.Result
-            If asyncJob.IsCalibration Then Me.ButtonEval.Enabled = True
-        End If
-
-        FileBlock = False
-
-        '' Re-enable all "Exec" buttons
-        CalibrationState = False
-        EvaluationState = False
-
-        Me.TextBoxRVeh.Text = Math.Round(fv_veh, 3).ToString
-        Me.TextBoxRAirPos.Text = Math.Round(fv_pe, 3).ToString
-        Me.TextBoxRBetaMis.Text = Math.Round(beta_ame, 2).ToString
-
-
-    End Sub
-#End Region ' AsynJob
-
-#Region "UI populate"
-
-    ' Function to get all parameter from the GUI
-    Function UI_PopulateToJob(Optional ByVal validate As Boolean = False) As Boolean
-        ' Read the data from the textboxes (General)
-        Job.vehicle_fpath = TextBoxVeh1.Text
-        Job.ambient_fpath = TextBoxWeather.Text
-        If UBound(Job.Anemometer) = 3 Then
-            Job.Anemometer(0) = TextBoxAirf.Text
-            Job.Anemometer(1) = TextBoxAird.Text
-            Job.Anemometer(2) = TextBoxbetaf.Text
-            Job.Anemometer(3) = TextBoxbetad.Text
-        End If
-        ' Appropriate the inputfiles from calibration run
-        Job.calib_run_fpath = TextBoxDataC.Text
-        Job.calib_track_fpath = TextBoxMSCC.Text
-
-        ' Appropriate the inputfiles from test run
-        Job.low1_fpath = TextBoxDataLS1.Text
-        Job.high_fpath = TextBoxDataHS.Text
-        Job.low2_fpath = TextBoxDataLS2.Text
-        Job.coast_track_fpath = TextBoxMSCT.Text
-        Crt.rr_corr_factor = TB_rr_corr_factor.Text
-
-        If validate Then
-            Job.Validate()
-        End If
-
-        Return True
-    End Function
-
-    ' Get the parameters from option tab
-    Sub UI_PopulateToCriteria()
-        ' Evaluation box
-        Crt.accel_correction = CB_accel_correction.Checked
-        Crt.gradient_correction = CB_gradient_correction.Checked
-
-        ' Output box
-        If RB1Hz.Checked Then Crt.hz_out = 1
-        If RB100Hz.Checked Then Crt.hz_out = 100
-
-        'Parameter boxes
-        ' General valid criteria
-        Crt.delta_t_tyre_max = TB_delta_t_tyre_max.Text
-        Crt.delta_rr_corr_max = TB_delta_rr_corr_max.Text
-        Crt.t_amb_var = TB_t_amb_var.Text
-        Crt.t_amb_tarmac = TB_t_amb_tarmac.Text
-        Crt.t_amb_max = TB_t_amb_max.Text
-        Crt.t_amb_min = TB_t_amb_min.Text
-        ' General
-        Crt.delta_Hz_max = TB_delta_Hz_max.Text
-        Crt.roh_air_ref = TB_roh_air_ref.Text
-        Crt.acc_corr_avg = TB_acc_corr_avg.Text
-        Crt.delta_parallel_max = TB_delta_parallel_max.Text
-        ' Identification of measurement section
-        Crt.trigger_delta_x_max = TB_trigger_delta_x_max.Text
-        Crt.trigger_delta_y_max = TB_trigger_delta_y_max.Text
-        Crt.delta_head_max = TB_delta_head_max.Text
-        ' Requirements on number of valid datasets
-        Crt.segruns_min_CAL = TB_segruns_min_CAL.Text
-        Crt.segruns_min_LS = TB_segruns_min_LS.Text
-        Crt.segruns_min_HS = TB_segruns_min_HS.Text
-        Crt.segruns_min_head_MS = TB_segruns_min_head_MS.Text
-        ' DataSet validity criteria
-        Crt.dist_float = TB_dist_float.Text
-        ' Calibration
-        Crt.v_wind_avg_max_CAL = TB_v_wind_avg_max_CAL.Text
-        Crt.v_wind_1s_max_CAL = TB_v_wind_1s_max_CAL.Text
-        Crt.beta_avg_max_CAL = TB_beta_avg_max_CAL.Text
-        ' Low and high speed test
-        Crt.leng_crit = TB_leng_crit.Text
-        ' Low speed test
-        Crt.v_wind_avg_max_LS = TB_v_wind_avg_max_LS.Text
-        Crt.v_wind_1s_max_LS = TB_v_wind_1s_max_LS.Text
-        Crt.v_veh_avg_max_LS = TB_v_veh_avg_max_LS.Text
-        Crt.v_veh_avg_min_LS = TB_v_veh_avg_min_LS.Text
-        Crt.v_veh_float_delta_LS = TB_v_veh_float_delta_LS.Text
-        Crt.tq_sum_float_delta_LS = TB_tq_sum_float_delta_LS.Text
-        ' High speed test
-        Crt.v_wind_avg_max_HS = TB_v_wind_avg_max_HS.Text
-        Crt.v_wind_1s_max_HS = TB_v_wind_1s_max_HS.Text
-        Crt.v_veh_avg_min_HS = TB_v_veh_avg_min_HS.Text
-        Crt.beta_avg_max_HS = TB_beta_avg_max_HS.Text
-        Crt.v_veh_1s_delta_HS = TB_v_veh_1s_delta_HS.Text
-        Crt.tq_sum_1s_delta_HS = TB_tq_sum_1s_delta_HS.Text
-    End Sub
-
-    Sub UI_PopulateFromJob()
-        ' Transfer the data to the GUI
-        ' General
-        TextBoxVeh1.Text = Job.vehicle_fpath
-        TextBoxAirf.Text = Job.Anemometer(0)
-        TextBoxAird.Text = Job.Anemometer(1)
-        TextBoxbetaf.Text = Job.Anemometer(2)
-        TextBoxbetad.Text = Job.Anemometer(3)
-        TextBoxWeather.Text = Job.ambient_fpath
-        ' Calibration
-        TextBoxMSCC.Text = Job.calib_track_fpath
-        TextBoxDataC.Text = Job.calib_run_fpath
-        ' Test
-        TextBoxMSCT.Text = Job.coast_track_fpath
-        TB_rr_corr_factor.Text = Crt.rr_corr_factor
-        TextBoxDataLS1.Text = Job.low1_fpath
-        TextBoxDataHS.Text = Job.high_fpath
-        TextBoxDataLS2.Text = Job.low2_fpath
-
-    End Sub
-
-    ' Function to set the parameters to standard
-    Sub UI_PopulateFromCriteria()
-        ' Write the Standard values in the textboxes
-        ' General valid criteria
-        TB_delta_t_tyre_max.Text = Crt.delta_t_tyre_max
-        TB_delta_rr_corr_max.Text = Crt.delta_rr_corr_max
-        TB_t_amb_var.Text = Crt.t_amb_var
-        TB_t_amb_tarmac.Text = Crt.t_amb_tarmac
-        TB_t_amb_max.Text = Crt.t_amb_max
-        TB_t_amb_min.Text = Crt.t_amb_min
-        ' General
-        TB_delta_Hz_max.Text = Crt.delta_Hz_max
-        TB_roh_air_ref.Text = Crt.roh_air_ref
-        TB_acc_corr_avg.Text = Crt.acc_corr_avg
-        TB_delta_parallel_max.Text = Crt.delta_parallel_max
-        ' Identification of measurement section
-        TB_trigger_delta_x_max.Text = Crt.trigger_delta_x_max
-        TB_trigger_delta_y_max.Text = Crt.trigger_delta_y_max
-        TB_delta_head_max.Text = Crt.delta_head_max
-        ' Requirements on number of valid datasets
-        TB_segruns_min_CAL.Text = Crt.segruns_min_CAL
-        TB_segruns_min_LS.Text = Crt.segruns_min_LS
-        TB_segruns_min_HS.Text = Crt.segruns_min_HS
-        TB_segruns_min_head_MS.Text = Crt.segruns_min_head_MS
-        ' DataSet validity criteria
-        TB_dist_float.Text = Crt.dist_float
-        ' Calibration
-        TB_v_wind_avg_max_CAL.Text = Crt.v_wind_avg_max_CAL
-        TB_v_wind_1s_max_CAL.Text = Crt.v_wind_1s_max_CAL
-        TB_beta_avg_max_CAL.Text = Crt.beta_avg_max_CAL
-        ' Low and high speed test
-        TB_leng_crit.Text = Crt.leng_crit
-        ' Low speed test
-        TB_v_wind_avg_max_LS.Text = Crt.v_wind_avg_max_LS
-        TB_v_wind_1s_max_LS.Text = Crt.v_wind_1s_max_LS
-        TB_v_veh_avg_min_LS.Text = Crt.v_veh_avg_min_LS
-        TB_v_veh_avg_max_LS.Text = Crt.v_veh_avg_max_LS
-        TB_v_veh_float_delta_LS.Text = Crt.v_veh_float_delta_LS
-        TB_tq_sum_float_delta_LS.Text = Crt.tq_sum_float_delta_LS
-        ' High speed test
-        TB_v_wind_avg_max_HS.Text = Crt.v_wind_avg_max_HS
-        TB_v_wind_1s_max_HS.Text = Crt.v_wind_1s_max_HS
-        TB_v_veh_avg_min_HS.Text = Crt.v_veh_avg_min_HS
-        TB_beta_avg_max_HS.Text = Crt.beta_avg_max_HS
-        TB_v_veh_1s_delta_HS.Text = Crt.v_veh_1s_delta_HS
-        TB_tq_sum_1s_delta_HS.Text = Crt.tq_sum_1s_delta_HS
-        ' Evaluation box
-        CB_accel_correction.Checked = Crt.accel_correction
-        CB_gradient_correction.Checked = Crt.gradient_correction
-
-        ' Output
-        If Crt.hz_out = 1 Then
-            RB1Hz.Checked = True
-        ElseIf Crt.hz_out = 100 Then
-            RB100Hz.Checked = True
-        End If
-    End Sub
-
-
-    ' Clear the GUI
-    Public Function fClear_VECTO_Form(ByVal Komplet As Boolean, Optional ByVal Fields As Boolean = True) As Boolean
-        If Komplet Then
-            ' Clear the Jobfile and the output folder
-            JobFile = Nothing
-            OutFolder = Nothing
-        End If
-
-        If Fields Then
-            ' Clear the Textboxes or set them to default
-            TextBoxVeh1.Clear()
-            TextBoxWeather.Clear()
-            TextBoxAirf.Text = 1
-            TextBoxAird.Text = 0
-            TextBoxbetaf.Text = 1
-            TextBoxbetad.Text = 0
-            CB_accel_correction.Checked = True
-            CB_gradient_correction.Checked = False
-
-            ' Calibration fields
-            TextBoxDataC.Clear()
-            TextBoxMSCC.Clear()
-            TB_rr_corr_factor.Text = 1.0
-
-            ' Test run fields
-            TextBoxMSCT.Clear()
-            TextBoxDataLS1.Clear()
-            TextBoxDataHS.Clear()
-            TextBoxDataLS2.Clear()
-
-            ButtonEval.Enabled = False
-            EvaluationState = False
-
-
-            ' Option parameters to standard
-            installJob(New cJob)
-            UI_PopulateFromJob()
-            UI_PopulateFromCriteria()
-        End If
-
-        ' Clear the Warning and Error box
-        ListBoxWar.Items.Clear()
-        ListBoxErr.Items.Clear()
-        TabControlOutMsg.SelectTab(0)
-        TabPageErr.Text = "Errors (0)"
-        TabPageWar.Text = "Warnings (0)"
-        Return True
-    End Function
-
-
-#End Region ' UI populate
-
-
 #Region "Infobox"
     ''' <summary>NOTE that the name of the controls below after the 3rd char is equal to the schema-property</summary>
     Private Sub setupInfoBox()
-        Dim processingControls = New Control() {
+        Dim isStrict = False
+
+        Dim schema As JObject
+        Dim controls As Control()
+
+        controls = New Control() {
+                Me.GB_Anemometer, Nothing
+        }
+        schema = JObject.Parse(cJob.JSchemaStr(isStrict))
+        armControlsWithInfoBox(schema, controls, AddressOf showInfoBox_main, AddressOf hideInfoBox_main)
+
+
+        controls = New Control() {
                 Me.TB_roh_air_ref, LRhoAirRef, _
                 Me.CB_accel_correction, Nothing, _
                 Me.CB_gradient_correction, Nothing, _
@@ -979,7 +996,11 @@ Public Class F_Main
                 Me.TB_acc_corr_avg, Me.LAccCorrAve, _
                 Me.TB_dist_float, Me.LDistFloat
         }
-        Dim validationControls = New Control() {
+        schema = New cCriteria(True).BodySchema.SelectToken("properties.Processing")
+        armControlsWithInfoBox(schema, controls, AddressOf showInfoBox_crt, AddressOf hideInfoBox_crt)
+
+
+        controls = New Control() {
             TB_trigger_delta_x_max, LDeltaXMax, _
             TB_trigger_delta_y_max, LDeltaYMax, _
             TB_delta_head_max, LContAng, _
@@ -1011,27 +1032,31 @@ Public Class F_Main
             TB_t_amb_max, LB_t_amb_max, _
             TB_t_amb_var, LB_t_amb_var, _
             TB_t_amb_tarmac, LB_t_amb_tarmac _
-            }
-
-
-        Dim schema As JObject
-
-        schema = New cCriteria(True).BodySchema.SelectToken("properties.Processing")
-        armControlsWithInfoBox(schema, processingControls, AddressOf showInfoBox, AddressOf hideInfoBox)
-
+        }
         schema = New cCriteria(True).BodySchema.SelectToken("properties.Validation")
-        armControlsWithInfoBox(schema, validationControls, AddressOf showInfoBox, AddressOf hideInfoBox)
+        armControlsWithInfoBox(schema, controls, AddressOf showInfoBox_crt, AddressOf hideInfoBox_crt)
     End Sub
 
-    Private Sub showInfoBox(ByVal sender As Object, ByVal e As System.EventArgs)
-        TBInfo.Text = sender.Tag
-        TBInfo.Visible = True
-        PBInfoIcon.Visible = True
+    Private Sub showInfoBox_main(ByVal sender As Object, ByVal e As System.EventArgs)
+        TBInfoMain.Text = sender.Tag
+        TBInfoMain.Visible = True
+        PbInfoIconMain.Visible = True
     End Sub
 
-    Private Sub hideInfoBox(ByVal sender As Object, ByVal e As System.EventArgs)
-        TBInfo.Visible = False
-        PBInfoIcon.Visible = False
+    Private Sub hideInfoBox_main(ByVal sender As Object, ByVal e As System.EventArgs)
+        TBInfoMain.Visible = False
+        PbInfoIconMain.Visible = False
+    End Sub
+
+    Private Sub showInfoBox_crt(ByVal sender As Object, ByVal e As System.EventArgs)
+        TBInfoCrt.Text = sender.Tag
+        TBInfoCrt.Visible = True
+        PBInfoIconCrt.Visible = True
+    End Sub
+
+    Private Sub hideInfoBox_crt(ByVal sender As Object, ByVal e As System.EventArgs)
+        TBInfoCrt.Visible = False
+        PBInfoIconCrt.Visible = False
     End Sub
 
 

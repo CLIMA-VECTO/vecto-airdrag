@@ -459,23 +459,14 @@ Public Module input
 
 
     ' Function to read the generic shape file
-    Function fGenShpLoad() As Boolean
+    Sub fGenShpLoad(ByVal genShpFile As String)
         ' Declarations
         Dim i, j, anz, pos, num As Integer
         Dim Info As String = ""
-        Dim Line(), Line2(), Line3(), GenShpFile As String
+        Dim Line(), Line2(), Line3() As String
         Dim XVal(,), YVal(,), XClone(), YClone() As Double
         Using FileInGenShp As New cFile_V3
-
-            ' Initialisation
-            GenShpFile = joinPaths(MyPath, "Declaration", "GenShape.shp")
-
-            ' Open the shape generic file
-            If Not FileInGenShp.OpenRead(GenShpFile) Then
-                ' Falls File nicht vorhanden, abbrechen mit Fehler
-                logme(9, True, "Can´t find the generic shape file: " & GenShpFile)
-                Return False
-            End If
+            FileInGenShp.OpenReadWithEx(genShpFile)
 
             ' Read the line
             Line = FileInGenShp.ReadLine()
@@ -495,8 +486,7 @@ Public Module input
                 If GenShape.veh_class.Contains(Line(pos)) Then
                     For j = 0 To GenShape.veh_class.Count - 1
                         If GenShape.veh_class(j) = Line(pos) And GenShape.veh_conf(j) = Line2(pos) Then
-                            logme(9, True, "The vehicle class with this configuration is already defined. Please control your generic shape file!")
-                            Return False
+                            Throw New ArgumentException("Invalid The vehicle-class({0}) with this configuration({0}) is already defined. Please control your generic ShapeFile({0})!")
                         End If
                     Next
                 End If
@@ -538,7 +528,6 @@ Public Module input
             Next i
         End Using
 
-        Return True
-    End Function
+    End Sub
 
 End Module

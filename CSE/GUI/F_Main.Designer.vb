@@ -24,9 +24,7 @@ Partial Class F_Main
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_Main))
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
-        Me.MenuItemFile = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripMenuItemExit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuItemExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemNewJob = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemLoadJob = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemReloadJob = New System.Windows.Forms.ToolStripMenuItem()
@@ -52,7 +50,7 @@ Partial Class F_Main
         Me.GB_hz_out = New System.Windows.Forms.GroupBox()
         Me.RB100Hz = New System.Windows.Forms.RadioButton()
         Me.RB1Hz = New System.Windows.Forms.RadioButton()
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.GB_Anemometer = New System.Windows.Forms.GroupBox()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -89,6 +87,9 @@ Partial Class F_Main
         Me.TextBoxDataC = New System.Windows.Forms.TextBox()
         Me.ButtonDataC = New System.Windows.Forms.Button()
         Me.ButtonSelectDataC = New System.Windows.Forms.Button()
+        Me.TextBoxMSCC = New System.Windows.Forms.TextBox()
+        Me.ButtonMSCC = New System.Windows.Forms.Button()
+        Me.ButtonSelectMSCC = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.Label16 = New System.Windows.Forms.Label()
@@ -99,9 +100,6 @@ Partial Class F_Main
         Me.TextBoxRAirPos = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.TextBoxRVeh = New System.Windows.Forms.TextBox()
-        Me.TextBoxMSCC = New System.Windows.Forms.TextBox()
-        Me.ButtonMSCC = New System.Windows.Forms.Button()
-        Me.ButtonSelectMSCC = New System.Windows.Forms.Button()
         Me.TabControlOutMsg = New System.Windows.Forms.TabControl()
         Me.TabPageMSG = New System.Windows.Forms.TabPage()
         Me.ListBoxMSG = New System.Windows.Forms.ListBox()
@@ -112,6 +110,8 @@ Partial Class F_Main
         Me.TextBoxVeh = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TPMain = New System.Windows.Forms.TabPage()
+        Me.TBInfoMain = New System.Windows.Forms.TextBox()
+        Me.PbInfoIconMain = New System.Windows.Forms.PictureBox()
         Me.TPCriteria = New System.Windows.Forms.TabPage()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.Label26 = New System.Windows.Forms.Label()
@@ -191,8 +191,8 @@ Partial Class F_Main
         Me.Label42 = New System.Windows.Forms.Label()
         Me.TB_v_wind_1s_max_CAL = New System.Windows.Forms.TextBox()
         Me.LBetaAveCALMax = New System.Windows.Forms.Label()
-        Me.TBInfo = New System.Windows.Forms.TextBox()
-        Me.PBInfoIcon = New System.Windows.Forms.PictureBox()
+        Me.TBInfoCrt = New System.Windows.Forms.TextBox()
+        Me.PBInfoIconCrt = New System.Windows.Forms.PictureBox()
         Me.GroupBox14 = New System.Windows.Forms.GroupBox()
         Me.Label82 = New System.Windows.Forms.Label()
         Me.LB_t_amb_tarmac = New System.Windows.Forms.Label()
@@ -231,7 +231,7 @@ Partial Class F_Main
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
-        Me.GroupBox2.SuspendLayout()
+        Me.GB_Anemometer.SuspendLayout()
         Me.GroupBoxInput.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -243,6 +243,7 @@ Partial Class F_Main
         Me.TabPageErr.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TPMain.SuspendLayout()
+        CType(Me.PbInfoIconMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TPCriteria.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
@@ -251,38 +252,26 @@ Partial Class F_Main
         Me.GroupBox12.SuspendLayout()
         Me.GroupBox11.SuspendLayout()
         Me.GroupBox13.SuspendLayout()
-        CType(Me.PBInfoIcon, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PBInfoIconCrt, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox14.SuspendLayout()
         Me.GroupBox10.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuItemFile, Me.MenuItemNewJob, Me.MenuItemLoadJob, Me.MenuItemReloadJob, Me.MenuItemSaveJob, Me.MenuItemSaveAsJob, Me.ToolsToolStripMenuItem, Me.InfoToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuItemExit, Me.MenuItemNewJob, Me.MenuItemLoadJob, Me.MenuItemReloadJob, Me.MenuItemSaveJob, Me.MenuItemSaveAsJob, Me.ToolsToolStripMenuItem, Me.InfoToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(944, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
-        'MenuItemFile
+        'MenuItemExit
         '
-        Me.MenuItemFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripSeparator2, Me.ToolStripMenuItemExit})
-        Me.MenuItemFile.Name = "MenuItemFile"
-        Me.MenuItemFile.Size = New System.Drawing.Size(37, 20)
-        Me.MenuItemFile.Text = "File"
-        '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(89, 6)
-        '
-        'ToolStripMenuItemExit
-        '
-        Me.ToolStripMenuItemExit.Image = Global.CSE.My.Resources.Resources.Beenden
-        Me.ToolStripMenuItemExit.Name = "ToolStripMenuItemExit"
-        Me.ToolStripMenuItemExit.Size = New System.Drawing.Size(92, 22)
-        Me.ToolStripMenuItemExit.Text = "Exit"
+        Me.MenuItemExit.Image = Global.CSE.My.Resources.Resources.Beenden
+        Me.MenuItemExit.Name = "MenuItemExit"
+        Me.MenuItemExit.Size = New System.Drawing.Size(53, 20)
+        Me.MenuItemExit.Text = "Exit"
         '
         'MenuItemNewJob
         '
@@ -502,26 +491,26 @@ Partial Class F_Main
         Me.RB1Hz.Text = "1Hz"
         Me.RB1Hz.UseVisualStyleBackColor = True
         '
-        'GroupBox2
+        'GB_Anemometer
         '
-        Me.GroupBox2.Controls.Add(Me.Label13)
-        Me.GroupBox2.Controls.Add(Me.Label12)
-        Me.GroupBox2.Controls.Add(Me.Label11)
-        Me.GroupBox2.Controls.Add(Me.Label10)
-        Me.GroupBox2.Controls.Add(Me.Label6)
-        Me.GroupBox2.Controls.Add(Me.Label5)
-        Me.GroupBox2.Controls.Add(Me.Label4)
-        Me.GroupBox2.Controls.Add(Me.Label3)
-        Me.GroupBox2.Controls.Add(Me.TextBoxbetaf)
-        Me.GroupBox2.Controls.Add(Me.TextBoxbetad)
-        Me.GroupBox2.Controls.Add(Me.TextBoxAirf)
-        Me.GroupBox2.Controls.Add(Me.TextBoxAird)
-        Me.GroupBox2.Location = New System.Drawing.Point(144, 72)
-        Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(463, 57)
-        Me.GroupBox2.TabIndex = 23
-        Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "Anemometer instrument calibration"
+        Me.GB_Anemometer.Controls.Add(Me.Label13)
+        Me.GB_Anemometer.Controls.Add(Me.Label12)
+        Me.GB_Anemometer.Controls.Add(Me.Label11)
+        Me.GB_Anemometer.Controls.Add(Me.Label10)
+        Me.GB_Anemometer.Controls.Add(Me.Label6)
+        Me.GB_Anemometer.Controls.Add(Me.Label5)
+        Me.GB_Anemometer.Controls.Add(Me.Label4)
+        Me.GB_Anemometer.Controls.Add(Me.Label3)
+        Me.GB_Anemometer.Controls.Add(Me.TextBoxbetaf)
+        Me.GB_Anemometer.Controls.Add(Me.TextBoxbetad)
+        Me.GB_Anemometer.Controls.Add(Me.TextBoxAirf)
+        Me.GB_Anemometer.Controls.Add(Me.TextBoxAird)
+        Me.GB_Anemometer.Location = New System.Drawing.Point(335, 72)
+        Me.GB_Anemometer.Name = "GB_Anemometer"
+        Me.GB_Anemometer.Size = New System.Drawing.Size(463, 57)
+        Me.GB_Anemometer.TabIndex = 23
+        Me.GB_Anemometer.TabStop = False
+        Me.GB_Anemometer.Text = "Anemometer instrument calibration"
         '
         'Label13
         '
@@ -861,7 +850,7 @@ Partial Class F_Main
         Me.ButtonCalC.Location = New System.Drawing.Point(837, 18)
         Me.ButtonCalC.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonCalC.Name = "ButtonCalC"
-        Me.ButtonCalC.Size = New System.Drawing.Size(60, 163)
+        Me.ButtonCalC.Size = New System.Drawing.Size(60, 111)
         Me.ButtonCalC.TabIndex = 12
         Me.ButtonCalC.Text = "Calibrate"
         Me.ButtonCalC.TextAlign = System.Drawing.ContentAlignment.BottomCenter
@@ -875,15 +864,14 @@ Partial Class F_Main
         Me.GroupBox1.Controls.Add(Me.TextBoxDataC)
         Me.GroupBox1.Controls.Add(Me.ButtonDataC)
         Me.GroupBox1.Controls.Add(Me.ButtonSelectDataC)
-        Me.GroupBox1.Controls.Add(Me.GroupBox2)
-        Me.GroupBox1.Controls.Add(Me.GroupBox3)
+        Me.GroupBox1.Controls.Add(Me.GB_Anemometer)
         Me.GroupBox1.Controls.Add(Me.TextBoxMSCC)
         Me.GroupBox1.Controls.Add(Me.ButtonMSCC)
         Me.GroupBox1.Controls.Add(Me.ButtonSelectMSCC)
         Me.GroupBox1.Controls.Add(Me.ButtonCalC)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 81)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(906, 188)
+        Me.GroupBox1.Size = New System.Drawing.Size(906, 138)
         Me.GroupBox1.TabIndex = 33
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Calibration test"
@@ -921,6 +909,39 @@ Partial Class F_Main
         Me.ButtonSelectDataC.Text = "..."
         Me.ButtonSelectDataC.UseVisualStyleBackColor = True
         '
+        'TextBoxMSCC
+        '
+        Me.TextBoxMSCC.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TextBoxMSCC.Location = New System.Drawing.Point(144, 20)
+        Me.TextBoxMSCC.Margin = New System.Windows.Forms.Padding(2)
+        Me.TextBoxMSCC.Name = "TextBoxMSCC"
+        Me.TextBoxMSCC.Size = New System.Drawing.Size(654, 20)
+        Me.TextBoxMSCC.TabIndex = 4
+        '
+        'ButtonMSCC
+        '
+        Me.ButtonMSCC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ButtonMSCC.Location = New System.Drawing.Point(5, 18)
+        Me.ButtonMSCC.Margin = New System.Windows.Forms.Padding(2)
+        Me.ButtonMSCC.Name = "ButtonMSCC"
+        Me.ButtonMSCC.Size = New System.Drawing.Size(135, 23)
+        Me.ButtonMSCC.TabIndex = 18
+        Me.ButtonMSCC.Text = "CalibrationTrack"
+        Me.ButtonMSCC.UseVisualStyleBackColor = True
+        '
+        'ButtonSelectMSCC
+        '
+        Me.ButtonSelectMSCC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonSelectMSCC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ButtonSelectMSCC.Location = New System.Drawing.Point(802, 18)
+        Me.ButtonSelectMSCC.Margin = New System.Windows.Forms.Padding(2)
+        Me.ButtonSelectMSCC.Name = "ButtonSelectMSCC"
+        Me.ButtonSelectMSCC.Size = New System.Drawing.Size(31, 23)
+        Me.ButtonSelectMSCC.TabIndex = 5
+        Me.ButtonSelectMSCC.Text = "..."
+        Me.ButtonSelectMSCC.UseVisualStyleBackColor = True
+        '
         'GroupBox3
         '
         Me.GroupBox3.Controls.Add(Me.Label17)
@@ -932,7 +953,7 @@ Partial Class F_Main
         Me.GroupBox3.Controls.Add(Me.TextBoxRAirPos)
         Me.GroupBox3.Controls.Add(Me.Label7)
         Me.GroupBox3.Controls.Add(Me.TextBoxRVeh)
-        Me.GroupBox3.Location = New System.Drawing.Point(144, 135)
+        Me.GroupBox3.Location = New System.Drawing.Point(341, 225)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(463, 46)
         Me.GroupBox3.TabIndex = 31
@@ -1023,39 +1044,6 @@ Partial Class F_Main
         Me.TextBoxRVeh.TabIndex = 0
         Me.TextBoxRVeh.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'TextBoxMSCC
-        '
-        Me.TextBoxMSCC.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxMSCC.Location = New System.Drawing.Point(144, 20)
-        Me.TextBoxMSCC.Margin = New System.Windows.Forms.Padding(2)
-        Me.TextBoxMSCC.Name = "TextBoxMSCC"
-        Me.TextBoxMSCC.Size = New System.Drawing.Size(654, 20)
-        Me.TextBoxMSCC.TabIndex = 4
-        '
-        'ButtonMSCC
-        '
-        Me.ButtonMSCC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonMSCC.Location = New System.Drawing.Point(5, 18)
-        Me.ButtonMSCC.Margin = New System.Windows.Forms.Padding(2)
-        Me.ButtonMSCC.Name = "ButtonMSCC"
-        Me.ButtonMSCC.Size = New System.Drawing.Size(135, 23)
-        Me.ButtonMSCC.TabIndex = 18
-        Me.ButtonMSCC.Text = "CalibrationTrack"
-        Me.ButtonMSCC.UseVisualStyleBackColor = True
-        '
-        'ButtonSelectMSCC
-        '
-        Me.ButtonSelectMSCC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonSelectMSCC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectMSCC.Location = New System.Drawing.Point(802, 18)
-        Me.ButtonSelectMSCC.Margin = New System.Windows.Forms.Padding(2)
-        Me.ButtonSelectMSCC.Name = "ButtonSelectMSCC"
-        Me.ButtonSelectMSCC.Size = New System.Drawing.Size(31, 23)
-        Me.ButtonSelectMSCC.TabIndex = 5
-        Me.ButtonSelectMSCC.Text = "..."
-        Me.ButtonSelectMSCC.UseVisualStyleBackColor = True
-        '
         'TabControlOutMsg
         '
         Me.TabControlOutMsg.Alignment = System.Windows.Forms.TabAlignment.Bottom
@@ -1097,7 +1085,8 @@ Partial Class F_Main
         Me.ListBoxMSG.Location = New System.Drawing.Point(2, 4)
         Me.ListBoxMSG.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxMSG.Name = "ListBoxMSG"
-        Me.ListBoxMSG.Size = New System.Drawing.Size(915, 147)
+        Me.ListBoxMSG.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
+        Me.ListBoxMSG.Size = New System.Drawing.Size(913, 160)
         Me.ListBoxMSG.TabIndex = 23
         '
         'TabPageWar
@@ -1123,7 +1112,8 @@ Partial Class F_Main
         Me.ListBoxWar.Location = New System.Drawing.Point(2, 4)
         Me.ListBoxWar.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxWar.Name = "ListBoxWar"
-        Me.ListBoxWar.Size = New System.Drawing.Size(946, 147)
+        Me.ListBoxWar.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
+        Me.ListBoxWar.Size = New System.Drawing.Size(915, 160)
         Me.ListBoxWar.TabIndex = 26
         '
         'TabPageErr
@@ -1148,7 +1138,8 @@ Partial Class F_Main
         Me.ListBoxErr.Location = New System.Drawing.Point(2, 4)
         Me.ListBoxErr.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxErr.Name = "ListBoxErr"
-        Me.ListBoxErr.Size = New System.Drawing.Size(946, 147)
+        Me.ListBoxErr.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
+        Me.ListBoxErr.Size = New System.Drawing.Size(913, 160)
         Me.ListBoxErr.TabIndex = 27
         '
         'TextBoxVeh
@@ -1175,6 +1166,9 @@ Partial Class F_Main
         '
         'TPMain
         '
+        Me.TPMain.Controls.Add(Me.PbInfoIconMain)
+        Me.TPMain.Controls.Add(Me.TBInfoMain)
+        Me.TPMain.Controls.Add(Me.GroupBox3)
         Me.TPMain.Controls.Add(Me.GroupBoxJob)
         Me.TPMain.Controls.Add(Me.GroupBox1)
         Me.TPMain.Controls.Add(Me.GroupBoxInput)
@@ -1186,13 +1180,30 @@ Partial Class F_Main
         Me.TPMain.Text = "Main"
         Me.TPMain.UseVisualStyleBackColor = True
         '
+        'TBInfoMain
+        '
+        Me.TBInfoMain.Location = New System.Drawing.Point(43, 176)
+        Me.TBInfoMain.Multiline = True
+        Me.TBInfoMain.Name = "TBInfoMain"
+        Me.TBInfoMain.Size = New System.Drawing.Size(282, 78)
+        Me.TBInfoMain.TabIndex = 85
+        '
+        'PbInfoIconMain
+        '
+        Me.PbInfoIconMain.Image = Global.CSE.My.Resources.Resources.Info
+        Me.PbInfoIconMain.Location = New System.Drawing.Point(12, 204)
+        Me.PbInfoIconMain.Name = "PbInfoIconMain"
+        Me.PbInfoIconMain.Size = New System.Drawing.Size(25, 30)
+        Me.PbInfoIconMain.TabIndex = 84
+        Me.PbInfoIconMain.TabStop = False
+        '
         'TPCriteria
         '
         Me.TPCriteria.Controls.Add(Me.GroupBox7)
         Me.TPCriteria.Controls.Add(Me.GroupBox8)
         Me.TPCriteria.Controls.Add(Me.GroupBox9)
-        Me.TPCriteria.Controls.Add(Me.TBInfo)
-        Me.TPCriteria.Controls.Add(Me.PBInfoIcon)
+        Me.TPCriteria.Controls.Add(Me.TBInfoCrt)
+        Me.TPCriteria.Controls.Add(Me.PBInfoIconCrt)
         Me.TPCriteria.Controls.Add(Me.GroupBox14)
         Me.TPCriteria.Controls.Add(Me.GroupBox10)
         Me.TPCriteria.Location = New System.Drawing.Point(4, 22)
@@ -1311,7 +1322,7 @@ Partial Class F_Main
         Me.GroupBox8.Controls.Add(Me.TB_segruns_min_CAL)
         Me.GroupBox8.Location = New System.Drawing.Point(6, 180)
         Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Size = New System.Drawing.Size(219, 137)
+        Me.GroupBox8.Size = New System.Drawing.Size(219, 161)
         Me.GroupBox8.TabIndex = 43
         Me.GroupBox8.TabStop = False
         Me.GroupBox8.Text = "Requirements on number of valid datasets"
@@ -1961,22 +1972,22 @@ Partial Class F_Main
         Me.LBetaAveCALMax.TabIndex = 60
         Me.LBetaAveCALMax.Text = "beta_avg_CAL_max"
         '
-        'TBInfo
+        'TBInfoCrt
         '
-        Me.TBInfo.Location = New System.Drawing.Point(37, 347)
-        Me.TBInfo.Multiline = True
-        Me.TBInfo.Name = "TBInfo"
-        Me.TBInfo.Size = New System.Drawing.Size(413, 64)
-        Me.TBInfo.TabIndex = 83
+        Me.TBInfoCrt.Location = New System.Drawing.Point(37, 347)
+        Me.TBInfoCrt.Multiline = True
+        Me.TBInfoCrt.Name = "TBInfoCrt"
+        Me.TBInfoCrt.Size = New System.Drawing.Size(413, 64)
+        Me.TBInfoCrt.TabIndex = 83
         '
-        'PBInfoIcon
+        'PBInfoIconCrt
         '
-        Me.PBInfoIcon.Image = Global.CSE.My.Resources.Resources.Info
-        Me.PBInfoIcon.Location = New System.Drawing.Point(6, 363)
-        Me.PBInfoIcon.Name = "PBInfoIcon"
-        Me.PBInfoIcon.Size = New System.Drawing.Size(25, 30)
-        Me.PBInfoIcon.TabIndex = 81
-        Me.PBInfoIcon.TabStop = False
+        Me.PBInfoIconCrt.Image = Global.CSE.My.Resources.Resources.Info
+        Me.PBInfoIconCrt.Location = New System.Drawing.Point(6, 363)
+        Me.PBInfoIconCrt.Name = "PBInfoIconCrt"
+        Me.PBInfoIconCrt.Size = New System.Drawing.Size(25, 30)
+        Me.PBInfoIconCrt.TabIndex = 81
+        Me.PBInfoIconCrt.TabStop = False
         '
         'GroupBox14
         '
@@ -2342,8 +2353,8 @@ Partial Class F_Main
         Me.GroupBoxJob.PerformLayout()
         Me.GB_hz_out.ResumeLayout(False)
         Me.GB_hz_out.PerformLayout()
-        Me.GroupBox2.ResumeLayout(False)
-        Me.GroupBox2.PerformLayout()
+        Me.GB_Anemometer.ResumeLayout(False)
+        Me.GB_Anemometer.PerformLayout()
         Me.GroupBoxInput.ResumeLayout(False)
         Me.GroupBoxInput.PerformLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2358,6 +2369,8 @@ Partial Class F_Main
         Me.TabPageErr.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.TPMain.ResumeLayout(False)
+        Me.TPMain.PerformLayout()
+        CType(Me.PbInfoIconMain, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TPCriteria.ResumeLayout(False)
         Me.TPCriteria.PerformLayout()
         Me.GroupBox7.ResumeLayout(False)
@@ -2374,7 +2387,7 @@ Partial Class F_Main
         Me.GroupBox11.PerformLayout()
         Me.GroupBox13.ResumeLayout(False)
         Me.GroupBox13.PerformLayout()
-        CType(Me.PBInfoIcon, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PBInfoIconCrt, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox14.ResumeLayout(False)
         Me.GroupBox14.PerformLayout()
         Me.GroupBox10.ResumeLayout(False)
@@ -2384,9 +2397,6 @@ Partial Class F_Main
 
     End Sub
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
-    Friend WithEvents MenuItemFile As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripMenuItemExit As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItemLog As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
@@ -2415,7 +2425,7 @@ Partial Class F_Main
     Friend WithEvents TextBoxAird As System.Windows.Forms.TextBox
     Friend WithEvents TextBoxbetaf As System.Windows.Forms.TextBox
     Friend WithEvents TextBoxbetad As System.Windows.Forms.TextBox
-    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+    Friend WithEvents GB_Anemometer As System.Windows.Forms.GroupBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents Label4 As System.Windows.Forms.Label
@@ -2509,8 +2519,8 @@ Partial Class F_Main
     Friend WithEvents TB_t_amb_tarmac As System.Windows.Forms.TextBox
     Friend WithEvents LB_t_amb_min As System.Windows.Forms.Label
     Friend WithEvents CreatActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents PBInfoIcon As System.Windows.Forms.PictureBox
-    Friend WithEvents TBInfo As System.Windows.Forms.TextBox
+    Friend WithEvents PBInfoIconCrt As System.Windows.Forms.PictureBox
+    Friend WithEvents TBInfoCrt As System.Windows.Forms.TextBox
     Friend WithEvents GroupBox9 As System.Windows.Forms.GroupBox
     Friend WithEvents LDistFloat As System.Windows.Forms.Label
     Friend WithEvents TB_dist_float As System.Windows.Forms.TextBox
@@ -2588,5 +2598,8 @@ Partial Class F_Main
     Friend WithEvents MenuItemSaveJob As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuItemSaveAsJob As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuItemClearLog As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents TBInfoMain As System.Windows.Forms.TextBox
+    Friend WithEvents PbInfoIconMain As System.Windows.Forms.PictureBox
+    Friend WithEvents MenuItemExit As System.Windows.Forms.ToolStripMenuItem
 
 End Class

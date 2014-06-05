@@ -387,8 +387,8 @@ Module Signal_identification
 
         ' Calculate the section average values
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
-            CalcData(tCompCali.vair_ic).Add(InputData(tComp.vair_ar)(i) * Job.Anemometer(0) + Job.Anemometer(1))
-            CalcData(tCompCali.beta_ic).Add(InputData(tComp.beta_ar)(i) * Job.Anemometer(2) + Job.Anemometer(3))
+            CalcData(tCompCali.vair_ic).Add(InputData(tComp.vair_ar)(i) * Job.v_air_f + Job.v_air_d)
+            CalcData(tCompCali.beta_ic).Add(InputData(tComp.beta_ar)(i) * Job.beta_f + Job.beta_d)
             For Each sKVC In CalcData
                 If CalcData(sKVC.Key).Count <= i Then
                     CalcData(sKVC.Key).Add(0)

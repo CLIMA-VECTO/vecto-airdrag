@@ -17,7 +17,7 @@ Public Class cJob
         Dim b As Object = New JObject()
         b.vehicle_fpath = ""
         b.ambient_fpath = ""
-        b.Anemometer = New JArray(0, 0, 0, 0)
+        'b.Anemometer = Nothing  'JObject.Parse(<json>{'v_air_f':0, 'v_air_d': 0, beta_f':0, 'beta_d': 0}</json>)
         b.calib_track_fpath = ""
         b.calib_run_fpath = ""
         b.coast_track_fpath = ""
@@ -44,13 +44,9 @@ Public Class cJob
                     "description": "File-path to Vehicle file (*.csveh)", 
                 }, 
                 "Anemometer": {
-                    "type": "array", 
-                    "required": true, 
-                    "items": {
-                        "type": "number"
-                    }, 
-                    "minItems": 4, "maxItems": 4, 
-                    "description": "The 4 Anemomenter instrument calibration factors in this order: v_air f, v_air d, beta f, beta d", 
+                    "type": "object", 
+                    "description": "The Anemometer calibration factors (floats).", 
+                    'default': {'v_air_f':1, 'v_air_d': 0, 'beta_f':1, 'beta_d': 0},
                 }, 
                 "ambient_fpath": {
                     "type": ["null", "string"], 
@@ -87,7 +83,7 @@ Public Class cJob
                     <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csdat$', ", "") %>
                     "description": "File-path to a measurement-file (*.csdat)", 
                 }, 
-                "Criteria": <%= cCriteria.JSchemaStr(Not isStrictBody) %>,
+                "Criteria": <%= cCriteria.JSchemaStr(isStrictBody) %>,
             }
         }</json>.Value
         '"": {
@@ -102,11 +98,13 @@ Public Class cJob
     ''' <remarks>See cJsonFile() constructor</remarks>
     Sub New(Optional ByVal skipValidation As Boolean = False)
         MyBase.New(BuildBody, skipValidation)
+        PopulateFields()
     End Sub
     ''' <summary>Reads from file or creates defaults</summary>
     ''' <param name="inputFilePath">the fpath of the file to read data from</param>
     Sub New(ByVal inputFilePath As String, Optional ByVal skipValidation As Boolean = False)
         MyBase.New(inputFilePath, skipValidation)
+        PopulateFields()
     End Sub
 
 
@@ -114,8 +112,8 @@ Public Class cJob
         Return JSchemaStr()
     End Function
 
-    ''' <param name="strictBody">when true, no additional json-properties allowed in the data, when nothing, use value from Header</param>
-    Protected Overrides Sub ValidateBody(ByVal strictBody As Boolean, ByVal validateMsgs As IList(Of String))
+    ''' <param name="isStrictBody">when true, no additional json-properties allowed in the data, when nothing, use value from Header</param>
+    Protected Overrides Sub ValidateBody(ByVal isStrictBody As Boolean, ByVal validateMsgs As IList(Of String))
         '' Check version
         ''
         Dim fromVersion = "1.0.0--"
@@ -127,7 +125,7 @@ Public Class cJob
 
         '' Check schema
         ''
-        Dim schema = JsonSchema.Parse(JSchemaStr(strictBody))
+        Dim schema = JsonSchema.Parse(JSchemaStr(isStrictBody))
         ValidateJson(Body, schema, validateMsgs)
 
         If validateMsgs.Any() Then Return
@@ -139,6 +137,31 @@ Public Class cJob
 
 
 #Region "json props"
+    Public v_air_f As Double
+    Public v_air_d As Double
+    Public beta_f As Double
+    Public beta_d As Double
+
+    Private Sub PopulateFields()
+        Dim anem = PropOrDefault(".Anemometer")
+        Me.v_air_f = anem("v_air_f")
+        Me.v_air_d = anem("v_air_d")
+        Me.beta_f = anem("beta_f")
+        Me.beta_d = anem("beta_d")
+    End Sub
+
+    ''' <summary>Override it to set custome fields</summary>
+    Overrides Sub Store(ByVal fpath As String, Optional ByVal prefs As cPreferences = Nothing)
+        Dim b As Object = Me.Body
+
+        b.v_air_f = Me.v_air_f
+        b.v_air_d = Me.v_air_d
+        b.beta_f = Me.beta_f
+        b.beta_d = Me.beta_d
+
+        MyBase.Store(fpath, prefs)
+    End Sub
+
 
     Public Property vehicle_fpath As String
         Get
@@ -149,14 +172,6 @@ Public Class cJob
 
             '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
             If value Is Nothing Then Me.Body("vehicle_fpath") = Nothing Else Me.Body("vehicle_fpath") = value
-        End Set
-    End Property
-    Public Property Anemometer As Single()
-        Get
-            Return (From i In Me.Body("Anemometer") Select (Single.Parse(i))).ToArray
-        End Get
-        Set(ByVal value As Single())
-            Me.Body("Anemometer") = New JArray(value.ToList())
         End Set
     End Property
 
@@ -281,7 +296,10 @@ Public Class cJob
             For i = 0 To UBound(factors) - 1
                 factors(i) = Line(i)
             Next i
-            Anemometer = factors
+            Job.v_air_f = factors(0)
+            Job.v_air_d = factors(1)
+            Job.beta_f = factors(2)
+            Job.beta_d = factors(3)
 
             ' Calibration test files
             calib_track_fpath = FileInVECTO.ReadLine(0)

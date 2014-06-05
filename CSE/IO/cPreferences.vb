@@ -27,9 +27,9 @@ Public Class cPreferences
         '    }</json>.Value)
     End Function
 
-    ''' <param name="allowAdditionalProps">when false, more strict validation</param>
-    Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
-        Dim allowAdditionalProps_str As String = allowAdditionalProps.ToString.ToLower
+    ''' <param name="isStrictBody">when false, more strict validation</param>
+    Public Shared Function JSchemaStr(Optional ByVal isStrictBody As Boolean = False) As String
+        Dim allowAdditionalProps_str As String = (Not isStrictBody).ToString.ToLower
         Return <json>{
             "title": "Schema for vecto-cse PREFERENCES",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
@@ -119,8 +119,8 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
     End Function
 
     ''' <exception cref="SystemException">includes all validation errors</exception>
-    ''' <param name="strictBody">when True, no additional json-properties allowed in the data, when nothing, use value from Header</param>
-    Protected Overrides Sub ValidateBody(ByVal strictBody As Boolean, ByVal validateMsgs As IList(Of String))
+    ''' <param name="isStrictBody">when True, no additional json-properties allowed in the data, when nothing, use value from Header</param>
+    Protected Overrides Sub ValidateBody(ByVal isStrictBody As Boolean, ByVal validateMsgs As IList(Of String))
         '' Check version
         ''
         Dim fromVersion = "1.0.0--"
@@ -132,7 +132,7 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 
         '' Check schema
         ''
-        Dim schema = JsonSchema.Parse(JSchemaStr(Not strictBody))
+        Dim schema = JsonSchema.Parse(JSchemaStr(isStrictBody))
         ValidateJson(Me.Body, schema, validateMsgs)
     End Sub
 
@@ -155,7 +155,7 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 
     Public Property writeLog As Boolean
         Get
-            Return BodyGetter(".writeLog")
+            Return PropOrDefault(".writeLog")
         End Get
         Set(ByVal value As Boolean)
             Me.Body("writeLog") = value
@@ -164,7 +164,7 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 
     Public Property logSize As Integer
         Get
-            Return BodyGetter(".logSize")
+            Return PropOrDefault(".logSize")
         End Get
         Set(ByVal value As Integer)
             Me.Body("logSize") = value
@@ -173,7 +173,7 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 
     Public Property logLevel As Integer
         Get
-            Return BodyGetter(".logLevel")
+            Return PropOrDefault(".logLevel")
         End Get
         Set(ByVal value As Integer)
             Me.Body("logLevel") = value
@@ -182,7 +182,7 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 
     Public Property editor As String
         Get
-            Return BodyGetter(".editor")
+            Return PropOrDefault(".editor")
         End Get
         Set(ByVal value As String)
             Me.Body("editor") = value
@@ -191,7 +191,7 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 
     Public Property strictBodies As Boolean
         Get
-            Return BodyGetter(".strictBodies")
+            Return PropOrDefault(".strictBodies")
         End Get
         Set(ByVal value As Boolean)
             Me.Body("strictBodies") = value
@@ -200,7 +200,7 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 
     Public Property includeSchemas As Boolean
         Get
-            Return BodyGetter(".includeSchemas")
+            Return PropOrDefault(".includeSchemas")
         End Get
         Set(ByVal value As Boolean)
             Me.Body("includeSchemas") = value
@@ -209,7 +209,7 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
 
     Public Property hideUsername As Boolean
         Get
-            Return BodyGetter(".hideUsername")
+            Return PropOrDefault(".hideUsername")
         End Get
         Set(ByVal value As Boolean)
             Me.Body("hideUsername") = value

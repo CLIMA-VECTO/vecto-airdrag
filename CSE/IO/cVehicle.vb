@@ -33,9 +33,9 @@ Public Class cVehicle
             }</json>.Value)
     End Function
 
-    ''' <param name="allowAdditionalProps">when false, more strict validation</param>
-    Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
-        Dim allowAdditionalProps_str As String = allowAdditionalProps.ToString.ToLower
+    ''' <param name="isStrictBody">when true, more strict validation</param>
+    Public Shared Function JSchemaStr(Optional ByVal isStrictBody As Boolean = False) As String
+        Dim allowAdditionalProps_str As String = (Not isStrictBody).ToString.ToLower
         Return <json>{
             "title": "Schema for vecto-cse VEHICLE",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
@@ -116,8 +116,8 @@ The generic parameters for classes are stored in the GenShape.shp",
     End Function
 
     ''' <exception cref="SystemException">includes all validation errors</exception>
-    ''' <param name="strictBody">when true, no additional json-properties allowed in the data, when nothing, use value from Header</param>
-    Protected Overrides Sub ValidateBody(ByVal strictBody As Boolean, ByVal validateMsgs As IList(Of String))
+    ''' <param name="isStrictBody">when true, no additional json-properties allowed in the data, when nothing, use value from Header</param>
+    Protected Overrides Sub ValidateBody(ByVal isStrictBody As Boolean, ByVal validateMsgs As IList(Of String))
         '' Check version
         ''
         Dim fromVersion = "1.0.0--"
@@ -129,7 +129,7 @@ The generic parameters for classes are stored in the GenShape.shp",
 
         '' Check schema
         ''
-        Dim schema = JsonSchema.Parse(JSchemaStr(Not strictBody))
+        Dim schema = JsonSchema.Parse(JSchemaStr(isStrictBody))
         ValidateJson(Body, schema, validateMsgs)
 
         If validateMsgs.Any() Then Return
