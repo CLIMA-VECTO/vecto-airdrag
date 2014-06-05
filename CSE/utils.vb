@@ -90,16 +90,54 @@ Module utils
         Return obj.Aggregate(Function(x, y) IO.Path.Combine(x.ToString(), y.ToString()))
     End Function
 
-    Function StripBackslash(ByVal path As String) As String
+    Function StripFinalBackslash(ByVal path As String) As String
         If path Is Nothing Then
             Return Nothing
-        ElseIf (path.Last = "\"c) Then
-            Return path.Substring(0, path.Length - 1)
+        ElseIf (path.EndsWith("\")) Then
+            Return path.Remove(path.Length - 1)
         Else
             Return path
         End If
     End Function
 
+    ''' <summary>Add root to the path if it is a relative one</summary>
+    ''' <returns>the root if path null/empty</returns>
+    Function getRootedPath(ByVal pathToRoot As String, ByVal root As String)
+        If String.IsNullOrWhiteSpace(pathToRoot) Then
+            Return root
+        ElseIf IO.Path.IsPathRooted(pathToRoot) Then
+            Return pathToRoot
+        End If
+        Return joinPaths(root, pathToRoot)
+    End Function
+
+    ''' <summary>Check if path has the specified as parent and return it as relative then</summary>
+    ''' <returns>the parent if path null/empty/invalid, null if path = parent</returns>
+    ''' <exception cref="ArgumentException">if parent not a valid path</exception>
+    Function getAnySubPath(ByVal pathToCheck As String, ByVal parent As String)
+        If String.IsNullOrWhiteSpace(pathToCheck) Then Return parent
+
+        '' Prepare Absolute-paths for comparison, and 
+        ''  scream if parent invalid.
+        ''
+        parent = IO.Path.GetFullPath(StripFinalBackslash(parent))
+        Try
+            pathToCheck = IO.Path.GetFullPath(pathToCheck)
+        Catch ex As Exception
+            Return parent
+        End Try
+
+        If pathToCheck.StartsWith(parent, StringComparison.OrdinalIgnoreCase) Then
+            pathToCheck = pathToCheck.Substring(parent.Length)
+
+            If pathToCheck.StartsWith(IO.Path.DirectorySeparatorChar) Then pathToCheck = pathToCheck.Substring(1)
+            If pathToCheck.Length = 0 OrElse pathToCheck = IO.Path.DirectorySeparatorChar Then
+                pathToCheck = Nothing
+            End If
+        End If
+
+        Return pathToCheck
+    End Function
 #End Region ' File paths'
 
     ' Function for a linear interpolation
@@ -163,7 +201,7 @@ Module utils
     ' Functions for the information depiction on the GUI with the backgroundworker (Info, Warning, Error)
 #Region "Logging"
     ''' <summary>Output from Informations\Warnings\Errors on the GUI, even from within the Backgoundworker</summary>
-    Sub fInfWarErr(ByVal logLevel As Integer, ByVal MsgBoxOut As Boolean, _
+    Sub logme(ByVal logLevel As Integer, ByVal asMsgBox As Boolean, _
                    ByVal text As String, Optional ByVal ex As Exception = Nothing)
 
         ' Declaration
@@ -175,14 +213,14 @@ Module utils
         Select Case logLevel
             Case 5 To 7 ' Info
                 logFileLevel = 1
-                tabLabel = "Info"
+                tabLabel = "Messages"
             Case 8 ' Warning
                 logFileLevel = 2
-                tabLabel = "Warning"
+                tabLabel = "Warnings"
                 StyleOut = MsgBoxStyle.Exclamation
             Case 9 ' Error
                 logFileLevel = 3
-                tabLabel = "Error"
+                tabLabel = "Errors"
                 StyleOut = MsgBoxStyle.Critical
         End Select
 
@@ -191,21 +229,21 @@ Module utils
 
         '' Print only filtered msgs in log-window
         ''
-        If logLevel >= AppPreferences.logLevel Then
+        If logLevel >= Prefs.logLevel Then
             Dim wintext = AnzeigeMessage(logLevel) & text
-            If BWorker.IsBusy Then
+            If BWorker IsNot Nothing AndAlso BWorker.IsBusy Then
                 '' If in Worker-thread, update GUI through a ProgressChanged event
                 ''
-                Dim WorkerMsg As New cLogMsg(logFileLevel, MsgBoxOut, wintext, ex, tabLabel)
+                Dim WorkerMsg As New cLogMsg(logFileLevel, asMsgBox, wintext, ex, tabLabel)
                 BWorker.ReportProgress(0, WorkerMsg)
             Else
-                updateLogWindow(logFileLevel, wintext, tabLabel)
+                updateLogWindow(logFileLevel, wintext, tabLabel, ex)
             End If
         End If
 
         '' Output as an messagebox (if requested)
         ''
-        If MsgBoxOut Then
+        If asMsgBox Then
             ' Output in a MsgBox
             If RestartN Then
                 ' By changes in the confic use other output
@@ -220,30 +258,45 @@ Module utils
         End If
     End Sub
 
-    Private Sub updateLogWindow(ByVal logFileLevel As Integer, ByVal text As String, ByVal tabLabel As String)
+    Private Sub updateLogWindow(ByVal logFileLevel As Integer, ByVal text As String, ByVal tabLabel As String, ByVal ex As Exception)
         ' Established the text wit the symbol from the style
+        Dim printEx = False
+        Dim lbox As ListBox
 
-        ' Write to Log-windows
-        Select Case logFileLevel
-            Case 1 ' Info
-                F_Main.ListBoxMSG.Items.Add(text)
-            Case 2 ' Warning
-                F_Main.ListBoxMSG.Items.Add(text)
-                F_Main.ListBoxWar.Items.Add(text)
-                F_Main.TabPageWar.Text = tabLabel & " (" & F_Main.ListBoxWar.Items.Count & ")"
-            Case 3 ' Error
-                F_Main.ListBoxMSG.Items.Add(text)
-                F_Main.ListBoxErr.Items.Add(text)
-                F_Main.TabPageErr.Text = tabLabel & " (" & F_Main.ListBoxErr.Items.Count & ")"
-                F_Main.TabControlOutMsg.SelectTab(2)
-            Case Else
-                '' ignored
-        End Select
+        If (ex IsNot Nothing) Then
+            printEx = (logFileLevel > 1 AndAlso Prefs.logLevel <= 2)
+            text = format("{0} (Check {1} for details)", text, IIf(printEx, "error/warn tab", "log-file"))
+        End If
 
+        ' Always write to log-msg tab.
+        ''
+        lbox = F_Main.ListBoxMSG
+        lbox.Items.Add(text)
+        F_Main.TabPageMSG.Text = format("Messages({0})", lbox.Items.Count)
         ' Set the Scrollbars in the Listboxes at the end
-        F_Main.ListBoxMSG.TopIndex = F_Main.ListBoxMSG.Items.Count - 1
-        F_Main.ListBoxWar.TopIndex = F_Main.ListBoxWar.Items.Count - 1
-        F_Main.ListBoxErr.TopIndex = F_Main.ListBoxErr.Items.Count - 1
+        lbox.TopIndex = lbox.Items.Count - 1
+
+        ''Write to other Log-windows.
+        ''
+        Dim label As String
+        If logFileLevel = 2 Then        ' Warning
+            lbox = F_Main.ListBoxWar
+            label = "Warnings"
+        ElseIf logFileLevel = 3 Then    ' Error
+            lbox = F_Main.ListBoxErr
+            label = "Errors"
+        Else
+            Return
+        End If
+
+        lbox.Items.Add(text)
+        If printEx Then
+            lbox.Items.Add(format("\i{0}", ex))
+        End If
+
+        lbox.TopIndex = lbox.Items.Count - 1
+        F_Main.TabPageWar.Text = format("Warnings({0})", lbox.Items.Count)
+
 
     End Sub
 
@@ -266,7 +319,7 @@ Module utils
 
         ' Call for the output from Informations\Warnings\Errors with the backgoundworker
         Public Sub forwardLog()
-            updateLogWindow(LogLevel, Text, TabLabel)
+            updateLogWindow(LogLevel, Text, TabLabel, Ex)
         End Sub
     End Class
 
@@ -277,7 +330,7 @@ Module utils
     Function fWriteLog(ByVal eventType As Integer, Optional ByVal logLevel As Integer = 4, Optional ByVal text As String = "", _
                        Optional ByVal ex As Exception = Nothing) As Boolean
 
-        If Not AppPreferences.writeLog Then Return True
+        If Not Prefs.writeLog Then Return True
 
         Dim LogFilenam As String = joinPaths(MyPath, "log.txt")
 
@@ -288,7 +341,7 @@ Module utils
             '' Truncate log-file if size exceeded on session-start.
             ''
             Dim fInf As New System.IO.FileInfo(LogFilenam)
-            If fInf.Exists AndAlso fInf.Length > AppPreferences.logSize * Math.Pow(10, 6) Then
+            If fInf.Exists AndAlso fInf.Length > Prefs.logSize * Math.Pow(10, 6) Then
                 fLoeschZeilen(LogFilenam, System.IO.File.ReadAllLines(LogFilenam).Length / 2)
             End If
         ElseIf eventType = 3 Then
@@ -326,6 +379,40 @@ Module utils
         End Try
 
         Return True
+    End Function
+
+    ' Delete lines from the Log
+    Function fLoeschZeilen(ByVal File As String, ByVal Anzahl As Integer, Optional ByVal Zeichen As String = "-") As Boolean
+        ' Declarations
+        Dim i, k As Integer
+        Dim inhalt() = System.IO.File.ReadAllLines(File)
+        Dim inhalt2() As String
+
+        ' Search till the given string is found
+        For i = Anzahl To UBound(inhalt)
+            If Trim(inhalt(i)).StartsWith(Zeichen) Then
+                Exit For
+            End If
+        Next i
+
+        ' Redimension from the array
+        ReDim inhalt2(UBound(inhalt) - i + 3)
+
+        ' Write the actualize file
+        inhalt2(1) = "Cleared Log " & CDate(DateAndTime.Now)
+        inhalt2(2) = "-----"
+
+        k = 3
+        For j = i To UBound(inhalt)
+            inhalt2(k) = inhalt(j)
+            k += 1
+        Next j
+
+        ' Write the textfile
+        System.IO.File.WriteAllLines(File, inhalt2)
+
+        Return True
+
     End Function
 
 #End Region ' Logging
@@ -381,9 +468,7 @@ Module utils
         End Using
     End Sub
 
-    ''' <summary>
-    ''' Reads an obligatory value from a json-object, or uses the default-value (if supplied).
-    ''' </summary>
+    ''' <summary>Reads an obligatory value from a json-object, or uses the default-value (if supplied).</summary>
     Function jvalue(ByVal jobj As JObject, ByVal item As Object, Optional ByVal defaultValue As Object = Nothing) As Object
         Dim value = jobj(item)
 
@@ -399,22 +484,31 @@ Module utils
     End Function
 
     ''' <summary>Builds a human-readable help-string from any non-null schema-properties.</summary>
-    Function schemaInfos2helpMsg(ByVal ParamArray propSchemaInfos() As JToken) As String
-        Dim titl = propSchemaInfos(0)
-        Dim desc = propSchemaInfos(1)
-        Dim type = propSchemaInfos(2)
-        Dim chce = propSchemaInfos(3)
-        Dim dflt = propSchemaInfos(4)
-        Dim mini = propSchemaInfos(5)
-        Dim miex = propSchemaInfos(6) '' exclusiveMin
-        Dim maxi = propSchemaInfos(7)
-        Dim maex = propSchemaInfos(8) '' exclusiveMax
+    Function schemaInfos2helpMsg(ByVal schema As JObject) As String
+        Dim infos() As JToken = (From pname In { _
+                                 "title", "description", "type", "enum", "default", _
+                                 "minimum", "exclusiveMinimum", "maximum", "exclusiveMaximum", "units"}
+                    Select schema(pname)).ToArray()
+
+        ''TODO: Include other schema-props in hlp-msg.
+
+        Dim titl = infos(0)
+        Dim desc = infos(1)
+        Dim type = infos(2)
+        Dim chce = infos(3)
+        Dim dflt = infos(4)
+        Dim mini = infos(5)
+        Dim miex = infos(6) '' exclusiveMin
+        Dim maxi = infos(7)
+        Dim maex = infos(8) '' exclusiveMax
+        Dim unit = infos(9) '' exclusiveMax
 
         Dim sdesc As String = ""
         Dim stype As String = ""
         Dim senum As String = ""
         Dim sdflt As String = ""
         Dim slimt As String = ""
+        Dim sunit As String = ""
 
         If desc IsNot Nothing Then
             sdesc = format(desc.ToString())
@@ -442,8 +536,9 @@ Module utils
             slimt = format("\n- limits : {0}{1}, {2}{3}", _
                            open, smin, smax, clos)
         End If
+        If unit IsNot Nothing Then sunit = format("\n-  units : {0}", unit)
 
-        Return String.Join("", stype, sdesc, senum, sdflt, slimt)
+        Return String.Join("", stype, sdesc, sunit, senum, sdflt, slimt)
     End Function
 
 #End Region ' Json
@@ -458,10 +553,7 @@ Module utils
     Private regexp_newLine As New Regex("\r\n|\n\r|\n|\r", RegexOptions.Compiled)
 
 
-    '''<summary>
-    ''' Invokes String.Format() translating '\n', '\t' and '\i' for indenting by-2
-    '''   all subsequent lines.
-    '''</summary>
+    '''<summary>Invokes String.Format() translating '\n', '\t' and '\i' for indenting by-2 all subsequent lines</summary>
     ''' <remarks>
     ''' New-lines are visible only in textBoxes - not console and/or imediate-window.
     ''' <h4>EXAMPLE:</h4>
@@ -493,6 +585,91 @@ Module utils
         Return str
     End Function
 
+    Function JoinSingles(ByVal vars As Single())
+        Dim svars As Object() = (From a In vars Select CStr(a)).ToArray()
+
+        Return Join(svars, ", ")
+    End Function
+    Function MyJoinQuoted(ByVal vars As Object())
+        Dim svars As String() = (From a In vars Select sa = String.Format("""{0}""", New JValue(a))).ToArray()
+
+        Return Join(svars, ", ")
+    End Function
 #End Region ' Strings
+
+#Region "GUI"
+    ''' <param name="infoboxControls">An array with even number of controls, made up of pairs (ctrl, label) where label can be null</param>
+    Sub armControlsWithInfoBox(ByVal schema As JObject, ByVal infoboxControls As Control(), ByVal showInfoBox As EventHandler, ByVal hideInfoBox As EventHandler)
+        For i = 0 To UBound(infoboxControls) Step 2
+            Dim ctrl = infoboxControls(i)
+            Dim lbl = infoboxControls(i + 1)
+
+            Dim ctrlName As String = ctrl.Name
+            Dim propName = ctrlName.Substring(3)
+
+            Dim helpMsg = updateControlsFromSchema(schema, ctrl, lbl, propName, True, True)
+            ctrl.Tag = helpMsg
+            AddHandler ctrl.MouseEnter, showInfoBox
+            AddHandler ctrl.MouseLeave, hideInfoBox
+
+            If lbl IsNot Nothing Then
+                lbl.Tag = helpMsg
+                AddHandler lbl.MouseEnter, showInfoBox
+                AddHandler lbl.MouseLeave, hideInfoBox
+            End If
+        Next
+
+    End Sub
+
+
+    Function updateControlsFromSchema(ByVal schema As JObject, ByVal ctrl As Control, ByVal label As Control, _
+                                 Optional ByVal propName As String = Nothing, Optional ByVal skipToolTip As Boolean = False, _
+                                 Optional ByVal usePropNameAsTitle As Boolean = False) As String
+        Dim msg As String = Nothing
+        Try
+            If propName Is Nothing Then propName = ctrl.Name
+
+            Dim pschema = schema.SelectToken(".properties." & propName)
+            If pschema Is Nothing Then
+                logme(8, False, format("Schema2GUI: Could not find schema for Control({0})!", propName))
+                Return msg
+            End If
+
+            '' Set title on control/label
+            ''
+            Dim title = pschema("title")
+            If title Is Nothing AndAlso usePropNameAsTitle Then title = propName
+
+            If title IsNot Nothing Then
+                If label IsNot Nothing Then
+                    label.Text = title
+                Else
+                    If TypeOf ctrl Is CheckBox Then
+                        ctrl.Text = title.ToString() & "?"
+                    End If
+                End If
+            End If
+
+            msg = schemaInfos2helpMsg(pschema)
+            If msg IsNot Nothing Then
+                If Not skipToolTip Then
+
+                    Dim t = New ToolTip()
+                    t.SetToolTip(ctrl, msg)
+                    t.AutomaticDelay = 300
+                    t.AutoPopDelay = 10000
+                End If
+
+            End If
+
+            Return msg
+
+        Catch ex As Exception
+            logme(8, False, format("Schema2GUI: Skipped exception: {0} ", ex.Message), ex)
+            Return msg
+        End Try
+    End Function
+
+#End Region 'GUI
 
 End Module

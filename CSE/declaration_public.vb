@@ -2,14 +2,22 @@
 
     ' Description of the form
     Public Const AppName As String = "VECTO_CSE"                ' Name of the programm
-    Public Const AppVers As String = "2.0.1-pre1"                     ' Version of the Programm
+    Public Const AppVers As String = "2.0.1-pre2"                     ' Version of the Programm
     Public AppDate As String                                    ' Date of the compilation of the programm
 
     ' Control variables
     Public Const komment = "C"                                  ' Symbol for a comment in the input files
-    Public Const varOutStr As String = "C:\..."                 ' String in the outfiles when no path is given
-    Public NameFK() As String = ({"", "Vehicle", "Weather", "Altitude", "MS Config calibration", "MS Config test", "Data Calib", "Data LS1", "Data HS", "Data LS2"})
     Public AnzeigeMessage() As String = ({"", "", "", "         + ", "      ~ ", "   * ", " - ", "", "", ""})
+
+    Public AppFormStarted = False
+    Public PrefsPath As String
+    Public Prefs As cPreferences
+    Public Job As cJob                                          ' The values for the 'Main' tab (and Criteria)
+    Public Crt As cCriteria                                     ' The values for the 'Options' tab 
+    Public Sub installJob(ByVal newJob As cJob)
+        Job = newJob
+        Crt = newJob.Criteria
+    End Sub
 
     ' General Path variables
     Public MyPath As String                                     ' Path of the *.exe
@@ -29,67 +37,14 @@
     Public Const f_rollHS = 1                                   ' Constant value for HS rolling resistance
     Public Zone1CentralMeridian = -177                          ' Central UTM zone meridian (Will be changed by zone adjustment)
 
-    Public delta_x_max As Single                                ' [m]; +/- size of the control area around a MS start/end point where a trigger signal is valid (driving direction)
-    Public delta_y_max As Single                                ' [m]; +/- size of the control area around a MS start/end point where a trigger signal is valid (perpendicular to driving direction)
-    Public delta_head_max As Single                             ' [°]; +/- maximum deviation from heading as read from the csdat-file to the heading from csms-file for a valid dataset
-    Public ds_min_CAL As Integer                                ' [#]; Minimum number of valid datasets required for the calibration test (per combination of MS ID and DIR ID)
-    Public ds_min_LS As Integer                                 ' [#]; Minimum number of valid datasets required for the low speed test (per combination of MS ID and DIR ID)
-    Public ds_min_HS As Integer                                 ' [#]; Minimum number of valid datasets required for the high speed test (per combination of MS ID and DIR ID)
-    Public ds_min_head_MS As Integer                            ' [#]; Minimum TOTAL number of valid datasets required for the high speed test per heading
-    Public delta_Hz_max As Single                               ' [%]; maximum allowed deviation of timestep-size in csdat-file from 100Hz
-    Public acc_corr_ave As Single                               ' [s] averaging of vehicle speed for correction of acceleration forces
-    Public dist_float As Single                                 ' [m]; Distance used for calculation of floatinig average signal used for stabilitay criteria in low speed tests
-    Public roh_air_ref As Single                                ' [kg/m^3] Reference air density 
 
-    ' Determination constances
-    Public delta_parallel_max As Single                         ' [°]; maximum heading difference for measurement section (parallelism criteria for test track layout)
-    Public v_wind_ave_CAL_max As Single                         ' [m/s]; maximum average wind speed during calibration test
-    Public beta_ave_CAL_max As Single                           ' [°]; maximum average beta during calibration test
-    Public v_wind_1s_CAL_max As Single                          ' [m/s]; maximum gust wind speed during calibration test
-    Public v_veh_ave_LS_max As Single                           ' [km/h]; maximum average vehicle speed for low speed test
-    Public v_veh_ave_LS_min As Single                           ' [km/h]; minimum average vehicle speed for low speed test
-    Public v_wind_ave_LS_max As Single                          ' [m/s]; maximum average wind speed during low speed test
-    Public v_wind_1s_LS_max As Single                           ' [m/s]; maximum gust wind speed during low speed test
-    Public v_veh_float_delta As Single                          ' [km/h]; +/- maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed test)
-    Public tq_sum_float_delta As Single                         ' [-]; +/- maximum relative deviation of floating average torque from average torque over entire section (low speed test)
-    Public v_veh_ave_HS_min As Single                           ' [km/h]; minimum average vehicle speed for high speed test
-    Public v_wind_ave_HS_max As Single                          ' [m/s]; maximum average wind speed during high speed test
-    Public v_wind_1s_HS_max As Single                           ' [m/s]; maximum gust wind speed during high speed test
-    Public beta_ave_HS_max As Single                            ' [°]; maximum average beta during high speed test
-    Public v_veh_1s_delta As Single                             ' [km/h]; +/- maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (high speed test)
-    Public tq_sum_1s_delta As Single                            ' [-]; +/- maximum relative deviation of 1s average torque from average torque over entire section (high speed test)
-    Public leng_crit As Single                                  ' [m]; maximum absolute difference of distance driven with lenght of section as specified in configuration
-    Public delta_t_tire_max As Single                           ' [°C]; maximum variation of tire temperature between high speed tests and low speed tests
-    Public delta_RRC_max As Single                              ' [kg/t]; maximum difference of RRC from the two low speed runs 
-    Public t_amb_var As Single                                  ' [°C]; maximum variation of ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)
-    Public t_amb_max As Single                                  ' [°C]; Maximum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only) 
-    Public t_amb_tarmac As Single                               ' [°C]; Maximum temperature below which no documentation of tarmac conditions is necessary
-    Public t_amb_min As Single                                  ' [°C]; Minimum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)
-
-    ' Constances for the array declaration and the program control
-    Public Const JBerF = 4                                      ' Number of calculation files
-    Public RRC As Double                                        ' Rolling resistance correction factor
-    Public AnemIC(4) As Single                                  ' Anemometer instrument calibration factors
+    ' Constances for the array declaration
     Public JumpPoint As Integer = -1                            ' Point at that a jump in the time-resolved data is detected
     Public OptPar() As Boolean = ({True, True, True})           ' Array to identify if optional parameters are given
-    Public HzOut As Integer = 1                                 ' Hz result file output
-
-    ' Spezification files
-    Public Vehspez As String                                    ' Vehicle specification file
-    Public Ambspez As String                                    ' Ambient conditions file
-    Public DataSpez(JBerF) As String                            ' Data specification file
-    Public MSCCSpez As String                                   ' Measurement section configuration file (Calibration run)
-    Public MSCTSpez As String                                   ' Measurement section configuration file (Test run)
 
     ' Boolean for the programm control
-    Public endofall As Boolean = False                          ' Variable if enough input data in the files
     Public FileBlock As Boolean = False                         ' Variable if a file is blocked by an other process
-    Public AccC As Boolean = False                              ' Variable for the acceleration correction
-    Public GradC As Boolean = False                             ' Variable for the gradient correction
 
-
-    Public PreferencesPath As String
-    Public AppPreferences As cPreferences
 
     'File browser
     Public FB_Drives() As String
@@ -99,6 +54,7 @@
 
     Public fbTXT As cFileBrowser
     Public fbVECTO As cFileBrowser
+    Public fbCRT As cFileBrowser
     Public fbCSV As cFileBrowser
     Public fbDir As cFileBrowser
     Public fbWorkDir As cFileBrowser

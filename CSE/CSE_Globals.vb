@@ -1,4 +1,191 @@
 ﻿Module CSE_Globals
+    Public Enum tComp
+        t
+        lati
+        longi
+        hdg
+        v_veh_GPS
+        v_veh_CAN
+        vair_ar
+        beta_ar
+        n_eng
+        tq_l
+        tq_r
+        t_amb_veh
+        t_tire
+        p_tire
+        fc
+        trigger
+        user_valid
+        Undefined
+    End Enum
+
+    Public Enum tCompWeat
+        t
+        t_amb_stat
+        p_amp_stat
+        rh_stat
+        Undefined
+    End Enum
+
+    Public Enum tCompCali
+        t
+        zone_UTM
+        lati_UTM
+        longi_UTM
+        trigger_c
+        SecID
+        DirID
+        lati_root
+        longi_root
+        v_veh_c
+        vair_ic
+        vair_uf
+        beta_ic
+        beta_uf
+        vwind_ha
+        vwind_c
+        vwind_1s
+        vair_c
+        vair_c_sq
+        beta_c
+        dist
+        dist_root
+        alt
+        slope_deg
+        omega_wh
+        omega_p_wh
+        tq_sum
+        tq_sum_1s
+        t_float
+        tq_sum_float
+        F_trac
+        v_veh_acc
+        a_veh_avg
+        F_acc
+        F_grd
+        F_res
+        v_veh_1s
+        v_veh_float
+        t_amp_veh
+        t_amp_stat
+        p_amp_stat
+        rh_stat
+    End Enum
+
+    Public Enum tCompErg
+        SecID
+        DirID
+        RunID
+        HeadID
+        delta_t
+        v_veh
+        v_MSC
+        v_MSC_GPS
+        s_MSC
+        v_veh_CAN
+        vair_ar
+        vair_ic
+        vair_uf
+        vair
+        beta_ar
+        beta_ic
+        beta_uf
+        user_valid
+        valid
+        used
+        calcT
+        n_eng
+        v_wind_avg
+        v_wind_1s
+        v_wind_1s_max
+        beta_avg
+        dist
+        omega_wh
+        omega_p_wh
+        tq_sum_1s
+        t_float
+        tq_sum_float
+        F_trac
+        F_res_ref
+        v_veh_avg
+        a_veh_avg
+        F_acc
+        F_grd
+        F_res
+        v_veh_1s
+        v_veh_float
+        t_amb_veh
+        t_amb_stat
+        p_amb_stat
+        rh_stat
+        v_air_sq
+        v_veh_1s_max
+        v_veh_1s_min
+        v_veh_float_max
+        v_veh_float_min
+        beta_abs
+        tq_sum
+        tq_sum_1s_max
+        tq_sum_1s_min
+        tq_sum_float_max
+        tq_sum_float_min
+        vp_H2O
+        rho_air
+        t_tire
+        p_tire
+        F0_ref_singleDS
+        F0_singleDS
+        F2_ref_singleDS
+        RRC_singleDS
+        CdxA_singleDS
+        val_User
+        val_vVeh_avg
+        val_vVeh_1s
+        val_vVeh_f
+        val_vWind
+        val_vWind_1s
+        val_tq_f
+        val_tq_1s
+        val_beta
+        val_dist
+    End Enum
+
+    Public Enum tCompErgReg
+        SecID
+        DirID
+        F0
+        F0_LS1
+        F0_LS2
+        F0_ref
+        F2_ref
+        F0_LS1_ref
+        F2_LS1_ref
+        F0_LS2_ref
+        F2_LS2_ref
+        roh_air_LS
+        beta_abs_HS
+        RRC
+        RRC_LS1
+        RRC_LS2
+        RRC_valid
+        CdxA
+        delta_CdxA
+        CdxA0
+        F0_95
+        F2_95
+        R_sq
+        t_tire_LS_min
+        t_tire_LS_max
+        t_tire_HS_min
+        t_tire_HS_max
+        valid_t_tire
+        't_amb
+        't_amb_min
+        't_amb_max
+    End Enum
+
+
     Public Function fComp(ByVal sK As String) As tComp
         sK = Trim(UCase(sK))
         Select Case sK
@@ -180,9 +367,9 @@
             Case tCompCali.F_trac
                 Return "F_trac"
             Case tCompCali.v_veh_acc
-                Return "v_veh_ave"
-            Case tCompCali.a_veh_ave
-                Return "a_veh_ave"
+                Return "v_veh_avg"
+            Case tCompCali.a_veh_avg
+                Return "a_veh_avg"
             Case tCompCali.F_acc
                 Return "F_acc"
             Case tCompCali.F_grd
@@ -268,7 +455,7 @@
                 Return "[N]"
             Case tCompCali.v_veh_acc
                 Return "[km/h]"
-            Case tCompCali.a_veh_ave
+            Case tCompCali.a_veh_avg
                 Return "[m/s2]"
             Case tCompCali.F_acc
                 Return "[N]"
@@ -339,14 +526,14 @@
                 Return "calcT"
             Case tCompErg.n_eng
                 Return "n_eng"
-            Case tCompErg.v_wind_ave
-                Return "v_wind_ave"
+            Case tCompErg.v_wind_avg
+                Return "v_wind_avg"
             Case tCompErg.v_wind_1s
                 Return "v_wind_1s"
             Case tCompErg.v_wind_1s_max
                 Return "v_wind_1s_max"
-            Case tCompErg.beta_ave
-                Return "beta_ave"
+            Case tCompErg.beta_avg
+                Return "beta_avg"
             Case tCompErg.dist
                 Return "delta s"
             Case tCompErg.omega_wh
@@ -361,10 +548,10 @@
                 Return "tq_sum_float"
             Case tCompErg.F_trac
                 Return "F_trac"
-            Case tCompErg.v_veh_ave
-                Return "v_veh_ave"
-            Case tCompErg.a_veh_ave
-                Return "a_veh_ave"
+            Case tCompErg.v_veh_avg
+                Return "v_veh_avg"
+            Case tCompErg.a_veh_avg
+                Return "a_veh_avg"
             Case tCompErg.F_acc
                 Return "F_acc"
             Case tCompErg.F_grd
@@ -427,8 +614,8 @@
                 Return "CdxA_singleDS"
             Case tCompErg.val_User
                 Return "val_User"
-            Case tCompErg.val_vVeh_ave
-                Return "val_vVeh_ave"
+            Case tCompErg.val_vVeh_avg
+                Return "val_vVeh_avg"
             Case tCompErg.val_vVeh_1s
                 Return "val_vVeh_1s"
             Case tCompErg.val_vVeh_f
@@ -496,13 +683,13 @@
                 Return "[-]"
             Case tCompErg.n_eng
                 Return "[rpm]"
-            Case tCompErg.v_wind_ave
+            Case tCompErg.v_wind_avg
                 Return "[m/s]"
             Case tCompErg.v_wind_1s
                 Return "[m/s]"
             Case tCompErg.v_wind_1s_max
                 Return "[m/s]"
-            Case tCompErg.beta_ave
+            Case tCompErg.beta_avg
                 Return "[°]"
             Case tCompErg.dist
                 Return "[m]"
@@ -518,9 +705,9 @@
                 Return "[Nm]"
             Case tCompErg.F_trac
                 Return "[N]"
-            Case tCompErg.v_veh_ave
+            Case tCompErg.v_veh_avg
                 Return "[km/h]"
-            Case tCompErg.a_veh_ave
+            Case tCompErg.a_veh_avg
                 Return "[m/s2]"
             Case tCompErg.F_acc
                 Return "[N]"
@@ -584,7 +771,7 @@
                 Return "[m2]"
             Case tCompErg.val_User
                 Return "[-]"
-            Case tCompErg.val_vVeh_ave
+            Case tCompErg.val_vVeh_avg
                 Return "[-]"
             Case tCompErg.val_vVeh_1s
                 Return "[-]"
@@ -731,55 +918,5 @@
             Case Else
                 Return "ERROR"
         End Select
-    End Function
-
-    ' Function with the standard parameter
-    Public Function StdParameter() As Boolean
-        ' Standard values
-        delta_x_max = 10                               ' [m]; +/- size of the control area around a MS start/end point where a trigger signal is valid (driving direction)
-        delta_y_max = 100                              ' [m]; +/- size of the control area around a MS start/end point where a trigger signal is valid (perpendicular to driving direction)
-        delta_head_max = 10                            ' [°]; +/- maximum deviation from heading as read from the csdat-file to the heading from csms-file for a valid dataset
-        ds_min_CAL = 5                                 ' [#]; Minimum number of valid datasets required for the calibration test (per combination of MS ID and DIR ID)
-        ds_min_LS = 1                                  ' [#]; Minimum number of valid datasets required for the low speed test (per combination of MS ID and DIR ID)
-        ds_min_HS = 2                                  ' [#]; Minimum number of valid datasets required for the high speed test (per combination of MS ID and DIR ID)
-        ds_min_head_MS = 10                            ' [#]; Minimum TOTAL number of valid datasets required for the high speed test per heading
-        delta_Hz_max = 1                               ' [%]; maximum allowed deviation of timestep-size in csdat-file from 100Hz
-        acc_corr_ave = 1                               ' [s] averaging of vehicle speed for correction of acceleration forces
-        dist_float = 25                                ' [m]; Distance used for calculation of floatinig average signal used for stabilitay criteria in low speed tests
-        roh_air_ref = 1.1884                           ' [kg/m^3] Reference air density 
-
-        ' Determination constances
-        delta_parallel_max = 20                        ' [°]; maximum heading difference for measurement section (parallelism criteria for test track layout)
-        v_wind_ave_CAL_max = 5                         ' [m/s]; maximum average wind speed during calibration test
-        beta_ave_CAL_max = 5                           ' [°]; maximum average beta during calibration test
-        v_wind_1s_CAL_max = 8                          ' [m/s]; maximum gust wind speed during calibration test
-        v_veh_ave_LS_max = 16                          ' [km/h]; maximum average vehicle speed for low speed test
-        v_veh_ave_LS_min = 9                           ' [km/h]; minimum average vehicle speed for low speed test
-        v_wind_ave_LS_max = 5                          ' [m/s]; maximum average wind speed during low speed test
-        v_wind_1s_LS_max = 8                           ' [m/s]; maximum gust wind speed during low speed test
-        v_veh_float_delta = 0.15                       ' [km/h]; +/- maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed test)
-        tq_sum_float_delta = 0.1                       ' [-]; +/- maximum relative deviation of floating average torque from average torque over entire section (low speed test)
-        v_veh_ave_HS_min = 80                          ' [km/h]; minimum average vehicle speed for high speed test
-        v_wind_ave_HS_max = 5                          ' [m/s]; maximum average wind speed during high speed test
-        v_wind_1s_HS_max = 8                           ' [m/s]; maximum gust wind speed during high speed test
-        beta_ave_HS_max = 3                            ' [°]; maximum average beta during high speed test
-        v_veh_1s_delta = 0.3                           ' [km/h]; +/- maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (high speed test)
-        tq_sum_1s_delta = 0.1                          ' [-]; +/- maximum relative deviation of 1s average torque from average torque over entire section (high speed test)
-        leng_crit = 3                                  ' [m]; maximum absolute difference of distance driven with lenght of section as specified in configuration
-        delta_t_tire_max = 5                           ' [°C]; maximum variation of tire temperature between high speed tests and low speed tests
-        delta_RRC_max = 0.3                            ' [kg/t]; maximum difference of RRC from the two low speed runs 
-        t_amb_var = 3                                  ' [°C]; maximum variation of ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)
-        t_amb_max = 35                                 ' [°C]; Maximum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only) 
-        t_amb_tarmac = 25                              ' [°C]; Maximum temperature below which no documentation of tarmac conditions is necessary
-        t_amb_min = 0                                  ' [°C]; Minimum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only)
-
-        ' Evaluation
-        AccC = False
-        GradC = False
-
-        ' Output
-        HzOut = 1
-
-        Return True
     End Function
 End Module

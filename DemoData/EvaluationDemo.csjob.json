@@ -1,0 +1,75 @@
+{
+  "Header": {
+    "Title": "vecto-cse JOB",
+    "FileVersion": "1.0.0",
+    "AppVersion": "2.0.1-pre2",
+    "ModifiedDate": "2014/06/05 03:57:58 +02:00",
+    "CreatedBy": "ISIS\\anastkn@JRC(lic: 04c137c0-24df-4d90-a3e2-b02fe3dba8ea)",
+    "StrictBody": false,
+    "BodySchema": null
+  },
+  "Body": {
+    "vehicle_fpath": "VehicleDemo.csveh.json",
+    "ambient_fpath": "AmbientConditionsDemo.csamb",
+    "Anemometer": {
+      "v_air_f": "2",
+      "v_air_d": "0",
+      "beta_f": "1",
+      "beta_d": "0"
+    },
+    "calib_track_fpath": "CalibrationTrackDemo.csms",
+    "calib_run_fpath": "DataDemo_CAL.csdat",
+    "coast_track_fpath": "CoastingTrackDemo.csms",
+    "low1_fpath": "DataDemo_LS1.csdat",
+    "high_fpath": "DataDemo_HS.csdat",
+    "low2_fpath": "DataDemo_LS2.csdat",
+    "Criteria": {
+      "Processing": {
+        "roh_air_ref": 1.1884,
+        "accel_correction": false,
+        "gradient_correction": false,
+        "hz_out": 1,
+        "rr_corr_factor": 1,
+        "acc_corr_avg": 1,
+        "dist_float": 25
+      },
+      "Validation": {
+        "trigger_delta_x_max": 10,
+        "trigger_delta_y_max": 100,
+        "delta_head_max": 10,
+        "segruns_min_CAL": 5,
+        "segruns_min_LS": 1,
+        "segruns_min_HS": 2,
+        "segruns_min_head_MS": 10,
+        "delta_Hz_max": 1,
+        "delta_parallel_max": 20,
+        "v_wind_avg_max_CAL": 5,
+        "v_wind_1s_max_CAL": 8,
+        "beta_avg_max_CAL": 5,
+        "leng_crit": 3,
+        "v_wind_avg_max_LS": 5,
+        "v_wind_1s_max_LS": 8,
+        "v_veh_avg_min_LS": 9,
+        "v_veh_avg_max_LS": 16,
+        "v_veh_float_delta_LS": 0.15,
+        "tq_sum_float_delta_LS": 0.1,
+        "v_wind_avg_max_HS": 5,
+        "v_wind_1s_max_HS": 8,
+        "beta_avg_max_HS": 3,
+        "v_veh_avg_min_HS": 80,
+        "v_veh_1s_delta_HS": 0.3,
+        "tq_sum_1s_delta_HS": 0.1,
+        "delta_t_tyre_max": 5,
+        "delta_rr_corr_max": 0.3,
+        "t_amb_min": 0,
+        "t_amb_max": 35,
+        "t_amb_var": 3,
+        "t_amb_tarmac": 25
+      }
+    },
+    "v_air_f": 2.0,
+    "v_air_d": 0.0,
+    "beta_f": 1.0,
+    "beta_d": 0.0
+  }
+}

@@ -5,6 +5,7 @@
     "AppVersion": "2.0.1-pre1",
     "ModifiedDate": "2014/05/28 00:33:50 +02:00",
     "Strict": true,
+    "BodySchema": null,
   },
   "Body": {
         "classCode":         4,

@@ -41,12 +41,14 @@ Partial Class F_Preferences
         Me.ButtonSelectNotepad = New System.Windows.Forms.Button()
         Me.editor = New System.Windows.Forms.TextBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.hideUsername = New System.Windows.Forms.CheckBox()
         Me.strictBodies = New System.Windows.Forms.CheckBox()
         Me.includeSchemas = New System.Windows.Forms.CheckBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.ButtonReload = New System.Windows.Forms.Button()
+        Me.ButtonSave = New System.Windows.Forms.Button()
         Me.GroupBoxWorDir.SuspendLayout()
         Me.GroupBoxInterface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
@@ -87,18 +89,18 @@ Partial Class F_Preferences
         '
         Me.ButtonOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonOK.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.ButtonOK.Location = New System.Drawing.Point(436, 242)
+        Me.ButtonOK.Location = New System.Drawing.Point(436, 248)
         Me.ButtonOK.Name = "ButtonOK"
         Me.ButtonOK.Size = New System.Drawing.Size(75, 23)
         Me.ButtonOK.TabIndex = 0
-        Me.ButtonOK.Text = "Save"
+        Me.ButtonOK.Text = "OK"
         Me.ButtonOK.UseVisualStyleBackColor = True
         '
         'ButtonCancel
         '
         Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButtonCancel.Location = New System.Drawing.Point(99, 242)
+        Me.ButtonCancel.Location = New System.Drawing.Point(355, 248)
         Me.ButtonCancel.Name = "ButtonCancel"
         Me.ButtonCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButtonCancel.TabIndex = 1
@@ -125,7 +127,7 @@ Partial Class F_Preferences
         Me.GroupBoxInterface.Controls.Add(Me.writeLog)
         Me.GroupBoxInterface.Location = New System.Drawing.Point(5, 120)
         Me.GroupBoxInterface.Name = "GroupBoxInterface"
-        Me.GroupBoxInterface.Size = New System.Drawing.Size(341, 84)
+        Me.GroupBoxInterface.Size = New System.Drawing.Size(341, 89)
         Me.GroupBoxInterface.TabIndex = 11
         Me.GroupBoxInterface.TabStop = False
         Me.GroupBoxInterface.Text = "Logging && Messages"
@@ -180,7 +182,7 @@ Partial Class F_Preferences
         Me.TabControl1.Location = New System.Drawing.Point(3, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(508, 233)
+        Me.TabControl1.Size = New System.Drawing.Size(508, 239)
         Me.TabControl1.TabIndex = 12
         '
         'TabPage2
@@ -192,7 +194,7 @@ Partial Class F_Preferences
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(500, 207)
+        Me.TabPage2.Size = New System.Drawing.Size(500, 213)
         Me.TabPage2.TabIndex = 0
         Me.TabPage2.Text = "General"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -227,6 +229,7 @@ Partial Class F_Preferences
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.hideUsername)
         Me.GroupBox1.Controls.Add(Me.strictBodies)
         Me.GroupBox1.Controls.Add(Me.includeSchemas)
         Me.GroupBox1.Controls.Add(Me.TextBox1)
@@ -234,15 +237,25 @@ Partial Class F_Preferences
         Me.GroupBox1.Controls.Add(Me.CheckBox1)
         Me.GroupBox1.Location = New System.Drawing.Point(352, 120)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(152, 84)
+        Me.GroupBox1.Size = New System.Drawing.Size(143, 89)
         Me.GroupBox1.TabIndex = 11
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "JSON"
         '
+        'hideUsername
+        '
+        Me.hideUsername.AutoSize = True
+        Me.hideUsername.Location = New System.Drawing.Point(6, 67)
+        Me.hideUsername.Name = "hideUsername"
+        Me.hideUsername.Size = New System.Drawing.Size(94, 17)
+        Me.hideUsername.TabIndex = 12
+        Me.hideUsername.Text = "hideUsername"
+        Me.hideUsername.UseVisualStyleBackColor = True
+        '
         'strictBodies
         '
         Me.strictBodies.AutoSize = True
-        Me.strictBodies.Location = New System.Drawing.Point(6, 57)
+        Me.strictBodies.Location = New System.Drawing.Point(6, 44)
         Me.strictBodies.Name = "strictBodies"
         Me.strictBodies.Size = New System.Drawing.Size(91, 17)
         Me.strictBodies.TabIndex = 12
@@ -280,7 +293,7 @@ Partial Class F_Preferences
         Me.CheckBox1.AutoSize = True
         Me.CheckBox1.Location = New System.Drawing.Point(353, 15)
         Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(129, 17)
+        Me.CheckBox1.Size = New System.Drawing.Size(121, 17)
         Me.CheckBox1.TabIndex = 5
         Me.CheckBox1.Text = "Write log file (log.txt)"
         Me.CheckBox1.UseVisualStyleBackColor = True
@@ -288,12 +301,23 @@ Partial Class F_Preferences
         'ButtonReload
         '
         Me.ButtonReload.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonReload.Location = New System.Drawing.Point(18, 242)
+        Me.ButtonReload.Location = New System.Drawing.Point(18, 248)
         Me.ButtonReload.Name = "ButtonReload"
         Me.ButtonReload.Size = New System.Drawing.Size(75, 23)
         Me.ButtonReload.TabIndex = 0
         Me.ButtonReload.Text = "Reload"
         Me.ButtonReload.UseVisualStyleBackColor = True
+        '
+        'ButtonSave
+        '
+        Me.ButtonSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonSave.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.ButtonSave.Location = New System.Drawing.Point(99, 248)
+        Me.ButtonSave.Name = "ButtonSave"
+        Me.ButtonSave.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonSave.TabIndex = 13
+        Me.ButtonSave.Text = "Save"
+        Me.ButtonSave.UseVisualStyleBackColor = True
         '
         'F_Preferences
         '
@@ -301,7 +325,8 @@ Partial Class F_Preferences
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButtonCancel
-        Me.ClientSize = New System.Drawing.Size(515, 277)
+        Me.ClientSize = New System.Drawing.Size(515, 283)
+        Me.Controls.Add(Me.ButtonSave)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.ButtonCancel)
         Me.Controls.Add(Me.ButtonReload)
@@ -350,4 +375,6 @@ Partial Class F_Preferences
     Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
     Friend WithEvents strictBodies As System.Windows.Forms.CheckBox
     Friend WithEvents includeSchemas As System.Windows.Forms.CheckBox
+    Friend WithEvents hideUsername As System.Windows.Forms.CheckBox
+    Friend WithEvents ButtonSave As System.Windows.Forms.Button
 End Class

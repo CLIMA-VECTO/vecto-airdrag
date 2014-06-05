@@ -687,7 +687,7 @@ Public Class FB_Dialog
 
     'ButtonWorkDir_Click
     Private Sub ButtonWorkDir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWorkDir.Click
-        SetFolder(AppPreferences.workingDir)
+        SetFolder(Prefs.workingDir)
     End Sub
 
     'ButtonDesktop_Click

@@ -20,16 +20,16 @@
             Dim vMSC As New cVirtMSC
 
             ' Read the input data
-            fInfWarErr(7, False, "Reading Input Files...")
-            Dim vehicle As New cVehicle(Vehspez)
-            ReadInputMSC(MSC, MSCCSpez, isCalibrate)
-            ReadDataFile(DataSpez(1), MSC)
+            logme(7, False, "Reading Input Files...")
+            Dim vehicle As New cVehicle(Job.vehicle_fpath)
+            ReadInputMSC(MSC, Job.calib_track_fpath, isCalibrate)
+            ReadDataFile(Job.calib_run_fpath, MSC)
 
             ' Exit function if error is detected
             If BWorker.CancellationPending Then Return False
 
             ' Output on the GUI
-            fInfWarErr(7, False, "Calculating the calibration run...")
+            logme(7, False, "Calculating the calibration run...")
 
             ' Identify the signal measurement sections
             fIdentifyMS(MSC, vMSC)
@@ -38,7 +38,7 @@
             If BWorker.CancellationPending Then Return False
 
             ' Output on the GUI
-            fInfWarErr(6, False, "Calculating the calibration run parameter")
+            logme(6, False, "Calculating the calibration run parameter")
 
             ' Calculate the results from the calibration test
             fCalcCalib(MSC, vehicle)
@@ -47,24 +47,23 @@
             'If BWorker.CancellationPending Then Return False
 
             ' Output on the GUI
-            fInfWarErr(7, False, "Writing the output files...")
+            logme(7, False, "Writing the output files...")
 
             ' Output
-            fOutDataCalc1Hz(DataSpez(1), isCalibrate)
-            fOutCalcRes(DataSpez, isCalibrate)
+            fOutDataCalc1Hz(Job.calib_run_fpath, isCalibrate)
+            fOutCalcRes(isCalibrate)
         Else
-            ' Declarations
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
 
             ' Output on the GUI
-            fInfWarErr(7, False, "Calculating the speed runs...")
+            logme(7, False, "Calculating the speed runs...")
 
             ' Read the input files
-            fInfWarErr(7, False, "Reading Input Files...")
-            Dim vehicle As New cVehicle(Vehspez)
-            ReadInputMSC(MSC, MSCTSpez, isCalibrate)
-            ReadWeather(Ambspez)
+            logme(7, False, "Reading Input Files...")
+            Dim vehicle As New cVehicle(Job.vehicle_fpath)
+            ReadInputMSC(MSC, Job.coast_track_fpath, isCalibrate)
+            ReadWeather(Job.ambient_fpath)
 
             ' Calculation of the virtual MSC points
             fIdentifyMS(MSC, vMSC, , False)
@@ -73,22 +72,22 @@
             If BWorker.CancellationPending Then Return False
 
             ' Output which test are calculated
-            For i = 2 To UBound(DataSpez)
-                If i = 2 Or i = 4 Then
+            For i = 0 To UBound(Job.coasting_fpaths)
+                If i = 0 Or i = 2 Then
                     ' Output on the GUI
-                    If i = 2 Then
-                        fInfWarErr(7, False, "Calculating the first low speed run...")
+                    If i = 0 Then
+                        logme(7, False, "Calculating the first low speed run...")
                     Else
-                        fInfWarErr(7, False, "Calculating the second low speed run...")
+                        logme(7, False, "Calculating the second low speed run...")
                     End If
                 Else
                     ' Output on the GUI
-                    fInfWarErr(7, False, "Calculating the high speed run...")
+                    logme(7, False, "Calculating the high speed run...")
                 End If
 
                 ' Output on the GUI
-                fInfWarErr(6, False, "Reading the data file...")
-                ReadDataFile(DataSpez(i), MSC)
+                logme(6, False, "Reading the data file...")
+                ReadDataFile(Job.coasting_fpaths(i), MSC)
 
                 ' Exit function if error is detected
                 If BWorker.CancellationPending Then Return False
@@ -100,19 +99,19 @@
                 If BWorker.CancellationPending Then Return False
 
                 ' Calculate the run
-                fCalcRun(MSC, vehicle, i - 1)
+                fCalcRun(MSC, vehicle, i)
 
                 ' Exit function if error is detected
                 If BWorker.CancellationPending Then Return False
 
                 ' Output on the GUI
-                fInfWarErr(6, False, "Writing the output files...")
+                logme(6, False, "Writing the output files...")
 
                 ' Output
-                fOutDataCalc1Hz(DataSpez(i), isCalibrate)
+                fOutDataCalc1Hz(Job.coasting_fpaths(i), isCalibrate)
 
                 ' Save the Result dictionaries
-                fSaveDic(i - 1)
+                fSaveDic(i)
 
                 ' Exit function if error is detected
                 If BWorker.CancellationPending Then Return False
@@ -133,8 +132,8 @@
             ' Exit function if error is detected
             If BWorker.CancellationPending Then
                 ' Write the summerised output file
-                fInfWarErr(7, False, "Writing the summarised output file...")
-                fOutCalcRes(DataSpez, isCalibrate)
+                logme(7, False, "Writing the summarised output file...")
+                fOutCalcRes(isCalibrate)
                 Return False
             End If
 
@@ -142,8 +141,8 @@
             fCalcReg(vehicle)
 
             ' Write the summerised output file
-            fInfWarErr(7, False, "Writing the summarised output file...")
-            fOutCalcRes(DataSpez, isCalibrate)
+            logme(7, False, "Writing the summarised output file...")
+            fOutCalcRes(isCalibrate)
 
             ' Check if all is valid
             For i = 0 To ErgValuesReg(tCompErgReg.SecID).Count - 1
@@ -152,13 +151,13 @@
             Next i
 
             ' Output of the final data
-            fOutCalcResReg(DataSpez)
+            fOutCalcResReg()
 
             ' Write the results on the GUI
-            fInfWarErr(7, False, "Results from the calculation")
-            fInfWarErr(6, False, "average absolute beta HS test: " & Math.Round(beta, 4))
-            fInfWarErr(6, False, "delta CdxA correction: " & Math.Round(delta_CdxA, 4))
-            fInfWarErr(6, False, "CdxA(0): " & Math.Round(CdxA0, 4))
+            logme(7, False, "Results from the calculation")
+            logme(6, False, "average absolute beta HS test: " & Math.Round(beta, 4))
+            logme(6, False, "delta CdxA correction: " & Math.Round(delta_CdxA, 4))
+            logme(6, False, "CdxA(0): " & Math.Round(CdxA0, 4))
 
             ' Clear the dictionaries
             ErgValuesComp = Nothing
@@ -221,7 +220,7 @@
 
             ' Error
             If run > 10 Then
-                fInfWarErr(9, False, "The calibration is not possible because iteration for valid datasets does not converge (n>10)")
+                logme(9, False, "The calibration is not possible because iteration for valid datasets does not converge (n>10)")
                 Change = False
                 BWorker.CancelAsync()
                 Return False
@@ -232,7 +231,7 @@
     End Function
 
     ' Calculate the speed run parameter
-    Function fCalcRun(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, ByVal TestRun As Integer) As Boolean
+    Function fCalcRun(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer) As Boolean
         ' Calculate the corrected vehicle speed
         fCalcCorVveh()
 
@@ -246,10 +245,10 @@
         fWindBetaAirErg()
 
         ' Calculate the other speed run relevant values
-        fCalcSpeedVal(MSCX, vehicleX, TestRun)
+        fCalcSpeedVal(MSCX, vehicleX, coastingSeq)
 
         ' Evaluate the valid sections
-        fCalcValidSec(MSCX, TestRun)
+        fCalcValidSec(MSCX, coastingSeq)
 
         Return True
     End Function
@@ -309,7 +308,7 @@
         ' error message if the CAN velocity is 0
         For i = 0 To UBound(CalcX)
             If ave_vn(i) = 0 And VSec(i) = 1 Then
-                fInfWarErr(9, False, "The measured vehicle velocity (v_veh_CAN) is 0 in section: " & CalcX(i))
+                logme(9, False, "The measured vehicle velocity (v_veh_CAN) is 0 in section: " & CalcX(i))
                 BWorker.CancelAsync()
                 Return False
             End If
@@ -484,7 +483,7 @@
 
         ' Set the values
         For i = 0 To ErgValues(tCompErg.SecID).Count - 1
-            If ErgValues(tCompErg.v_wind_ave)(i) < v_wind_ave_CAL_max And Math.Abs(ErgValues(tCompErg.beta_ave)(i)) < beta_ave_CAL_max And ErgValues(tCompErg.v_wind_1s_max)(i) < v_wind_1s_CAL_max And ErgValues(tCompErg.user_valid)(i) = 1 Then
+            If ErgValues(tCompErg.v_wind_avg)(i) < Crt.v_wind_avg_max_CAL And Math.Abs(ErgValues(tCompErg.beta_avg)(i)) < Crt.beta_avg_max_CAL And ErgValues(tCompErg.v_wind_1s_max)(i) < Crt.v_wind_1s_max_CAL And ErgValues(tCompErg.user_valid)(i) = 1 Then
                 ErgValues(tCompErg.valid)(i) = 1
                 ErgValues(tCompErg.used)(i) = 1
             Else
@@ -552,7 +551,7 @@
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            fInfWarErr(9, False, "Insufficent numbers of valid measurement sections available")
+            logme(9, False, "Insufficent numbers of valid measurement sections available")
             BWorker.CancelAsync()
             Return False
         End If
@@ -562,7 +561,7 @@
             For j = i + 1 To SecCount.NameSec.Count - 1
                 If Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) Then
                     ' If enought sections in both directions are detected
-                    If SecCount.AnzSec(i) >= ds_min_CAL And SecCount.AnzSec(j) >= ds_min_CAL Then
+                    If SecCount.AnzSec(i) >= Crt.segruns_min_CAL And SecCount.AnzSec(j) >= Crt.segruns_min_CAL Then
                         ' Set the whole sections on valid
                         SecCount.ValidSec(i) = True
                         SecCount.ValidSec(j) = True
@@ -613,7 +612,7 @@
             End If
         Next i
         If anz < 2 Then
-            fInfWarErr(9, False, "Insufficent numbers of valid measurement sections available")
+            logme(9, False, "Insufficent numbers of valid measurement sections available")
             BWorker.CancelAsync()
             Return False
         End If
@@ -701,7 +700,7 @@
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            fInfWarErr(9, False, "Insufficent numbers of valid measurement sections in the low speed test available")
+            logme(9, False, "Insufficent numbers of valid measurement sections in the low speed test available")
             BWorker.CancelAsync()
             Return False
         End If
@@ -712,7 +711,7 @@
                 If Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) And _
                    Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), "(") + 1, InStr(SecCount.NameSec(i), ",") - (InStr(SecCount.NameSec(i), "(") + 1))) = Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), "(") + 1, InStr(SecCount.NameSec(j), ",") - (InStr(SecCount.NameSec(j), "(") + 1))) Then
                     ' If enought sections in both directions are detected
-                    If SecCount.AnzSec(i) >= ds_min_LS And SecCount.AnzSec(j) >= ds_min_LS Then
+                    If SecCount.AnzSec(i) >= Crt.segruns_min_LS And SecCount.AnzSec(j) >= Crt.segruns_min_LS Then
 
                         ' If not both the same number
                         If Not SecCount.AnzSec(i) = SecCount.AnzSec(j) Then
@@ -741,7 +740,7 @@
                             End If
                         End If
                     Else
-                        fInfWarErr(9, False, "Not enough valid data for low speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
+                        logme(9, False, "Not enough valid data for low speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
                     End If
                 End If
             Next j
@@ -817,7 +816,7 @@
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            fInfWarErr(9, False, "Insufficent numbers of valid measurement sections in the high speed test available")
+            logme(9, False, "Insufficent numbers of valid measurement sections in the high speed test available")
             BWorker.CancelAsync()
             Return False
         End If
@@ -827,7 +826,7 @@
             For j = i + 1 To SecCount.NameSec.Count - 1
                 If Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1))) = Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), ",") + 1, InStr(SecCount.NameSec(j), ")") - (InStr(SecCount.NameSec(j), ",") + 1))) Then
                     ' If enought sections in both directions are detected
-                    If SecCount.AnzSec(i) >= ds_min_HS And SecCount.AnzSec(j) >= ds_min_HS Then
+                    If SecCount.AnzSec(i) >= Crt.segruns_min_HS And SecCount.AnzSec(j) >= Crt.segruns_min_HS Then
                         ' Count the valid tests per HeadID
                         Select Case Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1)))
                             Case 1
@@ -835,12 +834,12 @@
                             Case 2
                                 anzHS2 += SecCount.AnzSec(i) + SecCount.AnzSec(j)
                             Case Else
-                                fInfWarErr(9, False, "headID not known")
+                                logme(9, False, "headID not known")
                                 BWorker.CancelAsync()
                                 Return False
                         End Select
                     Else
-                        fInfWarErr(9, False, "Not enough valid data for high speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
+                        logme(9, False, "Not enough valid data for high speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
                         BWorker.CancelAsync()
                     End If
                 End If
@@ -848,8 +847,8 @@
         Next i
 
         ' Ceck if enough sections are detected
-        If anzHS1 < ds_min_head_MS Or anzHS2 < ds_min_head_MS Then
-            fInfWarErr(9, False, "Number of valid high speed datasets too low")
+        If anzHS1 < Crt.segruns_min_head_MS Or anzHS2 < Crt.segruns_min_head_MS Then
+            logme(9, False, "Number of valid high speed datasets too low")
             BWorker.CancelAsync()
             'Return False
         End If
@@ -892,29 +891,29 @@
     End Function
 
     ' Evaluate the Valid sections
-    Function fCalcValidSec(ByVal MSCX As cMSC, ByVal RunTestX As Integer) As Boolean
+    Function fCalcValidSec(ByVal MSCX As cMSC, ByVal coastingSeq As Integer) As Boolean
         ' Declaration
         Dim i As Integer
 
         ' Evaluation
-        Select Case RunTestX
-            Case 1, 3 ' Low speed test
+        Select Case coastingSeq
+            Case 0, 2 ' Low speed test
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
-                    If ErgValues(tCompErg.v_veh)(i) < v_veh_ave_LS_max And _
-                       ErgValues(tCompErg.v_veh)(i) > v_veh_ave_LS_min Then ErgValues(tCompErg.val_vVeh_ave)(i) = 1
-                    If ErgValues(tCompErg.v_wind_ave)(i) < v_wind_ave_LS_max Then ErgValues(tCompErg.val_vWind)(i) = 1
-                    If ErgValues(tCompErg.v_wind_1s_max)(i) < v_wind_1s_LS_max Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
-                    If ErgValues(tCompErg.v_veh_float_max)(i) < (ErgValues(tCompErg.v_veh)(i) + v_veh_float_delta) And _
-                       ErgValues(tCompErg.v_veh_float_min)(i) > (ErgValues(tCompErg.v_veh)(i) - v_veh_float_delta) Then ErgValues(tCompErg.val_vVeh_f)(i) = 1
-                    If ErgValues(tCompErg.tq_sum_float_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + tq_sum_float_delta)) And _
-                       ErgValues(tCompErg.tq_sum_float_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - tq_sum_float_delta)) Then ErgValues(tCompErg.val_tq_f)(i) = 1
-                    If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + leng_crit And _
-                       ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
+                    If ErgValues(tCompErg.v_veh)(i) < Crt.v_veh_avg_max_LS And _
+                       ErgValues(tCompErg.v_veh)(i) > Crt.v_veh_avg_min_LS Then ErgValues(tCompErg.val_vVeh_avg)(i) = 1
+                    If ErgValues(tCompErg.v_wind_avg)(i) < Crt.v_wind_avg_max_LS Then ErgValues(tCompErg.val_vWind)(i) = 1
+                    If ErgValues(tCompErg.v_wind_1s_max)(i) < Crt.v_wind_1s_max_LS Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
+                    If ErgValues(tCompErg.v_veh_float_max)(i) < (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_float_delta_LS) And _
+                       ErgValues(tCompErg.v_veh_float_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_float_delta_LS) Then ErgValues(tCompErg.val_vVeh_f)(i) = 1
+                    If ErgValues(tCompErg.tq_sum_float_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + Crt.tq_sum_float_delta_LS)) And _
+                       ErgValues(tCompErg.tq_sum_float_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - Crt.tq_sum_float_delta_LS)) Then ErgValues(tCompErg.val_tq_f)(i) = 1
+                    If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + Crt.leng_crit And _
+                       ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - Crt.leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
 
                     ' Check if all criterias are valid
-                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_ave)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And _
+                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And _
                        ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_vVeh_f)(i) = 1 And ErgValues(tCompErg.val_tq_f)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
@@ -928,23 +927,23 @@
                     ErgValues(tCompErg.val_vVeh_1s)(i) = 1
                     ErgValues(tCompErg.val_tq_1s)(i) = 1
                 Next i
-            Case 2 ' high speed test
+            Case Else ' high speed test
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
-                    If ErgValues(tCompErg.v_veh)(i) > v_veh_ave_HS_min Then ErgValues(tCompErg.val_vVeh_ave)(i) = 1
-                    If ErgValues(tCompErg.v_wind_ave)(i) < v_wind_ave_HS_max Then ErgValues(tCompErg.val_vWind)(i) = 1
-                    If ErgValues(tCompErg.v_wind_1s_max)(i) < v_wind_1s_HS_max Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
-                    If ErgValues(tCompErg.beta_abs)(i) < beta_ave_HS_max Then ErgValues(tCompErg.val_beta)(i) = 1
-                    If ErgValues(tCompErg.v_veh_1s_max)(i) < (ErgValues(tCompErg.v_veh)(i) + v_veh_1s_delta) And _
-                       ErgValues(tCompErg.v_veh_1s_min)(i) > (ErgValues(tCompErg.v_veh)(i) - v_veh_1s_delta) Then ErgValues(tCompErg.val_vVeh_1s)(i) = 1
-                    If ErgValues(tCompErg.tq_sum_1s_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + tq_sum_1s_delta)) And _
-                       ErgValues(tCompErg.tq_sum_1s_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - tq_sum_1s_delta)) Then ErgValues(tCompErg.val_tq_1s)(i) = 1
-                    If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + leng_crit And _
-                       ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
+                    If ErgValues(tCompErg.v_veh)(i) > Crt.v_veh_avg_min_HS Then ErgValues(tCompErg.val_vVeh_avg)(i) = 1
+                    If ErgValues(tCompErg.v_wind_avg)(i) < Crt.v_wind_avg_max_HS Then ErgValues(tCompErg.val_vWind)(i) = 1
+                    If ErgValues(tCompErg.v_wind_1s_max)(i) < Crt.v_wind_1s_max_HS Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
+                    If ErgValues(tCompErg.beta_abs)(i) < Crt.beta_avg_max_HS Then ErgValues(tCompErg.val_beta)(i) = 1
+                    If ErgValues(tCompErg.v_veh_1s_max)(i) < (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_1s_delta_HS) And _
+                       ErgValues(tCompErg.v_veh_1s_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_HS) Then ErgValues(tCompErg.val_vVeh_1s)(i) = 1
+                    If ErgValues(tCompErg.tq_sum_1s_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + Crt.tq_sum_1s_delta_HS)) And _
+                       ErgValues(tCompErg.tq_sum_1s_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - Crt.tq_sum_1s_delta_HS)) Then ErgValues(tCompErg.val_tq_1s)(i) = 1
+                    If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + Crt.leng_crit And _
+                       ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - Crt.leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
 
                     ' Check if all criterias are valid
-                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_ave)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_vWind_1s)(i) = 1 And _
+                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_vWind_1s)(i) = 1 And _
                        ErgValues(tCompErg.val_beta)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And ErgValues(tCompErg.val_tq_1s)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
@@ -963,13 +962,13 @@
     End Function
 
     ' Save the Dictionaries
-    Function fSaveDic(ByVal TestRunX As Integer) As Boolean
+    Function fSaveDic(ByVal coastingSeq As Integer) As Boolean
         ' Declaration
         Dim sKV As New KeyValuePair(Of tCompErg, List(Of Double))
         Dim sKVUndef As New KeyValuePair(Of String, List(Of Double))
 
         ' Initialisation
-        If TestRunX = 1 Then
+        If coastingSeq = 0 Then
             ErgValuesComp = New Dictionary(Of tCompErg, List(Of Double))
             ErgValuesUndefComp = New Dictionary(Of String, List(Of Double))
             UnitsErgUndefComp = New Dictionary(Of String, List(Of String))

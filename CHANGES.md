@@ -3,24 +3,46 @@ VECTO-CSE: Changes
 
 
 TODO: 2014-06-??: v2.0.1
------------------
-  * JSON-ize preferences, vehicle-file, job-file, criteria-file
-  * Provide default-values and help-messages in GUI/files with infos from "schemas".
-  * Start improving error-reporting by including stack-traces and timestamps into the log-file, for post-mortem examination.
-  * Separate config/ from Declaration/ folders.
-  * Standarize versinong using [SemanticVersioning](http://semver.org/).
-  * Possible to use any editor (not only notepad.exe) for viewing files.
-  * Welcome developers with README.md, CHANGES.md and COPYING.txt files.
+--------------------
+JRC contributions (see VECTO-29):
+
+  * IO: JSON-ize preferences, vehicle, job & criteria-files, ...
+  * IO: Separate config/ from Declaration/ folders.
+  * UI: Provide default-values and help-messages in GUI/files with infos fetched from JSON-schemas.
+  * UI: Make the Log-window visible at all times (more necessary now that unhandled exceptions are appropriately reported).
+  * Log: Gather all unhandled exceptions and report them into log-window and log-file.
+  * Log: Improving error-reporting by including stack-traces and timestamps into the log-file, for post-mortem examination.
+  * Translate all file-paths against `Prefs.WorkingDir`, so that i.e. Job-files can be ported to other computers.
+  * Possible to specify any editor (not only notepad.exe) for viewing files.
+  * Standarize versioning using [SemanticVersioning](http://semver.org/).
+  * Welcome developers and users with README.md, CHANGES.md and COPYING.txt files.
 ##### Internal:
-  * Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
   * Implement an API for writing Header/Body json-files.
+  * Apply Object-oriented design weith resource-management when I/O files.
+  * Sporadic fixes to work with filenames having 2-part extensions (ie `some_file.csjob.json`).
+  * Log: Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
+  * async: Stop abusing worker-Thread with Globals, use DoWorkEventArgs instead.
   * General restructuring of the folders and names in the project.
+
 
 More analytically:
 
+#### 2014-06-04: v2.0.1-pre2 ####
+JRC contributions:
+  * Convert Job & Criteria files to JSON and possible to store them separately.
+  * Still supporting old format for reading.
+  * Use Use WorkingDir trick for all job-file paths, so that Job-files can be ported to other computers.
+  * UI: Make the Log-window visible at all times (more necessary now that unhandled exceptions are appropriately reported).
+  * UI: Setup criteria-infobox from JSON-schema.
+##### Internal:
+  * Log unhandled exceptions.
+  * Gather all infos related to Job-properties (type, description, units) in a single place, the JSON-schema for the job-file.
+  * async: Stop abusing worker-Thread with Globals, use DoWorkEventArgs instead.
+  * Sporadic fixes to work with filenames having 2-part extensions (ie `some_file.csjob.json`).
+  * More refactorings to simplify structure of source files and folders.
 
 
-#### 2014-06-03: v2.0.1-pre1 ####
+#### 2014-05-30: v2.0.1-pre1 ####
 JRC contributions:
 
   * Read/write Vehicle-file as JSON.

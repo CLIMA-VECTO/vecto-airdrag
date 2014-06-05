@@ -18,7 +18,7 @@ Public Class cVehicle
 
 
     ' Defaults specified here.
-    Protected Overrides Function BodyContent() As JObject
+    Protected Shared Function BuildBody() As JObject
         Return JObject.Parse(<json>{
                 "vehClass":         null,
                 "configuration":    null,
@@ -33,14 +33,9 @@ Public Class cVehicle
             }</json>.Value)
     End Function
 
-    ' Default-prefs specified here.
-    Public Overrides Function BodySchema() As JObject
-        Return JObject.Parse(JSchemaStr())
-    End Function
-
-    ''' <param name="allowAdditionalProps">when false, more strict validation</param>
-    Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
-        Dim allowAdditionalProps_str As String = IIf(allowAdditionalProps, "true", "false")
+    ''' <param name="isStrictBody">when true, more strict validation</param>
+    Public Shared Function JSchemaStr(Optional ByVal isStrictBody As Boolean = False) As String
+        Dim allowAdditionalProps_str As String = (Not isStrictBody).ToString.ToLower
         Return <json>{
             "title": "Schema for vecto-cse VEHICLE",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
@@ -104,17 +99,25 @@ The generic parameters for classes are stored in the GenShape.shp",
     End Function
 
 
-    ''' <summary>Reads from file or creates defaults</summary>
-    ''' <param name="inputFilePath">If unspecifed, default prefs used, otherwise data read from file</param>
+    ''' <summary>creates defaults</summary>
     ''' <remarks>See cJsonFile() constructor</remarks>
-    Sub New(Optional ByVal inputFilePath As String = Nothing, Optional ByVal skipValidation As Boolean = False)
+    Sub New(Optional ByVal skipValidation As Boolean = False)
+        MyBase.New(BuildBody, skipValidation)
+    End Sub
+    ''' <summary>Reads from file or creates defaults</summary>
+    ''' <param name="inputFilePath">the fpath of the file to read data from</param>
+    Sub New(ByVal inputFilePath As String, Optional ByVal skipValidation As Boolean = False)
         MyBase.New(inputFilePath, skipValidation)
     End Sub
 
 
+    Protected Overrides Function BodySchemaStr() As String
+        Return JSchemaStr()
+    End Function
+
     ''' <exception cref="SystemException">includes all validation errors</exception>
-    ''' <param name="strictBody">when true, no additional json-properties allowed in the data, when nothing, use value from Header</param>
-    Protected Overrides Sub ValidateBody(ByVal strictBody As Boolean, ByVal validateMsgs As IList(Of String))
+    ''' <param name="isStrictBody">when true, no additional json-properties allowed in the data, when nothing, use value from Header</param>
+    Protected Overrides Sub ValidateBody(ByVal isStrictBody As Boolean, ByVal validateMsgs As IList(Of String))
         '' Check version
         ''
         Dim fromVersion = "1.0.0--"
@@ -126,7 +129,7 @@ The generic parameters for classes are stored in the GenShape.shp",
 
         '' Check schema
         ''
-        Dim schema = JsonSchema.Parse(JSchemaStr(Not strictBody))
+        Dim schema = JsonSchema.Parse(JSchemaStr(isStrictBody))
         ValidateJson(Body, schema, validateMsgs)
 
         If validateMsgs.Any() Then Return
@@ -145,7 +148,6 @@ The generic parameters for classes are stored in the GenShape.shp",
         ''
         validateMsgs.Add(format("The vehicle (class: {0}, configuration {1}) was not found in the generic shape file. \n\iPlease add it in .", Me.classCode, Me.configuration))
         BWorker.CancelAsync()
-        Return
     End Sub
 
 

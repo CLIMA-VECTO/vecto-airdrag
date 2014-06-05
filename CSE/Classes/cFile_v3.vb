@@ -47,13 +47,28 @@ Public Class cFile_V3
         Return True
     End Function
 
+    ' Function for open a file for reading
+    Public Sub OpenReadWithEx(ByVal FileName As String, Optional ByVal Separator As String = ",", Optional ByVal SkipComment As Boolean = True, Optional ByVal StopAtE As Boolean = False)
+        StopE = StopAtE
+        Path = FileName
+        Sepp = Separator
+        SkipCom = SkipComment
+        Mode = FileMode.Read
+        TxtFldParser = New Microsoft.VisualBasic.FileIO.TextFieldParser(Path, System.Text.Encoding.Default)
+
+        TxtFldParser.TextFieldType = Microsoft.VisualBasic.FileIO.FieldType.Delimited
+        TxtFldParser.Delimiters = New String() {Sepp}
+        TxtFldParser.TrimWhiteSpace = False
+        Me.ReadLine()
+
+        FileOpen = True
+    End Sub
+
     ' Function for reading a line in an open file
     Public Function ReadLine() As String()
         Dim line As String()
         Dim line0 As String
         Dim gogo As Boolean = True
-
-        endofall = False
 
         line = PreLine
 
@@ -78,8 +93,6 @@ lb10:
             If StopE Then FileEnd = (line0 = "E")
 
         End If
-
-        If Equals(PreLine, line) And FileEnd And Not gogo Then endofall = True
 
         Return line
 
@@ -125,7 +138,7 @@ lb10:
         Try
             Me.Close()
         Catch ex As Exception
-            fInfWarErr(9, False, format( _
+            logme(8, False, format( _
                        "Skipped exception while closing file_v3({0}) due to: {1}", Me.Path, ex.Message), ex)
         End Try
     End Sub
@@ -166,6 +179,15 @@ lb10:
         StrWrter.AutoFlush = AutoFlush
         Return True
     End Function
+    Public Sub OpenWriteWithEx(ByVal FileName As String, Optional ByVal Separator As String = ",", Optional ByVal Append As Boolean = False, Optional ByVal AutoFlush As Boolean = False)
+        Reset()
+        Path = FileName
+        Sepp = Separator
+        Mode = FileMode.Write
+        StrWrter = My.Computer.FileSystem.OpenTextFileWriter(Path, Append)
+        StrWrter.AutoFlush = AutoFlush
+        FileOpen = True
+    End Sub
 
     ' Writes a line into a file
     Public Sub WriteLine(ByVal ParamArray x() As Object)
@@ -194,7 +216,7 @@ lb10:
     Public Sub WriteLine(ByVal x As String)
         ' Polling if the file is blocked
         If IsNothing(StrWrter) Then
-            BWorker.CancelAsync()
+            If BWorker IsNot Nothing Then BWorker.CancelAsync()
             FileBlock = True
             Exit Sub
         End If

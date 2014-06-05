@@ -1,7 +1,7 @@
 VECTO-CSE
 =========
   * Copyright : 2014 EUROPEAN COMMISSION
-  * Developed : by TU-Graz, on behalf of DG CLIMA, supported by JRC.
+  * Developed : by TU-Graz & JRC, on behalf of DG CLIMA.
   * License   : EUPL
 
 A Constant Speed Evaluation tool for tests performed on Heavy-duty vehicles.
@@ -28,7 +28,6 @@ described at [Vecto's wiki-page](https://webgate.ec.europa.eu/CITnet/confluence/
 
 In any case, you can contact JRC to ask for access to the above resources: 
     vecto@jrc.ec.europa.eu
-
 
 
 

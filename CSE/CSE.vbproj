@@ -108,6 +108,7 @@
     <Compile Include="IO\cJsonFile.vb" />
     <Compile Include="Classes\CResult.vb" />
     <Compile Include="IO\cJob.vb" />
+    <Compile Include="IO\cCriteria.vb" />
     <Compile Include="IO\cPreferences.vb" />
     <Compile Include="cSemanticVersion.vb" />
     <Compile Include="Classes\csKey.vb" />
@@ -122,8 +123,6 @@
     <Compile Include="Calculation\Signal_identification.vb" />
     <Compile Include="Calculation\sub_linear_regression.vb" />
     <Compile Include="IO\input.vb" />
-    <Compile Include="GUI\Export_GUI.vb" />
-    <Compile Include="GUI\utils_GUI.vb" />
     <Compile Include="GUI\cFileBrowser.vb" />
     <Compile Include="GUI\F_Preferences.designer.vb">
       <DependentUpon>F_Preferences.vb</DependentUpon>
@@ -175,7 +174,6 @@
     <Compile Include="utils.vb" />
     <Compile Include="Classes\cFile_v3.vb" />
     <Compile Include="CSE_Globals.vb" />
-    <Compile Include="CSE_Types.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GUI\F_Preferences.resx">
@@ -297,7 +295,16 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\Refresh-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Stop-icon.png" />
+    <None Include="Resources\Stop-icon1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

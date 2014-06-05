@@ -56,14 +56,8 @@ Public Class cFileBrowser
     End Function
 
     'SaveDialog - Return true if all is ok
-    Public Function SaveDialog(ByVal path As String, Optional ByVal ForceExt As Boolean = True, Optional ByVal Ext As String = "") As Boolean
-        Dim x As eExtMode
-        If ForceExt Then
-            x = eExtMode.ForceExt
-        Else
-            x = eExtMode.SingleExt
-        End If
-        Return CustomDialog(path, False, True, x, False, Ext, "Save As")
+    Public Function SaveDialog(ByVal path As String, Optional ByVal forceExt As eExtMode = eExtMode.SingleExt, Optional ByVal Ext As String = "") As Boolean
+        Return CustomDialog(path, False, True, forceExt, False, Ext, "Save As")
     End Function
 
     ' Open the Dialog - Return true if all is ok

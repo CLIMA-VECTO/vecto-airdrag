@@ -17,7 +17,7 @@
             ErgEntriesC = New Dictionary(Of tCompCali, CResult)
             ErgEntryListC = New List(Of tCompCali)
             GenErgOutData(calibration)
-            If HzOut = 1 Then
+            If Crt.hz_out = 1 Then
                 ConvTo1Hz(InputData(tComp.t), InputUndefData)
                 ConvTo1Hz(InputData)
                 ConvTo1Hz(CalcData)
@@ -29,11 +29,11 @@
             End If
 
             ' Write on GUI
-            fInfWarErr(5, False, "Writing output-file (*.csv)")
+            logme(5, False, "Writing output-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = ""
-            Select Case HzOut
+            Select Case Crt.hz_out
                 Case 1
                     NameOutFile = OutFolder & fName(Datafile, False) & "_1Hz.csv"
                 Case 100
@@ -80,16 +80,15 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            logme(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True
     End Function
 
     ' Function for the output of the result data
-    Function fOutCalcRes(ByVal Datafile() As String, ByVal calibration As Boolean) As Boolean
-        ' Declaration
-        Dim i As Integer
+    Function fOutCalcRes(ByVal calibration As Boolean) As Boolean
+        Dim coasting_fpaths() = Job.coasting_fpaths
         Dim NameOutFile, key As String
         Using FileOut As New cFile_V3
             Dim first As Boolean
@@ -109,7 +108,7 @@
             End If
 
             ' Write on GUI
-            fInfWarErr(5, False, "Writing result-file (*.csv)")
+            logme(5, False, "Writing result-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = OutFolder & fName(JobFile, False) & "_MS_CAL.csv"
@@ -123,11 +122,11 @@
             ' Filekopf
             FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
             If calibration Then
-                FileOut.WriteLine("Datafile: ", Datafile(1))
+                FileOut.WriteLine("Datafile: ", Job.calib_run_fpath)
             Else
-                FileOut.WriteLine("Datafile LS1: ", Datafile(2))
-                FileOut.WriteLine("Datafile HS: ", Datafile(3))
-                FileOut.WriteLine("Datafile LS2: ", Datafile(4))
+                FileOut.WriteLine("Datafile LS1: ", coasting_fpaths(0))
+                FileOut.WriteLine("Datafile HS: ", coasting_fpaths(1))
+                FileOut.WriteLine("Datafile LS2: ", coasting_fpaths(2))
             End If
             FileOut.WriteLine("")
             FileOut.WriteLine("Results")
@@ -183,16 +182,15 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            logme(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True
     End Function
 
     ' Function for the output of the result data of the regression
-    Function fOutCalcResReg(ByVal Datafile() As String) As Boolean
-        ' Declaration
-        Dim i As Integer
+    Function fOutCalcResReg() As Boolean
+        Dim coasting_fpaths() = Job.coasting_fpaths
         Dim NameOutFile, key As String
         Using FileOut As New cFile_V3
             Dim first As Boolean
@@ -210,7 +208,7 @@
             End If
 
             ' Write on GUI
-            fInfWarErr(5, False, "Writing result-file (*.csv)")
+            logme(5, False, "Writing result-file (*.csv)")
 
             ' Generate the file name
             NameOutFile = OutFolder & fName(JobFile, False) & "_CSE.csv"
@@ -220,9 +218,9 @@
 
             ' Filekopf
             FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-            FileOut.WriteLine("Datafile LS1: ", Datafile(2))
-            FileOut.WriteLine("Datafile HS: ", Datafile(3))
-            FileOut.WriteLine("Datafile LS2: ", Datafile(4))
+            FileOut.WriteLine("Datafile LS1: ", coasting_fpaths(0))
+            FileOut.WriteLine("Datafile HS: ", coasting_fpaths(1))
+            FileOut.WriteLine("Datafile LS2: ", coasting_fpaths(2))
             FileOut.WriteLine("")
             FileOut.WriteLine("Results")
             FileOut.WriteLine("fv_veh:", fv_veh, "[-] calibration factor for vehicle speed")
@@ -240,7 +238,7 @@
             If valid_t_tire Then
                 FileOut.WriteLine("Tire temp:", "Ok")
             Else
-                FileOut.WriteLine("Tire temp:", "Invalid test - maximum variation of tire temperature exceeded")
+                FileOut.WriteLine("Tire temp:", "Invalid test - maximum variation of tyre temperature exceeded")
             End If
             If valid_RRC Then
                 FileOut.WriteLine("RRC:", "Ok")
@@ -277,7 +275,7 @@
 
         ' Ausgabe bei blockierter Datei
         If BWorker.CancellationPending And FileBlock Then
-            fInfWarErr(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
+            logme(9, False, "Can´t write in file " & NameOutFile & ". File is blocked by another process!")
         End If
 
         Return True
@@ -348,7 +346,7 @@
             AddToErg(tCompCali.F_res, fCompName(tCompCali.F_res), fCompUnit(tCompCali.F_res), "CalcData")
             AddToErg(tCompCali.v_veh_1s, fCompName(tCompCali.v_veh_1s), fCompUnit(tCompCali.v_veh_1s), "CalcData")
             AddToErg(tCompCali.v_veh_acc, fCompName(tCompCali.v_veh_acc), fCompUnit(tCompCali.v_veh_acc), "CalcData")
-            AddToErg(tCompCali.a_veh_ave, fCompName(tCompCali.a_veh_ave), fCompUnit(tCompCali.a_veh_ave), "CalcData")
+            AddToErg(tCompCali.a_veh_avg, fCompName(tCompCali.a_veh_avg), fCompUnit(tCompCali.a_veh_avg), "CalcData")
             AddToErg(tCompCali.v_veh_float, fCompName(tCompCali.v_veh_float), fCompUnit(tCompCali.v_veh_float), "CalcData")
             AddToErg(tCompCali.t_amp_stat, fCompName(tCompCali.t_amp_stat), fCompUnit(tCompCali.t_amp_stat), "CalcData")
             AddToErg(tCompCali.p_amp_stat, fCompName(tCompCali.p_amp_stat), fCompUnit(tCompCali.p_amp_stat), "CalcData")
@@ -384,7 +382,7 @@
 
         If Not calibration Then
             AddToErg(tCompErg.val_User, fCompName(tCompErg.val_User), fCompUnit(tCompErg.val_User), "ErgValues")
-            AddToErg(tCompErg.val_vVeh_ave, fCompName(tCompErg.val_vVeh_ave), fCompUnit(tCompErg.val_vVeh_ave), "ErgValues")
+            AddToErg(tCompErg.val_vVeh_avg, fCompName(tCompErg.val_vVeh_avg), fCompUnit(tCompErg.val_vVeh_avg), "ErgValues")
             AddToErg(tCompErg.val_vVeh_f, fCompName(tCompErg.val_vVeh_f), fCompUnit(tCompErg.val_vVeh_f), "ErgValues")
             AddToErg(tCompErg.val_vVeh_1s, fCompName(tCompErg.val_vVeh_1s), fCompUnit(tCompErg.val_vVeh_1s), "ErgValues")
             AddToErg(tCompErg.val_vWind, fCompName(tCompErg.val_vWind), fCompUnit(tCompErg.val_vWind), "ErgValues")
@@ -396,10 +394,10 @@
         End If
 
         AddToErg(tCompErg.vair, fCompName(tCompErg.vair), fCompUnit(tCompErg.vair), "ErgValues")
-        AddToErg(tCompErg.v_wind_ave, fCompName(tCompErg.v_wind_ave), fCompUnit(tCompErg.v_wind_ave), "ErgValues")
+        AddToErg(tCompErg.v_wind_avg, fCompName(tCompErg.v_wind_avg), fCompUnit(tCompErg.v_wind_avg), "ErgValues")
         AddToErg(tCompErg.v_wind_1s, fCompName(tCompErg.v_wind_1s), fCompUnit(tCompErg.v_wind_1s), "ErgValues")
         AddToErg(tCompErg.v_wind_1s_max, fCompName(tCompErg.v_wind_1s_max), fCompUnit(tCompErg.v_wind_1s_max), "ErgValues")
-        AddToErg(tCompErg.beta_ave, fCompName(tCompErg.beta_ave), fCompUnit(tCompErg.beta_ave), "ErgValues")
+        AddToErg(tCompErg.beta_avg, fCompName(tCompErg.beta_avg), fCompUnit(tCompErg.beta_avg), "ErgValues")
 
         If Not calibration Then
             AddToErg(tCompErg.beta_abs, fCompName(tCompErg.beta_abs), fCompUnit(tCompErg.beta_abs), "ErgValues")
@@ -423,8 +421,8 @@
             AddToErg(tCompErg.v_veh_1s, fCompName(tCompErg.v_veh_1s), fCompUnit(tCompErg.v_veh_1s), "ErgValues")
             AddToErg(tCompErg.v_veh_1s_max, fCompName(tCompErg.v_veh_1s_max), fCompUnit(tCompErg.v_veh_1s_max), "ErgValues")
             AddToErg(tCompErg.v_veh_1s_min, fCompName(tCompErg.v_veh_1s_min), fCompUnit(tCompErg.v_veh_1s_min), "ErgValues")
-            AddToErg(tCompErg.v_veh_ave, fCompName(tCompErg.v_veh_ave), fCompUnit(tCompErg.v_veh_ave), "ErgValues")
-            AddToErg(tCompErg.a_veh_ave, fCompName(tCompErg.a_veh_ave), fCompUnit(tCompErg.a_veh_ave), "ErgValues")
+            AddToErg(tCompErg.v_veh_avg, fCompName(tCompErg.v_veh_avg), fCompUnit(tCompErg.v_veh_avg), "ErgValues")
+            AddToErg(tCompErg.a_veh_avg, fCompName(tCompErg.a_veh_avg), fCompUnit(tCompErg.a_veh_avg), "ErgValues")
             AddToErg(tCompErg.v_veh_float, fCompName(tCompErg.v_veh_float), fCompUnit(tCompErg.v_veh_float), "ErgValues")
             AddToErg(tCompErg.v_veh_float_max, fCompName(tCompErg.v_veh_float_max), fCompUnit(tCompErg.v_veh_float_max), "ErgValues")
             AddToErg(tCompErg.v_veh_float_min, fCompName(tCompErg.v_veh_float_min), fCompUnit(tCompErg.v_veh_float_min), "ErgValues")
@@ -653,7 +651,7 @@
         For z = 1 To ValuesX.Item(tCompCali.t).Count - 1
             If fTime(z) < fTime(z - 1) Then
                 If Sprung Then
-                    fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
+                    logme(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
                     Return False
                 Else
                     Sprung = True
@@ -844,7 +842,7 @@
         For z = 1 To ValuesX.Item(tComp.t).Count - 1
             If fTime(z) < fTime(z - 1) Then
                 If Sprung Then
-                    fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
+                    logme(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
                     Return False
                 Else
                     Sprung = True
@@ -1035,7 +1033,7 @@
         For z = 1 To ValuesX.Item(ValuesX.First.Key).Count - 1
             If fTime(z) < fTime(z - 1) Then
                 If Sprung Then
-                    fInfWarErr(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
+                    logme(9, False, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]")
                     Return False
                 Else
                     Sprung = True

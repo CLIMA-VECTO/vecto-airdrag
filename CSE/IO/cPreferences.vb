@@ -14,7 +14,7 @@ Public Class cPreferences
     End Function
 
     ' Defaults specified here.
-    Protected Overrides Function BodyContent() As JObject
+    Protected Shared Function BuildBody() As JObject
         '' Return empty body since all proprs are optional.
         '' They will become concrete on the 1st store.
         Return New JObject()
@@ -27,13 +27,9 @@ Public Class cPreferences
         '    }</json>.Value)
     End Function
 
-    Public Overrides Function BodySchema() As JObject
-        Return JObject.Parse(JSchemaStr())
-    End Function
-
-    ''' <param name="allowAdditionalProps">when false, more strict validation</param>
-    Public Shared Function JSchemaStr(Optional ByVal allowAdditionalProps As Boolean = True) As String
-        Dim allowAdditionalProps_str As String = IIf(allowAdditionalProps, "true", "false")
+    ''' <param name="isStrictBody">when false, more strict validation</param>
+    Public Shared Function JSchemaStr(Optional ByVal isStrictBody As Boolean = False) As String
+        Dim allowAdditionalProps_str As String = (Not isStrictBody).ToString.ToLower
         Return <json>{
             "title": "Schema for vecto-cse PREFERENCES",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
@@ -55,7 +51,7 @@ Public Class cPreferences
                     "title": "Log-file's limit",
                     "type": "integer",
                     "minimum": 0,
-                    "default": 10,
+                    "default": 2,
                     "description": "Allowed Log-file size limit [MiB].",
                 }, 
                 "logLevel": {
@@ -63,8 +59,8 @@ Public Class cPreferences
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 10, "exclusiveMaximum": true,
-                    "default": 5,
-                    "description": "Sets the threshold(Level) below from which log-messages are skipped from the log-window.
+                    "default": 2,
+                    "description": "Sets the threshold(Level) above (inclusive) from which log-messages are shown in the log-window. 
     0     : All
     3-7   : No infos
     8     : No warnings
@@ -80,18 +76,25 @@ Public Class cPreferences
                     "title": "Strict Bodies",
                     "type": "boolean",
                     "default": false,
-                    "description": "Controls whether unknown body-properties are accepted when reading JSON-files. 
-It is useful for debugging malformed input-files, ie to detect 
-accidentally renamed properties.
-Each file can override it by setting its /Header/StrictBody property.",
+                    "description": "If set to true, the application will not accept any unknown body-properties when reading JSON-files. 
+It is useful for debugging malformed input-files, ie to detect accidentally renamed properties.
+Each file can override it by setting its `/Header/StrictBody` property.",
                 }, 
                 "includeSchemas": {
                     "title": "Include Schemas",
                     "type": "boolean",
                     "default": false,
-                    "description": "Controls whether to self-document JSON-files by populating their '/Header/BodySchema' property.
-Each file can override it by setting its '/Header/BodySchema' property to false/true.",
+                    "description": "When set to true the JSON-files are self-documented by 
+populating their `/Header/BodySchema` property.  Each file can override it by 
+setting its `/Header/BodySchema` property to false/true.",
                 }, 
+                "hideUsername": {
+                    "title": "Hide Username",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When true, the name of the user running the application will not be written
+in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.", 
+                },
             }
         }</json>.Value
     End Function
@@ -99,17 +102,25 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
 
 
 
-    ''' <summary>Reads from file or creates defaults</summary>
-    ''' <param name="inputFilePath">If unspecifed, default prefs used, otherwise data read from file</param>
+    ''' <summary>creates defaults</summary>
     ''' <remarks>See cJsonFile() constructor</remarks>
-    Sub New(Optional ByVal inputFilePath As String = Nothing, Optional ByVal skipValidation As Boolean = False)
+    Sub New(Optional ByVal skipValidation As Boolean = False)
+        MyBase.New(BuildBody, skipValidation)
+    End Sub
+    ''' <summary>Reads from file or creates defaults</summary>
+    ''' <param name="inputFilePath">the fpath of the file to read data from</param>
+    Sub New(ByVal inputFilePath As String, Optional ByVal skipValidation As Boolean = False)
         MyBase.New(inputFilePath, skipValidation)
     End Sub
 
 
+    Protected Overrides Function BodySchemaStr() As String
+        Return JSchemaStr()
+    End Function
+
     ''' <exception cref="SystemException">includes all validation errors</exception>
-    ''' <param name="strictBody">when True, no additional json-properties allowed in the data, when nothing, use value from Header</param>
-    Protected Overrides Sub ValidateBody(ByVal strictBody As Boolean, ByVal validateMsgs As IList(Of String))
+    ''' <param name="isStrictBody">when True, no additional json-properties allowed in the data, when nothing, use value from Header</param>
+    Protected Overrides Sub ValidateBody(ByVal isStrictBody As Boolean, ByVal validateMsgs As IList(Of String))
         '' Check version
         ''
         Dim fromVersion = "1.0.0--"
@@ -121,7 +132,7 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
 
         '' Check schema
         ''
-        Dim schema = JsonSchema.Parse(JSchemaStr(Not strictBody))
+        Dim schema = JsonSchema.Parse(JSchemaStr(isStrictBody))
         ValidateJson(Me.Body, schema, validateMsgs)
     End Sub
 
@@ -131,62 +142,20 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
 #Region "json props"
     Public Property workingDir As String
         Get
-            Dim value As String = Me.Body("workingDir")
-            If value Is Nothing OrElse String.IsNullOrWhiteSpace(value) Then
-                Return MyPath
-            ElseIf IO.Path.IsPathRooted(value) Then
-                Return value
-            Else
-                Return joinPaths(MyPath, value)
-            End If
+            Return getRootedPath(Me.Body("workingDir"), MyPath)
         End Get
         Set(ByVal value As String)
-            If value IsNot Nothing Then
-                '' Convert emtpy-paths into MyPath and store them as null.
-                ''
-                value = value.Trim()
-                If value.Length = 0 Then
-                    value = Nothing
-                Else
-                    '' Convert MyPath-prefixed paths into relative ones.
-                    ''
-                    Dim myPlainPath = IO.Path.GetFullPath(StripBackslash(MyPath))
-                    value = IO.Path.GetFullPath(value)
-                    If value.StartsWith(myPlainPath, StringComparison.OrdinalIgnoreCase) Then
-                        value = value.Substring(myPlainPath.Length)
-                        If (value.First = "\"c) Then
-                            value = value.Substring(1)
-                        End If
-                        If (value.Last <> "\"c) Then
-                            value = value & "\"
-                        End If
+            value = getAnySubPath(value, MyPath)
 
-                        If value.Length = 1 Then
-                            value = Nothing
-                        End If
-                    End If
-
-                    '' Store MyPath as null.
-                    ''
-                    If String.Equals(value, MyPath, StringComparison.OrdinalIgnoreCase) Then
-                        value = Nothing
-                    End If
-                End If
-            End If
-
-            '' NOTE: Early-binding makes Nulls end-up as 'string' schema-type.
+            '' NOTE: Early-binding makes schema-type always a 'string', and will fail later!
             ''
-            If value Is Nothing Then
-                Me.Body("workingDir") = Nothing
-            Else
-                Me.Body("workingDir") = value
-            End If
+            If value Is Nothing Then Me.Body("workingDir") = Nothing Else Me.Body("workingDir") = value
         End Set
     End Property
 
     Public Property writeLog As Boolean
         Get
-            Return BodyGetter(".writeLog")
+            Return PropOrDefault(".writeLog")
         End Get
         Set(ByVal value As Boolean)
             Me.Body("writeLog") = value
@@ -195,7 +164,7 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
 
     Public Property logSize As Integer
         Get
-            Return BodyGetter(".logSize")
+            Return PropOrDefault(".logSize")
         End Get
         Set(ByVal value As Integer)
             Me.Body("logSize") = value
@@ -204,7 +173,7 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
 
     Public Property logLevel As Integer
         Get
-            Return BodyGetter(".logLevel")
+            Return PropOrDefault(".logLevel")
         End Get
         Set(ByVal value As Integer)
             Me.Body("logLevel") = value
@@ -213,7 +182,7 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
 
     Public Property editor As String
         Get
-            Return BodyGetter(".editor")
+            Return PropOrDefault(".editor")
         End Get
         Set(ByVal value As String)
             Me.Body("editor") = value
@@ -222,7 +191,7 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
 
     Public Property strictBodies As Boolean
         Get
-            Return BodyGetter(".strictBodies")
+            Return PropOrDefault(".strictBodies")
         End Get
         Set(ByVal value As Boolean)
             Me.Body("strictBodies") = value
@@ -231,10 +200,19 @@ Each file can override it by setting its '/Header/BodySchema' property to false/
 
     Public Property includeSchemas As Boolean
         Get
-            Return BodyGetter(".includeSchemas")
+            Return PropOrDefault(".includeSchemas")
         End Get
         Set(ByVal value As Boolean)
             Me.Body("includeSchemas") = value
+        End Set
+    End Property
+
+    Public Property hideUsername As Boolean
+        Get
+            Return PropOrDefault(".hideUsername")
+        End Get
+        Set(ByVal value As Boolean)
+            Me.Body("hideUsername") = value
         End Set
     End Property
 
