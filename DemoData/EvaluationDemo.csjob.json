@@ -3,26 +3,26 @@
     "Title": "vecto-cse JOB",
     "FileVersion": "1.0.0",
     "AppVersion": "2.0.1-pre2",
-    "ModifiedDate": "2014/06/05 03:57:58 +02:00",
+    "ModifiedDate": "2014/06/05 04:11:53 +02:00",
     "CreatedBy": "ISIS\\anastkn@JRC(lic: 04c137c0-24df-4d90-a3e2-b02fe3dba8ea)",
     "StrictBody": false,
     "BodySchema": null
   },
   "Body": {
-    "vehicle_fpath": "VehicleDemo.csveh.json",
-    "ambient_fpath": "AmbientConditionsDemo.csamb",
+    "vehicle_fpath": "DemoData\\VehicleDemo.csveh.json",
+    "ambient_fpath": "DemoData\\AmbientConditionsDemo.csamb",
     "Anemometer": {
       "v_air_f": "2",
       "v_air_d": "0",
       "beta_f": "1",
       "beta_d": "0"
     },
-    "calib_track_fpath": "CalibrationTrackDemo.csms",
-    "calib_run_fpath": "DataDemo_CAL.csdat",
-    "coast_track_fpath": "CoastingTrackDemo.csms",
-    "low1_fpath": "DataDemo_LS1.csdat",
-    "high_fpath": "DataDemo_HS.csdat",
-    "low2_fpath": "DataDemo_LS2.csdat",
+    "calib_track_fpath": "DemoData\\CalibrationTrackDemo.csms",
+    "calib_run_fpath": "DemoData\\DataDemo_CAL.csdat",
+    "coast_track_fpath": "DemoData\\CoastingTrackDemo.csms",
+    "low1_fpath": "DemoData\\DataDemo_LS1.csdat",
+    "high_fpath": "DemoData\\DataDemo_HS.csdat",
+    "low2_fpath": "DemoData\\DataDemo_LS2.csdat",
     "Criteria": {
       "Processing": {
         "roh_air_ref": 1.1884,
