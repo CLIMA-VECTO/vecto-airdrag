@@ -19,7 +19,7 @@
     },
     "calib_track_fpath": "DemoData\\CalibrationTrackDemo.csms",
     "calib_run_fpath": "DemoData\\DataDemo_CAL.csdat",
-    "coast_track_fpath": "DemoData\\CoastingTrackDemo.csms",
+    "coast_track_fpath": "DemoData\\LS_HS_TrackDemo.csms",
     "low1_fpath": "DemoData\\DataDemo_LS1.csdat",
     "high_fpath": "DemoData\\DataDemo_HS.csdat",
     "low2_fpath": "DemoData\\DataDemo_LS2.csdat",

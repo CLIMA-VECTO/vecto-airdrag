@@ -110,8 +110,8 @@ Partial Class F_Main
         Me.TextBoxVeh = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TPMain = New System.Windows.Forms.TabPage()
-        Me.TBInfoMain = New System.Windows.Forms.TextBox()
         Me.PbInfoIconMain = New System.Windows.Forms.PictureBox()
+        Me.TBInfoMain = New System.Windows.Forms.TextBox()
         Me.TPCriteria = New System.Windows.Forms.TabPage()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.Label26 = New System.Windows.Forms.Label()
@@ -318,26 +318,26 @@ Partial Class F_Main
         'MenuItemClearLog
         '
         Me.MenuItemClearLog.Name = "MenuItemClearLog"
-        Me.MenuItemClearLog.Size = New System.Drawing.Size(144, 22)
+        Me.MenuItemClearLog.Size = New System.Drawing.Size(152, 22)
         Me.MenuItemClearLog.Text = "Clear Log"
         '
         'ToolStripMenuItemLog
         '
         Me.ToolStripMenuItemLog.Image = Global.CSE.My.Resources.Resources.Log_File
         Me.ToolStripMenuItemLog.Name = "ToolStripMenuItemLog"
-        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(144, 22)
+        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemLog.Text = "Open LogFile"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(141, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
         '
         'ToolStripMenuItemOption
         '
         Me.ToolStripMenuItemOption.Image = Global.CSE.My.Resources.Resources.Optionen
         Me.ToolStripMenuItemOption.Name = "ToolStripMenuItemOption"
-        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(144, 22)
+        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemOption.Text = "Preferences"
         '
         'InfoToolStripMenuItem
@@ -376,7 +376,7 @@ Partial Class F_Main
         'GroupBoxJob
         '
         Me.GroupBoxJob.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBoxJob.Controls.Add(Me.TextBoxWeather)
         Me.GroupBoxJob.Controls.Add(Me.ButtonWeather)
         Me.GroupBoxJob.Controls.Add(Me.ButtonSelectWeather)
@@ -395,7 +395,7 @@ Partial Class F_Main
         'TextBoxWeather
         '
         Me.TextBoxWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxWeather.Location = New System.Drawing.Point(144, 42)
         Me.TextBoxWeather.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxWeather.Name = "TextBoxWeather"
@@ -428,7 +428,7 @@ Partial Class F_Main
         'TextBoxVeh1
         '
         Me.TextBoxVeh1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxVeh1.Location = New System.Drawing.Point(145, 15)
         Me.TextBoxVeh1.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxVeh1.Name = "TextBoxVeh1"
@@ -639,7 +639,7 @@ Partial Class F_Main
         'GroupBoxInput
         '
         Me.GroupBoxInput.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBoxInput.Controls.Add(Me.ButtonDataLS1)
         Me.GroupBoxInput.Controls.Add(Me.TextBoxDataLS2)
         Me.GroupBoxInput.Controls.Add(Me.ButtonSelectDataLS1)
@@ -671,13 +671,13 @@ Partial Class F_Main
         Me.ButtonDataLS1.Name = "ButtonDataLS1"
         Me.ButtonDataLS1.Size = New System.Drawing.Size(134, 23)
         Me.ButtonDataLS1.TabIndex = 37
-        Me.ButtonDataLS1.Text = "Low-speed 1 run"
+        Me.ButtonDataLS1.Text = "Low-speed 1 data"
         Me.ButtonDataLS1.UseVisualStyleBackColor = True
         '
         'TextBoxDataLS2
         '
         Me.TextBoxDataLS2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxDataLS2.Location = New System.Drawing.Point(145, 110)
         Me.TextBoxDataLS2.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataLS2.Name = "TextBoxDataLS2"
@@ -704,13 +704,13 @@ Partial Class F_Main
         Me.ButtonDataLS2.Name = "ButtonDataLS2"
         Me.ButtonDataLS2.Size = New System.Drawing.Size(134, 23)
         Me.ButtonDataLS2.TabIndex = 43
-        Me.ButtonDataLS2.Text = "Low-speed 2 run"
+        Me.ButtonDataLS2.Text = "Low-speed 2 data"
         Me.ButtonDataLS2.UseVisualStyleBackColor = True
         '
         'TextBoxDataLS1
         '
         Me.TextBoxDataLS1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxDataLS1.Location = New System.Drawing.Point(145, 56)
         Me.TextBoxDataLS1.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataLS1.Name = "TextBoxDataLS1"
@@ -744,7 +744,7 @@ Partial Class F_Main
         'TextBoxDataHS
         '
         Me.TextBoxDataHS.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxDataHS.Location = New System.Drawing.Point(144, 83)
         Me.TextBoxDataHS.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataHS.Name = "TextBoxDataHS"
@@ -759,7 +759,7 @@ Partial Class F_Main
         Me.ButtonDataHS.Name = "ButtonDataHS"
         Me.ButtonDataHS.Size = New System.Drawing.Size(134, 23)
         Me.ButtonDataHS.TabIndex = 40
-        Me.ButtonDataHS.Text = "High-speed run"
+        Me.ButtonDataHS.Text = "High-speed data"
         Me.ButtonDataHS.UseVisualStyleBackColor = True
         '
         'ButtonEval
@@ -781,7 +781,7 @@ Partial Class F_Main
         'TextBoxMSCT
         '
         Me.TextBoxMSCT.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxMSCT.Location = New System.Drawing.Point(144, 19)
         Me.TextBoxMSCT.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxMSCT.Name = "TextBoxMSCT"
@@ -796,7 +796,7 @@ Partial Class F_Main
         Me.ButtonMSCT.Name = "ButtonMSCT"
         Me.ButtonMSCT.Size = New System.Drawing.Size(136, 23)
         Me.ButtonMSCT.TabIndex = 24
-        Me.ButtonMSCT.Text = "Coasting Track"
+        Me.ButtonMSCT.Text = "Meas. sec. config"
         Me.ButtonMSCT.UseVisualStyleBackColor = True
         '
         'ButtonSelectMSCT
@@ -860,7 +860,7 @@ Partial Class F_Main
         'GroupBox1
         '
         Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.TextBoxDataC)
         Me.GroupBox1.Controls.Add(Me.ButtonDataC)
         Me.GroupBox1.Controls.Add(Me.ButtonSelectDataC)
@@ -879,7 +879,7 @@ Partial Class F_Main
         'TextBoxDataC
         '
         Me.TextBoxDataC.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxDataC.Location = New System.Drawing.Point(144, 47)
         Me.TextBoxDataC.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataC.Name = "TextBoxDataC"
@@ -894,7 +894,7 @@ Partial Class F_Main
         Me.ButtonDataC.Name = "ButtonDataC"
         Me.ButtonDataC.Size = New System.Drawing.Size(135, 23)
         Me.ButtonDataC.TabIndex = 34
-        Me.ButtonDataC.Text = "Calibration run"
+        Me.ButtonDataC.Text = "Calibration data"
         Me.ButtonDataC.UseVisualStyleBackColor = True
         '
         'ButtonSelectDataC
@@ -912,7 +912,7 @@ Partial Class F_Main
         'TextBoxMSCC
         '
         Me.TextBoxMSCC.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxMSCC.Location = New System.Drawing.Point(144, 20)
         Me.TextBoxMSCC.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxMSCC.Name = "TextBoxMSCC"
@@ -927,7 +927,7 @@ Partial Class F_Main
         Me.ButtonMSCC.Name = "ButtonMSCC"
         Me.ButtonMSCC.Size = New System.Drawing.Size(135, 23)
         Me.ButtonMSCC.TabIndex = 18
-        Me.ButtonMSCC.Text = "CalibrationTrack"
+        Me.ButtonMSCC.Text = "Meas. sec. config"
         Me.ButtonMSCC.UseVisualStyleBackColor = True
         '
         'ButtonSelectMSCC
@@ -1048,8 +1048,8 @@ Partial Class F_Main
         '
         Me.TabControlOutMsg.Alignment = System.Windows.Forms.TabAlignment.Bottom
         Me.TabControlOutMsg.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageMSG)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageWar)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageErr)
@@ -1077,8 +1077,8 @@ Partial Class F_Main
         'ListBoxMSG
         '
         Me.ListBoxMSG.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ListBoxMSG.Font = New System.Drawing.Font("Consolas", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ListBoxMSG.FormattingEnabled = True
         Me.ListBoxMSG.HorizontalScrollbar = True
@@ -1104,8 +1104,8 @@ Partial Class F_Main
         'ListBoxWar
         '
         Me.ListBoxWar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ListBoxWar.Font = New System.Drawing.Font("Consolas", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ListBoxWar.FormattingEnabled = True
         Me.ListBoxWar.HorizontalScrollbar = True
@@ -1130,8 +1130,8 @@ Partial Class F_Main
         'ListBoxErr
         '
         Me.ListBoxErr.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ListBoxErr.Font = New System.Drawing.Font("Consolas", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ListBoxErr.FormattingEnabled = True
         Me.ListBoxErr.HorizontalScrollbar = True
@@ -1145,7 +1145,7 @@ Partial Class F_Main
         'TextBoxVeh
         '
         Me.TextBoxVeh.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxVeh.Location = New System.Drawing.Point(98, 19)
         Me.TextBoxVeh.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxVeh.Name = "TextBoxVeh"
@@ -1155,7 +1155,7 @@ Partial Class F_Main
         'TabControl1
         '
         Me.TabControl1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.TPMain)
         Me.TabControl1.Controls.Add(Me.TPCriteria)
         Me.TabControl1.Location = New System.Drawing.Point(8, 72)
@@ -1180,14 +1180,6 @@ Partial Class F_Main
         Me.TPMain.Text = "Main"
         Me.TPMain.UseVisualStyleBackColor = True
         '
-        'TBInfoMain
-        '
-        Me.TBInfoMain.Location = New System.Drawing.Point(43, 176)
-        Me.TBInfoMain.Multiline = True
-        Me.TBInfoMain.Name = "TBInfoMain"
-        Me.TBInfoMain.Size = New System.Drawing.Size(282, 78)
-        Me.TBInfoMain.TabIndex = 85
-        '
         'PbInfoIconMain
         '
         Me.PbInfoIconMain.Image = Global.CSE.My.Resources.Resources.Info
@@ -1196,6 +1188,14 @@ Partial Class F_Main
         Me.PbInfoIconMain.Size = New System.Drawing.Size(25, 30)
         Me.PbInfoIconMain.TabIndex = 84
         Me.PbInfoIconMain.TabStop = False
+        '
+        'TBInfoMain
+        '
+        Me.TBInfoMain.Location = New System.Drawing.Point(43, 176)
+        Me.TBInfoMain.Multiline = True
+        Me.TBInfoMain.Name = "TBInfoMain"
+        Me.TBInfoMain.Size = New System.Drawing.Size(282, 78)
+        Me.TBInfoMain.TabIndex = 85
         '
         'TPCriteria
         '
