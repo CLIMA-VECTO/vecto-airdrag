@@ -318,26 +318,26 @@ Partial Class F_Main
         'MenuItemClearLog
         '
         Me.MenuItemClearLog.Name = "MenuItemClearLog"
-        Me.MenuItemClearLog.Size = New System.Drawing.Size(152, 22)
+        Me.MenuItemClearLog.Size = New System.Drawing.Size(144, 22)
         Me.MenuItemClearLog.Text = "Clear Log"
         '
         'ToolStripMenuItemLog
         '
         Me.ToolStripMenuItemLog.Image = Global.CSE.My.Resources.Resources.Log_File
         Me.ToolStripMenuItemLog.Name = "ToolStripMenuItemLog"
-        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(152, 22)
+        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(144, 22)
         Me.ToolStripMenuItemLog.Text = "Open LogFile"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(141, 6)
         '
         'ToolStripMenuItemOption
         '
         Me.ToolStripMenuItemOption.Image = Global.CSE.My.Resources.Resources.Optionen
         Me.ToolStripMenuItemOption.Name = "ToolStripMenuItemOption"
-        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(152, 22)
+        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(144, 22)
         Me.ToolStripMenuItemOption.Text = "Preferences"
         '
         'InfoToolStripMenuItem
@@ -462,9 +462,9 @@ Partial Class F_Main
         '
         Me.GB_hz_out.Controls.Add(Me.RB100Hz)
         Me.GB_hz_out.Controls.Add(Me.RB1Hz)
-        Me.GB_hz_out.Location = New System.Drawing.Point(122, 94)
+        Me.GB_hz_out.Location = New System.Drawing.Point(129, 94)
         Me.GB_hz_out.Name = "GB_hz_out"
-        Me.GB_hz_out.Size = New System.Drawing.Size(97, 67)
+        Me.GB_hz_out.Size = New System.Drawing.Size(90, 67)
         Me.GB_hz_out.TabIndex = 6
         Me.GB_hz_out.TabStop = False
         Me.GB_hz_out.Text = "Output"
@@ -621,9 +621,9 @@ Partial Class F_Main
         Me.CB_gradient_correction.AutoSize = True
         Me.CB_gradient_correction.Location = New System.Drawing.Point(6, 137)
         Me.CB_gradient_correction.Name = "CB_gradient_correction"
-        Me.CB_gradient_correction.Size = New System.Drawing.Size(93, 17)
+        Me.CB_gradient_correction.Size = New System.Drawing.Size(123, 17)
         Me.CB_gradient_correction.TabIndex = 5
-        Me.CB_gradient_correction.Text = "Grd correction"
+        Me.CB_gradient_correction.Text = "gradient_correction?"
         Me.CB_gradient_correction.UseVisualStyleBackColor = True
         '
         'CB_accel_correction
@@ -631,9 +631,9 @@ Partial Class F_Main
         Me.CB_accel_correction.AutoSize = True
         Me.CB_accel_correction.Location = New System.Drawing.Point(6, 111)
         Me.CB_accel_correction.Name = "CB_accel_correction"
-        Me.CB_accel_correction.Size = New System.Drawing.Size(95, 17)
+        Me.CB_accel_correction.Size = New System.Drawing.Size(111, 17)
         Me.CB_accel_correction.TabIndex = 4
-        Me.CB_accel_correction.Text = "Acc correction"
+        Me.CB_accel_correction.Text = "accel_correction?"
         Me.CB_accel_correction.UseVisualStyleBackColor = True
         '
         'GroupBoxInput
@@ -1272,9 +1272,9 @@ Partial Class F_Main
         Me.LDeltaYMax.AutoSize = True
         Me.LDeltaYMax.Location = New System.Drawing.Point(11, 48)
         Me.LDeltaYMax.Name = "LDeltaYMax"
-        Me.LDeltaYMax.Size = New System.Drawing.Size(66, 13)
+        Me.LDeltaYMax.Size = New System.Drawing.Size(101, 13)
         Me.LDeltaYMax.TabIndex = 42
-        Me.LDeltaYMax.Text = "delta_y_max"
+        Me.LDeltaYMax.Text = "trigger_delta_y_max"
         '
         'TB_trigger_delta_y_max
         '
@@ -1298,9 +1298,9 @@ Partial Class F_Main
         Me.LDeltaXMax.AutoSize = True
         Me.LDeltaXMax.Location = New System.Drawing.Point(11, 22)
         Me.LDeltaXMax.Name = "LDeltaXMax"
-        Me.LDeltaXMax.Size = New System.Drawing.Size(66, 13)
+        Me.LDeltaXMax.Size = New System.Drawing.Size(101, 13)
         Me.LDeltaXMax.TabIndex = 39
-        Me.LDeltaXMax.Text = "delta_x_max"
+        Me.LDeltaXMax.Text = "trigger_delta_x_max"
         '
         'TB_trigger_delta_x_max
         '
@@ -1330,15 +1330,15 @@ Partial Class F_Main
         'LDsMinHeadMS
         '
         Me.LDsMinHeadMS.AutoSize = True
-        Me.LDsMinHeadMS.Location = New System.Drawing.Point(8, 108)
+        Me.LDsMinHeadMS.Location = New System.Drawing.Point(7, 111)
         Me.LDsMinHeadMS.Name = "LDsMinHeadMS"
-        Me.LDsMinHeadMS.Size = New System.Drawing.Size(91, 13)
+        Me.LDsMinHeadMS.Size = New System.Drawing.Size(118, 13)
         Me.LDsMinHeadMS.TabIndex = 51
-        Me.LDsMinHeadMS.Text = "ds_min_head_HS"
+        Me.LDsMinHeadMS.Text = "segruns_min_head_MS"
         '
         'TB_segruns_min_head_MS
         '
-        Me.TB_segruns_min_head_MS.Location = New System.Drawing.Point(122, 108)
+        Me.TB_segruns_min_head_MS.Location = New System.Drawing.Point(129, 108)
         Me.TB_segruns_min_head_MS.Name = "TB_segruns_min_head_MS"
         Me.TB_segruns_min_head_MS.Size = New System.Drawing.Size(45, 20)
         Me.TB_segruns_min_head_MS.TabIndex = 50
@@ -1347,15 +1347,15 @@ Partial Class F_Main
         'LDsMinHS
         '
         Me.LDsMinHS.AutoSize = True
-        Me.LDsMinHS.Location = New System.Drawing.Point(9, 82)
+        Me.LDsMinHS.Location = New System.Drawing.Point(7, 85)
         Me.LDsMinHS.Name = "LDsMinHS"
-        Me.LDsMinHS.Size = New System.Drawing.Size(61, 13)
+        Me.LDsMinHS.Size = New System.Drawing.Size(87, 13)
         Me.LDsMinHS.TabIndex = 48
-        Me.LDsMinHS.Text = "ds_min_HS"
+        Me.LDsMinHS.Text = "segruns_min_HS"
         '
         'TB_segruns_min_HS
         '
-        Me.TB_segruns_min_HS.Location = New System.Drawing.Point(122, 82)
+        Me.TB_segruns_min_HS.Location = New System.Drawing.Point(129, 82)
         Me.TB_segruns_min_HS.Name = "TB_segruns_min_HS"
         Me.TB_segruns_min_HS.Size = New System.Drawing.Size(45, 20)
         Me.TB_segruns_min_HS.TabIndex = 47
@@ -1364,15 +1364,15 @@ Partial Class F_Main
         'LDsMinLS
         '
         Me.LDsMinLS.AutoSize = True
-        Me.LDsMinLS.Location = New System.Drawing.Point(9, 56)
+        Me.LDsMinLS.Location = New System.Drawing.Point(7, 59)
         Me.LDsMinLS.Name = "LDsMinLS"
-        Me.LDsMinLS.Size = New System.Drawing.Size(59, 13)
+        Me.LDsMinLS.Size = New System.Drawing.Size(85, 13)
         Me.LDsMinLS.TabIndex = 45
-        Me.LDsMinLS.Text = "ds_min_LS"
+        Me.LDsMinLS.Text = "segruns_min_LS"
         '
         'TB_segruns_min_LS
         '
-        Me.TB_segruns_min_LS.Location = New System.Drawing.Point(122, 56)
+        Me.TB_segruns_min_LS.Location = New System.Drawing.Point(129, 56)
         Me.TB_segruns_min_LS.Name = "TB_segruns_min_LS"
         Me.TB_segruns_min_LS.Size = New System.Drawing.Size(45, 20)
         Me.TB_segruns_min_LS.TabIndex = 44
@@ -1381,15 +1381,15 @@ Partial Class F_Main
         'LDsMinCAL
         '
         Me.LDsMinCAL.AutoSize = True
-        Me.LDsMinCAL.Location = New System.Drawing.Point(9, 30)
+        Me.LDsMinCAL.Location = New System.Drawing.Point(7, 33)
         Me.LDsMinCAL.Name = "LDsMinCAL"
-        Me.LDsMinCAL.Size = New System.Drawing.Size(66, 13)
+        Me.LDsMinCAL.Size = New System.Drawing.Size(92, 13)
         Me.LDsMinCAL.TabIndex = 42
-        Me.LDsMinCAL.Text = "ds_min_CAL"
+        Me.LDsMinCAL.Text = "segruns_min_CAL"
         '
         'TB_segruns_min_CAL
         '
-        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(122, 30)
+        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(129, 30)
         Me.TB_segruns_min_CAL.Name = "TB_segruns_min_CAL"
         Me.TB_segruns_min_CAL.Size = New System.Drawing.Size(45, 20)
         Me.TB_segruns_min_CAL.TabIndex = 41
@@ -1559,9 +1559,9 @@ Partial Class F_Main
         Me.LB_tq_sum_1s_delta_HS.AutoSize = True
         Me.LB_tq_sum_1s_delta_HS.Location = New System.Drawing.Point(6, 151)
         Me.LB_tq_sum_1s_delta_HS.Name = "LB_tq_sum_1s_delta_HS"
-        Me.LB_tq_sum_1s_delta_HS.Size = New System.Drawing.Size(87, 13)
+        Me.LB_tq_sum_1s_delta_HS.Size = New System.Drawing.Size(108, 13)
         Me.LB_tq_sum_1s_delta_HS.TabIndex = 92
-        Me.LB_tq_sum_1s_delta_HS.Text = "tq_sum_1s_delta"
+        Me.LB_tq_sum_1s_delta_HS.Text = "tq_sum_1s_delta_HS"
         '
         'Label76
         '
@@ -1585,9 +1585,9 @@ Partial Class F_Main
         Me.LB_v_veh_1s_delta_HS.AutoSize = True
         Me.LB_v_veh_1s_delta_HS.Location = New System.Drawing.Point(6, 125)
         Me.LB_v_veh_1s_delta_HS.Name = "LB_v_veh_1s_delta_HS"
-        Me.LB_v_veh_1s_delta_HS.Size = New System.Drawing.Size(83, 13)
+        Me.LB_v_veh_1s_delta_HS.Size = New System.Drawing.Size(104, 13)
         Me.LB_v_veh_1s_delta_HS.TabIndex = 89
-        Me.LB_v_veh_1s_delta_HS.Text = "v_veh_1s_delta"
+        Me.LB_v_veh_1s_delta_HS.Text = "v_veh_1s_delta_HS"
         '
         'Label62
         '
@@ -1613,7 +1613,7 @@ Partial Class F_Main
         Me.LB_beta_avg_max_HS.Name = "LB_beta_avg_max_HS"
         Me.LB_beta_avg_max_HS.Size = New System.Drawing.Size(98, 13)
         Me.LB_beta_avg_max_HS.TabIndex = 86
-        Me.LB_beta_avg_max_HS.Text = "beta_avg_HS_max"
+        Me.LB_beta_avg_max_HS.Text = "beta_avg_max_HS"
         '
         'LB_v_wind_avg_max_HS
         '
@@ -1622,7 +1622,7 @@ Partial Class F_Main
         Me.LB_v_wind_avg_max_HS.Name = "LB_v_wind_avg_max_HS"
         Me.LB_v_wind_avg_max_HS.Size = New System.Drawing.Size(111, 13)
         Me.LB_v_wind_avg_max_HS.TabIndex = 78
-        Me.LB_v_wind_avg_max_HS.Text = "v_wind_avg_HS_max"
+        Me.LB_v_wind_avg_max_HS.Text = "v_wind_avg_max_HS"
         '
         'Label57
         '
@@ -1673,7 +1673,7 @@ Partial Class F_Main
         Me.LB_v_wind_1s_max_HS.Name = "LB_v_wind_1s_max_HS"
         Me.LB_v_wind_1s_max_HS.Size = New System.Drawing.Size(104, 13)
         Me.LB_v_wind_1s_max_HS.TabIndex = 81
-        Me.LB_v_wind_1s_max_HS.Text = "v_wind_1s_HS_max"
+        Me.LB_v_wind_1s_max_HS.Text = "v_wind_1s_max_HS"
         '
         'LB_v_veh_avg_min_HS
         '
@@ -1682,7 +1682,7 @@ Partial Class F_Main
         Me.LB_v_veh_avg_min_HS.Name = "LB_v_veh_avg_min_HS"
         Me.LB_v_veh_avg_min_HS.Size = New System.Drawing.Size(104, 13)
         Me.LB_v_veh_avg_min_HS.TabIndex = 83
-        Me.LB_v_veh_avg_min_HS.Text = "v_veh_avg_HS_min"
+        Me.LB_v_veh_avg_min_HS.Text = "v_veh_avg_min_HS"
         '
         'Label61
         '
@@ -1742,9 +1742,9 @@ Partial Class F_Main
         Me.LB_tq_sum_float_delta_LS.AutoSize = True
         Me.LB_tq_sum_float_delta_LS.Location = New System.Drawing.Point(6, 153)
         Me.LB_tq_sum_float_delta_LS.Name = "LB_tq_sum_float_delta_LS"
-        Me.LB_tq_sum_float_delta_LS.Size = New System.Drawing.Size(96, 13)
+        Me.LB_tq_sum_float_delta_LS.Size = New System.Drawing.Size(115, 13)
         Me.LB_tq_sum_float_delta_LS.TabIndex = 80
-        Me.LB_tq_sum_float_delta_LS.Text = "tq_sum_float_delta"
+        Me.LB_tq_sum_float_delta_LS.Text = "tq_sum_float_delta_LS"
         '
         'Label46
         '
@@ -1768,9 +1768,9 @@ Partial Class F_Main
         Me.LB_v_veh_float_delta_LS.AutoSize = True
         Me.LB_v_veh_float_delta_LS.Location = New System.Drawing.Point(6, 127)
         Me.LB_v_veh_float_delta_LS.Name = "LB_v_veh_float_delta_LS"
-        Me.LB_v_veh_float_delta_LS.Size = New System.Drawing.Size(92, 13)
+        Me.LB_v_veh_float_delta_LS.Size = New System.Drawing.Size(111, 13)
         Me.LB_v_veh_float_delta_LS.TabIndex = 77
-        Me.LB_v_veh_float_delta_LS.Text = "v_veh_float_delta"
+        Me.LB_v_veh_float_delta_LS.Text = "v_veh_float_delta_LS"
         '
         'LvWindAveLSMax
         '
@@ -1779,7 +1779,7 @@ Partial Class F_Main
         Me.LvWindAveLSMax.Name = "LvWindAveLSMax"
         Me.LvWindAveLSMax.Size = New System.Drawing.Size(109, 13)
         Me.LvWindAveLSMax.TabIndex = 66
-        Me.LvWindAveLSMax.Text = "v_wind_avg_LS_max"
+        Me.LvWindAveLSMax.Text = "v_wind_avg_max_LS"
         '
         'Label48
         '
@@ -1805,7 +1805,7 @@ Partial Class F_Main
         Me.LB_v_veh_avg_min_LS.Name = "LB_v_veh_avg_min_LS"
         Me.LB_v_veh_avg_min_LS.Size = New System.Drawing.Size(102, 13)
         Me.LB_v_veh_avg_min_LS.TabIndex = 75
-        Me.LB_v_veh_avg_min_LS.Text = "v_veh_avg_LS_min"
+        Me.LB_v_veh_avg_min_LS.Text = "v_veh_avg_min_LS"
         '
         'Label54
         '
@@ -1848,7 +1848,7 @@ Partial Class F_Main
         Me.LvWind1sLSMax.Name = "LvWind1sLSMax"
         Me.LvWind1sLSMax.Size = New System.Drawing.Size(102, 13)
         Me.LvWind1sLSMax.TabIndex = 69
-        Me.LvWind1sLSMax.Text = "v_wind_1s_LS_max"
+        Me.LvWind1sLSMax.Text = "v_wind_1s_max_LS"
         '
         'LB_v_veh_avg_max_LS
         '
@@ -1857,7 +1857,7 @@ Partial Class F_Main
         Me.LB_v_veh_avg_max_LS.Name = "LB_v_veh_avg_max_LS"
         Me.LB_v_veh_avg_max_LS.Size = New System.Drawing.Size(105, 13)
         Me.LB_v_veh_avg_max_LS.TabIndex = 72
-        Me.LB_v_veh_avg_max_LS.Text = "v_veh_avg_LS_max"
+        Me.LB_v_veh_avg_max_LS.Text = "v_veh_avg_max_LS"
         '
         'Label52
         '
@@ -1918,7 +1918,7 @@ Partial Class F_Main
         Me.LvWind1sCALMax.Name = "LvWind1sCALMax"
         Me.LvWind1sCALMax.Size = New System.Drawing.Size(109, 13)
         Me.LvWind1sCALMax.TabIndex = 63
-        Me.LvWind1sCALMax.Text = "v_wind_1s_CAL_max"
+        Me.LvWind1sCALMax.Text = "v_wind_1s_max_CAL"
         '
         'LvWindAveCALMax
         '
@@ -1927,7 +1927,7 @@ Partial Class F_Main
         Me.LvWindAveCALMax.Name = "LvWindAveCALMax"
         Me.LvWindAveCALMax.Size = New System.Drawing.Size(116, 13)
         Me.LvWindAveCALMax.TabIndex = 57
-        Me.LvWindAveCALMax.Text = "v_wind_avg_CAL_max"
+        Me.LvWindAveCALMax.Text = "v_wind_avg_max_CAL"
         '
         'TB_beta_avg_max_CAL
         '
@@ -1970,7 +1970,7 @@ Partial Class F_Main
         Me.LBetaAveCALMax.Name = "LBetaAveCALMax"
         Me.LBetaAveCALMax.Size = New System.Drawing.Size(103, 13)
         Me.LBetaAveCALMax.TabIndex = 60
-        Me.LBetaAveCALMax.Text = "beta_avg_CAL_max"
+        Me.LBetaAveCALMax.Text = "beta_avg_max_CAL"
         '
         'TBInfoCrt
         '
@@ -2157,9 +2157,9 @@ Partial Class F_Main
         Me.LB_delta_rr_corr_max.AutoSize = True
         Me.LB_delta_rr_corr_max.Location = New System.Drawing.Point(11, 98)
         Me.LB_delta_rr_corr_max.Name = "LB_delta_rr_corr_max"
-        Me.LB_delta_rr_corr_max.Size = New System.Drawing.Size(84, 13)
+        Me.LB_delta_rr_corr_max.Size = New System.Drawing.Size(91, 13)
         Me.LB_delta_rr_corr_max.TabIndex = 57
-        Me.LB_delta_rr_corr_max.Text = "delta_RRC_max"
+        Me.LB_delta_rr_corr_max.Text = "delta_rr_corr_max"
         '
         'TB_t_amb_max
         '
@@ -2265,13 +2265,13 @@ Partial Class F_Main
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(7, 71)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(80, 13)
+        Me.Label2.Size = New System.Drawing.Size(70, 13)
         Me.Label2.TabIndex = 85
-        Me.Label2.Text = "Rolling res. corr"
+        Me.Label2.Text = "rr_corr_factor"
         '
         'TB_rr_corr_factor
         '
-        Me.TB_rr_corr_factor.Location = New System.Drawing.Point(122, 69)
+        Me.TB_rr_corr_factor.Location = New System.Drawing.Point(129, 68)
         Me.TB_rr_corr_factor.Name = "TB_rr_corr_factor"
         Me.TB_rr_corr_factor.Size = New System.Drawing.Size(48, 20)
         Me.TB_rr_corr_factor.TabIndex = 84
@@ -2280,7 +2280,7 @@ Partial Class F_Main
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(170, 46)
+        Me.Label22.Location = New System.Drawing.Point(177, 45)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(18, 13)
         Me.Label22.TabIndex = 37
@@ -2297,7 +2297,7 @@ Partial Class F_Main
         '
         'TB_acc_corr_avg
         '
-        Me.TB_acc_corr_avg.Location = New System.Drawing.Point(122, 43)
+        Me.TB_acc_corr_avg.Location = New System.Drawing.Point(129, 42)
         Me.TB_acc_corr_avg.Name = "TB_acc_corr_avg"
         Me.TB_acc_corr_avg.Size = New System.Drawing.Size(45, 20)
         Me.TB_acc_corr_avg.TabIndex = 2
@@ -2306,7 +2306,7 @@ Partial Class F_Main
         'Label20
         '
         Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(170, 22)
+        Me.Label20.Location = New System.Drawing.Point(177, 21)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(44, 13)
         Me.Label20.TabIndex = 34
@@ -2323,7 +2323,7 @@ Partial Class F_Main
         '
         'TB_roh_air_ref
         '
-        Me.TB_roh_air_ref.Location = New System.Drawing.Point(122, 17)
+        Me.TB_roh_air_ref.Location = New System.Drawing.Point(129, 16)
         Me.TB_roh_air_ref.Name = "TB_roh_air_ref"
         Me.TB_roh_air_ref.Size = New System.Drawing.Size(45, 20)
         Me.TB_roh_air_ref.TabIndex = 1

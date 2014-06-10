@@ -189,7 +189,7 @@ Public Class cCriteria
                             "description": "+/- maximum deviation of floating average vehicle speed from average vehicle speed over entire section (low speed)", 
                             "units": "km/h", 
                         },
-                                                "tq_sum_float_delta_LS": {"type": "number", "required": true, 
+                        "tq_sum_float_delta_LS": {"type": "number", "required": true, 
                             "description": "+/- maximum relative deviation of floating average torque from average torque over entire section (low speed)", 
                         },
 

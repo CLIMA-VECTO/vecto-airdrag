@@ -1066,4 +1066,5 @@ Public Class F_Main
     Private Sub ClearLogToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemClearLog.Click
 
     End Sub
+
 End Class
