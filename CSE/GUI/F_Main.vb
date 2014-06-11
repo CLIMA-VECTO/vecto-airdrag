@@ -184,8 +184,8 @@ Public Class F_Main
     '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
     '####################################################################
     Private _CalibrationState As Boolean = False
-    Private _CalibrationTxts = {"Calibrate", "Cancel"}
-    Private _CalibrationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private ReadOnly _CalibrationTxts = {"Calibrate", "Cancel"}
+    Private ReadOnly _CalibrationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
     Private Property CalibrationState As Boolean
         Get
             Return _CalibrationState
@@ -195,7 +195,7 @@ Public Class F_Main
                 Dim indx = -CInt(value)
                 Me.ButtonCalC.Text = _CalibrationTxts(indx)
                 Me.ButtonCalC.Image = _CalibrationImgs(indx)
-                Me.ButtonCalC.UseWaitCursor = value
+                Me.UseWaitCursor = value
             End If
             _CalibrationState = value
         End Set
@@ -265,8 +265,8 @@ Public Class F_Main
     '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
     '####################################################################
     Private _EvaluationState As Boolean = False
-    Private _EvaluationTxts = {"Evaluate", "Cancel"}
-    Private _EvaluationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private ReadOnly _EvaluationTxts = {"Evaluate", "Cancel"}
+    Private ReadOnly _EvaluationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
     Private Property EvaluationState As Boolean
         Get
             Return _EvaluationState
@@ -276,7 +276,7 @@ Public Class F_Main
                 Dim indx = -CInt(value)
                 Me.ButtonEval.Text = _EvaluationTxts(indx)
                 Me.ButtonEval.Image = _EvaluationImgs(indx)
-                Me.ButtonEval.UseWaitCursor = value
+                Me.UseWaitCursor = value
             End If
             _EvaluationState = value
         End Set

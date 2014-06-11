@@ -1,6 +1,4 @@
-﻿Option Strict Off
-
-Imports Newtonsoft.Json.Linq
+﻿Imports Newtonsoft.Json.Linq
 Imports Newtonsoft.Json.Schema
 Imports System.Globalization
 
@@ -25,7 +23,7 @@ Imports System.Globalization
 Public MustInherit Class cJsonFile
     Implements ICloneable
 
-    Shared dateFrmt As String = "yyyy/MM/dd HH:mm:ss zzz"
+    Private Const DateFrmt As String = "yyyy/MM/dd HH:mm:ss zzz"
 
     ''' <summary>The json-content for a json-file structured in Header/Body</summary>
     ''' <remarks>Note that the content is invalid according to the schema, and has to be specified by sub-classers.</remarks>
@@ -111,6 +109,11 @@ When False, it overrides Application's choice and is not replaced ever.",
     ''' <remarks>To signify validation-failure it can throw an exception or add err-messages into the supplied list</remarks>
     Protected MustOverride Sub ValidateBody(ByVal isStrict As Boolean, ByVal validateMsgs As IList(Of String))
 
+    Protected Overridable Sub OnContentUpdated()
+    End Sub
+    Protected Overridable Sub OnBeforeContentStored()
+    End Sub
+
 
     ''' <summary>The whole json-content receiving any changes, always ready to be written as is.</summary>
     Private Content As JObject
@@ -127,9 +130,8 @@ When False, it overrides Application's choice and is not replaced ever.",
     ''' <param name="skipValidation">When false (the default), validates json-contents in both cases (reading or creating-defaults)</param>
     ''' <remarks>It optionally checks version and validates its body with ValidateVersionAndBody().</remarks>
     Protected Sub New(ByVal inputFilePath As String, Optional ByVal skipValidation As Boolean = False)
-        Dim strictHeader = True
+        Dim strictHeader = False   '' Accept unknown headers.
 
-        strictHeader = False   '' Try to read even bad headers.
         logme(4, False, format("Reading JSON-file({0})...", inputFilePath))
 
         Me.Content = ReadJsonFile(inputFilePath)
@@ -139,6 +141,8 @@ When False, it overrides Application's choice and is not replaced ever.",
         If Not skipValidation Then
             Me.Validate(strictHeader)
         End If
+
+        OnContentUpdated()
     End Sub
 
     ''' <summary>Creates an instance with defaults</summary>
@@ -146,7 +150,7 @@ When False, it overrides Application's choice and is not replaced ever.",
     ''' <param name="skipValidation">When false (the default), validates json-contents in both cases (reading or creating-defaults)</param>
     ''' <remarks>When defaulting, the resulted file-version is retrieved from 'CodeVersion' prop and the body from 'BodyStr' prop.</remarks>
     Protected Sub New(ByVal body As JToken, Optional ByVal skipValidation As Boolean = False)
-        Dim strictHeader = True
+        Dim strictHeader = False   '' Accept unknown headers.
 
         Dim jstr = JsonStr_FileContents()
         Me.Content = JObject.Parse(jstr)
@@ -159,10 +163,14 @@ When False, it overrides Application's choice and is not replaced ever.",
         If Not skipValidation Then
             Me.Validate(strictHeader)
         End If
+
+        OnContentUpdated()
     End Sub
 
     ''' <summary>Validates and Writing to the config file</summary>
     Overridable Sub Store(ByVal fpath As String, Optional ByVal prefs As cPreferences = Nothing)
+        OnBeforeContentStored()
+
         logme(4, False, format("Writting JSON-file({0})...", fpath))
         Me.UpdateHeader(prefs)
 
