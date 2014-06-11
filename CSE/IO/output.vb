@@ -44,15 +44,12 @@
             FileOut.OpenWrite(NameOutFile, , False)
 
             ' Filekopf
-            FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-            FileOut.WriteLine("Datafile: ", Datafile)
-            FileOut.WriteLine("")
+            FileOut.WriteLine("# Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
+            FileOut.WriteLine("# Datafile: ", Datafile)
+            FileOut.WriteLine("#")
 
-            ' Write the head
+            ' Write the head and units
             FileOut.WriteLine(ErgHead("InputData") + "," + ErgHead("InputUndefData") + "," + ErgHead("CalcData"))
-
-            ' Write the units
-            FileOut.WriteLine(ErgUnits("InputData") + "," + ErgUnits("InputUndefData") + "," + ErgUnits("CalcData"))
 
             ' Write the data
             For i = 0 To InputData.Item(tComp.t).Count - 1
@@ -120,27 +117,24 @@
             FileOut.OpenWrite(NameOutFile, , False)
 
             ' Filekopf
-            FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
+            FileOut.WriteLine("# Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
             If calibration Then
-                FileOut.WriteLine("Datafile: ", Job.calib_run_fpath)
+                FileOut.WriteLine("# Datafile: ", Job.calib_run_fpath)
             Else
-                FileOut.WriteLine("Datafile LS1: ", coasting_fpaths(0))
-                FileOut.WriteLine("Datafile HS: ", coasting_fpaths(1))
-                FileOut.WriteLine("Datafile LS2: ", coasting_fpaths(2))
+                FileOut.WriteLine("# Datafile LS1: ", coasting_fpaths(0))
+                FileOut.WriteLine("# Datafile HS: ", coasting_fpaths(1))
+                FileOut.WriteLine("# Datafile LS2: ", coasting_fpaths(2))
             End If
-            FileOut.WriteLine("")
-            FileOut.WriteLine("Results")
-            FileOut.WriteLine("fv_veh:", fv_veh)
-            FileOut.WriteLine("fv_veh_opt2:", fv_veh_opt2)
-            FileOut.WriteLine("fv_pe:", fv_pe)
-            FileOut.WriteLine("beta_ame:", beta_ame)
-            FileOut.WriteLine("")
+            FileOut.WriteLine("#")
+            FileOut.WriteLine("# Results")
+            FileOut.WriteLine("# fv_veh:", fv_veh)
+            FileOut.WriteLine("# fv_veh_opt2:", fv_veh_opt2)
+            FileOut.WriteLine("# fv_pe:", fv_pe)
+            FileOut.WriteLine("# beta_ame:", beta_ame)
+            FileOut.WriteLine("#")
 
-            ' Write the head
+            ' Write the head and units
             FileOut.WriteLine(ErgHead("ErgValues") + "," + ErgHead("ErgValuesUndef"))
-
-            ' Write the units
-            FileOut.WriteLine(ErgUnits("ErgValues") + "," + ErgUnits("ErgValuesUndef"))
 
             ' Write the data
             If calibration Then
@@ -217,47 +211,44 @@
             FileOut.OpenWrite(NameOutFile, , False)
 
             ' Filekopf
-            FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-            FileOut.WriteLine("Datafile LS1: ", coasting_fpaths(0))
-            FileOut.WriteLine("Datafile HS: ", coasting_fpaths(1))
-            FileOut.WriteLine("Datafile LS2: ", coasting_fpaths(2))
-            FileOut.WriteLine("")
-            FileOut.WriteLine("Results")
-            FileOut.WriteLine("fv_veh:", fv_veh, "[-] calibration factor for vehicle speed")
-            FileOut.WriteLine("fv_veh_opt2:", fv_veh_opt2, "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
-            FileOut.WriteLine("fv_pe:", fv_pe, "[-] calibration factor for air speed (position error)")
-            FileOut.WriteLine("fa_pe:", fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
-            FileOut.WriteLine("beta_ame:", beta_ame, "[°] calibration factor for beta (misalignment)")
-            FileOut.WriteLine("CdxA:", CdxA, "[m²] average CdxA before yaw angle correction")
-            FileOut.WriteLine("beta:", beta, "[°] average absolute yaw angle from high speed tests")
-            FileOut.WriteLine("delta_CdxA:", delta_CdxA, "[m²] correction of CdxA for yaw angle")
-            FileOut.WriteLine("CdxA(0):", CdxA0, "[m²] average CdxA for zero yaw angle")
-            FileOut.WriteLine("CdxA(0)_opt2:", CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
-            FileOut.WriteLine("")
-            FileOut.WriteLine("Validity criteria:")
+            FileOut.WriteLine("# Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
+            FileOut.WriteLine("# Datafile LS1: ", coasting_fpaths(0))
+            FileOut.WriteLine("# Datafile HS: ", coasting_fpaths(1))
+            FileOut.WriteLine("# Datafile LS2: ", coasting_fpaths(2))
+            FileOut.WriteLine("#")
+            FileOut.WriteLine("# Results")
+            FileOut.WriteLine("# fv_veh:", fv_veh, "[-] calibration factor for vehicle speed")
+            FileOut.WriteLine("# fv_veh_opt2:", fv_veh_opt2, "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
+            FileOut.WriteLine("# fv_pe:", fv_pe, "[-] calibration factor for air speed (position error)")
+            FileOut.WriteLine("# fa_pe:", fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
+            FileOut.WriteLine("# beta_ame:", beta_ame, "[°] calibration factor for beta (misalignment)")
+            FileOut.WriteLine("# CdxA:", CdxA, "[m²] average CdxA before yaw angle correction")
+            FileOut.WriteLine("# beta:", beta, "[°] average absolute yaw angle from high speed tests")
+            FileOut.WriteLine("# delta_CdxA:", delta_CdxA, "[m²] correction of CdxA for yaw angle")
+            FileOut.WriteLine("# CdxA(0):", CdxA0, "[m²] average CdxA for zero yaw angle")
+            FileOut.WriteLine("# CdxA(0)_opt2:", CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
+            FileOut.WriteLine("#")
+            FileOut.WriteLine("# Validity criteria:")
             If valid_t_tire Then
-                FileOut.WriteLine("Tire temp:", "Ok")
+                FileOut.WriteLine("# Tire temp:", "Ok")
             Else
-                FileOut.WriteLine("Tire temp:", "Invalid test - maximum variation of tyre temperature exceeded")
+                FileOut.WriteLine("# Tire temp:", "Invalid test - maximum variation of tyre temperature exceeded")
             End If
             If valid_RRC Then
-                FileOut.WriteLine("RRC:", "Ok")
+                FileOut.WriteLine("# RRC:", "Ok")
             Else
-                FileOut.WriteLine("RRC:", "Invalid test - maximum deviation of RRCs between low speed tests exceeded")
+                FileOut.WriteLine("# RRC:", "Invalid test - maximum deviation of RRCs between low speed tests exceeded")
             End If
             If valid_t_amb Then
-                FileOut.WriteLine("Ambient temp:", "Ok")
+                FileOut.WriteLine("# Ambient temp:", "Ok")
             Else
-                FileOut.WriteLine("Ambient temp:", "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
+                FileOut.WriteLine("# Ambient temp:", "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
             End If
 
-            FileOut.WriteLine("")
+            FileOut.WriteLine("#")
 
-            ' Write the head
+            ' Write the head and units
             FileOut.WriteLine(ErgHead("ErgValuesReg"))
-
-            ' Write the units
-            FileOut.WriteLine(ErgUnits("ErgValuesReg"))
 
             ' Write the data
             For i = 0 To ErgValuesReg.Item(tCompErgReg.SecID).Count - 1
@@ -270,7 +261,6 @@
                 s.Clear()
                 first = True
             Next i
-
         End Using
 
         ' Ausgabe bei blockierter Datei
@@ -529,7 +519,7 @@
         End If
     End Sub
 
-    ' Generate the head output string
+    ' Generate the head output string with units
     Public Function ErgHead(ByVal Dic As String) As String
         Dim s As New System.Text.StringBuilder
         Dim key As String
@@ -539,85 +529,37 @@
         If Dic = "InputData" Then
             For Each key In ErgEntryListI
                 If Not First Then s.Append(",")
-                s.Append(ErgEntriesI(key).Head)
+                s.Append(ErgEntriesI(key).Head + " " + ErgEntriesI(key).Unit)
                 First = False
             Next
         ElseIf Dic = "InputUndefData" Then
             For Each key In ErgEntryListIU
                 If Not First Then s.Append(",")
-                s.Append(ErgEntriesIU(key).Head)
+                s.Append(ErgEntriesIU(key).Head + " " + ErgEntriesIU(key).Unit)
                 First = False
             Next
         ElseIf Dic = "CalcData" Then
             For Each key In ErgEntryListC
                 If Not First Then s.Append(",")
-                s.Append(ErgEntriesC(key).Head)
+                s.Append(ErgEntriesC(key).Head + " " + ErgEntriesC(key).Unit)
                 First = False
             Next
         ElseIf Dic = "ErgValues" Then
             For Each key In ErgEntryListR
                 If Not First Then s.Append(",")
-                s.Append(ErgEntriesR(key).Head)
+                s.Append(ErgEntriesR(key).Head + " " + ErgEntriesR(key).Unit)
                 First = False
             Next
         ElseIf Dic = "ErgValuesUndef" Then
             For Each key In ErgEntryListRU
                 If Not First Then s.Append(",")
-                s.Append(ErgEntriesRU(key).Head)
+                s.Append(ErgEntriesRU(key).Head + " " + ErgEntriesRU(key).Unit)
                 First = False
             Next
         ElseIf Dic = "ErgValuesReg" Then
             For Each key In ErgEntryListReg
                 If Not First Then s.Append(",")
-                s.Append(ErgEntriesReg(key).Head)
-                First = False
-            Next
-        End If
-
-        Return s.ToString
-    End Function
-
-    ' Generate the unit output string
-    Public Function ErgUnits(ByVal Dic As String) As String
-        Dim s As New System.Text.StringBuilder
-        Dim First As Boolean
-        Dim key As String
-
-        First = True
-        If Dic = "InputData" Then
-            For Each key In ErgEntryListI
-                If Not First Then s.Append(",")
-                s.Append(ErgEntriesI(key).Unit)
-                First = False
-            Next
-        ElseIf Dic = "InputUndefData" Then
-            For Each key In ErgEntryListIU
-                If Not First Then s.Append(",")
-                s.Append(ErgEntriesIU(key).Unit)
-                First = False
-            Next
-        ElseIf Dic = "CalcData" Then
-            For Each key In ErgEntryListC
-                If Not First Then s.Append(",")
-                s.Append(ErgEntriesC(key).Unit)
-                First = False
-            Next
-        ElseIf Dic = "ErgValues" Then
-            For Each key In ErgEntryListR
-                If Not First Then s.Append(",")
-                s.Append(ErgEntriesR(key).Unit)
-                First = False
-            Next
-        ElseIf Dic = "ErgValuesUndef" Then
-            For Each key In ErgEntryListRU
-                If Not First Then s.Append(",")
-                s.Append(ErgEntriesRU(key).Unit)
-                First = False
-            Next
-        ElseIf Dic = "ErgValuesReg" Then
-            For Each key In ErgEntryListReg
-                If Not First Then s.Append(",")
-                s.Append(ErgEntriesReg(key).Unit)
+                s.Append(ErgEntriesReg(key).Head + " " + ErgEntriesReg(key).Unit)
                 First = False
             Next
         End If

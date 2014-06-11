@@ -32,15 +32,12 @@
             FileOut.OpenWrite(NameOutFile, , False)
 
             ' Filekopf
-            FileOut.WriteLine("Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-            FileOut.WriteLine("Datafile: ", Datafile)
-            FileOut.WriteLine("")
+            FileOut.WriteLine("# Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
+            FileOut.WriteLine("# Datafile: ", Datafile)
+            FileOut.WriteLine("#")
 
-            ' Write the head
+            ' Write the head and units
             FileOut.WriteLine(ErgHead("InputData") + "," + ErgHead("CalcData"))
-
-            ' Write the units
-            FileOut.WriteLine(ErgUnits("InputData") + "," + ErgUnits("CalcData"))
 
             ' Write the data
             For i = 0 To InputData.Item(tComp.t).Count - 1
