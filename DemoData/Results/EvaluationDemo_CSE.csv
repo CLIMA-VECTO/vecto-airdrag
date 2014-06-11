@@ -1,12 +1,12 @@
-﻿Resultfile Programm VECTO_CSE 2.0.1-pre2 Comp 04/06/2014
-Datafile LS1: ,d:\Work\vecto-cse.git\CSE\bin\Debug\DemoData\DataDemo_LS1.csdat
-Datafile HS: ,d:\Work\vecto-cse.git\CSE\bin\Debug\DemoData\DataDemo_HS.csdat
-Datafile LS2: ,d:\Work\vecto-cse.git\CSE\bin\Debug\DemoData\DataDemo_LS2.csdat
+﻿Resultfile Programm VECTO_CSE 2.0.1-pre2 Comp 06.06.2014
+Datafile LS1: ,I:\martindippold\VECTO-CSE\CSE\bin\Debug\DemoData\DataDemo_LS1.csdat
+Datafile HS: ,I:\martindippold\VECTO-CSE\CSE\bin\Debug\DemoData\DataDemo_HS.csdat
+Datafile LS2: ,I:\martindippold\VECTO-CSE\CSE\bin\Debug\DemoData\DataDemo_LS2.csdat
 
 Results
 fv_veh:,0.970873786407766,[-] calibration factor for vehicle speed
 fv_veh_opt2:,0.969525450405305,[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)
-fv_pe:,1.07256230008039,[-] calibration factor for air speed (position error)
+fv_pe:,0.536281150040195,[-] calibration factor for air speed (position error)
 fa_pe:,1,[-] position error correction factor for measured air inflow angle (beta)
 beta_ame:,-0.0146402089298575,[°] calibration factor for beta (misalignment)
 CdxA:,5.59562995689675,[m²] average CdxA before yaw angle correction
