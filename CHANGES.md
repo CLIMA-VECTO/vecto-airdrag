@@ -23,6 +23,7 @@ Mostly JRC contributions (see VECTO-29 & VECTO-35):
   * Sporadic fixes to work with filenames having 2-part extensions (ie `some_file.csjob.json`).
   * Log: Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
   * async: Stop abusing worker-Thread with Globals, use DoWorkEventArgs instead.
+  * async: Start using Exceptions instead of CancelAsync() and error-flags.
   * General restructuring of the folders and names in the project.
 
 
@@ -30,10 +31,12 @@ Mostly JRC contributions (see VECTO-29 & VECTO-35):
 More analytically:
 
 #### 2014-06-23: v2.0.1-pre3 ####
-TUG improvements:
+TUG & JRC improvements:
 
   * Changed comment symbol in CSV files from 'c' --> '#'
   * Unify hunits into header labels.
+  * Use Exceptions instead of CancelAsync() and error-flags in calc-routines and input.vb.
+  * Remove unused distVincenty() func.
 
 
 #### 2014-06-04: v2.0.1-pre2 ####

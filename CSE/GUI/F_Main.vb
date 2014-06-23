@@ -157,11 +157,11 @@ Public Class F_Main
         Handles BackgroundWorkerVECTO.RunWorkerCompleted
         ' If an Error is detected
         If e.Error IsNot Nothing Then
-            logme(8, False, format("Backround operation ended with exception: {0}", e.Error.Message), e.Error)
+            logme(8, False, format("Background operation ended with exception: {0}", e.Error.Message), e.Error)
         ElseIf e.Cancelled Then
-            logme(7, False, "Backround operation  aborted by user.")
+            logme(7, False, "Background operation aborted by user.")
         Else
-            logme(7, False, "Backround operation ended OK.")
+            logme(7, False, "Background operation ended OK.")
             Dim asyncJob As cAsyncJob = e.Result
             If asyncJob.IsCalibration Then Me.ButtonEval.Enabled = True
         End If
