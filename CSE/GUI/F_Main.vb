@@ -867,7 +867,8 @@ Public Class F_Main
 
 #Region "Infos menu"
     ' Create activation file
-    Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreatActivationFileToolStripMenuItem.Click
+
+    Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreateActivationFileToolStripMenuItem.Click
         Lic.CreateActFile(MyPath & "ActivationCode.dat")
         logme(7, True, "Activation code created under: " & MyPath & "ActivationCode.dat")
     End Sub

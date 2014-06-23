@@ -36,7 +36,6 @@ Partial Class F_Main
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripMenuItemOption = New System.Windows.Forms.ToolStripMenuItem()
         Me.InfoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreatActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemManu = New System.Windows.Forms.ToolStripMenuItem()
         Me.BackgroundWorkerVECTO = New System.ComponentModel.BackgroundWorker()
@@ -228,6 +227,9 @@ Partial Class F_Main
         Me.Label20 = New System.Windows.Forms.Label()
         Me.LRhoAirRef = New System.Windows.Forms.Label()
         Me.TB_roh_air_ref = New System.Windows.Forms.TextBox()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.CreateActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
@@ -310,7 +312,7 @@ Partial Class F_Main
         '
         'ToolsToolStripMenuItem
         '
-        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuItemClearLog, Me.ToolStripMenuItemLog, Me.ToolStripSeparator3, Me.ToolStripMenuItemOption})
+        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuItemClearLog, Me.ToolStripMenuItemLog, Me.ToolStripMenuItem2, Me.CreateActivationFileToolStripMenuItem, Me.ToolStripSeparator3, Me.ToolStripMenuItemOption})
         Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
         Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
         Me.ToolsToolStripMenuItem.Text = "Tools"
@@ -318,54 +320,47 @@ Partial Class F_Main
         'MenuItemClearLog
         '
         Me.MenuItemClearLog.Name = "MenuItemClearLog"
-        Me.MenuItemClearLog.Size = New System.Drawing.Size(144, 22)
+        Me.MenuItemClearLog.Size = New System.Drawing.Size(186, 22)
         Me.MenuItemClearLog.Text = "Clear Log"
         '
         'ToolStripMenuItemLog
         '
         Me.ToolStripMenuItemLog.Image = Global.CSE.My.Resources.Resources.Log_File
         Me.ToolStripMenuItemLog.Name = "ToolStripMenuItemLog"
-        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(144, 22)
+        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(186, 22)
         Me.ToolStripMenuItemLog.Text = "Open LogFile"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(141, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(183, 6)
         '
         'ToolStripMenuItemOption
         '
         Me.ToolStripMenuItemOption.Image = Global.CSE.My.Resources.Resources.Optionen
         Me.ToolStripMenuItemOption.Name = "ToolStripMenuItemOption"
-        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(144, 22)
+        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(186, 22)
         Me.ToolStripMenuItemOption.Text = "Preferences"
         '
         'InfoToolStripMenuItem
         '
         Me.InfoToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CreatActivationFileToolStripMenuItem, Me.ToolStripMenuItemAbout, Me.ToolStripMenuItemManu})
+        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout})
         Me.InfoToolStripMenuItem.Name = "InfoToolStripMenuItem"
         Me.InfoToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.InfoToolStripMenuItem.Text = "Help"
-        '
-        'CreatActivationFileToolStripMenuItem
-        '
-        Me.CreatActivationFileToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.Licencefile
-        Me.CreatActivationFileToolStripMenuItem.Name = "CreatActivationFileToolStripMenuItem"
-        Me.CreatActivationFileToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
-        Me.CreatActivationFileToolStripMenuItem.Text = "Create Activation File"
         '
         'ToolStripMenuItemAbout
         '
         Me.ToolStripMenuItemAbout.Image = Global.CSE.My.Resources.Resources.Info
         Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
-        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(186, 22)
+        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemAbout.Text = "About CSE"
         '
         'ToolStripMenuItemManu
         '
         Me.ToolStripMenuItemManu.Name = "ToolStripMenuItemManu"
-        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(186, 22)
+        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemManu.Text = "User Manual"
         '
         'BackgroundWorkerVECTO
@@ -376,7 +371,7 @@ Partial Class F_Main
         'GroupBoxJob
         '
         Me.GroupBoxJob.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBoxJob.Controls.Add(Me.TextBoxWeather)
         Me.GroupBoxJob.Controls.Add(Me.ButtonWeather)
         Me.GroupBoxJob.Controls.Add(Me.ButtonSelectWeather)
@@ -395,7 +390,7 @@ Partial Class F_Main
         'TextBoxWeather
         '
         Me.TextBoxWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxWeather.Location = New System.Drawing.Point(144, 42)
         Me.TextBoxWeather.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxWeather.Name = "TextBoxWeather"
@@ -428,7 +423,7 @@ Partial Class F_Main
         'TextBoxVeh1
         '
         Me.TextBoxVeh1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxVeh1.Location = New System.Drawing.Point(145, 15)
         Me.TextBoxVeh1.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxVeh1.Name = "TextBoxVeh1"
@@ -639,7 +634,7 @@ Partial Class F_Main
         'GroupBoxInput
         '
         Me.GroupBoxInput.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBoxInput.Controls.Add(Me.ButtonDataLS1)
         Me.GroupBoxInput.Controls.Add(Me.TextBoxDataLS2)
         Me.GroupBoxInput.Controls.Add(Me.ButtonSelectDataLS1)
@@ -677,7 +672,7 @@ Partial Class F_Main
         'TextBoxDataLS2
         '
         Me.TextBoxDataLS2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxDataLS2.Location = New System.Drawing.Point(145, 110)
         Me.TextBoxDataLS2.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataLS2.Name = "TextBoxDataLS2"
@@ -710,7 +705,7 @@ Partial Class F_Main
         'TextBoxDataLS1
         '
         Me.TextBoxDataLS1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxDataLS1.Location = New System.Drawing.Point(145, 56)
         Me.TextBoxDataLS1.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataLS1.Name = "TextBoxDataLS1"
@@ -744,7 +739,7 @@ Partial Class F_Main
         'TextBoxDataHS
         '
         Me.TextBoxDataHS.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxDataHS.Location = New System.Drawing.Point(144, 83)
         Me.TextBoxDataHS.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataHS.Name = "TextBoxDataHS"
@@ -781,7 +776,7 @@ Partial Class F_Main
         'TextBoxMSCT
         '
         Me.TextBoxMSCT.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxMSCT.Location = New System.Drawing.Point(144, 19)
         Me.TextBoxMSCT.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxMSCT.Name = "TextBoxMSCT"
@@ -860,7 +855,7 @@ Partial Class F_Main
         'GroupBox1
         '
         Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.TextBoxDataC)
         Me.GroupBox1.Controls.Add(Me.ButtonDataC)
         Me.GroupBox1.Controls.Add(Me.ButtonSelectDataC)
@@ -879,7 +874,7 @@ Partial Class F_Main
         'TextBoxDataC
         '
         Me.TextBoxDataC.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxDataC.Location = New System.Drawing.Point(144, 47)
         Me.TextBoxDataC.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataC.Name = "TextBoxDataC"
@@ -912,7 +907,7 @@ Partial Class F_Main
         'TextBoxMSCC
         '
         Me.TextBoxMSCC.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxMSCC.Location = New System.Drawing.Point(144, 20)
         Me.TextBoxMSCC.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxMSCC.Name = "TextBoxMSCC"
@@ -1048,8 +1043,8 @@ Partial Class F_Main
         '
         Me.TabControlOutMsg.Alignment = System.Windows.Forms.TabAlignment.Bottom
         Me.TabControlOutMsg.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageMSG)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageWar)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageErr)
@@ -1077,8 +1072,8 @@ Partial Class F_Main
         'ListBoxMSG
         '
         Me.ListBoxMSG.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ListBoxMSG.Font = New System.Drawing.Font("Consolas", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ListBoxMSG.FormattingEnabled = True
         Me.ListBoxMSG.HorizontalScrollbar = True
@@ -1104,8 +1099,8 @@ Partial Class F_Main
         'ListBoxWar
         '
         Me.ListBoxWar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ListBoxWar.Font = New System.Drawing.Font("Consolas", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ListBoxWar.FormattingEnabled = True
         Me.ListBoxWar.HorizontalScrollbar = True
@@ -1130,8 +1125,8 @@ Partial Class F_Main
         'ListBoxErr
         '
         Me.ListBoxErr.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ListBoxErr.Font = New System.Drawing.Font("Consolas", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ListBoxErr.FormattingEnabled = True
         Me.ListBoxErr.HorizontalScrollbar = True
@@ -1145,7 +1140,7 @@ Partial Class F_Main
         'TextBoxVeh
         '
         Me.TextBoxVeh.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxVeh.Location = New System.Drawing.Point(98, 19)
         Me.TextBoxVeh.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxVeh.Name = "TextBoxVeh"
@@ -1155,7 +1150,7 @@ Partial Class F_Main
         'TabControl1
         '
         Me.TabControl1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.TPMain)
         Me.TabControl1.Controls.Add(Me.TPCriteria)
         Me.TabControl1.Location = New System.Drawing.Point(8, 72)
@@ -2329,6 +2324,22 @@ Partial Class F_Main
         Me.TB_roh_air_ref.TabIndex = 1
         Me.TB_roh_air_ref.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(149, 6)
+        '
+        'CreateActivationFileToolStripMenuItem
+        '
+        Me.CreateActivationFileToolStripMenuItem.Name = "CreateActivationFileToolStripMenuItem"
+        Me.CreateActivationFileToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+        Me.CreateActivationFileToolStripMenuItem.Text = "Create Activation File"
+        '
+        'ToolStripMenuItem2
+        '
+        Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(183, 6)
+        '
         'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2518,7 +2529,6 @@ Partial Class F_Main
     Friend WithEvents Label84 As System.Windows.Forms.Label
     Friend WithEvents TB_t_amb_tarmac As System.Windows.Forms.TextBox
     Friend WithEvents LB_t_amb_min As System.Windows.Forms.Label
-    Friend WithEvents CreatActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PBInfoIconCrt As System.Windows.Forms.PictureBox
     Friend WithEvents TBInfoCrt As System.Windows.Forms.TextBox
     Friend WithEvents GroupBox9 As System.Windows.Forms.GroupBox
@@ -2601,5 +2611,8 @@ Partial Class F_Main
     Friend WithEvents TBInfoMain As System.Windows.Forms.TextBox
     Friend WithEvents PbInfoIconMain As System.Windows.Forms.PictureBox
     Friend WithEvents MenuItemExit As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents CreateActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
