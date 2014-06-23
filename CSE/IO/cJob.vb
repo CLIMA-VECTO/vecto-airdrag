@@ -98,13 +98,11 @@ Public Class cJob
     ''' <remarks>See cJsonFile() constructor</remarks>
     Sub New(Optional ByVal skipValidation As Boolean = False)
         MyBase.New(BuildBody, skipValidation)
-        PopulateFields()
     End Sub
     ''' <summary>Reads from file or creates defaults</summary>
     ''' <param name="inputFilePath">the fpath of the file to read data from</param>
     Sub New(ByVal inputFilePath As String, Optional ByVal skipValidation As Boolean = False)
         MyBase.New(inputFilePath, skipValidation)
-        PopulateFields()
     End Sub
 
 
@@ -142,7 +140,7 @@ Public Class cJob
     Public beta_f As Double
     Public beta_d As Double
 
-    Private Sub PopulateFields()
+    Protected Overrides Sub OnContentUpdated()
         Dim anem = PropOrDefault(".Anemometer")
         Me.v_air_f = anem("v_air_f")
         Me.v_air_d = anem("v_air_d")
@@ -151,15 +149,13 @@ Public Class cJob
     End Sub
 
     ''' <summary>Override it to set custome fields</summary>
-    Overrides Sub Store(ByVal fpath As String, Optional ByVal prefs As cPreferences = Nothing)
+    Protected Overrides Sub OnBeforeContentStored()
         Dim b As Object = Me.Body
 
         b.v_air_f = Me.v_air_f
         b.v_air_d = Me.v_air_d
         b.beta_f = Me.beta_f
         b.beta_d = Me.beta_d
-
-        MyBase.Store(fpath, prefs)
     End Sub
 
 
@@ -296,10 +292,10 @@ Public Class cJob
             For i = 0 To UBound(factors) - 1
                 factors(i) = Line(i)
             Next i
-            Job.v_air_f = factors(0)
-            Job.v_air_d = factors(1)
-            Job.beta_f = factors(2)
-            Job.beta_d = factors(3)
+            Me.v_air_f = factors(0)
+            Me.v_air_d = factors(1)
+            Me.beta_f = factors(2)
+            Me.beta_d = factors(3)
 
             ' Calibration test files
             calib_track_fpath = FileInVECTO.ReadLine(0)
@@ -425,6 +421,8 @@ Public Class cJob
 
 
         End Using
+
+        Me.OnBeforeContentStored()
 
         F_Main.UI_PopulateFromJob()
         F_Main.UI_PopulateFromCriteria()
