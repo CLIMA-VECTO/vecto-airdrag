@@ -12,11 +12,8 @@ Public Class cCriteria
     End Function
 
 
-    Private ForeignBody As JToken
-
-
     '' Default values are Decleration
-    Public Shared Function BuildBody() As JObject
+    Private Shared Function BuildBody() As JObject
         Dim b, g As Object
         b = New JObject()
 
@@ -252,17 +249,14 @@ Public Class cCriteria
     ''' <remarks>See cJsonFile() constructor</remarks>
     Sub New(Optional ByVal skipValidation As Boolean = False)
         MyBase.New(BuildBody, skipValidation)
-        PopulateFields()
     End Sub
     ''' <summary>Reads from file or creates defaults</summary>
     ''' <param name="inputFilePath">the fpath of the file to read data from</param>
     Sub New(ByVal inputFilePath As String, Optional ByVal skipValidation As Boolean = False)
         MyBase.New(inputFilePath, skipValidation)
-        PopulateFields()
     End Sub
     Sub New(ByVal foreignBody As JToken, Optional ByVal skipValidation As Boolean = False)
         MyBase.New(foreignBody, skipValidation)
-        PopulateFields()
     End Sub
 
 
@@ -275,8 +269,8 @@ Public Class cCriteria
     Protected Overrides Sub ValidateBody(ByVal isStrictBody As Boolean, ByVal validateMsgs As IList(Of String))
         '' Check version
         ''
-        Dim fromVersion = "1.0.0--"
-        Dim toVersion = "2.0.0--" ' The earliest pre-release.
+        Const fromVersion = "1.0.0--"
+        Const toVersion = "2.0.0--" ' The earliest pre-release.
         If Not IsSemanticVersionsSupported(Me.FileVersion, fromVersion, toVersion) Then
             validateMsgs.Add(format("Unsupported FileVersion({0}, was not in between [{1}, {2})", Me.FileVersion, fromVersion, toVersion))
             Return
@@ -337,62 +331,7 @@ Public Class cCriteria
     Public t_amb_tarmac As Single
 
 
-    ''' <summary>Override it to set custome fields</summary>
-    Overrides Sub Store(ByVal fpath As String, Optional ByVal prefs As cPreferences = Nothing)
-        Dim g, b As Object
-        b = Me.Body
-
-        g = b("Processing")
-        g.roh_air_ref = Me.roh_air_ref
-        g.accel_correction = Me.accel_correction
-        g.gradient_correction = Me.gradient_correction
-        g.hz_out = Me.hz_out
-        g.rr_corr_factor = Me.rr_corr_factor
-        g.acc_corr_avg = Me.acc_corr_avg
-        g.dist_float = Me.dist_float
-
-        g = b("Validation")
-        g.trigger_delta_x_max = Me.trigger_delta_x_max
-        g.trigger_delta_y_max = Me.trigger_delta_y_max
-        g.delta_head_max = Me.delta_head_max
-        g.segruns_min_CAL = Me.segruns_min_CAL
-        g.segruns_min_LS = Me.segruns_min_LS
-        g.segruns_min_HS = Me.segruns_min_HS
-        g.segruns_min_head_MS = Me.segruns_min_head_MS
-        g.delta_Hz_max = Me.delta_Hz_max
-        g.delta_parallel_max = Me.delta_parallel_max
-
-        g.v_wind_avg_max_CAL = Me.v_wind_avg_max_CAL
-        g.v_wind_1s_max_CAL = Me.v_wind_1s_max_CAL
-        g.beta_avg_max_CAL = Me.beta_avg_max_CAL
-
-        g.leng_crit = Me.leng_crit
-
-        g.v_wind_avg_max_LS = Me.v_wind_avg_max_LS
-        g.v_wind_1s_max_LS = Me.v_wind_1s_max_LS
-        g.v_veh_avg_min_LS = Me.v_veh_avg_min_LS
-        g.v_veh_avg_max_LS = Me.v_veh_avg_max_LS
-        g.v_veh_float_delta_LS = Me.v_veh_float_delta_LS
-        g.tq_sum_float_delta_LS = Me.tq_sum_float_delta_LS
-
-        g.v_wind_avg_max_HS = Me.v_wind_avg_max_HS
-        g.v_wind_1s_max_HS = Me.v_wind_1s_max_HS
-        g.beta_avg_max_HS = Me.beta_avg_max_HS
-        g.v_veh_avg_min_HS = Me.v_veh_avg_min_HS
-        g.v_veh_1s_delta_HS = Me.v_veh_1s_delta_HS
-        g.tq_sum_1s_delta_HS = Me.tq_sum_1s_delta_HS
-
-        g.delta_t_tyre_max = Me.delta_t_tyre_max
-        g.delta_rr_corr_max = Me.delta_rr_corr_max
-        g.t_amb_var = Me.t_amb_var
-        g.t_amb_tarmac = Me.t_amb_tarmac
-        g.t_amb_max = Me.t_amb_max
-        g.t_amb_min = Me.t_amb_min
-
-        MyBase.Store(fpath, prefs)
-    End Sub
-
-    Private Sub PopulateFields()
+    Protected Overrides Sub OnContentUpdated()
         Dim g, p As Object
         p = Me.Body
 
@@ -443,6 +382,59 @@ Public Class cCriteria
         Me.t_amb_tarmac = g("t_amb_tarmac")
         Me.t_amb_max = g("t_amb_max")
         Me.t_amb_min = g("t_amb_min")
+    End Sub
+
+    ''' <summary>Override it to set custome fields</summary>
+    Protected Overrides Sub OnBeforeContentStored()
+        Dim g, b As Object
+        b = Me.Body
+
+        g = b("Processing")
+        g.roh_air_ref = Me.roh_air_ref
+        g.accel_correction = Me.accel_correction
+        g.gradient_correction = Me.gradient_correction
+        g.hz_out = Me.hz_out
+        g.rr_corr_factor = Me.rr_corr_factor
+        g.acc_corr_avg = Me.acc_corr_avg
+        g.dist_float = Me.dist_float
+
+        g = b("Validation")
+        g.trigger_delta_x_max = Me.trigger_delta_x_max
+        g.trigger_delta_y_max = Me.trigger_delta_y_max
+        g.delta_head_max = Me.delta_head_max
+        g.segruns_min_CAL = Me.segruns_min_CAL
+        g.segruns_min_LS = Me.segruns_min_LS
+        g.segruns_min_HS = Me.segruns_min_HS
+        g.segruns_min_head_MS = Me.segruns_min_head_MS
+        g.delta_Hz_max = Me.delta_Hz_max
+        g.delta_parallel_max = Me.delta_parallel_max
+
+        g.v_wind_avg_max_CAL = Me.v_wind_avg_max_CAL
+        g.v_wind_1s_max_CAL = Me.v_wind_1s_max_CAL
+        g.beta_avg_max_CAL = Me.beta_avg_max_CAL
+
+        g.leng_crit = Me.leng_crit
+
+        g.v_wind_avg_max_LS = Me.v_wind_avg_max_LS
+        g.v_wind_1s_max_LS = Me.v_wind_1s_max_LS
+        g.v_veh_avg_min_LS = Me.v_veh_avg_min_LS
+        g.v_veh_avg_max_LS = Me.v_veh_avg_max_LS
+        g.v_veh_float_delta_LS = Me.v_veh_float_delta_LS
+        g.tq_sum_float_delta_LS = Me.tq_sum_float_delta_LS
+
+        g.v_wind_avg_max_HS = Me.v_wind_avg_max_HS
+        g.v_wind_1s_max_HS = Me.v_wind_1s_max_HS
+        g.beta_avg_max_HS = Me.beta_avg_max_HS
+        g.v_veh_avg_min_HS = Me.v_veh_avg_min_HS
+        g.v_veh_1s_delta_HS = Me.v_veh_1s_delta_HS
+        g.tq_sum_1s_delta_HS = Me.tq_sum_1s_delta_HS
+
+        g.delta_t_tyre_max = Me.delta_t_tyre_max
+        g.delta_rr_corr_max = Me.delta_rr_corr_max
+        g.t_amb_var = Me.t_amb_var
+        g.t_amb_tarmac = Me.t_amb_tarmac
+        g.t_amb_max = Me.t_amb_max
+        g.t_amb_min = Me.t_amb_min
     End Sub
 
 #End Region ' json props

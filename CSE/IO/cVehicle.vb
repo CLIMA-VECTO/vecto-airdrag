@@ -147,7 +147,6 @@ The generic parameters for classes are stored in the GenShape.shp",
         '' The configuration was not found!
         ''
         validateMsgs.Add(format("The vehicle (class: {0}, configuration {1}) was not found in the generic shape file. \n\iPlease add it in .", Me.classCode, Me.configuration))
-        BWorker.CancelAsync()
     End Sub
 
 

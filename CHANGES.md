@@ -4,9 +4,10 @@ VECTO-CSE: Changes
 
 TODO: 2014-06-??: v2.0.1
 --------------------
-JRC contributions (see VECTO-29):
+Mostly JRC contributions (see VECTO-29 & VECTO-35):
 
-  * IO: JSON-ize preferences, vehicle, job & criteria-files, ...
+  * IO: JSON-ize preferences, vehicle, job & criteria-files EXCEPT from Track-file and Output-values.
+  * IO: CSVize all the rest files with a single header line and use '#' for comment lines.
   * IO: Separate config/ from Declaration/ folders.
   * UI: Provide default-values and help-messages in GUI/files with infos fetched from JSON-schemas.
   * UI: Make the Log-window visible at all times (more necessary now that unhandled exceptions are appropriately reported).
@@ -22,13 +23,25 @@ JRC contributions (see VECTO-29):
   * Sporadic fixes to work with filenames having 2-part extensions (ie `some_file.csjob.json`).
   * Log: Improve logging-API so now a single log-routine is used everywhere(instead of 3 different ones).
   * async: Stop abusing worker-Thread with Globals, use DoWorkEventArgs instead.
+  * async: Start using Exceptions instead of CancelAsync() and error-flags.
   * General restructuring of the folders and names in the project.
+
 
 
 More analytically:
 
+#### 2014-06-23: v2.0.1-pre3 ####
+TUG & JRC improvements:
+
+  * Changed comment symbol in CSV files from 'c' --> '#'
+  * Unify hunits into header labels.
+  * Use Exceptions instead of CancelAsync() and error-flags in calc-routines and input.vb.
+  * Remove unused distVincenty() func.
+
+
 #### 2014-06-04: v2.0.1-pre2 ####
 JRC contributions:
+
   * Convert Job & Criteria files to JSON and possible to store them separately.
   * Still supporting old format for reading.
   * Use Use WorkingDir trick for all job-file paths, so that Job-files can be ported to other computers.

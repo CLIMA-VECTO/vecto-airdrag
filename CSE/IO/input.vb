@@ -1,7 +1,7 @@
 ﻿' Read the input data
 Public Module input
     ' Read the measurement section config file
-    Function ReadInputMSC(ByRef MSCX As cMSC, ByVal MSCfile As String, Optional ByVal calibration As Boolean = True) As Boolean
+    Sub ReadInputMSC(ByRef MSCX As cMSC, ByVal MSCfile As String, Optional ByVal calibration As Boolean = True)
         ' Declarations
         Dim i As Integer
         Dim RefHead As Double
@@ -13,11 +13,7 @@ Public Module input
             logme(5, False, "Read MS configuration file")
 
             ' Open the MSC spezification file
-            If Not FileInMSCSpez.OpenRead(MSCfile) Then
-                ' Error if the file is not available
-                logme(9, False, "Can´t find the MS configuration specification file: " & MSCfile)
-                Return False
-            End If
+            FileInMSCSpez.OpenReadWithEx(MSCfile)
 
             ' Determine the trigger status 
             MSCX.tUse = FileInMSCSpez.ReadLine(0)
@@ -40,9 +36,7 @@ Public Module input
                 Loop
             Catch ex As Exception
                 ' Falls kein gültiger Wert eingegeben wurde
-                logme(9, False, "Invalid value in the trigger data file: " & fName(MSCfile, True))
-                BWorker.CancelAsync()
-                Return False
+                Throw New Exception(format("Invalid value in the trigger data file({0}) due to: {1})", fName(MSCfile, True), ex.Message, ex))
             End Try
 
         End Using
@@ -63,9 +57,7 @@ Public Module input
                         MSCX.headID.Add(2)
                         Continue For
                     Else
-                        logme(9, False, "Measurement section with invalid headings identified (test track not parallel) at line: " & i)
-                        BWorker.CancelAsync()
-                        Return False
+                        Throw New Exception("Measurement section with invalid headings identified (test track not parallel) at line: " & i)
                     End If
                 End If
             Next i
@@ -74,16 +66,12 @@ Public Module input
             For i = 1 To MSCX.meID.Count - 1
                 If Crt.gradient_correction Then
                     If MSCX.AltPath(i) = Nothing Then
-                        logme(9, False, "Altitude correction = on, missing altitude file at line: " & i)
-                        BWorker.CancelAsync()
-                        Return False
+                        Throw New Exception("Altitude correction = on, missing altitude file at line: " & i)
                     End If
 
                     If fPath(MSCX.AltPath(i)) = Nothing Then MSCX.AltPath(i) = joinPaths(fPath(MSCfile), MSCX.AltPath(i))
                     If Not FileIO.FileSystem.FileExists(MSCX.AltPath(i)) Then
-                        logme(9, False, "Altitude correction = on, altitude file doesen´t exist: " & MSCX.AltPath(i))
-                        BWorker.CancelAsync()
-                        Return False
+                        Throw New Exception("Altitude correction = on, altitude file doesen´t exist: " & MSCX.AltPath(i))
                     End If
                 End If
             Next i
@@ -92,12 +80,10 @@ Public Module input
                 MSCX.headID.Add(1)
             Next i
         End If
-
-        Return True
-    End Function
+    End Sub
 
     ' Read the wather data
-    Public Function ReadWeather(ByVal Datafile As String) As Boolean
+    Public Sub ReadWeather(ByVal Datafile As String)
         ' Declaration
         Using FileInWeather As New cFile_V3
             Dim Line() As String
@@ -113,19 +99,8 @@ Public Module input
             InputWeatherData = New Dictionary(Of tCompWeat, List(Of Double))
             UnitsWeat = New Dictionary(Of tCompWeat, List(Of String))
 
-            'Abort if there's no file
-            If Datafile = "" OrElse Not IO.File.Exists(Datafile) Then
-                logme(9, False, "Weather data file not found (" & Datafile & ") !")
-                BWorker.CancelAsync()
-                Return False
-            End If
-
             'Open file
-            If Not FileInWeather.OpenRead(Datafile) Then
-                logme(9, False, "Failed to open file (" & Datafile & ") !")
-                BWorker.CancelAsync()
-                Return False
-            End If
+            FileInWeather.OpenReadWithEx(Datafile)
 
             ' Build check key
             WeathCheck.Add(tCompWeat.t, False)
@@ -147,9 +122,7 @@ Public Module input
                 Else
                     ' Check if component is already defined
                     If WeathCheck(Comp) Then
-                        logme(9, False, "Component '" & Line(i) & "' already defined! Column " & i + 1)
-                        BWorker.CancelAsync()
-                        Return False
+                        Throw New Exception(format("Column {0}: Component({1}) already defined!", i + 1, Line(i)))
                     End If
 
                     ' Set the defined component true and save the position
@@ -163,9 +136,7 @@ Public Module input
             ' Check if all required data is given
             For Each sKVW In WeathCheck
                 If Not WeathCheck(sKVW.Key) Then
-                    logme(9, False, "Missing signal for " & fCompName(sKVW.Key))
-                    BWorker.CancelAsync()
-                    Return False
+                    Throw New Exception("Missing signal for " & fCompName(sKVW.Key))
                 End If
             Next
 
@@ -184,18 +155,14 @@ Public Module input
                     Next sKV
                 Loop
             Catch ex As Exception
-                logme(9, False, "Error during file read! Line number: " & tdim + 1 & " (" & Datafile & ")")
-                BWorker.CancelAsync()
-                Return False
+                Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tdim + 1, ex.Message), ex)
             End Try
 
         End Using
-
-        Return True
-    End Function
+    End Sub
 
     ' Read the data file
-    Public Function ReadDataFile(ByVal Datafile As String, ByVal MSCX As cMSC) As Boolean
+    Public Sub ReadDataFile(ByVal Datafile As String, ByVal MSCX As cMSC)
         ' Declarations
         Using FileInMeasure As New cFile_V3
             Dim Line(), txt As String
@@ -226,9 +193,6 @@ Public Module input
                 OptPar(i) = True
             Next i
 
-            ' Exit if an errer was detected
-            If BWorker.CancellationPending Then Return False
-
             ' Generate the calculation dictionary variables
             'For Each EnumStr In System.Enum.GetValues(GetType(tCompErg))
             '    CalcData.Add(EnumStr, New List(Of Double))
@@ -237,19 +201,8 @@ Public Module input
                 CalcData.Add(EnumStr, New List(Of Double))
             Next
 
-            'Abort if there's no file
-            If Datafile = "" OrElse Not IO.File.Exists(Datafile) Then
-                logme(9, False, "Measurement data file not found (" & Datafile & ") !")
-                BWorker.CancelAsync()
-                Return False
-            End If
-
             'Open file
-            If Not FileInMeasure.OpenRead(Datafile) Then
-                logme(9, False, "Failed to open file (" & Datafile & ") !")
-                BWorker.CancelAsync()
-                Return False
-            End If
+            FileInMeasure.OpenReadWithEx(Datafile)
 
             ' Build check key
             MeasCheck.Add(tComp.t, False)
@@ -285,9 +238,7 @@ Public Module input
 
                     ' Check if the component is already defined
                     If InputUndefData.ContainsKey(txt) Then
-                        logme(9, False, "Component '" & Line(i) & "' already defined! Column " & i + 1)
-                        BWorker.CancelAsync()
-                        Return False
+                        Throw New Exception(format("Column {0}: Component({1}) already defined!", i + 1, Line(i)))
                     End If
 
                     ' Add the component to the dictionary
@@ -297,9 +248,7 @@ Public Module input
                 Else
                     ' Check if component is already defined
                     If MeasCheck(Comp) Then
-                        logme(9, False, "Component '" & Line(i) & "' already defined! Column " & i + 1)
-                        BWorker.CancelAsync()
-                        Return False
+                        Throw New Exception(format("Column {0}: Component({1}) already defined!", i + 1, Line(i)))
                     End If
 
                     ' Set the defined component true and save the position
@@ -316,9 +265,7 @@ Public Module input
                     Select Case sKVM.Key
                         Case tComp.trigger
                             If MSCX.tUse Then
-                                logme(9, False, "No trigger signal detected, but trigger_used in MS config activated!")
-                                BWorker.CancelAsync()
-                                Return False
+                                Throw New Exception("No trigger signal detected, but trigger_used in MS config activated!")
                             End If
                             OptPar(0) = False
                         Case tComp.p_tire
@@ -328,9 +275,7 @@ Public Module input
                         Case tComp.user_valid
                             valid_set = True
                         Case Else
-                            logme(9, False, "Missing signal for " & fCompName(sKVM.Key))
-                            BWorker.CancelAsync()
-                            Return False
+                            Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
                     End Select
                 End If
             Next
@@ -351,9 +296,7 @@ Public Module input
                                 If tDim >= 2 Then
                                     If Math.Abs((InputData(sKV.Key)(tDim - 1) - InputData(sKV.Key)(tDim - 2)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
                                         If ErrDat Then
-                                            logme(9, False, "The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
-                                            BWorker.CancelAsync()
-                                            Return False
+                                            Throw New Exception("The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
                                         Else
                                             ErrDat = True
                                             JumpPoint = tDim - 1
@@ -421,9 +364,7 @@ Public Module input
                     Next
                 Loop
             Catch ex As Exception
-                logme(9, False, "Error during file read! Line number: " & tDim + 1 & " (" & Datafile & ")")
-                BWorker.CancelAsync()
-                Return False
+                Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tdim + 1, ex.Message), ex)
             End Try
 
 
@@ -444,18 +385,14 @@ Public Module input
                     CalcData(tCompCali.longi_UTM)(i) = UTMCoord.Easting
                 Next i
                 If Zone1CentralMeridian > 180 Then
-                    logme(9, False, "The adjustment is not possible because the data lie to far away from each other to fit into one UTM stripe")
-                    BWorker.CancelAsync()
-                    Return False
+                    Throw New Exception("The adjustment is not possible because the data lie to far away from each other to fit into one UTM stripe")
                 End If
             Loop
 
             'Developer export of input data converted from MM.MM to UTM
             'fOuttest(Datafile)
         End Using
-
-        Return True
-    End Function
+    End Sub
 
 
     ' Function to read the generic shape file

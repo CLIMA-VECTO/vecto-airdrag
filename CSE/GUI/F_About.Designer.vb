@@ -43,6 +43,7 @@ Partial Class F_About
         Me.Label6 = New System.Windows.Forms.Label()
         Me.LinkLicensed = New System.Windows.Forms.LinkLabel()
         Me.Label13 = New System.Windows.Forms.Label()
+        Me.LVersion = New System.Windows.Forms.Label()
         CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBoxTUG, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBoxFVT, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -252,12 +253,23 @@ Partial Class F_About
         Me.Label13.TabIndex = 20
         Me.Label13.Text = "Copyright: 2014 European Union"
         '
-        'F_Info
+        'LVersion
+        '
+        Me.LVersion.AutoSize = True
+        Me.LVersion.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LVersion.Location = New System.Drawing.Point(207, 56)
+        Me.LVersion.Name = "LVersion"
+        Me.LVersion.Size = New System.Drawing.Size(65, 18)
+        Me.LVersion.TabIndex = 22
+        Me.LVersion.Text = "Version"
+        '
+        'F_About
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(474, 567)
+        Me.Controls.Add(Me.LVersion)
         Me.Controls.Add(Me.LinkLicensed)
         Me.Controls.Add(Me.Label13)
         Me.Controls.Add(Me.LinkLabel1)
@@ -282,7 +294,7 @@ Partial Class F_About
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximumSize = New System.Drawing.Size(480, 591)
         Me.MinimumSize = New System.Drawing.Size(480, 591)
-        Me.Name = "F_Info"
+        Me.Name = "F_About"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "About CSE"
         CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).EndInit()
@@ -312,4 +324,5 @@ Partial Class F_About
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents LinkLicensed As System.Windows.Forms.LinkLabel
     Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents LVersion As System.Windows.Forms.Label
 End Class
