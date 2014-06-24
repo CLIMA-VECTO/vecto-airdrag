@@ -353,9 +353,7 @@
             vline = FileInAlt.ReadLine
 
             If dist < vline(0) Then
-                logme(9, False, "The distance is lower then the minimum in the altitude file")
-                BWorker.CancelAsync()
-                fAltInterp = 0
+                Throw New Exception(format("The distance({0}) is lower then the minimum({1}) in the altitude file!", dist, vline(0)))
             End If
 
             Do While Not FileInAlt.EndOfFile
@@ -380,80 +378,6 @@
         End Using
     End Function
 
-    ' Length calculation out of coordinates MM.MM (Not used at the moment)
-    Public Function distVincenty(ByVal lat1 As Double, ByVal lon1 As Double, ByVal lat2 As Double, ByVal lon2 As Double, Optional ByVal Dist As Boolean = False) As Double
-        ' Declaration
-        Dim i As Integer
-        Dim L, C, U1, U2, sinU1, cosU1, sinU2, cosU2, lambda, lambdap, sinLambda, sinSigma, sinAlpha, cosLambda, cosSigma, cosSqAlpha, cos2SigmaM, sigma, deltaSigma As Double
-        Dim uSq, Ai, Bi, s, fwdAz, revAz As Double
-
-        ' Constant declarations
-        Const a = 6378137.0          ' WGS-84 ellipsoid params (major axis of the ellipsoid)
-        Const b = 6356752.314245     ' WGS-84 ellipsoid params (minor axes of the ellipsoid)
-        Const f = 1 / 298.257223563  ' WGS-84 ellipsoid params (Falttening)
-        Const iMax = 100             ' Maximum of iterrations
-        Const toRad = Math.PI / 180
-
-        ' Initialisation
-        L = (lon2 - lon1) * toRad
-        U1 = Math.Atan((1 - f) * Math.Tan(lat1 * toRad))
-        U2 = Math.Atan((1 - f) * Math.Tan(lat2 * toRad))
-        sinU1 = Math.Sin(U1)
-        cosU1 = Math.Cos(U1)
-        sinU2 = Math.Sin(U2)
-        cosU2 = Math.Cos(U2)
-        i = iMax
-        lambda = L
-        lambdap = lambda + 1
-
-        ' Calculate lambda
-        Do Until (Math.Abs(lambda - lambdap) < 0.000000000001 Or i = 0)
-            sinLambda = Math.Sin(lambda)
-            cosLambda = Math.Cos(lambda)
-            sinSigma = Math.Sqrt((cosU2 * sinLambda) ^ 2 + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) ^ 2)
-
-            If (sinSigma = 0) Then Return 0 ' co-incident points
-
-            cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda
-            sigma = Math.Atan2(sinSigma, cosSigma)
-            sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma
-            cosSqAlpha = 1 - sinAlpha * sinAlpha
-            cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha
-
-            If (IsNothing(cos2SigmaM)) Then cos2SigmaM = 0 ' equatorial line: cosSqAlpha=0 (§6)
-
-            C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha))
-            lambdap = lambda
-
-            lambda = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)))
-            i -= 1
-        Loop
-
-        ' Erreor message wehen lambda can not be calculated
-        If i = 0 Then
-            logme(9, False, "Was not able to calculate the distance and bearing between koordinates.")
-            BWorker.CancelAsync()
-            Return 0  ' formula failed to converge
-        End If
-
-        ' Calculate the distance
-        If Dist Then
-            uSq = cosSqAlpha * (a ^ 2 - b ^ 2) / (b ^ 2)
-            Ai = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)))
-            Bi = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)))
-            deltaSigma = Bi * sinSigma * (cos2SigmaM + Bi / 4 * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - Bi / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)))
-            s = b * Ai * (sigma - deltaSigma)
-            Return s
-        Else
-            ' Calculate the bearings
-            fwdAz = Math.Atan2(cosU2 * sinLambda, cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) * 1 / toRad    ' Forward azimut
-            revAz = Math.Atan2(cosU1 * sinLambda, -sinU1 * cosU2 + cosU1 * sinU2 * cosLambda) * 1 / toRad   ' Bering in direction P1--> P2
-
-            ' Correct the Angle
-            If revAz < 0 Then revAz = 360 + revAz
-            Return revAz
-        End If
-    End Function
 
     ' Calculate the UTM coordinates
     Function UTM(ByVal Lat As Double, ByVal Lon As Double) As cUTMCoord

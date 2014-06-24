@@ -18,8 +18,8 @@
 
         meID.Add(0)
         dID.Add(0)
-        KoordA.Add({0})
-        KoordE.Add({0})
+        KoordA.Add(New Integer() {0})
+        KoordE.Add(New Integer() {0})
         NewSec.Add(0)
         Head.Add(0)
     End Sub

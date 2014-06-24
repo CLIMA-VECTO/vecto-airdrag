@@ -157,11 +157,11 @@ Public Class F_Main
         Handles BackgroundWorkerVECTO.RunWorkerCompleted
         ' If an Error is detected
         If e.Error IsNot Nothing Then
-            logme(8, False, format("Backround operation ended with exception: {0}", e.Error.Message), e.Error)
+            logme(8, False, format("Background operation ended with exception: {0}", e.Error.Message), e.Error)
         ElseIf e.Cancelled Then
-            logme(7, False, "Backround operation  aborted by user.")
+            logme(7, False, "Background operation aborted by user.")
         Else
-            logme(7, False, "Backround operation ended OK.")
+            logme(7, False, "Background operation ended OK.")
             Dim asyncJob As cAsyncJob = e.Result
             If asyncJob.IsCalibration Then Me.ButtonEval.Enabled = True
         End If
@@ -184,8 +184,8 @@ Public Class F_Main
     '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
     '####################################################################
     Private _CalibrationState As Boolean = False
-    Private _CalibrationTxts = {"Calibrate", "Cancel"}
-    Private _CalibrationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private ReadOnly _CalibrationTxts = {"Calibrate", "Cancel"}
+    Private ReadOnly _CalibrationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
     Private Property CalibrationState As Boolean
         Get
             Return _CalibrationState
@@ -195,7 +195,7 @@ Public Class F_Main
                 Dim indx = -CInt(value)
                 Me.ButtonCalC.Text = _CalibrationTxts(indx)
                 Me.ButtonCalC.Image = _CalibrationImgs(indx)
-                Me.ButtonCalC.UseWaitCursor = value
+                Me.UseWaitCursor = value
             End If
             _CalibrationState = value
         End Set
@@ -265,8 +265,8 @@ Public Class F_Main
     '#### Only HERE manage "Exec" button's state (Text, Image, etc). ####
     '####################################################################
     Private _EvaluationState As Boolean = False
-    Private _EvaluationTxts = {"Evaluate", "Cancel"}
-    Private _EvaluationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private ReadOnly _EvaluationTxts = {"Evaluate", "Cancel"}
+    Private ReadOnly _EvaluationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
     Private Property EvaluationState As Boolean
         Get
             Return _EvaluationState
@@ -276,7 +276,7 @@ Public Class F_Main
                 Dim indx = -CInt(value)
                 Me.ButtonEval.Text = _EvaluationTxts(indx)
                 Me.ButtonEval.Image = _EvaluationImgs(indx)
-                Me.ButtonEval.UseWaitCursor = value
+                Me.UseWaitCursor = value
             End If
             _EvaluationState = value
         End Set
@@ -867,7 +867,8 @@ Public Class F_Main
 
 #Region "Infos menu"
     ' Create activation file
-    Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreatActivationFileToolStripMenuItem.Click
+
+    Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreateActivationFileToolStripMenuItem.Click
         Lic.CreateActFile(MyPath & "ActivationCode.dat")
         logme(7, True, "Activation code created under: " & MyPath & "ActivationCode.dat")
     End Sub

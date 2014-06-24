@@ -1,7 +1,7 @@
 ﻿Public Module main_calculation_call
 
     ' Main calculation
-    Function calculation(ByVal isCalibrate As Boolean) As Boolean
+    Sub calculation(ByVal isCalibrate As Boolean)
         ' Declaration
         Dim i As Integer
 
@@ -26,7 +26,7 @@
             ReadDataFile(Job.calib_run_fpath, MSC)
 
             ' Exit function if error is detected
-            If BWorker.CancellationPending Then Return False
+            If BWorker.CancellationPending Then Return
 
             ' Output on the GUI
             logme(7, False, "Calculating the calibration run...")
@@ -35,23 +35,23 @@
             fIdentifyMS(MSC, vMSC)
 
             ' Exit function if error is detected
-            If BWorker.CancellationPending Then Return False
+            If BWorker.CancellationPending Then Return
 
             ' Output on the GUI
             logme(6, False, "Calculating the calibration run parameter")
 
-            ' Calculate the results from the calibration test
-            fCalcCalib(MSC, vehicle)
+            Try
+                ' Calculate the results from the calibration test
+                fCalcCalib(MSC, vehicle)
 
-            ' Exit function if error is detected
-            'If BWorker.CancellationPending Then Return False
+            Finally
+                ' Output on the GUI
+                logme(7, False, "Writing the output files...")
 
-            ' Output on the GUI
-            logme(7, False, "Writing the output files...")
-
-            ' Output
-            fOutDataCalc1Hz(Job.calib_run_fpath, isCalibrate)
-            fOutCalcRes(isCalibrate)
+                ' Output
+                fOutDataCalc1Hz(Job.calib_run_fpath, isCalibrate)
+                fOutCalcRes(isCalibrate)
+            End Try
         Else
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
@@ -69,7 +69,7 @@
             fIdentifyMS(MSC, vMSC, , False)
 
             ' Exit function if error is detected
-            If BWorker.CancellationPending Then Return False
+            If BWorker.CancellationPending Then Return
 
             ' Output which test are calculated
             For i = 0 To UBound(Job.coasting_fpaths)
@@ -90,19 +90,19 @@
                 ReadDataFile(Job.coasting_fpaths(i), MSC)
 
                 ' Exit function if error is detected
-                If BWorker.CancellationPending Then Return False
+                If BWorker.CancellationPending Then Return
 
                 ' Identify the signal measurement sections
                 fIdentifyMS(MSC, vMSC, False)
 
                 ' Exit function if error is detected
-                If BWorker.CancellationPending Then Return False
+                If BWorker.CancellationPending Then Return
 
                 ' Calculate the run
                 fCalcRun(MSC, vehicle, i)
 
                 ' Exit function if error is detected
-                If BWorker.CancellationPending Then Return False
+                If BWorker.CancellationPending Then Return
 
                 ' Output on the GUI
                 logme(6, False, "Writing the output files...")
@@ -114,7 +114,7 @@
                 fSaveDic(i)
 
                 ' Exit function if error is detected
-                If BWorker.CancellationPending Then Return False
+                If BWorker.CancellationPending Then Return
 
                 ' Clear the dictionaries
                 InputData = Nothing
@@ -126,23 +126,18 @@
                 'UnitsUndef = Nothing
             Next i
 
-            ' Check if the LS/HS test run is valid
-            fCheckLSHS()
+            Try
+                ' Check if the LS/HS test run is valid
+                fCheckLSHS()
 
-            ' Exit function if error is detected
-            If BWorker.CancellationPending Then
+                ' Calculate the regressions
+                fCalcReg(vehicle)
+            Finally
+
                 ' Write the summerised output file
                 logme(7, False, "Writing the summarised output file...")
                 fOutCalcRes(isCalibrate)
-                Return False
-            End If
-
-            ' Calculate the regressions
-            fCalcReg(vehicle)
-
-            ' Write the summerised output file
-            logme(7, False, "Writing the summarised output file...")
-            fOutCalcRes(isCalibrate)
+            End Try
 
             ' Check if all is valid
             For i = 0 To ErgValuesReg(tCompErgReg.SecID).Count - 1
@@ -168,12 +163,10 @@
             InputWeatherData = Nothing
             UnitsWeat = Nothing
         End If
-
-        Return True
-    End Function
+    End Sub
 
     ' Calculate the calibration test parameter
-    Function fCalcCalib(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle) As Boolean
+    Sub fCalcCalib(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle)
         ' Declaration
         Dim run As Integer
         Dim Change As Boolean
@@ -220,15 +213,10 @@
 
             ' Error
             If run > 10 Then
-                logme(9, False, "The calibration is not possible because iteration for valid datasets does not converge (n>10)")
-                Change = False
-                BWorker.CancelAsync()
-                Return False
+                Throw New Exception("The calibration is not possible because iteration for valid datasets does not converge (n>10)!")
             End If
         Loop
-
-        Return True
-    End Function
+    End Sub
 
     ' Calculate the speed run parameter
     Function fCalcRun(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer) As Boolean
@@ -254,7 +242,7 @@
     End Function
 
     ' Function to calibrate fv_veh
-    Function ffv_veh(ByVal MSCX As cMSC) As Boolean
+    Sub ffv_veh(ByVal MSCX As cMSC)
         ' Declaration
         Dim i, j, CalcX(0), VSec(0), num As Integer
         Dim ave_vz(0), ave_vz2(0), ave_vn(0) As Double
@@ -308,9 +296,7 @@
         ' error message if the CAN velocity is 0
         For i = 0 To UBound(CalcX)
             If ave_vn(i) = 0 And VSec(i) = 1 Then
-                logme(9, False, "The measured vehicle velocity (v_veh_CAN) is 0 in section: " & CalcX(i))
-                BWorker.CancelAsync()
-                Return False
+                Throw New Exception("The measured vehicle velocity (v_veh_CAN) is 0 in section: " & CalcX(i))
             End If
         Next i
 
@@ -332,9 +318,7 @@
         ' Calculate the average over all factors
         fv_veh = fv_veh / num
         fv_veh_opt2 = fv_veh_opt2 / num
-
-        Return True
-    End Function
+    End Sub
 
     Function ffvpeBeta() As Boolean
         ' Declaration
@@ -465,7 +449,7 @@
     End Function
 
     ' Function to check if the calibration run is valid
-    Function fCheckCalib(ByVal Run As Integer, ByRef Change As Boolean) As Boolean
+    Sub fCheckCalib(ByVal Run As Integer, ByRef Change As Boolean)
         ' Declaration
         Dim i, j, k, anz As Integer
         Dim control As Boolean
@@ -551,9 +535,7 @@
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            logme(9, False, "Insufficent numbers of valid measurement sections available")
-            BWorker.CancelAsync()
-            Return False
+            Throw New Exception(format("Insufficent numbers of valid measurement sections({0}) available!", SecCount.AnzSec.Count))
         End If
 
         ' Check if enough valid sections in both directionsection
@@ -612,9 +594,7 @@
             End If
         Next i
         If anz < 2 Then
-            logme(9, False, "Insufficent numbers of valid measurement sections available")
-            BWorker.CancelAsync()
-            Return False
+            Throw New Exception(format("Insufficent numbers of valid measurement sections({0}) available!", anz))
         End If
 
         ' Look if something have changed
@@ -627,12 +607,10 @@
         Else
             Change = True
         End If
-
-        Return True
-    End Function
+    End Sub
 
     ' Function to check if the calibration run is valid
-    Function fCheckLSHS() As Boolean
+    Sub fCheckLSHS()
         ' Declaration
         Dim i, j, k, anz, anzHS1, anzHS2 As Integer
         Dim control, FirstIn As Boolean
@@ -700,9 +678,7 @@
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            logme(9, False, "Insufficent numbers of valid measurement sections in the low speed test available")
-            BWorker.CancelAsync()
-            Return False
+            Throw New Exception(format("Insufficent numbers of valid measurement sections({0}) in the low speed test available!", SecCount.AnzSec.Count))
         End If
 
         ' Check if enough valid sections in both directionsection
@@ -741,6 +717,7 @@
                         End If
                     Else
                         logme(9, False, "Not enough valid data for low speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
+                        ' FIXME: is this an error?
                     End If
                 End If
             Next j
@@ -816,9 +793,7 @@
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            logme(9, False, "Insufficent numbers of valid measurement sections in the high speed test available")
-            BWorker.CancelAsync()
-            Return False
+            Throw New Exception(format("Insufficent numbers of valid measurement sections({0}) in the high speed test available!", SecCount.AnzSec.Count))
         End If
 
         ' Check if enough valid sections in both directionsection
@@ -828,19 +803,17 @@
                     ' If enought sections in both directions are detected
                     If SecCount.AnzSec(i) >= Crt.segruns_min_HS And SecCount.AnzSec(j) >= Crt.segruns_min_HS Then
                         ' Count the valid tests per HeadID
-                        Select Case Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1)))
+                        Dim headId = Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1)))
+                        Select Case headId
                             Case 1
                                 anzHS1 += SecCount.AnzSec(i) + SecCount.AnzSec(j)
                             Case 2
                                 anzHS2 += SecCount.AnzSec(i) + SecCount.AnzSec(j)
                             Case Else
-                                logme(9, False, "headID not known")
-                                BWorker.CancelAsync()
-                                Return False
+                                Throw New Exception(format("Unknown headID({0})!", headId))
                         End Select
                     Else
-                        logme(9, False, "Not enough valid data for high speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
-                        BWorker.CancelAsync()
+                        Throw New Exception(format("Not enough valid data({0}) for high speed tests available in section({1})!", SecCount.AnzSec(i), Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2))))
                     End If
                 End If
             Next j
@@ -848,9 +821,7 @@
 
         ' Ceck if enough sections are detected
         If anzHS1 < Crt.segruns_min_head_MS Or anzHS2 < Crt.segruns_min_head_MS Then
-            logme(9, False, "Number of valid high speed datasets too low")
-            BWorker.CancelAsync()
-            'Return False
+            Throw New Exception(format("Number of valid high speed datasets({0}) too low!", anzHS1))
         End If
 
         ' Set to equal Values
@@ -886,12 +857,10 @@
                 Next i
             End If
         End If
-
-        Return True
-    End Function
+    End Sub
 
     ' Evaluate the Valid sections
-    Function fCalcValidSec(ByVal MSCX As cMSC, ByVal coastingSeq As Integer) As Boolean
+    Sub fCalcValidSec(ByVal MSCX As cMSC, ByVal coastingSeq As Integer)
         ' Declaration
         Dim i As Integer
 
@@ -958,11 +927,10 @@
                 Next i
         End Select
 
-        Return True
-    End Function
+    End Sub
 
     ' Save the Dictionaries
-    Function fSaveDic(ByVal coastingSeq As Integer) As Boolean
+    Sub fSaveDic(ByVal coastingSeq As Integer)
         ' Declaration
         Dim sKV As New KeyValuePair(Of tCompErg, List(Of Double))
         Dim sKVUndef As New KeyValuePair(Of String, List(Of Double))
@@ -994,7 +962,5 @@
                 ErgValuesUndefComp(sKVUndef.Key).AddRange(ErgValuesUndef(sKVUndef.Key))
             Next
         End If
-
-        Return True
-    End Function
+    End Sub
 End Module

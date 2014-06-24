@@ -205,7 +205,7 @@ lb10:
         Next
         ' Abfrage ob Datei blockiert
         If IsNothing(StrWrter) Then
-            BWorker.CancelAsync()
+            BWorker.CancelAsync() ' FIXME: Totaly unrelated here, file-io should not know anything about the worker-thread.
             FileBlock = True
             Exit Sub
         End If
@@ -216,7 +216,9 @@ lb10:
     Public Sub WriteLine(ByVal x As String)
         ' Polling if the file is blocked
         If IsNothing(StrWrter) Then
-            If BWorker IsNot Nothing Then BWorker.CancelAsync()
+            If BWorker IsNot Nothing Then
+                BWorker.CancelAsync() ' FIXME: Totaly unrelated here, file-io should not know anything about the worker-thread.
+            End If
             FileBlock = True
             Exit Sub
         End If

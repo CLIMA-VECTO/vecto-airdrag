@@ -101,7 +101,7 @@
         Private Sub MyApplication_UnhandledException(ByVal sender As Object, ByVal ev As Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs) Handles Me.UnhandledException
             Dim ex As Exception = ev.Exception
             If AppFormStarted Then
-                logme(9, False, format("Unhandled exception: \i{0}", ex.Message), ex)
+                logme(9, False, format("Unhandled exception in {0}: \i{1}", ex.Source, ex.Message), ex)
                 ev.ExitApplication = False
             Else
                 MsgBox(format("{0} failed after init due to: \n\i{1}", AppName, ex), MsgBoxStyle.Critical, format("{0} failed to Start!", AppName))

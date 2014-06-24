@@ -2,7 +2,7 @@
 Module Signal_identification
 
     ' Divide the signal into there directions
-    Public Function fIdentifyMS(ByVal MSC As cMSC, ByRef vMSC As cVirtMSC, Optional ByVal virtMSC As Boolean = True, Optional ByVal SectionDev As Boolean = True) As Boolean
+    Public Sub fIdentifyMS(ByVal MSC As cMSC, ByRef vMSC As cVirtMSC, Optional ByVal virtMSC As Boolean = True, Optional ByVal SectionDev As Boolean = True)
         If virtMSC Then
             ' Calculation of the virtual MSC points
             fvirtMSC(MSC, vMSC)
@@ -18,9 +18,7 @@ Module Signal_identification
             ' Leap in time control
             If JumpPoint <> -1 Then
                 If CalcData(tCompCali.SecID)(JumpPoint) <> 0 Then
-                    logme(9, False, "The detected leap in time is inside a measurement section. This is not allowed!")
-                    BWorker.CancelAsync()
-                    Return False
+                    Throw New Exception(format("The detected leap in time({0}) is not allowed to be inside a measurement section!", CalcData(tCompCali.SecID)(JumpPoint)))
                 End If
             End If
 
@@ -30,9 +28,7 @@ Module Signal_identification
             ' Calculate the section overview
             fSecOverview(MSC)
         End If
-
-        Return True
-    End Function
+    End Sub
 
     ' Calculation of the virtual trigger points
     Function fvirtMSC(ByVal MSCOrg As cMSC, ByRef MSCVirt As cVirtMSC) As Boolean
@@ -724,10 +720,8 @@ Module Signal_identification
             ' Temprature, Pressure, Humidity
             For j = 0 To InputWeatherData(tCompWeat.t).Count - 1
                 If j = 0 Then
-                    If CalcData(tCompCali.t)(i) < InputWeatherData(tCompWeat.t)(j) And j = 0 Then
-                        logme(9, False, "The test time is outside the range of the data from the stationary weather station.")
-                        BWorker.CancelAsync()
-                        Return False
+                    If CalcData(tCompCali.t)(i) < InputWeatherData(tCompWeat.t)(j) Then
+                        Throw New Exception(format("The test time({0}) is outside the range of the data from the stationary weather station({1}).", CalcData(tCompCali.t)(i), InputWeatherData(tCompWeat.t)(j)))
                     ElseIf CalcData(tCompCali.t)(i) >= InputWeatherData(tCompWeat.t)(j) And CalcData(tCompCali.t)(i) < InputWeatherData(tCompWeat.t)(j + 1) Then
                         CalcData(tCompCali.t_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.t)(j + 1), InputWeatherData(tCompWeat.t_amb_stat)(j), InputWeatherData(tCompWeat.t_amb_stat)(j + 1), CalcData(tCompCali.t)(i))
                         CalcData(tCompCali.p_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.t)(j + 1), InputWeatherData(tCompWeat.p_amp_stat)(j), InputWeatherData(tCompWeat.p_amp_stat)(j + 1), CalcData(tCompCali.t)(i))
@@ -743,9 +737,7 @@ Module Signal_identification
                     End If
                 End If
                 If j = InputWeatherData(tCompWeat.t).Count - 1 Then
-                    logme(9, False, "The test time is outside the range of the data from the stationary weather station.")
-                    BWorker.CancelAsync()
-                    Return False
+                    Throw New Exception(format("The test time is outside the range of the data from the stationary weather station."))
                 End If
             Next j
         Next i
@@ -775,6 +767,7 @@ Module Signal_identification
                                 CalcData(tCompCali.slope_deg)(i) = 0
                                 logme(9, False, "Standstill or loss of vehicle speed signal inside MS not permitted (Error at line " & i & ")")
                                 BWorker.CancelAsync()
+                                ' XXXX: What is absolutely neccessary to run afterwards, and cannot return immediately here??
                             Else
                                 CalcData(tCompCali.slope_deg)(i) = (Math.Asin((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI
                             End If
