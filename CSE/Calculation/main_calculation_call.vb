@@ -11,8 +11,6 @@
         CalcData = Nothing
         ErgValues = Nothing
         ErgValuesUndef = Nothing
-        Units = Nothing
-        'UnitsUndef = Nothing
 
         If isCalibrate Then
             ' Declarations
@@ -122,8 +120,6 @@
                 CalcData = Nothing
                 ErgValues = Nothing
                 ErgValuesUndef = Nothing
-                Units = Nothing
-                'UnitsUndef = Nothing
             Next i
 
             Try
@@ -157,11 +153,8 @@
             ' Clear the dictionaries
             ErgValuesComp = Nothing
             ErgValuesUndefComp = Nothing
-            'UnitsErgUndefComp = Nothing
             ErgValuesReg = Nothing
-            'UnitsUndef = Nothing
             InputWeatherData = Nothing
-            UnitsWeat = Nothing
         End If
     End Sub
 
@@ -717,7 +710,7 @@
                         End If
                     Else
                         logme(9, False, "Not enough valid data for low speed tests available in section " & Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)))
-                        ' FIXME: is this an error?
+                        ' TODO: is this an error?
                     End If
                 End If
             Next j
@@ -939,7 +932,6 @@
         If coastingSeq = 0 Then
             ErgValuesComp = New Dictionary(Of tCompErg, List(Of Double))
             ErgValuesUndefComp = New Dictionary(Of String, List(Of Double))
-            'UnitsErgUndefComp = New Dictionary(Of String, List(Of String))
 
             For Each sKV In ErgValues
                 ErgValuesComp.Add(sKV.Key, New List(Of Double))
@@ -952,7 +944,6 @@
             ' Transfer the ResultValues in the complet result file
             ErgValuesComp = ErgValues
             ErgValuesUndefComp = ErgValuesUndef
-            'UnitsErgUndefComp = UnitsUndef
         Else
             ' Add the ResultValues to the complet dictionary
             For Each sKV In ErgValues

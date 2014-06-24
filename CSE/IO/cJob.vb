@@ -25,6 +25,8 @@ Public Class cJob
         b.high_fpath = ""
         b.low2_fpath = ""
         b.Criteria = New cCriteria().Body
+
+        b.Results = New cResults().Body
         Return b
     End Function
 
@@ -84,6 +86,7 @@ Public Class cJob
                     "description": "File-path to a measurement-file (*.csdat)", 
                 }, 
                 "Criteria": <%= cCriteria.JSchemaStr(isStrictBody) %>,
+                "Results": <%= cResults.JSchemaStr(isStrictBody) %>,
             }
         }</json>.Value
         '"": {
@@ -156,6 +159,16 @@ Public Class cJob
         b.v_air_d = Me.v_air_d
         b.beta_f = Me.beta_f
         b.beta_d = Me.beta_d
+
+        'b.fv_veh = fv_veh
+        'b.fa_pe = fa_pe
+        'b.fv_pe = fv_pe
+        'b.beta_ame = beta_ame
+        'b.CdxA = CdxA
+        'b.beta = beta
+        'b.delta_CdxA = delta_CdxA
+        'b.CdxA0 = CdxA0
+        'b.CdxA0_opt2 = CdxA0_opt2
     End Sub
 
 
@@ -352,7 +365,7 @@ Public Class cJob
                             Case 7 ' TBContHz
                                 crt.delta_Hz_max = Line(0)
                             Case 8 ' TBRhoAirRef
-                                crt.roh_air_ref = Line(0)
+                                crt.rho_air_ref = Line(0)
                             Case 9 ' TBAveSecAcc
                                 crt.acc_corr_avg = Line(0)
                             Case 10 ' TBDeltaHeadMax

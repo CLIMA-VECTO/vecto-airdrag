@@ -163,7 +163,7 @@
         F2_LS1_ref
         F0_LS2_ref
         F2_LS2_ref
-        roh_air_LS
+        rho_air_LS
         beta_abs_HS
         RRC
         RRC_LS1
@@ -241,6 +241,22 @@
                 Return tCompWeat.rh_stat
             Case Else
                 Return tCompWeat.Undefined
+        End Select
+    End Function
+
+    Public Function fCompWeatherUnit(ByVal sK As String) As tCompWeat
+        sK = Trim(UCase(sK))
+        Select Case sK
+            Case sKey.Weather.t
+                Return "[s]"
+            Case sKey.Weather.t_amb_stat
+                Return "[°C]"
+            Case sKey.Weather.p_amb_stat
+                Return "[mbar]"
+            Case sKey.Weather.rh_stat
+                Return "[%]"
+            Case Else
+                Return "[-]"
         End Select
     End Function
 
@@ -881,8 +897,8 @@
                 Return "CdxA0"
             Case tCompErgReg.delta_CdxA
                 Return "delta_CdxA"
-            Case tCompErgReg.roh_air_LS
-                Return "roh_air_LS"
+            Case tCompErgReg.rho_air_LS
+                Return "rho_air_LS"
             Case tCompErgReg.beta_abs_HS
                 Return "beta_abs_HS"
             Case tCompErgReg.t_tire_LS_max
@@ -944,7 +960,7 @@
                 Return "[m2]"
             Case tCompErgReg.delta_CdxA
                 Return "[m2]"
-            Case tCompErgReg.roh_air_LS
+            Case tCompErgReg.rho_air_LS
                 Return "[kg/m3]"
             Case tCompErgReg.beta_abs_HS
                 Return "[°]"

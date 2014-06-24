@@ -7,14 +7,14 @@
 
     ' Control variables
     Public Const komment = "#"                                  ' Symbol for a comment in the input files
-    Public Const Teiler = ","
     Public AnzeigeMessage() As String = ({"", "", "", "         + ", "      ~ ", "   * ", " - ", "", "", ""})
 
     Public AppFormStarted = False
     Public PrefsPath As String
     Public Prefs As cPreferences
     Public Job As cJob                                          ' The values for the 'Main' tab (and Criteria)
-    Public Crt As cCriteria                                     ' The values for the 'Options' tab 
+    Public Crt As cCriteria                                     ' The values for the 'Options' tab
+    'Public Res As cResults                                      ' The values of the results
     Public Sub installJob(ByVal newJob As cJob)
         Job = newJob
         Crt = newJob.Criteria
@@ -76,13 +76,9 @@
     Public ErgValues As Dictionary(Of tCompErg, List(Of Double))                            ' Dictionary for the result data
     Public ErgValuesUndef As Dictionary(Of String, List(Of Double))                         ' Dictionary for the undefined result data (from the undefined input data)
     Public InputWeatherData As Dictionary(Of tCompWeat, List(Of Double))                    ' Dictionary for the weather data
-    Public Units As Dictionary(Of tComp, List(Of String))                                   ' Dictionary for the units of the input data
-    'Public UnitsUndef As Dictionary(Of String, List(Of String))                             ' Dictionary for the units of the undefined input data
-    Public UnitsWeat As Dictionary(Of tCompWeat, List(Of String))                           ' Dictionary for the units of the weather data
     Public sKey As csKey                                                                    ' Key array for the input data (Definition of the column identifier)
     Public ErgValuesComp As Dictionary(Of tCompErg, List(Of Double))                        ' Dictionary for the result data (complete)
     Public ErgValuesUndefComp As Dictionary(Of String, List(Of Double))                     ' Dictionary for the undefined result data (from the undefined input data, complete)
-    'Public UnitsErgUndefComp As Dictionary(Of String, List(Of String))                      ' Dictionary for the units of the undefined result data
     Public ErgValuesReg As Dictionary(Of tCompErgReg, List(Of Double))                      ' Dictionary for the result data from the linear regression
 
     ' Result dictionaries

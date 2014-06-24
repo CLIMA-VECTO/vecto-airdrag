@@ -1,5 +1,5 @@
 <t>,<t_amb_stat>,<p_amb_stat>,<rh_stat>
-[s] since daystart,[°C],[mbar],[%]
+# [s] since daystart,[°C],[mbar],[%]
 25200,18.1,1015.8,69.2
 25210,18,1015.8,69.3
 25220,18.1,1015.8,69.3

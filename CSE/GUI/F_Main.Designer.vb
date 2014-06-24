@@ -226,7 +226,7 @@ Partial Class F_Main
         Me.TB_acc_corr_avg = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.LRhoAirRef = New System.Windows.Forms.Label()
-        Me.TB_roh_air_ref = New System.Windows.Forms.TextBox()
+        Me.TB_rho_air_ref = New System.Windows.Forms.TextBox()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
         Me.CreateActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
@@ -2238,7 +2238,7 @@ Partial Class F_Main
         Me.GroupBox10.Controls.Add(Me.GB_hz_out)
         Me.GroupBox10.Controls.Add(Me.Label20)
         Me.GroupBox10.Controls.Add(Me.LRhoAirRef)
-        Me.GroupBox10.Controls.Add(Me.TB_roh_air_ref)
+        Me.GroupBox10.Controls.Add(Me.TB_rho_air_ref)
         Me.GroupBox10.Location = New System.Drawing.Point(6, 6)
         Me.GroupBox10.Name = "GroupBox10"
         Me.GroupBox10.Size = New System.Drawing.Size(219, 167)
@@ -2316,13 +2316,13 @@ Partial Class F_Main
         Me.LRhoAirRef.TabIndex = 33
         Me.LRhoAirRef.Text = "rho_air_ref"
         '
-        'TB_roh_air_ref
+        'TB_rho_air_ref
         '
-        Me.TB_roh_air_ref.Location = New System.Drawing.Point(129, 16)
-        Me.TB_roh_air_ref.Name = "TB_roh_air_ref"
-        Me.TB_roh_air_ref.Size = New System.Drawing.Size(45, 20)
-        Me.TB_roh_air_ref.TabIndex = 1
-        Me.TB_roh_air_ref.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TB_rho_air_ref.Location = New System.Drawing.Point(129, 16)
+        Me.TB_rho_air_ref.Name = "TB_rho_air_ref"
+        Me.TB_rho_air_ref.Size = New System.Drawing.Size(45, 20)
+        Me.TB_rho_air_ref.TabIndex = 1
+        Me.TB_rho_air_ref.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'ToolStripMenuItem1
         '
@@ -2483,7 +2483,7 @@ Partial Class F_Main
     Friend WithEvents GroupBox7 As System.Windows.Forms.GroupBox
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents LRhoAirRef As System.Windows.Forms.Label
-    Friend WithEvents TB_roh_air_ref As System.Windows.Forms.TextBox
+    Friend WithEvents TB_rho_air_ref As System.Windows.Forms.TextBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents LDeltaHzMax As System.Windows.Forms.Label
     Friend WithEvents TB_delta_Hz_max As System.Windows.Forms.TextBox

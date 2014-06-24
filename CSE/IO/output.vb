@@ -297,7 +297,6 @@
 
         ' Undefined input data
         For Each sKV In InputUndefData
-            'AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "InputUndefData")
             AddToErg(sKV.Key, sKV.Key, "", "InputUndefData")
         Next
 
@@ -435,12 +434,10 @@
         ' Undefined input data
         If calibration Then
             For Each sKV In InputUndefData
-                'AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "ErgValuesUndef")
                 AddToErg(sKV.Key, sKV.Key, "", "ErgValuesUndef")
             Next
         Else
             For Each sKV In ErgValuesUndefComp
-                'AddToErg(sKV.Key, sKV.Key, UnitsErgUndefComp(sKV.Key)(0), "ErgValuesUndef")
                 AddToErg(sKV.Key, sKV.Key, "", "ErgValuesUndef")
             Next
         End If
@@ -464,7 +461,7 @@
         AddToErg(tCompErgReg.CdxA0, fCompName(tCompErgReg.CdxA0), fCompUnit(tCompErgReg.CdxA0), "ErgValuesReg")
         AddToErg(tCompErgReg.delta_CdxA, fCompName(tCompErgReg.delta_CdxA), fCompUnit(tCompErgReg.delta_CdxA), "ErgValuesReg")
         AddToErg(tCompErgReg.beta_abs_HS, fCompName(tCompErgReg.beta_abs_HS), fCompUnit(tCompErgReg.beta_abs_HS), "ErgValuesReg")
-        AddToErg(tCompErgReg.roh_air_LS, fCompName(tCompErgReg.roh_air_LS), fCompUnit(tCompErgReg.roh_air_LS), "ErgValuesReg")
+        AddToErg(tCompErgReg.rho_air_LS, fCompName(tCompErgReg.rho_air_LS), fCompUnit(tCompErgReg.rho_air_LS), "ErgValuesReg")
         AddToErg(tCompErgReg.RRC, fCompName(tCompErgReg.RRC), fCompUnit(tCompErgReg.RRC), "ErgValuesReg")
         AddToErg(tCompErgReg.RRC_LS1, fCompName(tCompErgReg.RRC_LS1), fCompUnit(tCompErgReg.RRC_LS1), "ErgValuesReg")
         AddToErg(tCompErgReg.RRC_LS2, fCompName(tCompErgReg.RRC_LS2), fCompUnit(tCompErgReg.RRC_LS2), "ErgValuesReg")

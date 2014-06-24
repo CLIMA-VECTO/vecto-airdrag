@@ -97,7 +97,6 @@ Public Module input
             ' Initialise
             tdim = -1
             InputWeatherData = New Dictionary(Of tCompWeat, List(Of Double))
-            UnitsWeat = New Dictionary(Of tCompWeat, List(Of String))
 
             'Open file
             FileInWeather.OpenReadWithEx(Datafile)
@@ -129,7 +128,6 @@ Public Module input
                     WeathCheck(Comp) = True
                     Spalten.Add(Comp, i)
                     InputWeatherData.Add(Comp, New List(Of Double))
-                    UnitsWeat.Add(Comp, New List(Of String))
                 End If
             Next i
 
@@ -147,9 +145,7 @@ Public Module input
                     Line = FileInWeather.ReadLine
 
                     For Each sKV In Spalten
-                        If tdim = 0 Then
-                            UnitsWeat(sKV.Key).Add(Line(sKV.Value))
-                        Else
+                        If tdim <> 0 Then
                             InputWeatherData(sKV.Key).Add(CDbl(Line(sKV.Value)))
                         End If
                     Next sKV
@@ -187,16 +183,11 @@ Public Module input
             InputData = New Dictionary(Of tComp, List(Of Double))
             InputUndefData = New Dictionary(Of String, List(Of Double))
             CalcData = New Dictionary(Of tCompCali, List(Of Double))
-            'Units = New Dictionary(Of tComp, List(Of String))
-            'UnitsUndef = New Dictionary(Of String, List(Of String))
             For i = 0 To UBound(OptPar)
                 OptPar(i) = True
             Next i
 
             ' Generate the calculation dictionary variables
-            'For Each EnumStr In System.Enum.GetValues(GetType(tCompErg))
-            '    CalcData.Add(EnumStr, New List(Of Double))
-            'Next
             For Each EnumStr In System.Enum.GetValues(GetType(tCompCali))
                 CalcData.Add(EnumStr, New List(Of Double))
             Next
@@ -244,7 +235,6 @@ Public Module input
                     ' Add the component to the dictionary
                     SpaltenUndef.Add(txt, i)
                     InputUndefData.Add(txt, New List(Of Double))
-                    'UnitsUndef.Add(txt, New List(Of String))
                 Else
                     ' Check if component is already defined
                     If MeasCheck(Comp) Then
@@ -255,7 +245,6 @@ Public Module input
                     MeasCheck(Comp) = True
                     Spalten.Add(Comp, i)
                     InputData.Add(Comp, New List(Of Double))
-                    'Units.Add(Comp, New List(Of String))
                 End If
             Next i
 
@@ -287,9 +276,6 @@ Public Module input
                     Line = FileInMeasure.ReadLine
 
                     For Each sKV In Spalten
-                        'If tDim = 0 Then
-                        '    Units(sKV.Key).Add(Line(sKV.Value))
-                        'Else
                         If tDim <> 0 Then
                             InputData(sKV.Key).Add(CDbl(Line(sKV.Value)))
                             If sKV.Key = tComp.t Then
@@ -349,7 +335,6 @@ Public Module input
                     If valid_set Then
                         If tDim = 0 Then
                             InputData.Add(tComp.user_valid, New List(Of Double))
-                            'Units.Add(tComp.user_valid, New List(Of String))
                         Else
                             InputData(tComp.user_valid).Add(CDbl(1))
                         End If
@@ -357,9 +342,6 @@ Public Module input
 
                     ' Add the additional data to the undefined values
                     For Each sKVUndef In SpaltenUndef
-                        'If tDim = 0 Then
-                        '    UnitsUndef(sKVUndef.Key).Add(Line(sKVUndef.Value))
-                        'Else
                         If tDim <> 0 Then
                             InputUndefData(sKVUndef.Key).Add(CDbl(Line(sKVUndef.Value)))
                         End If

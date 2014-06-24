@@ -164,6 +164,7 @@ Public Class F_Main
             logme(7, False, "Background operation ended OK.")
             Dim asyncJob As cAsyncJob = e.Result
             If asyncJob.IsCalibration Then Me.ButtonEval.Enabled = True
+            doSaveJob(False)
         End If
 
         FileBlock = False
@@ -281,7 +282,6 @@ Public Class F_Main
             _EvaluationState = value
         End Set
     End Property
-
 
     ' Evaluate button test run
     Private Sub EvaluationHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonEval.Click
@@ -489,7 +489,7 @@ Public Class F_Main
         Crt.t_amb_min = TB_t_amb_min.Text
         ' General
         Crt.delta_Hz_max = TB_delta_Hz_max.Text
-        Crt.roh_air_ref = TB_roh_air_ref.Text
+        Crt.rho_air_ref = TB_rho_air_ref.Text
         Crt.acc_corr_avg = TB_acc_corr_avg.Text
         Crt.delta_parallel_max = TB_delta_parallel_max.Text
         ' Identification of measurement section
@@ -558,7 +558,7 @@ Public Class F_Main
         TB_t_amb_min.Text = Crt.t_amb_min
         ' General
         TB_delta_Hz_max.Text = Crt.delta_Hz_max
-        TB_roh_air_ref.Text = Crt.roh_air_ref
+        TB_rho_air_ref.Text = Crt.rho_air_ref
         TB_acc_corr_avg.Text = Crt.acc_corr_avg
         TB_delta_parallel_max.Text = Crt.delta_parallel_max
         ' Identification of measurement section
@@ -897,7 +897,7 @@ Public Class F_Main
 
     ' Check if the input is a number
     Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_delta_t_tyre_max.KeyPress, TB_delta_rr_corr_max.KeyPress, TB_t_amb_var.KeyPress, _
-        TB_t_amb_tarmac.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_roh_air_ref.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
+        TB_t_amb_tarmac.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_rho_air_ref.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
         TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_MS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
         TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_v_wind_1s_max_LS.KeyPress, TB_v_wind_avg_max_LS.KeyPress, _
         TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress
@@ -989,7 +989,7 @@ Public Class F_Main
 
 
         controls = New Control() {
-                Me.TB_roh_air_ref, LRhoAirRef, _
+                Me.TB_rho_air_ref, LRhoAirRef, _
                 Me.CB_accel_correction, Nothing, _
                 Me.CB_gradient_correction, Nothing, _
                 Me.TB_rr_corr_factor, Me.Label2, _
