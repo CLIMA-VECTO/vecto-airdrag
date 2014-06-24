@@ -127,10 +127,10 @@
             End If
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Results")
-            FileOut.WriteLine("# fv_veh:", fv_veh)
-            FileOut.WriteLine("# fv_veh_opt2:", fv_veh_opt2)
-            FileOut.WriteLine("# fv_pe:", fv_pe)
-            FileOut.WriteLine("# beta_ame:", beta_ame)
+            FileOut.WriteLine("# fv_veh:", Job.fv_veh)
+            FileOut.WriteLine("# fv_veh_opt2:", Job.fv_veh_opt2)
+            FileOut.WriteLine("# fv_pe:", Job.fv_pe)
+            FileOut.WriteLine("# beta_ame:", Job.beta_ame)
             FileOut.WriteLine("#")
 
             ' Write the head and units
@@ -217,29 +217,29 @@
             FileOut.WriteLine("# Datafile LS2: ", coasting_fpaths(2))
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Results")
-            FileOut.WriteLine("# fv_veh:", fv_veh, "[-] calibration factor for vehicle speed")
-            FileOut.WriteLine("# fv_veh_opt2:", fv_veh_opt2, "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
-            FileOut.WriteLine("# fv_pe:", fv_pe, "[-] calibration factor for air speed (position error)")
-            FileOut.WriteLine("# fa_pe:", fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
-            FileOut.WriteLine("# beta_ame:", beta_ame, "[°] calibration factor for beta (misalignment)")
-            FileOut.WriteLine("# CdxA:", CdxA, "[m²] average CdxA before yaw angle correction")
-            FileOut.WriteLine("# beta:", beta, "[°] average absolute yaw angle from high speed tests")
-            FileOut.WriteLine("# delta_CdxA:", delta_CdxA, "[m²] correction of CdxA for yaw angle")
-            FileOut.WriteLine("# CdxA(0):", CdxA0, "[m²] average CdxA for zero yaw angle")
-            FileOut.WriteLine("# CdxA(0)_opt2:", CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
+            FileOut.WriteLine("# fv_veh:", Job.fv_veh, "[-] calibration factor for vehicle speed")
+            FileOut.WriteLine("# fv_veh_opt2:", Job.fv_veh_opt2, "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
+            FileOut.WriteLine("# fv_pe:", Job.fv_pe, "[-] calibration factor for air speed (position error)")
+            FileOut.WriteLine("# fa_pe:", Job.fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
+            FileOut.WriteLine("# beta_ame:", Job.beta_ame, "[°] calibration factor for beta (misalignment)")
+            FileOut.WriteLine("# CdxA:", Job.CdxA, "[m²] average CdxA before yaw angle correction")
+            FileOut.WriteLine("# beta:", Job.beta, "[°] average absolute yaw angle from high speed tests")
+            FileOut.WriteLine("# delta_CdxA:", Job.delta_CdxA, "[m²] correction of CdxA for yaw angle")
+            FileOut.WriteLine("# CdxA(0):", Job.CdxA0, "[m²] average CdxA for zero yaw angle")
+            FileOut.WriteLine("# CdxA(0)_opt2:", Job.CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Validity criteria:")
-            If valid_t_tire Then
+            If Job.valid_t_tire Then
                 FileOut.WriteLine("# Tire temp:", "Ok")
             Else
                 FileOut.WriteLine("# Tire temp:", "Invalid test - maximum variation of tyre temperature exceeded")
             End If
-            If valid_RRC Then
+            If Job.valid_RRC Then
                 FileOut.WriteLine("# RRC:", "Ok")
             Else
                 FileOut.WriteLine("# RRC:", "Invalid test - maximum deviation of RRCs between low speed tests exceeded")
             End If
-            If valid_t_amb Then
+            If Job.valid_t_amb Then
                 FileOut.WriteLine("# Ambient temp:", "Ok")
             Else
                 FileOut.WriteLine("# Ambient temp:", "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")

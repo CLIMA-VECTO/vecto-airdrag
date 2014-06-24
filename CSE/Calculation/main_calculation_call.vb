@@ -137,8 +137,8 @@
 
             ' Check if all is valid
             For i = 0 To ErgValuesReg(tCompErgReg.SecID).Count - 1
-                If ErgValuesReg(tCompErgReg.valid_t_tire)(i) = 0 Then valid_t_tire = False
-                If ErgValuesReg(tCompErgReg.RRC_valid)(i) = 0 Then valid_RRC = False
+                If ErgValuesReg(tCompErgReg.valid_t_tire)(i) = 0 Then Job.valid_t_tire = False
+                If ErgValuesReg(tCompErgReg.RRC_valid)(i) = 0 Then Job.valid_RRC = False
             Next i
 
             ' Output of the final data
@@ -146,9 +146,9 @@
 
             ' Write the results on the GUI
             logme(7, False, "Results from the calculation")
-            logme(6, False, "average absolute beta HS test: " & Math.Round(beta, 4))
-            logme(6, False, "delta CdxA correction: " & Math.Round(delta_CdxA, 4))
-            logme(6, False, "CdxA(0): " & Math.Round(CdxA0, 4))
+            logme(6, False, "average absolute beta HS test: " & Math.Round(Job.beta, 4))
+            logme(6, False, "delta CdxA correction: " & Math.Round(Job.delta_CdxA, 4))
+            logme(6, False, "CdxA(0): " & Math.Round(Job.CdxA0, 4))
 
             ' Clear the dictionaries
             ErgValuesComp = Nothing
@@ -165,10 +165,10 @@
         Dim Change As Boolean
 
         ' Initialisation
-        fv_veh = 0
-        fv_veh_opt2 = 0
-        fv_pe = 0
-        beta_ame = 0
+        Job.fv_veh = 0
+        Job.fv_veh_opt2 = 0
+        Job.fv_pe = 0
+        Job.beta_ame = 0
         Change = False
         run = 0
 
@@ -177,10 +177,10 @@
 
         Do While Change
             ' Initialise Parameter
-            fv_veh = 0
-            fv_veh_opt2 = 0
-            fv_pe = 0
-            beta_ame = 0
+            Job.fv_veh = 0
+            Job.fv_veh_opt2 = 0
+            Job.fv_pe = 0
+            Job.beta_ame = 0
             run += 1
 
             ' Calculate fv_veh
@@ -297,20 +297,20 @@
         For i = 0 To UBound(CalcX)
             If VSec(i) = 1 Then
                 If MSCX.tUse Then
-                    fv_veh += ave_vz(i) / ave_vn(i)
-                    fv_veh_opt2 = 0
+                    Job.fv_veh += ave_vz(i) / ave_vn(i)
+                    Job.fv_veh_opt2 = 0
                     num += 1
                 Else
-                    fv_veh += ave_vz2(i) / ave_vn(i)
-                    fv_veh_opt2 += ave_vz(i) / ave_vn(i)
+                    Job.fv_veh += ave_vz2(i) / ave_vn(i)
+                    Job.fv_veh_opt2 += ave_vz(i) / ave_vn(i)
                     num += 1
                 End If
             End If
         Next i
 
         ' Calculate the average over all factors
-        fv_veh = fv_veh / num
-        fv_veh_opt2 = fv_veh_opt2 / num
+        Job.fv_veh = Job.fv_veh / num
+        Job.fv_veh_opt2 = Job.fv_veh_opt2 / num
     End Sub
 
     Function ffvpeBeta() As Boolean
@@ -393,11 +393,11 @@
                     num += 1
                 End If
             Next j
-            fv_pe += ave_vc_ges / v_air_ges
+            Job.fv_pe += ave_vc_ges / v_air_ges
         Next i
 
-        fv_pe = fv_pe / (UBound(CalcX) + 1)
-        beta_ame += beta_ges / num
+        Job.fv_pe = Job.fv_pe / (UBound(CalcX) + 1)
+        Job.beta_ame += beta_ges / num
 
         Return True
     End Function
@@ -414,8 +414,8 @@
 
         ' Calculate the values
         For i = 0 To CalcData(tCompCali.lati_UTM).Count - 1
-            CalcData(tCompCali.vair_uf)(i) = (CalcData(tCompCali.vair_ic)(i) * fv_pe)
-            CalcData(tCompCali.beta_uf)(i) = ((CalcData(tCompCali.beta_ic)(i) - beta_ame) * fa_pe)
+            CalcData(tCompCali.vair_uf)(i) = (CalcData(tCompCali.vair_ic)(i) * Job.fv_pe)
+            CalcData(tCompCali.beta_uf)(i) = ((CalcData(tCompCali.beta_ic)(i) - Job.beta_ame) * Job.fa_pe)
             vwind_x_ha = CalcData(tCompCali.vair_uf)(i) * Math.Cos(CalcData(tCompCali.beta_uf)(i) * Math.PI / 180) - CalcData(tCompCali.v_veh_c)(i) / 3.6
             vwind_y_ha = CalcData(tCompCali.vair_uf)(i) * Math.Sin(CalcData(tCompCali.beta_uf)(i) * Math.PI / 180)
             CalcData(tCompCali.vwind_ha)(i) = (Math.Sqrt(vwind_x_ha ^ 2 + vwind_y_ha ^ 2))

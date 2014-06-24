@@ -162,23 +162,33 @@ Public Class cResults
         b = Me.Body
 
         g = b("Calibration")
-        g.fv_veh = fv_veh
-        g.fa_pe = fa_pe
-        g.fv_pe = fv_pe
-        g.beta_ame = beta_ame
+        g.fv_veh = Job.fv_veh
+        g.fa_pe = Job.fa_pe
+        g.fv_pe = Job.fv_pe
+        g.beta_ame = Job.beta_ame
 
         g = b("Evaluation")
-        g.CdxA = CdxA
-        g.beta = beta
-        g.delta_CdxA = delta_CdxA
-        g.CdxA0 = CdxA0
-        g.CdxA0_opt2 = CdxA0_opt2
+        g.CdxA = Job.CdxA
+        g.beta = Job.beta
+        g.delta_CdxA = Job.delta_CdxA
+        g.CdxA0 = Job.CdxA0
+        g.CdxA0_opt2 = Job.CdxA0_opt2
 
         g = b("Validity")
-        g.valid_t_tire = valid_t_tire
-        g.valid_t_amb = valid_t_amb
-        g.valid_RRC = valid_RRC
+        g.valid_t_tire = Job.valid_t_tire
+        g.valid_t_amb = Job.valid_t_amb
+        g.valid_RRC = Job.valid_RRC
     End Sub
+
+    ''' <summary>Do not invoke this method in vain...</summary>
+    Property Results As cResults
+        Get
+            Return New cResults(Me.Body("Results"), True)
+        End Get
+        Set(ByVal value As cResults)
+            Me.Body("Results") = value.Body
+        End Set
+    End Property
 
 #End Region ' json props
 

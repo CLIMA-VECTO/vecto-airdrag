@@ -540,7 +540,7 @@ Module Signal_identification
 
         ' Calculate the corrected vehicle speed
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
-            CalcData(tCompCali.v_veh_c)(i) = (InputData(tComp.v_veh_CAN)(i) * fv_veh)
+            CalcData(tCompCali.v_veh_c)(i) = (InputData(tComp.v_veh_CAN)(i) * Job.fv_veh)
             If i = 0 Then
                 CalcData(tCompCali.dist)(i) = (CalcData(tCompCali.v_veh_c)(i) / 3.6) * (1 / HzIn)
             Else

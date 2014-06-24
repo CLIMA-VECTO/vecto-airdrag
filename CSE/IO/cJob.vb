@@ -26,7 +26,19 @@ Public Class cJob
         b.low2_fpath = ""
         b.Criteria = New cCriteria().Body
 
-        b.Results = New cResults().Body
+        'b.Results = New cResults().Body
+        b.fv_veh = 0
+        b.fa_pe = 1
+        b.fv_pe = 0
+        b.beta_ame = 0
+        b.CdxA = 0
+        b.beta = 0
+        b.delta_CdxA = 0
+        b.CdxA0 = 0
+        b.CdxA0_opt2 = 0
+        b.valid_t_tire = True
+        b.valid_t_amb = True
+        b.valid_RRC = True
         Return b
     End Function
 
@@ -86,8 +98,73 @@ Public Class cJob
                     "description": "File-path to a measurement-file (*.csdat)", 
                 }, 
                 "Criteria": <%= cCriteria.JSchemaStr(isStrictBody) %>,
-                "Results": <%= cResults.JSchemaStr(isStrictBody) %>,
-            }
+
+            "properties": {
+                "Calibration": {
+                    "type": "object",
+                    "required": true,
+                    "additionalProperties": <%= allowAdditionalProps_str %>, 
+                    "properties": {
+                        "fv_veh": {"type": "number", "required": true, 
+                            "description": "Calibration factor for vehicle speed.", 
+                        },
+                        "fv_pe": {"type": "number", "required": true, 
+                            "description": "Calibration factor for air speed (position error).", 
+                        },
+                        "fa_pe": {"type": "number", "required": true, 
+                            "description": "Position error correction factor for measured air inflow angle (beta).", 
+                        },
+                        "beta_ame": {"type": "number", "required": true, 
+                            "description": "Calibration factor for beta (misalignment).",
+                            "units": "°",
+                        },
+                    }
+                },
+                "Evaluation": {
+                    "type": "object",
+                    "required": true,
+                    "additionalProperties": <%= allowAdditionalProps_str %>, 
+                    "properties": {
+                        "CdxA": {"type": "number", "required": true, 
+                            "description": "Average CdxA before yaw angle correction",
+                            "units": "m^2",
+                        },
+                        "beta": {"type": "number", "required": true, 
+                            "description": "Average absolute yaw angle from high speed tests.",
+                            "units": "m^2",
+                        },
+                        "delta_CdxA": {"type": "number", "required": true, 
+                            "description": "Correction of CdxA for yaw angle.",
+                            "units": "m^2",
+                        },
+                        "CdxA0": {"type": "number", "required": true, 
+                            "description": "Correction of CdxA for zero yaw angle.",
+                            "units": "m^2",
+                        },
+                        "CdxA0_opt2": {"type": "number", "required": true, 
+                            "description": "Average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections).",
+                            "units": "m^2",
+                        },
+                    }
+                },
+                "Validity": {
+                    "type": "object",
+                    "required": true,
+                    "additionalProperties": <%= allowAdditionalProps_str %>, 
+                    "properties": {
+                        "valid_t_tire": {"type": "boolean", "required": true, 
+                            "description": "Invalid if the maximum ambient temperature exceeded.", 
+                        },
+                        "valid_t_amb": {"type": "boolean", "required": true, 
+                            "description": "Invalid if the ambient temperature fallen below minimum.", 
+                        },
+                        "valid_RRC": {"type": "boolean", "required": true, 
+                            "description": "Invalid if the ambient temperature higher than allowed.", 
+                        },
+                    }
+                },
+            },
+        }
         }</json>.Value
         '"": {
         '    "type": "string", 
@@ -143,6 +220,20 @@ Public Class cJob
     Public beta_f As Double
     Public beta_d As Double
 
+    Public fv_veh As Double = 0
+    Public fv_veh_opt2 As Double = 0
+    Public fa_pe As Double = 1
+    Public fv_pe As Double = 0
+    Public beta_ame As Double = 0
+    Public CdxA As Double = 0
+    Public beta As Double = 0
+    Public delta_CdxA As Double = 0
+    Public CdxA0 As Double = 0
+    Public CdxA0_opt2 As Double = 0
+    Public valid_t_tire As Boolean = True
+    Public valid_t_amb As Boolean = True
+    Public valid_RRC As Boolean = True
+
     Protected Overrides Sub OnContentUpdated()
         Dim anem = PropOrDefault(".Anemometer")
         Me.v_air_f = anem("v_air_f")
@@ -160,15 +251,18 @@ Public Class cJob
         b.beta_f = Me.beta_f
         b.beta_d = Me.beta_d
 
-        'b.fv_veh = fv_veh
-        'b.fa_pe = fa_pe
-        'b.fv_pe = fv_pe
-        'b.beta_ame = beta_ame
-        'b.CdxA = CdxA
-        'b.beta = beta
-        'b.delta_CdxA = delta_CdxA
-        'b.CdxA0 = CdxA0
-        'b.CdxA0_opt2 = CdxA0_opt2
+        b.fv_veh = Math.Round(fv_veh, 3)
+        b.fa_pe = Math.Round(fa_pe, 3)
+        b.fv_pe = Math.Round(fv_pe, 3)
+        b.beta_ame = Math.Round(beta_ame, 2)
+        b.CdxA = Math.Round(CdxA, 5)
+        b.beta = Math.Round(beta, 5)
+        b.delta_CdxA = Math.Round(delta_CdxA, 5)
+        b.CdxA0 = Math.Round(CdxA0, 5)
+        b.CdxA0_opt2 = Math.Round(CdxA0_opt2, 5)
+        b.valid_t_tire = valid_t_tire
+        b.valid_t_amb = valid_t_amb
+        b.valid_RRC = valid_RRC
     End Sub
 
 

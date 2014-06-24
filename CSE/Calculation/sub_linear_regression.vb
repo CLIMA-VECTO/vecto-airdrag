@@ -20,14 +20,14 @@
         t_amb_num = 0
         FirstInGes = True
         ErgValuesReg = New Dictionary(Of tCompErgReg, List(Of Double))
-        CdxA = 0
-        CdxA0 = 0
-        CdxA0_opt2 = 0
-        delta_CdxA = 0
-        beta = 0
-        valid_t_amb = True
-        valid_RRC = True
-        valid_t_tire = True
+        Job.CdxA = 0
+        Job.CdxA0 = 0
+        Job.CdxA0_opt2 = 0
+        Job.delta_CdxA = 0
+        Job.beta = 0
+        Job.valid_t_amb = True
+        Job.valid_RRC = True
+        Job.valid_t_tire = True
 
         ' Generate the result dictionary variables
         For Each EnumStr In System.Enum.GetValues(GetType(tCompErgReg))
@@ -294,9 +294,9 @@
                     End If
 
                     ' Summerise for the endresults
-                    CdxA += ErgValuesReg(tCompErgReg.CdxA)(lauf)
-                    beta += ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf)
-                    CdxA0_opt2 += ErgValuesReg(tCompErgReg.CdxA0)(lauf)
+                    Job.CdxA += ErgValuesReg(tCompErgReg.CdxA)(lauf)
+                    Job.beta += ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf)
+                    Job.CdxA0_opt2 += ErgValuesReg(tCompErgReg.CdxA0)(lauf)
                 Else
                     ' Clear the data in the result dictionary
                     ErgValuesReg(tCompErgReg.SecID).RemoveAt(lauf)
@@ -313,17 +313,17 @@
         Next i
 
         ' Calculate the Endresults
-        CdxA = CdxA / (lauf + 1)
-        beta = beta / (lauf + 1)
-        delta_CdxA = fCalcGenShp(beta, vehicle)
-        CdxA0_opt2 = CdxA0_opt2 / (lauf + 1)
-        CdxA0 = CdxA - delta_CdxA
+        Job.CdxA = Job.CdxA / (lauf + 1)
+        Job.beta = Job.beta / (lauf + 1)
+        Job.delta_CdxA = fCalcGenShp(Job.beta, vehicle)
+        Job.CdxA0_opt2 = Job.CdxA0_opt2 / (lauf + 1)
+        Job.CdxA0 = Job.CdxA - Job.delta_CdxA
 
         ' Test validation
         t_amb_f = t_amb_f / t_amb_num
         If (t_amb_f - t_amb_min_f) > Crt.t_amb_var Or (t_amb_max_f - t_amb_f) > Crt.t_amb_var Then
             logme(9, False, "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
-            valid_t_amb = False
+            Job.valid_t_amb = False
         End If
 
         If t_amb_max_f > Crt.t_amb_max Then

@@ -14,7 +14,6 @@
     Public Prefs As cPreferences
     Public Job As cJob                                          ' The values for the 'Main' tab (and Criteria)
     Public Crt As cCriteria                                     ' The values for the 'Options' tab
-    'Public Res As cResults                                      ' The values of the results
     Public Sub installJob(ByVal newJob As cJob)
         Job = newJob
         Crt = newJob.Criteria
@@ -96,19 +95,6 @@
     Public ErgEntryListReg As New List(Of tCompErgReg)                                      ' Array with the output sequenz of the result from the regression calculation
 
     ' Result values
-    Public fv_veh As Double = 0
-    Public fv_veh_opt2 As Double = 0
-    Public fa_pe As Double = 1
-    Public fv_pe As Double = 0
-    Public beta_ame As Double = 0
-    Public CdxA As Double = 0
-    Public beta As Double = 0
-    Public delta_CdxA As Double = 0
-    Public CdxA0 As Double = 0
-    Public CdxA0_opt2 As Double = 0
-    Public valid_t_tire As Boolean = True
-    Public valid_t_amb As Boolean = True
-    Public valid_RRC As Boolean = True
     Public GenShape As New cGenShp
 
     ' *****************************************************************
