@@ -163,7 +163,7 @@
         F2_LS1_ref
         F0_LS2_ref
         F2_LS2_ref
-        roh_air_LS
+        rho_air_LS
         beta_abs_HS
         RRC
         RRC_LS1
@@ -244,6 +244,22 @@
         End Select
     End Function
 
+    Public Function fCompWeatherUnit(ByVal sK As String) As tCompWeat
+        sK = Trim(UCase(sK))
+        Select Case sK
+            Case sKey.Weather.t
+                Return "[s]"
+            Case sKey.Weather.t_amb_stat
+                Return "[°C]"
+            Case sKey.Weather.p_amb_stat
+                Return "[mbar]"
+            Case sKey.Weather.rh_stat
+                Return "[%]"
+            Case Else
+                Return "[-]"
+        End Select
+    End Function
+
     Public Function fCompName(ByVal ID As tComp) As String
         Select Case ID
             Case tComp.t
@@ -282,6 +298,49 @@
                 Return "valid"
             Case tComp.Undefined
                 Return "Undefined"
+            Case Else
+                Return "ERROR"
+        End Select
+    End Function
+
+    Public Function fCompUnit(ByVal ID As tComp) As String
+        Select Case ID
+            Case tComp.t
+                Return "[s]"
+            Case tComp.lati
+                Return "[mm.mm]"
+            Case tComp.longi
+                Return "[mm.mm]"
+            Case tComp.hdg
+                Return "[°]"
+            Case tComp.v_veh_GPS
+                Return "[km/h]"
+            Case tComp.v_veh_CAN
+                Return "[km/h]"
+            Case tComp.vair_ar
+                Return "[m/s]"
+            Case tComp.beta_ar
+                Return "[°]"
+            Case tComp.n_eng
+                Return "[rpm]"
+            Case tComp.tq_l
+                Return "[Nm]"
+            Case tComp.tq_r
+                Return "[Nm]"
+            Case tComp.t_amb_veh
+                Return "[°C]"
+            Case tComp.t_tire
+                Return "[°C]"
+            Case tComp.p_tire
+                Return "[bar]"
+            Case tComp.fc
+                Return "[kg/h]"
+            Case tComp.trigger
+                Return "[-]"
+            Case tComp.user_valid
+                Return "[-]"
+            Case tComp.Undefined
+                Return "[-]"
             Case Else
                 Return "ERROR"
         End Select
@@ -838,8 +897,8 @@
                 Return "CdxA0"
             Case tCompErgReg.delta_CdxA
                 Return "delta_CdxA"
-            Case tCompErgReg.roh_air_LS
-                Return "roh_air_LS"
+            Case tCompErgReg.rho_air_LS
+                Return "rho_air_LS"
             Case tCompErgReg.beta_abs_HS
                 Return "beta_abs_HS"
             Case tCompErgReg.t_tire_LS_max
@@ -901,7 +960,7 @@
                 Return "[m2]"
             Case tCompErgReg.delta_CdxA
                 Return "[m2]"
-            Case tCompErgReg.roh_air_LS
+            Case tCompErgReg.rho_air_LS
                 Return "[kg/m3]"
             Case tCompErgReg.beta_abs_HS
                 Return "[°]"

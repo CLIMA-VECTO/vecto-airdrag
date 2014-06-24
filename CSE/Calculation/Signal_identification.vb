@@ -540,7 +540,7 @@ Module Signal_identification
 
         ' Calculate the corrected vehicle speed
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
-            CalcData(tCompCali.v_veh_c)(i) = (InputData(tComp.v_veh_CAN)(i) * fv_veh)
+            CalcData(tCompCali.v_veh_c)(i) = (InputData(tComp.v_veh_CAN)(i) * Job.fv_veh)
             If i = 0 Then
                 CalcData(tCompCali.dist)(i) = (CalcData(tCompCali.v_veh_c)(i) / 3.6) * (1 / HzIn)
             Else
@@ -887,9 +887,9 @@ Module Signal_identification
                         ErgValues(tCompErg.vp_H2O)(run) = ((ErgValues(tCompErg.rh_stat)(run) / 100) * 611 * 10 ^ ((7.5 * ErgValues(tCompErg.t_amb_stat)(run)) / (237 + ErgValues(tCompErg.t_amb_stat)(run))))
                         ErgValues(tCompErg.rho_air)(run) = (ErgValues(tCompErg.p_amb_stat)(run) * 100 - ErgValues(tCompErg.vp_H2O)(run)) / (287.05 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15)) + ErgValues(tCompErg.vp_H2O)(run) / (461.9 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15))
                         If ErgValues(tCompErg.RunID)(run) = IDHS Then
-                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS * (Crt.roh_air_ref / ErgValues(tCompErg.rho_air)(run))
+                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS * (Crt.rho_air_ref / ErgValues(tCompErg.rho_air)(run))
                         Else
-                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor * (Crt.roh_air_ref / ErgValues(tCompErg.rho_air)(run))
+                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor * (Crt.rho_air_ref / ErgValues(tCompErg.rho_air)(run))
                         End If
                         ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
                         If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz
@@ -958,9 +958,9 @@ Module Signal_identification
                     ErgValues(tCompErg.vp_H2O)(run) = ((ErgValues(tCompErg.rh_stat)(run) / 100) * 611 * 10 ^ ((7.5 * ErgValues(tCompErg.t_amb_stat)(run)) / (237 + ErgValues(tCompErg.t_amb_stat)(run))))
                     ErgValues(tCompErg.rho_air)(run) = (ErgValues(tCompErg.p_amb_stat)(run) * 100 - ErgValues(tCompErg.vp_H2O)(run)) / (287.05 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15)) + ErgValues(tCompErg.vp_H2O)(run) / (461.9 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15))
                     If ErgValues(tCompErg.RunID)(run) = IDHS Then
-                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS * (Crt.roh_air_ref / ErgValues(tCompErg.rho_air)(run))
+                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS * (Crt.rho_air_ref / ErgValues(tCompErg.rho_air)(run))
                     Else
-                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor * (Crt.roh_air_ref / ErgValues(tCompErg.rho_air)(run))
+                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor * (Crt.rho_air_ref / ErgValues(tCompErg.rho_air)(run))
                     End If
                     ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
                     If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz

@@ -5,7 +5,7 @@
         ' Declaration
         Dim i, j, k, numLS1, numLS2, numHS, num, numT, PosHS(), lauf, t_amb_num As Integer
         Dim XLS1_Array(,), XLS2_Array(,), XHS_Array(,), XHS_S(1, 1), YLS1_Array(), YLS2_Array(), YHS_Array(), YHS_S(1) As Double
-        Dim XLR(,), YLR(), WFLR(,), F0, F2, F095, F295, R2, Roh_air_LS1, Roh_air_LS2, t_amb_f, t_amb_max_f, t_amb_min_f As Double
+        Dim XLR(,), YLR(), WFLR(,), F0, F2, F095, F295, R2, Rho_air_LS1, Rho_air_LS2, t_amb_f, t_amb_max_f, t_amb_min_f As Double
         Dim FirstInLS1, FirstInLS2, FirstInHS, FirstInGes As Boolean
         Dim EnumStr As tCompErgReg
 
@@ -20,14 +20,14 @@
         t_amb_num = 0
         FirstInGes = True
         ErgValuesReg = New Dictionary(Of tCompErgReg, List(Of Double))
-        CdxA = 0
-        CdxA0 = 0
-        CdxA0_opt2 = 0
-        delta_CdxA = 0
-        beta = 0
-        valid_t_amb = True
-        valid_RRC = True
-        valid_t_tire = True
+        Job.CdxA = 0
+        Job.CdxA0 = 0
+        Job.CdxA0_opt2 = 0
+        Job.delta_CdxA = 0
+        Job.beta = 0
+        Job.valid_t_amb = True
+        Job.valid_RRC = True
+        Job.valid_t_tire = True
 
         ' Generate the result dictionary variables
         For Each EnumStr In System.Enum.GetValues(GetType(tCompErgReg))
@@ -42,8 +42,8 @@
                 numLS2 = 0
                 numHS = 0
                 lauf += 1
-                Roh_air_LS1 = 0
-                Roh_air_LS2 = 0
+                Rho_air_LS1 = 0
+                Rho_air_LS2 = 0
                 FirstInLS1 = True
                 FirstInLS2 = True
                 FirstInHS = True
@@ -58,7 +58,7 @@
                 ' Save the SecID and DirID in result dictionary
                 ErgValuesReg(tCompErgReg.SecID).Add(ErgValuesComp(tCompErg.SecID)(i))
                 ErgValuesReg(tCompErgReg.DirID).Add(ErgValuesComp(tCompErg.DirID)(i))
-                ErgValuesReg(tCompErgReg.roh_air_LS).Add(0)
+                ErgValuesReg(tCompErgReg.rho_air_LS).Add(0)
                 ErgValuesReg(tCompErgReg.beta_abs_HS).Add(0)
 
                 ' Go through all measurements
@@ -82,7 +82,7 @@
                                     XLS1_Array(1, UBound(XLS1_Array, 2)) = ErgValuesComp(tCompErg.v_air_sq)(j)
                                     YLS1_Array(UBound(XLS1_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
 
-                                    ' Add values for t_tire_min/max and roh_air into the result dictionary
+                                    ' Add values for t_tire_min/max and rho_air into the result dictionary
                                     If FirstInLS1 Then
                                         ErgValuesReg(tCompErgReg.t_tire_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
                                         ErgValuesReg(tCompErgReg.t_tire_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
@@ -91,8 +91,8 @@
                                         If ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
                                         If ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
                                     End If
-                                    ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) += ErgValuesComp(tCompErg.rho_air)(j)
-                                    Roh_air_LS1 += ErgValuesComp(tCompErg.rho_air)(j)
+                                    ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) += ErgValuesComp(tCompErg.rho_air)(j)
+                                    Rho_air_LS1 += ErgValuesComp(tCompErg.rho_air)(j)
                                 Case IDLS2
                                     ' Initialise
                                     ReDim Preserve XLS2_Array(1, UBound(XLS2_Array, 2) + 1)
@@ -104,7 +104,7 @@
                                     XLS2_Array(1, UBound(XLS2_Array, 2)) = ErgValuesComp(tCompErg.v_air_sq)(j)
                                     YLS2_Array(UBound(YLS2_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
 
-                                    ' Add values for t_tire_min/max and roh_air into the result dictionary
+                                    ' Add values for t_tire_min/max and rho_air into the result dictionary
                                     If FirstInLS2 Then
                                         ErgValuesReg(tCompErgReg.t_tire_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
                                         ErgValuesReg(tCompErgReg.t_tire_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
@@ -113,8 +113,8 @@
                                         If ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
                                         If ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
                                     End If
-                                    ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) += ErgValuesComp(tCompErg.rho_air)(j)
-                                    Roh_air_LS2 += ErgValuesComp(tCompErg.rho_air)(j)
+                                    ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) += ErgValuesComp(tCompErg.rho_air)(j)
+                                    Rho_air_LS2 += ErgValuesComp(tCompErg.rho_air)(j)
                                 Case IDHS
                                     ' Initialise
                                     ReDim Preserve XHS_Array(1, UBound(XHS_Array, 2) + 1)
@@ -207,10 +207,10 @@
 
                         ' Save the values
                         ErgValuesComp(tCompErg.F0_ref_singleDS)(PosHS(j)) = F0
-                        ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) = F0 * (ErgValuesComp(tCompErg.rho_air)(PosHS(j)) / Crt.roh_air_ref)
+                        ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) = F0 * (ErgValuesComp(tCompErg.rho_air)(PosHS(j)) / Crt.rho_air_ref)
                         ErgValuesComp(tCompErg.F2_ref_singleDS)(PosHS(j)) = F2
                         ErgValuesComp(tCompErg.RRC_singleDS)(PosHS(j)) = (ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) / (vehicle.testMass * 9.81)) * 1000
-                        ErgValuesComp(tCompErg.CdxA_singleDS)(PosHS(j)) = 2 * F2 / Crt.roh_air_ref
+                        ErgValuesComp(tCompErg.CdxA_singleDS)(PosHS(j)) = 2 * F2 / Crt.rho_air_ref
                     Next j
 
                     '***** Calculate the linear regression for LS1
@@ -228,7 +228,7 @@
 
                     ' Save the values
                     ErgValuesReg(tCompErgReg.F0_LS1_ref).Add(F0)
-                    ErgValuesReg(tCompErgReg.F0_LS1).Add(F0 * (Roh_air_LS1 / numLS1) / Crt.roh_air_ref)
+                    ErgValuesReg(tCompErgReg.F0_LS1).Add(F0 * (Rho_air_LS1 / numLS1) / Crt.rho_air_ref)
                     ErgValuesReg(tCompErgReg.F2_LS1_ref).Add(F2)
                     ErgValuesReg(tCompErgReg.RRC_LS1).Add((ErgValuesReg(tCompErgReg.F0_LS1)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
@@ -247,7 +247,7 @@
 
                     ' Save the values
                     ErgValuesReg(tCompErgReg.F0_LS2_ref).Add(F0)
-                    ErgValuesReg(tCompErgReg.F0_LS2).Add(F0 * (Roh_air_LS2 / numLS2) / Crt.roh_air_ref)
+                    ErgValuesReg(tCompErgReg.F0_LS2).Add(F0 * (Rho_air_LS2 / numLS2) / Crt.rho_air_ref)
                     ErgValuesReg(tCompErgReg.F2_LS2_ref).Add(F2)
                     ErgValuesReg(tCompErgReg.RRC_LS2).Add((ErgValuesReg(tCompErgReg.F0_LS2)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
@@ -278,11 +278,11 @@
                     ErgValuesReg(tCompErgReg.R_sq).Add(R2)
 
                     ' Calculate additional values
-                    ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) = ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) / (numLS1 + numLS2)
+                    ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) = ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) / (numLS1 + numLS2)
                     ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf) = ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf) / (numHS)
-                    ErgValuesReg(tCompErgReg.F0).Add(F0 * (ErgValuesReg(tCompErgReg.roh_air_LS)(lauf) / Crt.roh_air_ref))
+                    ErgValuesReg(tCompErgReg.F0).Add(F0 * (ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) / Crt.rho_air_ref))
                     ErgValuesReg(tCompErgReg.RRC).Add(ErgValuesReg(tCompErgReg.F0)(lauf) / (vehicle.testMass * 9.81) * 1000)
-                    ErgValuesReg(tCompErgReg.CdxA).Add(2 * F2 / Crt.roh_air_ref)
+                    ErgValuesReg(tCompErgReg.CdxA).Add(2 * F2 / Crt.rho_air_ref)
                     ErgValuesReg(tCompErgReg.delta_CdxA).Add(fCalcGenShp(ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf), vehicle))
                     ErgValuesReg(tCompErgReg.CdxA0).Add(ErgValuesReg(tCompErgReg.CdxA)(lauf) - ErgValuesReg(tCompErgReg.delta_CdxA)(lauf))
                     If ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_HS_max)(lauf) - Crt.delta_t_tyre_max) Or _
@@ -294,14 +294,14 @@
                     End If
 
                     ' Summerise for the endresults
-                    CdxA += ErgValuesReg(tCompErgReg.CdxA)(lauf)
-                    beta += ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf)
-                    CdxA0_opt2 += ErgValuesReg(tCompErgReg.CdxA0)(lauf)
+                    Job.CdxA += ErgValuesReg(tCompErgReg.CdxA)(lauf)
+                    Job.beta += ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf)
+                    Job.CdxA0_opt2 += ErgValuesReg(tCompErgReg.CdxA0)(lauf)
                 Else
                     ' Clear the data in the result dictionary
                     ErgValuesReg(tCompErgReg.SecID).RemoveAt(lauf)
                     ErgValuesReg(tCompErgReg.DirID).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.roh_air_LS).RemoveAt(lauf)
+                    ErgValuesReg(tCompErgReg.rho_air_LS).RemoveAt(lauf)
                     ErgValuesReg(tCompErgReg.beta_abs_HS).RemoveAt(lauf)
                     ErgValuesReg(tCompErgReg.t_tire_HS_max).RemoveAt(lauf)
                     ErgValuesReg(tCompErgReg.t_tire_HS_min).RemoveAt(lauf)
@@ -313,17 +313,17 @@
         Next i
 
         ' Calculate the Endresults
-        CdxA = CdxA / (lauf + 1)
-        beta = beta / (lauf + 1)
-        delta_CdxA = fCalcGenShp(beta, vehicle)
-        CdxA0_opt2 = CdxA0_opt2 / (lauf + 1)
-        CdxA0 = CdxA - delta_CdxA
+        Job.CdxA = Job.CdxA / (lauf + 1)
+        Job.beta = Job.beta / (lauf + 1)
+        Job.delta_CdxA = fCalcGenShp(Job.beta, vehicle)
+        Job.CdxA0_opt2 = Job.CdxA0_opt2 / (lauf + 1)
+        Job.CdxA0 = Job.CdxA - Job.delta_CdxA
 
         ' Test validation
         t_amb_f = t_amb_f / t_amb_num
         If (t_amb_f - t_amb_min_f) > Crt.t_amb_var Or (t_amb_max_f - t_amb_f) > Crt.t_amb_var Then
             logme(9, False, "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
-            valid_t_amb = False
+            Job.valid_t_amb = False
         End If
 
         If t_amb_max_f > Crt.t_amb_max Then

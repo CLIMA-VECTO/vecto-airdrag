@@ -73,13 +73,13 @@
         Dim sKV As New KeyValuePair(Of String, List(Of Double))
 
         ' Input data
-        AddToErg(tComp.t, fCompName(tComp.t), Units(tComp.t)(0), "InputData")
-        AddToErg(tComp.lati, fCompName(tComp.lati), Units(tComp.lati)(0), "InputData")
-        AddToErg(tComp.longi, fCompName(tComp.longi), Units(tComp.longi)(0), "InputData")
+        AddToErg(tComp.t, fCompName(tComp.t), fCompUnit(tComp.t), "InputData")
+        AddToErg(tComp.lati, fCompName(tComp.lati), fCompUnit(tComp.lati), "InputData")
+        AddToErg(tComp.longi, fCompName(tComp.longi), fCompUnit(tComp.longi), "InputData")
 
         ' Undefined input data
         For Each sKV In InputUndefData
-            AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "InputUndefData")
+            AddToErg(sKV.Key, sKV.Key, "", "InputUndefData")
         Next
 
         ' Calculated data

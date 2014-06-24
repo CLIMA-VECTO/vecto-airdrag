@@ -127,10 +127,10 @@
             End If
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Results")
-            FileOut.WriteLine("# fv_veh:", fv_veh)
-            FileOut.WriteLine("# fv_veh_opt2:", fv_veh_opt2)
-            FileOut.WriteLine("# fv_pe:", fv_pe)
-            FileOut.WriteLine("# beta_ame:", beta_ame)
+            FileOut.WriteLine("# fv_veh:", Job.fv_veh)
+            FileOut.WriteLine("# fv_veh_opt2:", Job.fv_veh_opt2)
+            FileOut.WriteLine("# fv_pe:", Job.fv_pe)
+            FileOut.WriteLine("# beta_ame:", Job.beta_ame)
             FileOut.WriteLine("#")
 
             ' Write the head and units
@@ -217,29 +217,29 @@
             FileOut.WriteLine("# Datafile LS2: ", coasting_fpaths(2))
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Results")
-            FileOut.WriteLine("# fv_veh:", fv_veh, "[-] calibration factor for vehicle speed")
-            FileOut.WriteLine("# fv_veh_opt2:", fv_veh_opt2, "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
-            FileOut.WriteLine("# fv_pe:", fv_pe, "[-] calibration factor for air speed (position error)")
-            FileOut.WriteLine("# fa_pe:", fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
-            FileOut.WriteLine("# beta_ame:", beta_ame, "[°] calibration factor for beta (misalignment)")
-            FileOut.WriteLine("# CdxA:", CdxA, "[m²] average CdxA before yaw angle correction")
-            FileOut.WriteLine("# beta:", beta, "[°] average absolute yaw angle from high speed tests")
-            FileOut.WriteLine("# delta_CdxA:", delta_CdxA, "[m²] correction of CdxA for yaw angle")
-            FileOut.WriteLine("# CdxA(0):", CdxA0, "[m²] average CdxA for zero yaw angle")
-            FileOut.WriteLine("# CdxA(0)_opt2:", CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
+            FileOut.WriteLine("# fv_veh:", Job.fv_veh, "[-] calibration factor for vehicle speed")
+            FileOut.WriteLine("# fv_veh_opt2:", Job.fv_veh_opt2, "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
+            FileOut.WriteLine("# fv_pe:", Job.fv_pe, "[-] calibration factor for air speed (position error)")
+            FileOut.WriteLine("# fa_pe:", Job.fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
+            FileOut.WriteLine("# beta_ame:", Job.beta_ame, "[°] calibration factor for beta (misalignment)")
+            FileOut.WriteLine("# CdxA:", Job.CdxA, "[m²] average CdxA before yaw angle correction")
+            FileOut.WriteLine("# beta:", Job.beta, "[°] average absolute yaw angle from high speed tests")
+            FileOut.WriteLine("# delta_CdxA:", Job.delta_CdxA, "[m²] correction of CdxA for yaw angle")
+            FileOut.WriteLine("# CdxA(0):", Job.CdxA0, "[m²] average CdxA for zero yaw angle")
+            FileOut.WriteLine("# CdxA(0)_opt2:", Job.CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Validity criteria:")
-            If valid_t_tire Then
+            If Job.valid_t_tire Then
                 FileOut.WriteLine("# Tire temp:", "Ok")
             Else
                 FileOut.WriteLine("# Tire temp:", "Invalid test - maximum variation of tyre temperature exceeded")
             End If
-            If valid_RRC Then
+            If Job.valid_RRC Then
                 FileOut.WriteLine("# RRC:", "Ok")
             Else
                 FileOut.WriteLine("# RRC:", "Invalid test - maximum deviation of RRCs between low speed tests exceeded")
             End If
-            If valid_t_amb Then
+            If Job.valid_t_amb Then
                 FileOut.WriteLine("# Ambient temp:", "Ok")
             Else
                 FileOut.WriteLine("# Ambient temp:", "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
@@ -277,27 +277,27 @@
         Dim sKV As New KeyValuePair(Of String, List(Of Double))
 
         ' Input data
-        AddToErg(tComp.t, fCompName(tComp.t), Units(tComp.t)(0), "InputData")
-        AddToErg(tComp.lati, fCompName(tComp.lati), Units(tComp.lati)(0), "InputData")
-        AddToErg(tComp.longi, fCompName(tComp.longi), Units(tComp.longi)(0), "InputData")
-        AddToErg(tComp.hdg, fCompName(tComp.hdg), Units(tComp.hdg)(0), "InputData")
-        AddToErg(tComp.v_veh_GPS, fCompName(tComp.v_veh_GPS), Units(tComp.v_veh_GPS)(0), "InputData")
-        AddToErg(tComp.v_veh_CAN, fCompName(tComp.v_veh_CAN), Units(tComp.v_veh_CAN)(0), "InputData")
-        AddToErg(tComp.vair_ar, fCompName(tComp.vair_ar), Units(tComp.vair_ar)(0), "InputData")
-        AddToErg(tComp.beta_ar, fCompName(tComp.beta_ar), Units(tComp.beta_ar)(0), "InputData")
-        AddToErg(tComp.n_eng, fCompName(tComp.n_eng), Units(tComp.n_eng)(0), "InputData")
-        AddToErg(tComp.tq_l, fCompName(tComp.tq_l), Units(tComp.tq_l)(0), "InputData")
-        AddToErg(tComp.tq_r, fCompName(tComp.tq_r), Units(tComp.tq_r)(0), "InputData")
-        AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), Units(tComp.t_amb_veh)(0), "InputData")
-        AddToErg(tComp.t_tire, fCompName(tComp.t_tire), Units(tComp.t_tire)(0), "InputData")
+        AddToErg(tComp.t, fCompName(tComp.t), fCompUnit(tComp.t), "InputData")
+        AddToErg(tComp.lati, fCompName(tComp.lati), fCompUnit(tComp.lati), "InputData")
+        AddToErg(tComp.longi, fCompName(tComp.longi), fCompUnit(tComp.longi), "InputData")
+        AddToErg(tComp.hdg, fCompName(tComp.hdg), fCompUnit(tComp.hdg), "InputData")
+        AddToErg(tComp.v_veh_GPS, fCompName(tComp.v_veh_GPS), fCompUnit(tComp.v_veh_GPS), "InputData")
+        AddToErg(tComp.v_veh_CAN, fCompName(tComp.v_veh_CAN), fCompUnit(tComp.v_veh_CAN), "InputData")
+        AddToErg(tComp.vair_ar, fCompName(tComp.vair_ar), fCompUnit(tComp.vair_ar), "InputData")
+        AddToErg(tComp.beta_ar, fCompName(tComp.beta_ar), fCompUnit(tComp.beta_ar), "InputData")
+        AddToErg(tComp.n_eng, fCompName(tComp.n_eng), fCompUnit(tComp.n_eng), "InputData")
+        AddToErg(tComp.tq_l, fCompName(tComp.tq_l), fCompUnit(tComp.tq_l), "InputData")
+        AddToErg(tComp.tq_r, fCompName(tComp.tq_r), fCompUnit(tComp.tq_r), "InputData")
+        AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), fCompUnit(tComp.t_amb_veh), "InputData")
+        AddToErg(tComp.t_tire, fCompName(tComp.t_tire), fCompUnit(tComp.t_tire), "InputData")
         ' Write optional parameters
-        If OptPar(0) Then AddToErg(tComp.trigger, fCompName(tComp.trigger), Units(tComp.trigger)(0), "InputData")
-        If OptPar(1) Then AddToErg(tComp.p_tire, fCompName(tComp.p_tire), Units(tComp.p_tire)(0), "InputData")
-        If OptPar(2) Then AddToErg(tComp.fc, fCompName(tComp.fc), Units(tComp.fc)(0), "InputData")
+        If OptPar(0) Then AddToErg(tComp.trigger, fCompName(tComp.trigger), fCompUnit(tComp.trigger), "InputData")
+        If OptPar(1) Then AddToErg(tComp.p_tire, fCompName(tComp.p_tire), fCompUnit(tComp.p_tire), "InputData")
+        If OptPar(2) Then AddToErg(tComp.fc, fCompName(tComp.fc), fCompUnit(tComp.fc), "InputData")
 
         ' Undefined input data
         For Each sKV In InputUndefData
-            AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "InputUndefData")
+            AddToErg(sKV.Key, sKV.Key, "", "InputUndefData")
         Next
 
         ' Calculated data
@@ -434,11 +434,11 @@
         ' Undefined input data
         If calibration Then
             For Each sKV In InputUndefData
-                AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "ErgValuesUndef")
+                AddToErg(sKV.Key, sKV.Key, "", "ErgValuesUndef")
             Next
         Else
             For Each sKV In ErgValuesUndefComp
-                AddToErg(sKV.Key, sKV.Key, UnitsErgUndefComp(sKV.Key)(0), "ErgValuesUndef")
+                AddToErg(sKV.Key, sKV.Key, "", "ErgValuesUndef")
             Next
         End If
     End Sub
@@ -461,7 +461,7 @@
         AddToErg(tCompErgReg.CdxA0, fCompName(tCompErgReg.CdxA0), fCompUnit(tCompErgReg.CdxA0), "ErgValuesReg")
         AddToErg(tCompErgReg.delta_CdxA, fCompName(tCompErgReg.delta_CdxA), fCompUnit(tCompErgReg.delta_CdxA), "ErgValuesReg")
         AddToErg(tCompErgReg.beta_abs_HS, fCompName(tCompErgReg.beta_abs_HS), fCompUnit(tCompErgReg.beta_abs_HS), "ErgValuesReg")
-        AddToErg(tCompErgReg.roh_air_LS, fCompName(tCompErgReg.roh_air_LS), fCompUnit(tCompErgReg.roh_air_LS), "ErgValuesReg")
+        AddToErg(tCompErgReg.rho_air_LS, fCompName(tCompErgReg.rho_air_LS), fCompUnit(tCompErgReg.rho_air_LS), "ErgValuesReg")
         AddToErg(tCompErgReg.RRC, fCompName(tCompErgReg.RRC), fCompUnit(tCompErgReg.RRC), "ErgValuesReg")
         AddToErg(tCompErgReg.RRC_LS1, fCompName(tCompErgReg.RRC_LS1), fCompUnit(tCompErgReg.RRC_LS1), "ErgValuesReg")
         AddToErg(tCompErgReg.RRC_LS2, fCompName(tCompErgReg.RRC_LS2), fCompUnit(tCompErgReg.RRC_LS2), "ErgValuesReg")

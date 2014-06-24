@@ -19,7 +19,7 @@ Public Class cCriteria
 
         g = New JObject()
         b.Processing = g
-        g.roh_air_ref = 1.1884
+        g.rho_air_ref = 1.1884
         g.accel_correction = False
         g.gradient_correction = False
         g.hz_out = 1
@@ -83,7 +83,7 @@ Public Class cCriteria
                     "required": true,
                     "additionalProperties": <%= allowAdditionalProps_str %>, 
                     "properties": {
-                        "roh_air_ref": {"type": "number", "required": true, 
+                        "rho_air_ref": {"type": "number", "required": true, 
                             "description": "Reference air density.", 
                             "units": "kg/m^3", 
                         },
@@ -295,7 +295,7 @@ Public Class cCriteria
     Public hz_out As Integer = 1
     Public acc_corr_avg As Single
     Public dist_float As Single
-    Public roh_air_ref As Single
+    Public rho_air_ref As Single
 
     ' Criteria
     Public trigger_delta_x_max As Single
@@ -340,7 +340,7 @@ Public Class cCriteria
         Me.accel_correction = g("accel_correction")
         Me.gradient_correction = g("gradient_correction")
         Me.hz_out = g("hz_out")
-        Me.roh_air_ref = g("roh_air_ref")
+        Me.rho_air_ref = g("rho_air_ref")
         Me.acc_corr_avg = g("acc_corr_avg")
         Me.dist_float = g("dist_float")
 
@@ -390,7 +390,7 @@ Public Class cCriteria
         b = Me.Body
 
         g = b("Processing")
-        g.roh_air_ref = Me.roh_air_ref
+        g.rho_air_ref = Me.rho_air_ref
         g.accel_correction = Me.accel_correction
         g.gradient_correction = Me.gradient_correction
         g.hz_out = Me.hz_out
