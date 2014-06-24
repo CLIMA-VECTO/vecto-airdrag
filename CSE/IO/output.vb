@@ -277,27 +277,28 @@
         Dim sKV As New KeyValuePair(Of String, List(Of Double))
 
         ' Input data
-        AddToErg(tComp.t, fCompName(tComp.t), Units(tComp.t)(0), "InputData")
-        AddToErg(tComp.lati, fCompName(tComp.lati), Units(tComp.lati)(0), "InputData")
-        AddToErg(tComp.longi, fCompName(tComp.longi), Units(tComp.longi)(0), "InputData")
-        AddToErg(tComp.hdg, fCompName(tComp.hdg), Units(tComp.hdg)(0), "InputData")
-        AddToErg(tComp.v_veh_GPS, fCompName(tComp.v_veh_GPS), Units(tComp.v_veh_GPS)(0), "InputData")
-        AddToErg(tComp.v_veh_CAN, fCompName(tComp.v_veh_CAN), Units(tComp.v_veh_CAN)(0), "InputData")
-        AddToErg(tComp.vair_ar, fCompName(tComp.vair_ar), Units(tComp.vair_ar)(0), "InputData")
-        AddToErg(tComp.beta_ar, fCompName(tComp.beta_ar), Units(tComp.beta_ar)(0), "InputData")
-        AddToErg(tComp.n_eng, fCompName(tComp.n_eng), Units(tComp.n_eng)(0), "InputData")
-        AddToErg(tComp.tq_l, fCompName(tComp.tq_l), Units(tComp.tq_l)(0), "InputData")
-        AddToErg(tComp.tq_r, fCompName(tComp.tq_r), Units(tComp.tq_r)(0), "InputData")
-        AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), Units(tComp.t_amb_veh)(0), "InputData")
-        AddToErg(tComp.t_tire, fCompName(tComp.t_tire), Units(tComp.t_tire)(0), "InputData")
+        AddToErg(tComp.t, fCompName(tComp.t), fCompUnit(tComp.t), "InputData")
+        AddToErg(tComp.lati, fCompName(tComp.lati), fCompUnit(tComp.lati), "InputData")
+        AddToErg(tComp.longi, fCompName(tComp.longi), fCompUnit(tComp.longi), "InputData")
+        AddToErg(tComp.hdg, fCompName(tComp.hdg), fCompUnit(tComp.hdg), "InputData")
+        AddToErg(tComp.v_veh_GPS, fCompName(tComp.v_veh_GPS), fCompUnit(tComp.v_veh_GPS), "InputData")
+        AddToErg(tComp.v_veh_CAN, fCompName(tComp.v_veh_CAN), fCompUnit(tComp.v_veh_CAN), "InputData")
+        AddToErg(tComp.vair_ar, fCompName(tComp.vair_ar), fCompUnit(tComp.vair_ar), "InputData")
+        AddToErg(tComp.beta_ar, fCompName(tComp.beta_ar), fCompUnit(tComp.beta_ar), "InputData")
+        AddToErg(tComp.n_eng, fCompName(tComp.n_eng), fCompUnit(tComp.n_eng), "InputData")
+        AddToErg(tComp.tq_l, fCompName(tComp.tq_l), fCompUnit(tComp.tq_l), "InputData")
+        AddToErg(tComp.tq_r, fCompName(tComp.tq_r), fCompUnit(tComp.tq_r), "InputData")
+        AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), fCompUnit(tComp.t_amb_veh), "InputData")
+        AddToErg(tComp.t_tire, fCompName(tComp.t_tire), fCompUnit(tComp.t_tire), "InputData")
         ' Write optional parameters
-        If OptPar(0) Then AddToErg(tComp.trigger, fCompName(tComp.trigger), Units(tComp.trigger)(0), "InputData")
-        If OptPar(1) Then AddToErg(tComp.p_tire, fCompName(tComp.p_tire), Units(tComp.p_tire)(0), "InputData")
-        If OptPar(2) Then AddToErg(tComp.fc, fCompName(tComp.fc), Units(tComp.fc)(0), "InputData")
+        If OptPar(0) Then AddToErg(tComp.trigger, fCompName(tComp.trigger), fCompUnit(tComp.trigger), "InputData")
+        If OptPar(1) Then AddToErg(tComp.p_tire, fCompName(tComp.p_tire), fCompUnit(tComp.p_tire), "InputData")
+        If OptPar(2) Then AddToErg(tComp.fc, fCompName(tComp.fc), fCompUnit(tComp.fc), "InputData")
 
         ' Undefined input data
         For Each sKV In InputUndefData
-            AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "InputUndefData")
+            'AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "InputUndefData")
+            AddToErg(sKV.Key, sKV.Key, "", "InputUndefData")
         Next
 
         ' Calculated data
@@ -434,11 +435,13 @@
         ' Undefined input data
         If calibration Then
             For Each sKV In InputUndefData
-                AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "ErgValuesUndef")
+                'AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "ErgValuesUndef")
+                AddToErg(sKV.Key, sKV.Key, "", "ErgValuesUndef")
             Next
         Else
             For Each sKV In ErgValuesUndefComp
-                AddToErg(sKV.Key, sKV.Key, UnitsErgUndefComp(sKV.Key)(0), "ErgValuesUndef")
+                'AddToErg(sKV.Key, sKV.Key, UnitsErgUndefComp(sKV.Key)(0), "ErgValuesUndef")
+                AddToErg(sKV.Key, sKV.Key, "", "ErgValuesUndef")
             Next
         End If
     End Sub

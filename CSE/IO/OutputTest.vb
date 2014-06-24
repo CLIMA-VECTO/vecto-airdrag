@@ -79,7 +79,8 @@
 
         ' Undefined input data
         For Each sKV In InputUndefData
-            AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "InputUndefData")
+            'AddToErg(sKV.Key, sKV.Key, UnitsUndef(sKV.Key)(0), "InputUndefData")
+            AddToErg(sKV.Key, sKV.Key, "", "InputUndefData")
         Next
 
         ' Calculated data

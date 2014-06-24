@@ -287,6 +287,49 @@
         End Select
     End Function
 
+    Public Function fCompUnit(ByVal ID As tComp) As String
+        Select Case ID
+            Case tComp.t
+                Return "[s]"
+            Case tComp.lati
+                Return "[mm.mm]"
+            Case tComp.longi
+                Return "[mm.mm]"
+            Case tComp.hdg
+                Return "[°]"
+            Case tComp.v_veh_GPS
+                Return "[km/h]"
+            Case tComp.v_veh_CAN
+                Return "[km/h]"
+            Case tComp.vair_ar
+                Return "[m/s]"
+            Case tComp.beta_ar
+                Return "[°]"
+            Case tComp.n_eng
+                Return "[rpm]"
+            Case tComp.tq_l
+                Return "[Nm]"
+            Case tComp.tq_r
+                Return "[Nm]"
+            Case tComp.t_amb_veh
+                Return "[°C]"
+            Case tComp.t_tire
+                Return "[°C]"
+            Case tComp.p_tire
+                Return "[bar]"
+            Case tComp.fc
+                Return "[kg/h]"
+            Case tComp.trigger
+                Return "[-]"
+            Case tComp.user_valid
+                Return "[-]"
+            Case tComp.Undefined
+                Return "[-]"
+            Case Else
+                Return "ERROR"
+        End Select
+    End Function
+
     Public Function fCompName(ByVal ID As tCompWeat) As String
         Select Case ID
             Case tCompWeat.t
