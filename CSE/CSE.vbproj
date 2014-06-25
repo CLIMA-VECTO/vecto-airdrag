@@ -116,7 +116,6 @@
     <Compile Include="Classes\cValidSec.vb" />
     <Compile Include="IO\cVehicle.vb" />
     <Compile Include="Classes\cVirtMSC.vb" />
-    <Compile Include="IO\cResults.vb" />
     <Compile Include="IO\output.vb" />
     <Compile Include="IO\OutputTest.vb" />
     <Compile Include="Calculation\Minor_routines_calculate.vb" />

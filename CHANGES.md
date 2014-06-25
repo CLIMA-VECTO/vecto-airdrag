@@ -2,11 +2,11 @@ VECTO-CSE: Changes
 ===================
 
 
-TODO: 2014-06-??: v2.0.1
+TODO: 2014-06-25: v2.0.1
 --------------------
 Mostly JRC contributions (see VECTO-29 & VECTO-35):
 
-  * IO: JSON-ize preferences, vehicle, job & criteria-files EXCEPT from Track-file and Output-values.
+  * IO: JSON-ize preferences, vehicle, job & criteria-files EXCEPT from Track-file.
   * IO: CSVize all the rest files with a single header line and use '#' for comment lines.
   * IO: Separate config/ from Declaration/ folders.
   * UI: Provide default-values and help-messages in GUI/files with infos fetched from JSON-schemas.
@@ -30,11 +30,14 @@ Mostly JRC contributions (see VECTO-29 & VECTO-35):
 
 More analytically:
 
-#### 2014-06-23: v2.0.1-pre3 ####
+#### 2014-06-23: v2.0.1-beta0 ####
 TUG & JRC improvements:
 
-  * Changed comment symbol in CSV files from 'c' --> '#'
-  * Unify hunits into header labels.
+  * json: Store run-results within the Job-file.
+  * csv: Ensure result-files are valid CSVs.
+  * csv: Changed comment symbol in CSV files from 'c' --> '#'
+  * csv: Unify hunits into header labels.
+##### Internal:
   * Use Exceptions instead of CancelAsync() and error-flags in calc-routines and input.vb.
   * Remove unused distVincenty() func.
 

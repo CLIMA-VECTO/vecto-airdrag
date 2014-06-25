@@ -19,6 +19,17 @@ Imports System.Globalization
 ''' •	/Header/BodySchema: The JSON-schema of the body will be placed HERE, for documenting file.  
 '''     When true, it is always replaced by the Body's schema on the next save. When false, it overrides 
 ''' application's choice and is not replaced ever.
+''' 
+''' 
+''' How to Override:
+''' ----------------
+''' You can extend it to add Body-content in 2 ways (and a combination o0f both is possible):
+''' •    With Properties: Add Properties that on Get/Set write/read directly from the body-content,
+'''      so the object is always in sync with the JSON-content.
+''' •    With public fields: Add fields that do not have any side-effect, but then the JSON-content 
+'''     needs to get synced with those fields.  This is achieved by overriding thefollowing 2 methods:
+''' 
+''' In any case, 
 ''' </remarks>
 Public MustInherit Class cJsonFile
     Implements ICloneable
@@ -109,8 +120,11 @@ When False, it overrides Application's choice and is not replaced ever.",
     ''' <remarks>To signify validation-failure it can throw an exception or add err-messages into the supplied list</remarks>
     Protected MustOverride Sub ValidateBody(ByVal isStrict As Boolean, ByVal validateMsgs As IList(Of String))
 
+    ''' <summary>Override this to read the JSON-content and update any fields on this instance</summary>
     Protected Overridable Sub OnContentUpdated()
     End Sub
+
+    ''' <summary>Override this to update the JSON-content from any fields on this instance before storing it</summary>
     Protected Overridable Sub OnBeforeContentStored()
     End Sub
 

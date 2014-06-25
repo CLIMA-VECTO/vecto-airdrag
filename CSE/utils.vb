@@ -263,15 +263,16 @@ Module utils
         Dim printEx = False
         Dim lbox As ListBox
 
+        Dim mtext = text
         If (ex IsNot Nothing) Then
             printEx = (logFileLevel > 1 AndAlso Prefs.logLevel <= 2)
-            text = format("{0} (Check {1} for details)", text, IIf(printEx, "error/warn tab", "log-file"))
+            mtext = format("{0} (Check {1} for details)", text, IIf(printEx, "error/warn tab", "log-file"))
         End If
 
         ' Always write to log-msg tab.
         ''
         lbox = F_Main.ListBoxMSG
-        lbox.Items.Add(text)
+        lbox.Items.Add(mtext)
         F_Main.TabPageMSG.Text = format("Messages({0})", lbox.Items.Count)
         ' Set the Scrollbars in the Listboxes at the end
         lbox.TopIndex = lbox.Items.Count - 1
@@ -295,9 +296,7 @@ Module utils
         End If
 
         lbox.TopIndex = lbox.Items.Count - 1
-        F_Main.TabPageWar.Text = format("Warnings({0})", lbox.Items.Count)
-
-
+        lbox.Text = format("{0}({1})", label, lbox.Items.Count)
     End Sub
 
 
