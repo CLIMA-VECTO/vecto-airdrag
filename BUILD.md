@@ -29,7 +29,7 @@ Checklist to build a new release:
       * Newtonsoft.Json.dll 6.0.0
       * Declaration/ (With all its files marked as READONLY!!)
       * DemoData/
-      * Docs/CSE-User Manual.pdf (generated from Word-file)
+      * Docs/CSE-User Manual.pdf (*remember* to generate from Word-file and delete irrelevant files)
       * Docs/GenericData.xlsx
       * README.md
       * CHANGES.md

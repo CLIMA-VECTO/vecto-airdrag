@@ -31,7 +31,7 @@ Mostly JRC contributions (see VECTO-29 & VECTO-35):
 More analytically:
 
 #### 2014-06-23: v2.0.1-beta0 ####
-TUG & JRC improvements:
+Mostly TUG improvements:
 
   * json: Store run-results within the Job-file.
   * csv: Ensure result-files are valid CSVs.
@@ -40,6 +40,7 @@ TUG & JRC improvements:
 ##### Internal:
   * Use Exceptions instead of CancelAsync() and error-flags in calc-routines and input.vb.
   * Remove unused distVincenty() func.
+  * Added EUPL preamble on all source-files.
 
 
 #### 2014-06-04: v2.0.1-pre2 ####
