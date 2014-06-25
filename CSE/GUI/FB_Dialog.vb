@@ -1,3 +1,14 @@
+' Copyright 2014 European Union.
+' Licensed under the EUPL (the 'Licence');
+'
+' * You may not use this work except in compliance with the Licence.
+' * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
+' * Unless required by applicable law or agreed to in writing,
+'   software distributed under the Licence is distributed on an "AS IS" basis,
+'   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+'
+' See the LICENSE.txt for the specific language governing permissions and limitations.
+
 Public Class FB_Dialog
 
     Private MyFolder As String
@@ -614,7 +625,7 @@ Public Class FB_Dialog
     End Sub
 
     'Select All - Click
-    Private Sub ButtonAll_Click(sender As System.Object, e As System.EventArgs) Handles ButtonAll.Click
+    Private Sub ButtonAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonAll.Click
         Dim i As Integer
         Me.ListViewFiles.BeginUpdate()
         For i = 0 To Me.ListViewFiles.Items.Count - 1
@@ -907,7 +918,7 @@ lb1:
     End Sub
 
     ' New File
-    Private Sub NewFileToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles NewFileToolStripMenuItem.Click
+    Private Sub NewFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NewFileToolStripMenuItem.Click
         Dim File As String
         Dim Result As DialogResult
 

@@ -1,4 +1,15 @@
-﻿Module Minor_routines_calculate
+﻿' Copyright 2014 European Union.
+' Licensed under the EUPL (the 'Licence');
+'
+' * You may not use this work except in compliance with the Licence.
+' * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
+' * Unless required by applicable law or agreed to in writing,
+'   software distributed under the Licence is distributed on an "AS IS" basis,
+'   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+'
+' See the LICENSE.txt for the specific language governing permissions and limitations.
+
+Module Minor_routines_calculate
     ' Koordinat calculation
     Public Function KleinPkt(ByVal orgKoordX As Double, ByVal orgKoordY As Double, ByVal Tae As Double, ByVal Saf As Double, ByVal Sfp As Double) As Array
         ' Declaration
@@ -57,7 +68,7 @@
         'Check whether Time is not reversed
         For i = 1 To TimeX.Count - 1
             If i = 1 Then tstep = TimeX(i) - TimeX(i - 1)
-            If tstep + (tstep * crt.delta_Hz_max / 100) < Math.Abs(TimeX(i) - TimeX(i - 1)) Or tstep - (tstep * crt.delta_Hz_max / 100) > Math.Abs(TimeX(i) - TimeX(i - 1)) Then
+            If tstep + (tstep * Crt.delta_Hz_max / 100) < Math.Abs(TimeX(i) - TimeX(i - 1)) Or tstep - (tstep * Crt.delta_Hz_max / 100) > Math.Abs(TimeX(i) - TimeX(i - 1)) Then
                 If Sprung Then
                     logme(9, False, "Time step invalid! t(" & i - 1 & ") = " & TimeX(i - 1) & "[s], t(" & i & ") = " & TimeX(i) & "[s]")
                     Return False
@@ -128,7 +139,7 @@
         'Check whether Time is not reversed
         For i = 1 To TimeX.Count - 1
             If i = 1 Then tstep = TimeX(i) - TimeX(i - 1)
-            If tstep + (tstep * crt.delta_Hz_max / 100) < Math.Abs(TimeX(i) - TimeX(i - 1)) Or tstep - (tstep * crt.delta_Hz_max / 100) > Math.Abs(TimeX(i) - TimeX(i - 1)) Then
+            If tstep + (tstep * Crt.delta_Hz_max / 100) < Math.Abs(TimeX(i) - TimeX(i - 1)) Or tstep - (tstep * Crt.delta_Hz_max / 100) > Math.Abs(TimeX(i) - TimeX(i - 1)) Then
                 If Sprung Then
                     logme(9, False, "Time step invalid! t(" & i - 1 & ") = " & TimeX(i - 1) & "[s], t(" & i & ") = " & TimeX(i) & "[s]")
                     Return False
