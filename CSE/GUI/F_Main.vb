@@ -242,6 +242,9 @@ Public Class F_Main
             ' Change the button "Exec" --> "Cancel" 
             Me.CalibrationState = True
 
+            ' Reset Values
+            Job.ResetValue(True)
+
             ' Save the Jobfiles
             doSaveJob(False)
 
@@ -321,6 +324,9 @@ Public Class F_Main
             Me.EvaluationState = True
 
             fWriteLog(2, 4, "----- Speed runs ")
+
+            ' Reset Values
+            Job.ResetValue()
 
             ' Save the Jobfiles
             doSaveJob(False)

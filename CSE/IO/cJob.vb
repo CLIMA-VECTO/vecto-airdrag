@@ -185,6 +185,24 @@ Public Class cJob
         MyBase.New(inputFilePath, skipValidation)
     End Sub
 
+    ' Reset the Values to Standard
+    Friend Sub ResetValue(Optional IsCalibration As Boolean = False)
+        If IsCalibration Then
+            Job.fv_veh = 0
+            Job.fa_pe = 1
+            Job.fv_pe = 0
+            Job.beta_ame = 0
+        End If
+
+        Job.CdxA = 0
+        Job.beta = 0
+        Job.delta_CdxA = 0
+        Job.CdxA0 = 0
+        Job.CdxA0_opt2 = 0
+        Job.valid_t_tire = True
+        Job.valid_t_amb = True
+        Job.valid_RRC = True
+    End Sub
 
     Protected Overrides Function BodySchemaStr() As String
         Return JSchemaStr()
@@ -220,19 +238,19 @@ Public Class cJob
     Public beta_f As Double
     Public beta_d As Double
 
-    Public fv_veh As Double = 0
-    Public fv_veh_opt2 As Double = 0
-    Public fa_pe As Double = 1
-    Public fv_pe As Double = 0
-    Public beta_ame As Double = 0
-    Public CdxA As Double = 0
-    Public beta As Double = 0
-    Public delta_CdxA As Double = 0
-    Public CdxA0 As Double = 0
-    Public CdxA0_opt2 As Double = 0
-    Public valid_t_tire As Boolean = True
-    Public valid_t_amb As Boolean = True
-    Public valid_RRC As Boolean = True
+    Public fv_veh As Double
+    Public fv_veh_opt2 As Double
+    Public fa_pe As Double
+    Public fv_pe As Double
+    Public beta_ame As Double
+    Public CdxA As Double
+    Public beta As Double
+    Public delta_CdxA As Double
+    Public CdxA0 As Double
+    Public CdxA0_opt2 As Double
+    Public valid_t_tire As Boolean
+    Public valid_t_amb As Boolean
+    Public valid_RRC As Boolean
 
     Protected Overrides Sub OnContentUpdated()
         Dim anem = PropOrDefault(".Anemometer")
