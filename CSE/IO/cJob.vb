@@ -37,7 +37,6 @@ Public Class cJob
         b.low2_fpath = ""
         b.Criteria = New cCriteria().Body
 
-        'b.Results = New cResults().Body
         b.fv_veh = 0
         b.fa_pe = 1
         b.fv_pe = 0
@@ -108,74 +107,74 @@ Public Class cJob
                     <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csdat$', ", "") %>
                     "description": "File-path to a measurement-file (*.csdat)", 
                 }, 
+                "fv_veh": {
+                    "type": "number", 
+                    "description": "Calibration factor for vehicle speed.", 
+                    'default': 0,
+                },
+                "fv_pe": {
+                    "type": "number", 
+                    "description": "Calibration factor for air speed (position error).", 
+                    'default': 0,
+                },
+                "fa_pe": {
+                    "type": "number", 
+                    "description": "Position error correction factor for measured air inflow angle (beta).", 
+                    'default': 1,
+                },
+                "beta_ame": {
+                    "type": "number", 
+                    "description": "Calibration factor for beta (misalignment).", 
+                    'default': 0,
+                    "units": "°",
+                },
+                "CdxA": {
+                    "type": "number", 
+                    "description": "Average CdxA before yaw angle correction", 
+                    'default': 0,
+                    "units": "m^2",
+                },
+                "beta": {
+                    "type": "number", 
+                    "description": "Average absolute yaw angle from high speed tests.", 
+                    'default': 0,
+                    "units": "m^2",
+                },
+                "delta_CdxA": {
+                    "type": "number", 
+                    "description": "Correction of CdxA for yaw angle.", 
+                    'default': 0,
+                    "units": "m^2",
+                },
+                "CdxA0": {
+                    "type": "number", 
+                    "description": "Correction of CdxA for zero yaw angle.", 
+                    'default': 0,
+                    "units": "m^2",
+                },
+                "CdxA0_opt2": {
+                    "type": "number", 
+                    "description": "Average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections).", 
+                    'default': 0,
+                    "units": "m^2",
+                },
+                "valid_t_tire": {
+                    "type": "boolean", 
+                    "description": "Invalid if the maximum ambient temperature exceeded.", 
+                    'default': true,
+                },
+                "valid_t_amb": {
+                    "type": "boolean", 
+                    "description": "Invalid if the ambient temperature fallen below minimum.", 
+                    'default': true,
+                },
+                "valid_RRC": {
+                    "type": "boolean", 
+                    "description": "Invalid if the ambient temperature higher than allowed.", 
+                    'default': true,
+                },
                 "Criteria": <%= cCriteria.JSchemaStr(isStrictBody) %>,
-
-            "properties": {
-                "Calibration": {
-                    "type": "object",
-                    "required": true,
-                    "additionalProperties": <%= allowAdditionalProps_str %>, 
-                    "properties": {
-                        "fv_veh": {"type": "number", "required": true, 
-                            "description": "Calibration factor for vehicle speed.", 
-                        },
-                        "fv_pe": {"type": "number", "required": true, 
-                            "description": "Calibration factor for air speed (position error).", 
-                        },
-                        "fa_pe": {"type": "number", "required": true, 
-                            "description": "Position error correction factor for measured air inflow angle (beta).", 
-                        },
-                        "beta_ame": {"type": "number", "required": true, 
-                            "description": "Calibration factor for beta (misalignment).",
-                            "units": "°",
-                        },
-                    }
-                },
-                "Evaluation": {
-                    "type": "object",
-                    "required": true,
-                    "additionalProperties": <%= allowAdditionalProps_str %>, 
-                    "properties": {
-                        "CdxA": {"type": "number", "required": true, 
-                            "description": "Average CdxA before yaw angle correction",
-                            "units": "m^2",
-                        },
-                        "beta": {"type": "number", "required": true, 
-                            "description": "Average absolute yaw angle from high speed tests.",
-                            "units": "m^2",
-                        },
-                        "delta_CdxA": {"type": "number", "required": true, 
-                            "description": "Correction of CdxA for yaw angle.",
-                            "units": "m^2",
-                        },
-                        "CdxA0": {"type": "number", "required": true, 
-                            "description": "Correction of CdxA for zero yaw angle.",
-                            "units": "m^2",
-                        },
-                        "CdxA0_opt2": {"type": "number", "required": true, 
-                            "description": "Average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections).",
-                            "units": "m^2",
-                        },
-                    }
-                },
-                "Validity": {
-                    "type": "object",
-                    "required": true,
-                    "additionalProperties": <%= allowAdditionalProps_str %>, 
-                    "properties": {
-                        "valid_t_tire": {"type": "boolean", "required": true, 
-                            "description": "Invalid if the maximum ambient temperature exceeded.", 
-                        },
-                        "valid_t_amb": {"type": "boolean", "required": true, 
-                            "description": "Invalid if the ambient temperature fallen below minimum.", 
-                        },
-                        "valid_RRC": {"type": "boolean", "required": true, 
-                            "description": "Invalid if the ambient temperature higher than allowed.", 
-                        },
-                    }
-                },
-            },
-        }
+            }
         }</json>.Value
         '"": {
         '    "type": "string", 
@@ -275,10 +274,13 @@ Public Class cJob
     Protected Overrides Sub OnBeforeContentStored()
         Dim b As Object = Me.Body
 
-        b.v_air_f = Me.v_air_f
-        b.v_air_d = Me.v_air_d
-        b.beta_f = Me.beta_f
-        b.beta_d = Me.beta_d
+        Dim a As Object = New JObject()
+        a.v_air_f = Me.v_air_f
+        a.v_air_d = Me.v_air_d
+        a.beta_f = Me.beta_f
+        a.beta_d = Me.beta_d
+
+        b.Anemometer = a
 
         b.fv_veh = Math.Round(fv_veh, 3)
         b.fa_pe = Math.Round(fa_pe, 3)
@@ -294,7 +296,6 @@ Public Class cJob
         b.valid_RRC = valid_RRC
     End Sub
 
-
     Public Property vehicle_fpath As String
         Get
             Return getRootedPath(Me.Body("vehicle_fpath"), Prefs.workingDir)
@@ -306,9 +307,6 @@ Public Class cJob
             If value Is Nothing Then Me.Body("vehicle_fpath") = Nothing Else Me.Body("vehicle_fpath") = value
         End Set
     End Property
-
-
-
     Public Property ambient_fpath As String
         Get
             Return getRootedPath(Me.Body("ambient_fpath"), Prefs.workingDir)
@@ -342,7 +340,6 @@ Public Class cJob
             If value Is Nothing Then Me.Body("calib_run_fpath") = Nothing Else Me.Body("calib_run_fpath") = value
         End Set
     End Property
-
     Public Property coast_track_fpath As String
         Get
             Return getRootedPath(Me.Body("coast_track_fpath"), Prefs.workingDir)
@@ -387,13 +384,11 @@ Public Class cJob
             If value Is Nothing Then Me.Body("low2_fpath") = Nothing Else Me.Body("low2_fpath") = value
         End Set
     End Property
-
     Public ReadOnly Property coasting_fpaths As String()
         Get
             Return {low1_fpath, high_fpath, low2_fpath}
         End Get
     End Property
-
 
     ''' <summary>Do not invoke this method in vain...</summary>
     Property Criteria As cCriteria
@@ -404,8 +399,6 @@ Public Class cJob
             Me.Body("Criteria") = value.Body
         End Set
     End Property
-
-
 
     ' Function for reading the jobfile
     Public Sub fReadOldJobFile(ByVal jobFile As String)

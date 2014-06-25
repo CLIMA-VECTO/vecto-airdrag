@@ -350,7 +350,7 @@ Module Minor_routines_calculate
             Dim vline(), Line() As String
 
             ' Output on the GUI
-            logme(5, False, "Read altitude file")
+            logme(3, False, "Read altitude file")
 
             ' Open the MSC spezification file
             If Not FileInAlt.OpenRead(File) Then

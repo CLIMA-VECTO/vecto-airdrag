@@ -105,7 +105,7 @@ Public Class cCriteria
                             "description": "When True, applies gradient correction.", 
                         },
                         "hz_out": {"type": "integer", "required": true, 
-                            "description": "The sampling-rate of the result files.",
+                            "description": "The output-rate of the result files.",
                             "units": "Hz",
                         },
                         "rr_corr_factor": {"type": "number", "required": true, 
