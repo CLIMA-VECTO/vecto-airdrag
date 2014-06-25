@@ -51,6 +51,7 @@
                 fOutCalcRes(isCalibrate)
             End Try
         Else
+            ' Declaration
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
 
