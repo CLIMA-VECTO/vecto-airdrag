@@ -156,9 +156,7 @@ Public Module input
                     Line = FileInWeather.ReadLine
 
                     For Each sKV In Spalten
-                        If tdim <> 0 Then
-                            InputWeatherData(sKV.Key).Add(CDbl(Line(sKV.Value)))
-                        End If
+                        InputWeatherData(sKV.Key).Add(CDbl(Line(sKV.Value)))
                     Next sKV
                 Loop
             Catch ex As Exception
@@ -287,65 +285,64 @@ Public Module input
                     Line = FileInMeasure.ReadLine
 
                     For Each sKV In Spalten
-                        If tDim <> 0 Then
-                            InputData(sKV.Key).Add(CDbl(Line(sKV.Value)))
-                            If sKV.Key = tComp.t Then
-                                CalcData(tCompCali.t).Add(CDbl(Line(sKV.Value)))
-                                If tDim >= 2 Then
-                                    If Math.Abs((InputData(sKV.Key)(tDim - 1) - InputData(sKV.Key)(tDim - 2)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
-                                        If ErrDat Then
-                                            Throw New Exception("The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
-                                        Else
-                                            ErrDat = True
-                                            JumpPoint = tDim - 1
-                                        End If
+                        InputData(sKV.Key).Add(CDbl(Line(sKV.Value)))
+                        If sKV.Key = tComp.t Then
+                            CalcData(tCompCali.t).Add(CDbl(Line(sKV.Value)))
+                            If tDim >= 1 Then
+                                If Math.Abs((InputData(sKV.Key)(tDim) - InputData(sKV.Key)(tDim - 1)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
+                                    If ErrDat Then
+                                        Throw New Exception("The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
+                                    Else
+                                        ErrDat = True
+                                        JumpPoint = tDim
                                     End If
                                 End If
-                            ElseIf sKV.Key = tComp.lati Then
-                                If UTMcalc Then
-                                    UTMCoord = UTM(InputData(sKV.Key)(tDim - 1) / 60, InputData(tComp.longi)(tDim - 1) / 60)
-                                    If Not ZoneChange Then
-                                        If tDim > 1 Then
-                                            If CalcData(tCompCali.zone_UTM).Last <> UTMCoord.Zone Then
-                                                logme(8, False, "The coordinates lie in different UTM Zones. A zone adjustment will be done!")
-                                                ZoneChange = True
-                                            End If
-                                        End If
-                                    End If
-                                    CalcData(tCompCali.zone_UTM).Add(UTMCoord.Zone)
-                                    CalcData(tCompCali.lati_UTM).Add(UTMCoord.Northing)
-                                    CalcData(tCompCali.longi_UTM).Add(UTMCoord.Easting)
-                                    UTMcalc = False
-                                Else
-                                    UTMcalc = True
-                                End If
-                            ElseIf sKV.Key = tComp.longi Then
-                                If UTMcalc Then
-                                    UTMCoord = UTM(InputData(tComp.lati)(tDim - 1) / 60, InputData(sKV.Key)(tDim - 1) / 60)
-                                    If Not ZoneChange Then
-                                        If tDim > 1 Then
-                                            If CalcData(tCompCali.zone_UTM).Last <> UTMCoord.Zone Then
-                                                logme(8, False, "The coordinates lie in different UTM Zones. A zone adjustment will be done!")
-                                                ZoneChange = True
-                                            End If
-                                        End If
-                                    End If
-                                    CalcData(tCompCali.zone_UTM).Add(UTMCoord.Zone)
-                                    CalcData(tCompCali.lati_UTM).Add(UTMCoord.Northing)
-                                    CalcData(tCompCali.longi_UTM).Add(UTMCoord.Easting)
-                                    UTMcalc = False
-                                Else
-                                    UTMcalc = True
-                                End If
-                            ElseIf sKV.Key = tComp.trigger Then
-                                CalcData(tCompCali.trigger_c).Add(CDbl(Line(sKV.Value)))
                             End If
+                        ElseIf sKV.Key = tComp.lati Then
+                            If UTMcalc Then
+                                UTMCoord = UTM(InputData(sKV.Key)(tDim) / 60, InputData(tComp.longi)(tDim) / 60)
+                                If Not ZoneChange Then
+                                    If tDim > 0 Then
+                                        If CalcData(tCompCali.zone_UTM).Last <> UTMCoord.Zone Then
+                                            logme(8, False, "The coordinates lie in different UTM Zones. A zone adjustment will be done!")
+                                            ZoneChange = True
+                                        End If
+                                    End If
+                                End If
+                                CalcData(tCompCali.zone_UTM).Add(UTMCoord.Zone)
+                                CalcData(tCompCali.lati_UTM).Add(UTMCoord.Northing)
+                                CalcData(tCompCali.longi_UTM).Add(UTMCoord.Easting)
+                                UTMcalc = False
+                            Else
+                                UTMcalc = True
+                            End If
+                        ElseIf sKV.Key = tComp.longi Then
+                            If UTMcalc Then
+                                UTMCoord = UTM(InputData(tComp.lati)(tDim) / 60, InputData(sKV.Key)(tDim) / 60)
+                                If Not ZoneChange Then
+                                    If tDim > 0 Then
+                                        If CalcData(tCompCali.zone_UTM).Last <> UTMCoord.Zone Then
+                                            logme(8, False, "The coordinates lie in different UTM Zones. A zone adjustment will be done!")
+                                            ZoneChange = True
+                                        End If
+                                    End If
+                                End If
+                                CalcData(tCompCali.zone_UTM).Add(UTMCoord.Zone)
+                                CalcData(tCompCali.lati_UTM).Add(UTMCoord.Northing)
+                                CalcData(tCompCali.longi_UTM).Add(UTMCoord.Easting)
+                                UTMcalc = False
+                            Else
+                                UTMcalc = True
+                            End If
+                        ElseIf sKV.Key = tComp.trigger Then
+                            CalcData(tCompCali.trigger_c).Add(CDbl(Line(sKV.Value)))
                         End If
                     Next sKV
 
                     If valid_set Then
                         If tDim = 0 Then
                             InputData.Add(tComp.user_valid, New List(Of Double))
+                            InputData(tComp.user_valid).Add(CDbl(1))
                         Else
                             InputData(tComp.user_valid).Add(CDbl(1))
                         End If
@@ -353,9 +350,7 @@ Public Module input
 
                     ' Add the additional data to the undefined values
                     For Each sKVUndef In SpaltenUndef
-                        If tDim <> 0 Then
-                            InputUndefData(sKVUndef.Key).Add(CDbl(Line(sKVUndef.Value)))
-                        End If
+                        InputUndefData(sKVUndef.Key).Add(CDbl(Line(sKVUndef.Value)))
                     Next
                 Loop
             Catch ex As Exception
