@@ -1,6 +1,16 @@
 VECTO-CSE: Changes
 ===================
+#### 2014-09-30: v2.0.1-beta2 ####
+Mostly TUG improvements:
 
+  * Correction GenShape Check
+  * New Version number.
+
+#### 2014-09-15: v2.0.1-beta1 ####
+Mostly TUG improvements:
+
+  * IO: Data reading corrected for first data set in measurement section file, weather file and data files.
+  * New Version number.
 
 TODO: 2014-06-25: v2.0.1
 --------------------
