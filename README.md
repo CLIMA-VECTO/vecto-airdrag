@@ -9,7 +9,7 @@ A Constant Speed Evaluation tool for tests performed on Heavy-duty vehicles.
 
 ## INSTALLATION:
 This application is "portable" since no administration rights are needed, 
-and you can simply copy and move it anywhere. 
+and you can simply copy and move it anywhere.
 
 ### Prerequisites:
 The application is written in Windows VB.Net-4.0, so you have to ensure 
