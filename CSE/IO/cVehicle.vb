@@ -149,7 +149,7 @@ The generic parameters for classes are stored in the GenShape.shp",
         ''
         '' Check if vehicle class with the given configuration class is available
         For i = 0 To GenShape.veh_class.Count - 1
-            If GenShape.veh_class(i) = Me.classCode AndAlso CBool(GenShape.veh_conf(i)) = Me.IsRigid Then
+            If GenShape.veh_class(i) = Me.classCode AndAlso CBool(GenShape.veh_conf(i)) = CBool(Me.configuration) Then
                 Job.fa_pe = GenShape.fa_pe(i)
                 Return
             End If

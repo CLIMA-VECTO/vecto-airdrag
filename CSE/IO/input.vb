@@ -43,7 +43,7 @@ Public Module input
                     MSCX.longS.Add(Line(5))
                     MSCX.latE.Add(Line(6))
                     MSCX.longE.Add(Line(7))
-                    If Crt.gradient_correction Then MSCX.AltPath.Add(Line(8))
+                    If Crt.gradient_correction And Not calibration Then MSCX.AltPath.Add(Line(8))
                 Loop
             Catch ex As Exception
                 ' Falls kein gültiger Wert eingegeben wurde
