@@ -803,25 +803,21 @@ Public Module main_calculation_call
 
         ' Check if enough valid sections in both directionsection
         For i = 0 To SecCount.NameSec.Count - 1
-            For j = i + 1 To SecCount.NameSec.Count - 1
-                If Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1))) = Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), ",") + 1, InStr(SecCount.NameSec(j), ")") - (InStr(SecCount.NameSec(j), ",") + 1))) Then
-                    ' If enought sections in both directions are detected
-                    If SecCount.AnzSec(i) >= Crt.segruns_min_HS And SecCount.AnzSec(j) >= Crt.segruns_min_HS Then
-                        ' Count the valid tests per HeadID
-                        Dim headId = Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1)))
-                        Select Case headId
-                            Case 1
-                                anzHS1 += SecCount.AnzSec(i) + SecCount.AnzSec(j)
-                            Case 2
-                                anzHS2 += SecCount.AnzSec(i) + SecCount.AnzSec(j)
-                            Case Else
-                                Throw New Exception(format("Unknown headID({0})!", headId))
-                        End Select
-                    Else
-                        Throw New Exception(format("Not enough valid data({0}) for high speed tests available in section({1})!", SecCount.AnzSec(i), Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2))))
-                    End If
-                End If
-            Next j
+            ' If enought runs in the direction are detected
+            If SecCount.AnzSec(i) >= Crt.segruns_min_HS Then
+                ' Count the valid tests per HeadID
+                Dim headId = Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1)))
+                Select Case headId
+                    Case 1
+                        anzHS1 += SecCount.AnzSec(i)
+                    Case 2
+                        anzHS2 += SecCount.AnzSec(i)
+                    Case Else
+                        Throw New Exception(format("Unknown headID({0})!", headId))
+                End Select
+            Else
+                Throw New Exception(format("Not enough valid data({0}) for high speed tests available in section({1})!", SecCount.AnzSec(i), Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2))))
+            End If
         Next i
 
         ' Ceck if enough sections are detected
