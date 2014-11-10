@@ -47,7 +47,9 @@ Module Signal_identification
         Dim i As Integer
         Dim first As Boolean = True
         Dim AddSec As Boolean = False
+        Dim LenDiff As Boolean = False
         Dim Aae As Double
+        Dim len(MSCOrg.meID.Count - 1) As Double
         Dim UTMCoordP As New cUTMCoord
         Dim UTMCoordV As New cUTMCoord
 
@@ -59,6 +61,7 @@ Module Signal_identification
             UTMCoordP = UTM(MSCOrg.latS(i) / 60, MSCOrg.longS(i) / 60)
             UTMCoordV = UTM(MSCOrg.latE(i) / 60, MSCOrg.longE(i) / 60)
             Aae = QuadReq(UTMCoordV.Easting - UTMCoordP.Easting, UTMCoordV.Northing - UTMCoordP.Northing)
+            len(i) = Math.Sqrt(Math.Pow(UTMCoordV.Easting - UTMCoordP.Easting, 2) + Math.Pow(UTMCoordV.Northing - UTMCoordP.Northing, 2))
             MSCVirt.meID.Add(MSCOrg.meID(i))
             MSCVirt.dID.Add(MSCOrg.dID(i))
             MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, 0, -Crt.trigger_delta_y_max))
@@ -71,19 +74,30 @@ Module Signal_identification
                     MSCVirt.NewSec.Add(True)
                     MSCVirt.meID.Add(0)
                     MSCVirt.dID.Add(MSCOrg.dID(i))
-                    MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), -Crt.trigger_delta_y_max))
-                    MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), Crt.trigger_delta_y_max))
+                    MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, len(i), -Crt.trigger_delta_y_max))
+                    MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, len(i), Crt.trigger_delta_y_max))
                     MSCVirt.Head.Add(MSCOrg.head(i))
                 End If
             ElseIf i = MSCOrg.meID.Count - 1 Then
                 MSCVirt.NewSec.Add(True)
                 MSCVirt.meID.Add(0)
                 MSCVirt.dID.Add(MSCOrg.dID(i))
-                MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), -Crt.trigger_delta_y_max))
-                MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, MSCOrg.len(i), Crt.trigger_delta_y_max))
+                MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, len(i), -Crt.trigger_delta_y_max))
+                MSCVirt.KoordE.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, len(i), Crt.trigger_delta_y_max))
                 MSCVirt.Head.Add(MSCOrg.head(i))
             End If
         Next i
+
+        ' Controll the spezified csms length
+        For i = 1 To MSCOrg.meID.Count - 1
+            If Math.Abs(len(i) - MSCOrg.len(i)) > Crt.leng_crit Then
+                If Not LenDiff Then logme(9, False, "Length difference between given coordinates and spezified section length in *.csms file!")
+                logme(9, False, "SecID(" & MSCOrg.meID(i) & "), DirID(" & MSCOrg.dID(i) & "), spez. Len(" & MSCOrg.len(i) & "), coord. Len(" & Math.Round(len(i), 2) & ")")
+                LenDiff = True
+            End If
+        Next i
+        ' Exit the programm
+        If LenDiff Then Throw New Exception(format("Length difference between given coordinates and spezified section length in *.csms file! Please correct the length!"))
 
         Return True
     End Function
@@ -582,7 +596,7 @@ Module Signal_identification
                 End If
             Else
                 ' Finish calculation after a valid section
-                If run > 0 And firstIn = False Then
+                If firstIn = False Then
                     ' Calculate the results from the last section
                     ErgValues(tCompErg.v_veh)(run) = ErgValues(tCompErg.v_veh)(run) / anz
                     ErgValues(tCompErg.dist)(run) = CalcData(tCompCali.dist)(i - 1) - ErgValues(tCompErg.dist)(run)

@@ -1,5 +1,13 @@
 VECTO-CSE: Changes
 ===================
+#### 2014-09-30: v2.0.1-beta3 ####
+Mostly TUG improvements:
+
+  * Correction HS calculation
+  * Correction length calculation for the first section in the dat-file when there is a gap between the first and second MS.
+  * Update length calculation in csms-file to check if specified length from user and coordinates are the same
+  * New Version number.
+  
 #### 2014-09-30: v2.0.1-beta2 ####
 Mostly TUG improvements:
 
