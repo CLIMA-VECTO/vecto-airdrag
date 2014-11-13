@@ -91,7 +91,7 @@ Module sub_linear_regression
                                     ' Get the values
                                     XLS1_Array(0, UBound(XLS1_Array, 2)) = 1
                                     XLS1_Array(1, UBound(XLS1_Array, 2)) = ErgValuesComp(tCompErg.v_air_sq)(j)
-                                    YLS1_Array(UBound(XLS1_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
+                                    YLS1_Array(UBound(YLS1_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
 
                                     ' Add values for t_tire_min/max and rho_air into the result dictionary
                                     If FirstInLS1 Then

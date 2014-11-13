@@ -336,6 +336,14 @@ Public Module input
                             End If
                         ElseIf sKV.Key = tComp.trigger Then
                             CalcData(tCompCali.trigger_c).Add(CDbl(Line(sKV.Value)))
+                        ElseIf sKV.Key = tComp.beta_ar Then
+                            If InputData(sKV.Key)(tDim) > 360 Or InputData(sKV.Key)(tDim) < -360 Then
+                                Throw New Exception("The beta_ar angle is higher then +-360°! This is not a possible angle. Please correct.")
+                            ElseIf InputData(sKV.Key)(tDim) > 180 Then
+                                InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) - 360
+                            ElseIf InputData(sKV.Key)(tDim) < -180 Then
+                                InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) + 360
+                            End If
                         End If
                     Next sKV
 
