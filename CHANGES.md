@@ -1,6 +1,14 @@
 VECTO-CSE: Changes
 ===================
-#### 2014-09-30: v2.0.1-beta3 ####
+#### 2014-11-13: v2.0.1-beta4 ####
+Mostly TUG improvements:
+
+  * Bugfix linear regression calculation LS
+  * Add control for beta angle <= 360° and calculation to +-180° if angle > +-180°
+  * Update user manual
+  * New Version number.
+  
+#### 2014-11-10: v2.0.1-beta3 ####
 Mostly TUG improvements:
 
   * Correction HS calculation
