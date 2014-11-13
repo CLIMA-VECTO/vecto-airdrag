@@ -13,7 +13,7 @@ Module declaration_public
 
     ' Description of the form
     Public Const AppName As String = "VECTO_CSE"                ' Name of the programm
-    Public Const AppVers As String = "2.0.1-beta4"              ' Version of the Programm
+    Public Const AppVers As String = "2.0.1-beta3"              ' Version of the Programm
     Public AppDate As String                                    ' Date of the compilation of the programm
 
     ' Control variables
