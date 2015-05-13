@@ -389,7 +389,6 @@ Module Minor_routines_calculate
         End Using
     End Function
 
-
     ' Calculate the UTM coordinates
     Function UTM(ByVal Lat As Double, ByVal Lon As Double) As cUTMCoord
         ' Declaration

@@ -644,6 +644,8 @@ Partial Class F_Main
         'CB_accel_correction
         '
         Me.CB_accel_correction.AutoSize = True
+        Me.CB_accel_correction.Checked = True
+        Me.CB_accel_correction.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CB_accel_correction.Location = New System.Drawing.Point(6, 111)
         Me.CB_accel_correction.Name = "CB_accel_correction"
         Me.CB_accel_correction.Size = New System.Drawing.Size(111, 17)

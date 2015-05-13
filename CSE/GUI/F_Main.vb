@@ -1102,8 +1102,6 @@ Public Class F_Main
         PBInfoIconCrt.Visible = False
     End Sub
 
-
-
 #End Region
 
 End Class
