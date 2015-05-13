@@ -207,7 +207,7 @@ Public Module main_calculation_call
             ' Calculate the values for v_wind, beta and v_air
             fWindBetaAir(vehicleX)
 
-            ' Calculate the moving average from v_vind
+            ' Calculate the moving average from v_wind
             fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.vwind_c), CalcData(tCompCali.vwind_1s))
 
             ' Calculate the average values for v_wind, beta and v_wind_1s_max
@@ -328,13 +328,13 @@ Public Module main_calculation_call
     Function ffvpeBeta() As Boolean
         ' Declaration
         Dim anz_s(1, 0), i, j, CalcX(0), VSec(0), num As Integer
-        Dim ave_vc(1, 0), vair_ar(1, 0), beta_ar(1, 0), v_air_ges, beta_ges, ave_vc_ges As Double
+        Dim ave_vc(1, 0), vair_ic(1, 0), beta_ic(1, 0), v_air_ges, beta_ges, ave_vc_ges As Double
 
         ' Initialise
         For i = 0 To 1
             ave_vc(i, 0) = 0
-            vair_ar(i, 0) = 0
-            beta_ar(i, 0) = 0
+            vair_ic(i, 0) = 0
+            beta_ic(i, 0) = 0
             anz_s(i, 0) = 0
         Next i
         num = 0
@@ -350,8 +350,8 @@ Public Module main_calculation_call
                     ReDim Preserve CalcX(UBound(CalcX) + 1)
                     ReDim Preserve VSec(UBound(VSec) + 1)
                     ReDim Preserve ave_vc(1, UBound(ave_vc, 2) + 1)
-                    ReDim Preserve vair_ar(1, UBound(vair_ar, 2) + 1)
-                    ReDim Preserve beta_ar(1, UBound(beta_ar, 2) + 1)
+                    ReDim Preserve vair_ic(1, UBound(vair_ic, 2) + 1)
+                    ReDim Preserve beta_ic(1, UBound(beta_ic, 2) + 1)
                     ReDim Preserve anz_s(1, UBound(anz_s, 2) + 1)
                     CalcX(UBound(CalcX)) = ErgValues(tCompErg.SecID)(i)
                     VSec(UBound(VSec)) = 0
@@ -366,13 +366,13 @@ Public Module main_calculation_call
                     VSec(UBound(VSec)) = 1
                     If ErgValues(tCompErg.DirID)(i) = ErgValues(tCompErg.DirID)(0) Then
                         ave_vc(0, (UBound(ave_vc, 2))) += ErgValues(tCompErg.v_veh)(i) / 3.6
-                        vair_ar(0, (UBound(vair_ar, 2))) += ErgValues(tCompErg.vair_ic)(i)
-                        beta_ar(0, (UBound(beta_ar, 2))) += ErgValues(tCompErg.beta_ic)(i)
+                        vair_ic(0, (UBound(vair_ic, 2))) += ErgValues(tCompErg.vair_ic)(i)
+                        beta_ic(0, (UBound(beta_ic, 2))) += ErgValues(tCompErg.beta_ic)(i)
                         anz_s(0, (UBound(anz_s, 2))) += 1
                     Else
                         ave_vc(1, (UBound(ave_vc, 2))) += ErgValues(tCompErg.v_veh)(i) / 3.6
-                        vair_ar(1, (UBound(vair_ar, 2))) += ErgValues(tCompErg.vair_ic)(i)
-                        beta_ar(1, (UBound(beta_ar, 2))) += ErgValues(tCompErg.beta_ic)(i)
+                        vair_ic(1, (UBound(vair_ic, 2))) += ErgValues(tCompErg.vair_ic)(i)
+                        beta_ic(1, (UBound(beta_ic, 2))) += ErgValues(tCompErg.beta_ic)(i)
                         anz_s(1, (UBound(anz_s, 2))) += 1
                     End If
                 End If
@@ -380,13 +380,13 @@ Public Module main_calculation_call
                     VSec(UBound(VSec)) = 1
                     If ErgValues(tCompErg.DirID)(j) = ErgValues(tCompErg.DirID)(0) Then
                         ave_vc(0, (UBound(ave_vc, 2))) += ErgValues(tCompErg.v_veh)(j) / 3.6
-                        vair_ar(0, (UBound(vair_ar, 2))) += ErgValues(tCompErg.vair_ic)(j)
-                        beta_ar(0, (UBound(beta_ar, 2))) += ErgValues(tCompErg.beta_ic)(j)
+                        vair_ic(0, (UBound(vair_ic, 2))) += ErgValues(tCompErg.vair_ic)(j)
+                        beta_ic(0, (UBound(beta_ic, 2))) += ErgValues(tCompErg.beta_ic)(j)
                         anz_s(0, (UBound(anz_s, 2))) += 1
                     Else
                         ave_vc(1, (UBound(ave_vc, 2))) += ErgValues(tCompErg.v_veh)(j) / 3.6
-                        vair_ar(1, (UBound(vair_ar, 2))) += ErgValues(tCompErg.vair_ic)(j)
-                        beta_ar(1, (UBound(beta_ar, 2))) += ErgValues(tCompErg.beta_ic)(j)
+                        vair_ic(1, (UBound(vair_ic, 2))) += ErgValues(tCompErg.vair_ic)(j)
+                        beta_ic(1, (UBound(beta_ic, 2))) += ErgValues(tCompErg.beta_ic)(j)
                         anz_s(1, (UBound(anz_s, 2))) += 1
                     End If
                 End If
@@ -399,8 +399,8 @@ Public Module main_calculation_call
             ave_vc_ges = 0
             For j = 0 To 1
                 If VSec(i) = 1 Then
-                    v_air_ges += vair_ar(j, i) / anz_s(j, i)
-                    beta_ges += beta_ar(j, i) / anz_s(j, i)
+                    v_air_ges += vair_ic(j, i) / anz_s(j, i)
+                    beta_ges += beta_ic(j, i) / anz_s(j, i)
                     ave_vc_ges += ave_vc(j, i) / anz_s(j, i)
                     num += 1
                 End If
@@ -540,7 +540,7 @@ Public Module main_calculation_call
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            Throw New Exception(format("Insufficent numbers of valid measurement sections({0}) available!", SecCount.AnzSec.Count))
+            Throw New Exception(format("Insufficient numbers of valid measurement sections({0}) available!", SecCount.AnzSec.Count))
         End If
 
         ' Check if enough valid sections in both directionsection
@@ -599,7 +599,7 @@ Public Module main_calculation_call
             End If
         Next i
         If anz < 2 Then
-            Throw New Exception(format("Insufficent numbers of valid measurement sections({0}) available!", anz))
+            Throw New Exception(format("Insufficient numbers of valid measurement sections({0}) available!", anz))
         End If
 
         ' Look if something have changed
@@ -683,7 +683,7 @@ Public Module main_calculation_call
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            Throw New Exception(format("Insufficent numbers of valid measurement sections({0}) in the low speed test available!", SecCount.AnzSec.Count))
+            Throw New Exception(format("Insufficient numbers of valid measurement sections({0}) in the low speed test available!", SecCount.AnzSec.Count))
         End If
 
         ' Check if enough valid sections in both directionsection
@@ -798,7 +798,7 @@ Public Module main_calculation_call
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
-            Throw New Exception(format("Insufficent numbers of valid measurement sections({0}) in the high speed test available!", SecCount.AnzSec.Count))
+            Throw New Exception(format("Insufficient numbers of valid measurement sections({0}) in the high speed test available!", SecCount.AnzSec.Count))
         End If
 
         ' Check if enough valid sections in both directionsection
