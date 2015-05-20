@@ -47,6 +47,7 @@ Module declaration_public
     Public Const IDHS = 0                                       ' Run ID for the high test run
     Public Const f_rollHS = 1                                   ' Constant value for HS rolling resistance
     Public Zone1CentralMeridian = -177                          ' Central UTM zone meridian (Will be changed by zone adjustment)
+    Public Const AmeAng = 180                                   ' Installation angle of the anemomenter
 
 
     ' Constances for the array declaration

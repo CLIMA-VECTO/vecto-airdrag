@@ -52,19 +52,6 @@ Partial Class F_Main
         Me.GB_hz_out = New System.Windows.Forms.GroupBox()
         Me.RB100Hz = New System.Windows.Forms.RadioButton()
         Me.RB1Hz = New System.Windows.Forms.RadioButton()
-        Me.GB_Anemometer = New System.Windows.Forms.GroupBox()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.TextBoxbetaf = New System.Windows.Forms.TextBox()
-        Me.TextBoxbetad = New System.Windows.Forms.TextBox()
-        Me.TextBoxAirf = New System.Windows.Forms.TextBox()
-        Me.TextBoxAird = New System.Windows.Forms.TextBox()
         Me.CB_gradient_correction = New System.Windows.Forms.CheckBox()
         Me.CB_accel_correction = New System.Windows.Forms.CheckBox()
         Me.GroupBoxInput = New System.Windows.Forms.GroupBox()
@@ -112,8 +99,6 @@ Partial Class F_Main
         Me.TextBoxVeh = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TPMain = New System.Windows.Forms.TabPage()
-        Me.PbInfoIconMain = New System.Windows.Forms.PictureBox()
-        Me.TBInfoMain = New System.Windows.Forms.TextBox()
         Me.TPCriteria = New System.Windows.Forms.TabPage()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.Label26 = New System.Windows.Forms.Label()
@@ -233,7 +218,6 @@ Partial Class F_Main
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
-        Me.GB_Anemometer.SuspendLayout()
         Me.GroupBoxInput.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -245,7 +229,6 @@ Partial Class F_Main
         Me.TabPageErr.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TPMain.SuspendLayout()
-        CType(Me.PbInfoIconMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TPCriteria.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
@@ -502,135 +485,6 @@ Partial Class F_Main
         Me.RB1Hz.Text = "1Hz"
         Me.RB1Hz.UseVisualStyleBackColor = True
         '
-        'GB_Anemometer
-        '
-        Me.GB_Anemometer.Controls.Add(Me.Label13)
-        Me.GB_Anemometer.Controls.Add(Me.Label12)
-        Me.GB_Anemometer.Controls.Add(Me.Label11)
-        Me.GB_Anemometer.Controls.Add(Me.Label10)
-        Me.GB_Anemometer.Controls.Add(Me.Label6)
-        Me.GB_Anemometer.Controls.Add(Me.Label5)
-        Me.GB_Anemometer.Controls.Add(Me.Label4)
-        Me.GB_Anemometer.Controls.Add(Me.Label3)
-        Me.GB_Anemometer.Controls.Add(Me.TextBoxbetaf)
-        Me.GB_Anemometer.Controls.Add(Me.TextBoxbetad)
-        Me.GB_Anemometer.Controls.Add(Me.TextBoxAirf)
-        Me.GB_Anemometer.Controls.Add(Me.TextBoxAird)
-        Me.GB_Anemometer.Location = New System.Drawing.Point(335, 72)
-        Me.GB_Anemometer.Name = "GB_Anemometer"
-        Me.GB_Anemometer.Size = New System.Drawing.Size(463, 57)
-        Me.GB_Anemometer.TabIndex = 23
-        Me.GB_Anemometer.TabStop = False
-        Me.GB_Anemometer.Text = "Anemometer instrument calibration"
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(423, 23)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(17, 13)
-        Me.Label13.TabIndex = 31
-        Me.Label13.Text = "[°]"
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(311, 23)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(16, 13)
-        Me.Label12.TabIndex = 30
-        Me.Label12.Text = "[-]"
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(194, 23)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(31, 13)
-        Me.Label11.TabIndex = 29
-        Me.Label11.Text = "[m/s]"
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(86, 23)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(16, 13)
-        Me.Label10.TabIndex = 28
-        Me.Label10.Text = "[-]"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(343, 23)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(37, 13)
-        Me.Label6.TabIndex = 27
-        Me.Label6.Text = "beta d"
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(231, 23)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(34, 13)
-        Me.Label5.TabIndex = 26
-        Me.Label5.Text = "beta f"
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(114, 23)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(39, 13)
-        Me.Label4.TabIndex = 25
-        Me.Label4.Text = "v_air d"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(6, 23)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(36, 13)
-        Me.Label3.TabIndex = 24
-        Me.Label3.Text = "v_air f"
-        '
-        'TextBoxbetaf
-        '
-        Me.TextBoxbetaf.Location = New System.Drawing.Point(271, 20)
-        Me.TextBoxbetaf.Name = "TextBoxbetaf"
-        Me.TextBoxbetaf.Size = New System.Drawing.Size(40, 20)
-        Me.TextBoxbetaf.TabIndex = 10
-        Me.TextBoxbetaf.Text = "1"
-        Me.TextBoxbetaf.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'TextBoxbetad
-        '
-        Me.TextBoxbetad.Location = New System.Drawing.Point(383, 20)
-        Me.TextBoxbetad.Name = "TextBoxbetad"
-        Me.TextBoxbetad.Size = New System.Drawing.Size(40, 20)
-        Me.TextBoxbetad.TabIndex = 11
-        Me.TextBoxbetad.Text = "0"
-        Me.TextBoxbetad.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'TextBoxAirf
-        '
-        Me.TextBoxAirf.Location = New System.Drawing.Point(46, 20)
-        Me.TextBoxAirf.Name = "TextBoxAirf"
-        Me.TextBoxAirf.Size = New System.Drawing.Size(40, 20)
-        Me.TextBoxAirf.TabIndex = 8
-        Me.TextBoxAirf.Text = "1"
-        Me.TextBoxAirf.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'TextBoxAird
-        '
-        Me.TextBoxAird.Location = New System.Drawing.Point(154, 20)
-        Me.TextBoxAird.Name = "TextBoxAird"
-        Me.TextBoxAird.Size = New System.Drawing.Size(40, 20)
-        Me.TextBoxAird.TabIndex = 9
-        Me.TextBoxAird.Text = "0"
-        Me.TextBoxAird.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
         'CB_gradient_correction
         '
         Me.CB_gradient_correction.AutoSize = True
@@ -644,8 +498,6 @@ Partial Class F_Main
         'CB_accel_correction
         '
         Me.CB_accel_correction.AutoSize = True
-        Me.CB_accel_correction.Checked = True
-        Me.CB_accel_correction.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CB_accel_correction.Location = New System.Drawing.Point(6, 111)
         Me.CB_accel_correction.Name = "CB_accel_correction"
         Me.CB_accel_correction.Size = New System.Drawing.Size(111, 17)
@@ -671,7 +523,7 @@ Partial Class F_Main
         Me.GroupBoxInput.Controls.Add(Me.ButtonMSCT)
         Me.GroupBoxInput.Controls.Add(Me.ButtonSelectMSCT)
         Me.GroupBoxInput.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupBoxInput.Location = New System.Drawing.Point(5, 274)
+        Me.GroupBoxInput.Location = New System.Drawing.Point(5, 261)
         Me.GroupBoxInput.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBoxInput.Name = "GroupBoxInput"
         Me.GroupBoxInput.Padding = New System.Windows.Forms.Padding(2)
@@ -867,7 +719,7 @@ Partial Class F_Main
         Me.ButtonCalC.Location = New System.Drawing.Point(837, 18)
         Me.ButtonCalC.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonCalC.Name = "ButtonCalC"
-        Me.ButtonCalC.Size = New System.Drawing.Size(60, 111)
+        Me.ButtonCalC.Size = New System.Drawing.Size(60, 50)
         Me.ButtonCalC.TabIndex = 12
         Me.ButtonCalC.Text = "Calibrate"
         Me.ButtonCalC.TextAlign = System.Drawing.ContentAlignment.BottomCenter
@@ -881,14 +733,13 @@ Partial Class F_Main
         Me.GroupBox1.Controls.Add(Me.TextBoxDataC)
         Me.GroupBox1.Controls.Add(Me.ButtonDataC)
         Me.GroupBox1.Controls.Add(Me.ButtonSelectDataC)
-        Me.GroupBox1.Controls.Add(Me.GB_Anemometer)
         Me.GroupBox1.Controls.Add(Me.TextBoxMSCC)
         Me.GroupBox1.Controls.Add(Me.ButtonMSCC)
         Me.GroupBox1.Controls.Add(Me.ButtonSelectMSCC)
         Me.GroupBox1.Controls.Add(Me.ButtonCalC)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 81)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(906, 138)
+        Me.GroupBox1.Size = New System.Drawing.Size(906, 79)
         Me.GroupBox1.TabIndex = 33
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Calibration test"
@@ -970,7 +821,7 @@ Partial Class F_Main
         Me.GroupBox3.Controls.Add(Me.TextBoxRAirPos)
         Me.GroupBox3.Controls.Add(Me.Label7)
         Me.GroupBox3.Controls.Add(Me.TextBoxRVeh)
-        Me.GroupBox3.Location = New System.Drawing.Point(341, 225)
+        Me.GroupBox3.Location = New System.Drawing.Point(231, 166)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(463, 46)
         Me.GroupBox3.TabIndex = 31
@@ -1071,7 +922,7 @@ Partial Class F_Main
         Me.TabControlOutMsg.Controls.Add(Me.TabPageWar)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageErr)
         Me.TabControlOutMsg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabControlOutMsg.Location = New System.Drawing.Point(8, 520)
+        Me.TabControlOutMsg.Location = New System.Drawing.Point(8, 510)
         Me.TabControlOutMsg.Margin = New System.Windows.Forms.Padding(2)
         Me.TabControlOutMsg.Name = "TabControlOutMsg"
         Me.TabControlOutMsg.SelectedIndex = 0
@@ -1178,13 +1029,11 @@ Partial Class F_Main
         Me.TabControl1.Location = New System.Drawing.Point(8, 72)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(925, 443)
+        Me.TabControl1.Size = New System.Drawing.Size(925, 433)
         Me.TabControl1.TabIndex = 35
         '
         'TPMain
         '
-        Me.TPMain.Controls.Add(Me.PbInfoIconMain)
-        Me.TPMain.Controls.Add(Me.TBInfoMain)
         Me.TPMain.Controls.Add(Me.GroupBox3)
         Me.TPMain.Controls.Add(Me.GroupBoxJob)
         Me.TPMain.Controls.Add(Me.GroupBox1)
@@ -1192,27 +1041,10 @@ Partial Class F_Main
         Me.TPMain.Location = New System.Drawing.Point(4, 22)
         Me.TPMain.Name = "TPMain"
         Me.TPMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.TPMain.Size = New System.Drawing.Size(917, 417)
+        Me.TPMain.Size = New System.Drawing.Size(917, 407)
         Me.TPMain.TabIndex = 0
         Me.TPMain.Text = "Main"
         Me.TPMain.UseVisualStyleBackColor = True
-        '
-        'PbInfoIconMain
-        '
-        Me.PbInfoIconMain.Image = Global.CSE.My.Resources.Resources.Info
-        Me.PbInfoIconMain.Location = New System.Drawing.Point(12, 204)
-        Me.PbInfoIconMain.Name = "PbInfoIconMain"
-        Me.PbInfoIconMain.Size = New System.Drawing.Size(25, 30)
-        Me.PbInfoIconMain.TabIndex = 84
-        Me.PbInfoIconMain.TabStop = False
-        '
-        'TBInfoMain
-        '
-        Me.TBInfoMain.Location = New System.Drawing.Point(43, 176)
-        Me.TBInfoMain.Multiline = True
-        Me.TBInfoMain.Name = "TBInfoMain"
-        Me.TBInfoMain.Size = New System.Drawing.Size(282, 78)
-        Me.TBInfoMain.TabIndex = 85
         '
         'TPCriteria
         '
@@ -1226,7 +1058,7 @@ Partial Class F_Main
         Me.TPCriteria.Location = New System.Drawing.Point(4, 22)
         Me.TPCriteria.Name = "TPCriteria"
         Me.TPCriteria.Padding = New System.Windows.Forms.Padding(3)
-        Me.TPCriteria.Size = New System.Drawing.Size(917, 417)
+        Me.TPCriteria.Size = New System.Drawing.Size(917, 407)
         Me.TPCriteria.TabIndex = 1
         Me.TPCriteria.Text = "Criteria"
         Me.TPCriteria.UseVisualStyleBackColor = True
@@ -1994,7 +1826,7 @@ Partial Class F_Main
         Me.TBInfoCrt.Location = New System.Drawing.Point(37, 347)
         Me.TBInfoCrt.Multiline = True
         Me.TBInfoCrt.Name = "TBInfoCrt"
-        Me.TBInfoCrt.Size = New System.Drawing.Size(413, 64)
+        Me.TBInfoCrt.Size = New System.Drawing.Size(413, 56)
         Me.TBInfoCrt.TabIndex = 83
         '
         'PBInfoIconCrt
@@ -2370,8 +2202,6 @@ Partial Class F_Main
         Me.GroupBoxJob.PerformLayout()
         Me.GB_hz_out.ResumeLayout(False)
         Me.GB_hz_out.PerformLayout()
-        Me.GB_Anemometer.ResumeLayout(False)
-        Me.GB_Anemometer.PerformLayout()
         Me.GroupBoxInput.ResumeLayout(False)
         Me.GroupBoxInput.PerformLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2386,8 +2216,6 @@ Partial Class F_Main
         Me.TabPageErr.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.TPMain.ResumeLayout(False)
-        Me.TPMain.PerformLayout()
-        CType(Me.PbInfoIconMain, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TPCriteria.ResumeLayout(False)
         Me.TPCriteria.PerformLayout()
         Me.GroupBox7.ResumeLayout(False)
@@ -2438,15 +2266,6 @@ Partial Class F_Main
     Friend WithEvents TextBoxMSCC As System.Windows.Forms.TextBox
     Friend WithEvents ButtonMSCC As System.Windows.Forms.Button
     Friend WithEvents ButtonSelectMSCC As System.Windows.Forms.Button
-    Friend WithEvents TextBoxAirf As System.Windows.Forms.TextBox
-    Friend WithEvents TextBoxAird As System.Windows.Forms.TextBox
-    Friend WithEvents TextBoxbetaf As System.Windows.Forms.TextBox
-    Friend WithEvents TextBoxbetad As System.Windows.Forms.TextBox
-    Friend WithEvents GB_Anemometer As System.Windows.Forms.GroupBox
-    Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents TextBoxRBetaMis As System.Windows.Forms.TextBox
@@ -2474,10 +2293,6 @@ Partial Class F_Main
     Friend WithEvents GB_hz_out As System.Windows.Forms.GroupBox
     Friend WithEvents RB100Hz As System.Windows.Forms.RadioButton
     Friend WithEvents RB1Hz As System.Windows.Forms.RadioButton
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
     Friend WithEvents TPMain As System.Windows.Forms.TabPage
     Friend WithEvents TPCriteria As System.Windows.Forms.TabPage
@@ -2614,8 +2429,6 @@ Partial Class F_Main
     Friend WithEvents MenuItemSaveJob As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuItemSaveAsJob As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuItemClearLog As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents TBInfoMain As System.Windows.Forms.TextBox
-    Friend WithEvents PbInfoIconMain As System.Windows.Forms.PictureBox
     Friend WithEvents MenuItemExit As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripSeparator

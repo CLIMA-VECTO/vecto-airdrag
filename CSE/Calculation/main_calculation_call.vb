@@ -409,7 +409,7 @@ Public Module main_calculation_call
         Next i
 
         Job.fv_pe = Job.fv_pe / (UBound(CalcX) + 1)
-        Job.beta_ame += beta_ges / num
+        Job.beta_ame += beta_ges / num - AmeAng
 
         Return True
     End Function
@@ -426,10 +426,10 @@ Public Module main_calculation_call
 
         ' Calculate the values
         For i = 0 To CalcData(tCompCali.lati_UTM).Count - 1
-            CalcData(tCompCali.vair_uf)(i) = (CalcData(tCompCali.vair_ic)(i) * Job.fv_pe)
-            CalcData(tCompCali.beta_uf)(i) = ((CalcData(tCompCali.beta_ic)(i) - Job.beta_ame) * Job.fa_pe)
-            vwind_x_ha = CalcData(tCompCali.vair_uf)(i) * Math.Cos(CalcData(tCompCali.beta_uf)(i) * Math.PI / 180) - CalcData(tCompCali.v_veh_c)(i) / 3.6
-            vwind_y_ha = CalcData(tCompCali.vair_uf)(i) * Math.Sin(CalcData(tCompCali.beta_uf)(i) * Math.PI / 180)
+            CalcData(tCompCali.vair_uf)(i) = (InputData(tComp.vair_ic)(i) * Job.fv_pe)
+            CalcData(tCompCali.beta_uf)(i) = ((InputData(tComp.beta_ic)(i) - Job.beta_ame) * Job.fa_pe)
+            vwind_x_ha = CalcData(tCompCali.vair_uf)(i) * Math.Cos((CalcData(tCompCali.beta_uf)(i) - AmeAng) * Math.PI / 180) - CalcData(tCompCali.v_veh_c)(i) / 3.6
+            vwind_y_ha = CalcData(tCompCali.vair_uf)(i) * Math.Sin((CalcData(tCompCali.beta_uf)(i) - AmeAng) * Math.PI / 180)
             CalcData(tCompCali.vwind_ha)(i) = (Math.Sqrt(vwind_x_ha ^ 2 + vwind_y_ha ^ 2))
 
             ' Calculate the steps

@@ -27,8 +27,6 @@ Public Class F_Main
         Crt.hz_out = 1
 
         PBInfoIconCrt.Visible = False
-        TBInfoMain.Visible = False
-        TBInfoMain.BackColor = System.Drawing.Color.LightYellow
         TBInfoCrt.Visible = False
         TBInfoCrt.BackColor = System.Drawing.Color.LightYellow
         setupInfoBox()
@@ -89,6 +87,36 @@ Public Class F_Main
 
         ' Load the default settings into criteria tab
         UI_PopulateFromCriteria()
+    End Sub
+
+    ' Show the GUI and start direct if neccessary
+    Private Sub F_Main_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        ' If the start is done with command line then load jobfile and start calculation
+        If fGetArgs() Then
+            Dim reload As Boolean = True
+            doLoadJob(reload)
+
+            Try
+                ' Start the calibration
+                CalibrationHandler(sender, e)
+
+                ' Wait till Backgroundworker is no longer busy
+                Do While BWorker.IsBusy
+                    Application.DoEvents()
+                Loop
+
+                ' Start the evaluation
+                EvaluationHandler(sender, e)
+
+                ' Wait till Backgroundworker is no longer busy
+                Do While BWorker.IsBusy
+                    Application.DoEvents()
+                Loop
+            Finally
+                ' Close the form after calculation
+                Me.Close()
+            End Try
+        End If
     End Sub
 
     Private Sub ClickExitHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemExit.Click
@@ -188,8 +216,6 @@ Public Class F_Main
         Me.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3).ToString
         Me.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3).ToString
         Me.TextBoxRBetaMis.Text = Math.Round(Job.beta_ame, 2).ToString
-
-
     End Sub
 
 
@@ -478,11 +504,6 @@ Public Class F_Main
         Job.vehicle_fpath = TextBoxVeh1.Text
         Job.ambient_fpath = TextBoxWeather.Text
 
-        Job.v_air_f = TextBoxAirf.Text
-        Job.v_air_d = TextBoxAird.Text
-        Job.beta_f = TextBoxbetaf.Text
-        Job.beta_d = TextBoxbetad.Text
-
         ' Appropriate the inputfiles from calibration run
         Job.calib_run_fpath = TextBoxDataC.Text
         Job.calib_track_fpath = TextBoxMSCC.Text
@@ -561,10 +582,6 @@ Public Class F_Main
         ' Transfer the data to the GUI
         ' General
         TextBoxVeh1.Text = Job.vehicle_fpath
-        TextBoxAirf.Text = Job.v_air_f
-        TextBoxAird.Text = Job.v_air_d
-        TextBoxbetaf.Text = Job.beta_f
-        TextBoxbetad.Text = Job.beta_d
         TextBoxWeather.Text = Job.ambient_fpath
         ' Calibration
         TextBoxMSCC.Text = Job.calib_track_fpath
@@ -657,10 +674,6 @@ Public Class F_Main
             ' Clear the Textboxes or set them to default
             TextBoxVeh1.Clear()
             TextBoxWeather.Clear()
-            TextBoxAirf.Text = 1
-            TextBoxAird.Text = 0
-            TextBoxbetaf.Text = 1
-            TextBoxbetad.Text = 0
             CB_accel_correction.Checked = True
             CB_gradient_correction.Checked = False
 
@@ -954,6 +967,7 @@ Public Class F_Main
         If Not IsNothing(JobFile) Then
             logme(8, False, format("The Job-file({0}) has changed because of criteria update", JobFile))
         End If
+        Crt.accel_correction = True
         UI_PopulateFromCriteria()
     End Sub
 
@@ -1024,13 +1038,6 @@ Public Class F_Main
         Dim controls As Control()
 
         controls = New Control() {
-                Me.GB_Anemometer, Nothing
-        }
-        schema = JObject.Parse(cJob.JSchemaStr(isStrict))
-        armControlsWithInfoBox(schema, controls, AddressOf showInfoBox_main, AddressOf hideInfoBox_main)
-
-
-        controls = New Control() {
                 Me.TB_rho_air_ref, LRhoAirRef, _
                 Me.CB_accel_correction, Nothing, _
                 Me.CB_gradient_correction, Nothing, _
@@ -1080,17 +1087,6 @@ Public Class F_Main
         armControlsWithInfoBox(schema, controls, AddressOf showInfoBox_crt, AddressOf hideInfoBox_crt)
     End Sub
 
-    Private Sub showInfoBox_main(ByVal sender As Object, ByVal e As System.EventArgs)
-        TBInfoMain.Text = sender.Tag
-        TBInfoMain.Visible = True
-        PbInfoIconMain.Visible = True
-    End Sub
-
-    Private Sub hideInfoBox_main(ByVal sender As Object, ByVal e As System.EventArgs)
-        TBInfoMain.Visible = False
-        PbInfoIconMain.Visible = False
-    End Sub
-
     Private Sub showInfoBox_crt(ByVal sender As Object, ByVal e As System.EventArgs)
         TBInfoCrt.Text = sender.Tag
         TBInfoCrt.Visible = True
@@ -1103,5 +1099,4 @@ Public Class F_Main
     End Sub
 
 #End Region
-
 End Class

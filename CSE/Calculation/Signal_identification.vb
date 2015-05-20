@@ -408,8 +408,6 @@ Module Signal_identification
 
         ' Calculate the section average values
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
-            CalcData(tCompCali.vair_ic).Add(InputData(tComp.vair_ar)(i) * Job.v_air_f + Job.v_air_d)
-            CalcData(tCompCali.beta_ic).Add(InputData(tComp.beta_ar)(i) * Job.beta_f + Job.beta_d)
             For Each sKVC In CalcData
                 If CalcData(sKVC.Key).Count <= i Then
                     CalcData(sKVC.Key).Add(0)
@@ -429,10 +427,8 @@ Module Signal_identification
                     Next
                     ErgValues(tCompErg.delta_t).Add(InputData(tComp.t)(i))
                     ErgValues(tCompErg.v_veh_CAN).Add(InputData(tComp.v_veh_CAN)(i))
-                    ErgValues(tCompErg.vair_ar).Add(InputData(tComp.vair_ar)(i))
-                    ErgValues(tCompErg.vair_ic).Add(CalcData(tCompCali.vair_ic)(i))
-                    ErgValues(tCompErg.beta_ar).Add(InputData(tComp.beta_ar)(i))
-                    ErgValues(tCompErg.beta_ic).Add(CalcData(tCompCali.beta_ic)(i))
+                    ErgValues(tCompErg.vair_ic).Add(InputData(tComp.vair_ic)(i))
+                    ErgValues(tCompErg.beta_ic).Add(InputData(tComp.beta_ic)(i))
                     ErgValues(tCompErg.user_valid).Add(InputData(tComp.user_valid)(i))
                     ErgValues(tCompErg.valid).Add(1)
                     ErgValues(tCompErg.used).Add(1)
@@ -457,10 +453,8 @@ Module Signal_identification
                     If (ErgValues(tCompErg.SecID).Last = CalcData(tCompCali.SecID)(i)) And (ErgValues(tCompErg.DirID).Last = CalcData(tCompCali.DirID)(i)) Then
                         ' Build the sum
                         ErgValues(tCompErg.v_veh_CAN)(run) += InputData(tComp.v_veh_CAN)(i)
-                        ErgValues(tCompErg.vair_ar)(run) += InputData(tComp.vair_ar)(i)
-                        ErgValues(tCompErg.vair_ic)(run) += CalcData(tCompCali.vair_ic)(i)
-                        ErgValues(tCompErg.beta_ar)(run) += InputData(tComp.beta_ar)(i)
-                        ErgValues(tCompErg.beta_ic)(run) += CalcData(tCompCali.beta_ic)(i)
+                        ErgValues(tCompErg.vair_ic)(run) += InputData(tComp.vair_ic)(i)
+                        ErgValues(tCompErg.beta_ic)(run) += InputData(tComp.beta_ic)(i)
                         ErgValues(tCompErg.user_valid)(run) += InputData(tComp.user_valid)(i)
                         If Not MSCX.tUse Then
                             ErgValues(tCompErg.v_MSC_GPS)(run) += InputData(tComp.v_veh_GPS)(i)
@@ -474,9 +468,7 @@ Module Signal_identification
                         ' Calculate the results from the last section
                         ErgValues(tCompErg.delta_t)(run) = InputData(tComp.t)(i - 1) - ErgValues(tCompErg.delta_t)(run)
                         ErgValues(tCompErg.v_veh_CAN)(run) = ErgValues(tCompErg.v_veh_CAN)(run) / anz
-                        ErgValues(tCompErg.vair_ar)(run) = ErgValues(tCompErg.vair_ar)(run) / anz
                         ErgValues(tCompErg.vair_ic)(run) = ErgValues(tCompErg.vair_ic)(run) / anz
-                        ErgValues(tCompErg.beta_ar)(run) = ErgValues(tCompErg.beta_ar)(run) / anz
                         ErgValues(tCompErg.beta_ic)(run) = ErgValues(tCompErg.beta_ic)(run) / anz
                         ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
                         ErgValues(tCompErg.user_valid)(run) = ErgValues(tCompErg.user_valid)(run) / anz
@@ -499,10 +491,8 @@ Module Signal_identification
                         Next
                         ErgValues(tCompErg.delta_t).Add(InputData(tComp.t)(i))
                         ErgValues(tCompErg.v_veh_CAN).Add(InputData(tComp.v_veh_CAN)(i))
-                        ErgValues(tCompErg.vair_ar).Add(InputData(tComp.vair_ar)(i))
-                        ErgValues(tCompErg.vair_ic).Add(CalcData(tCompCali.vair_ic)(i))
-                        ErgValues(tCompErg.beta_ar).Add(InputData(tComp.beta_ar)(i))
-                        ErgValues(tCompErg.beta_ic).Add(CalcData(tCompCali.beta_ic)(i))
+                        ErgValues(tCompErg.vair_ic).Add(InputData(tComp.vair_ic)(i))
+                        ErgValues(tCompErg.beta_ic).Add(InputData(tComp.beta_ic)(i))
                         ErgValues(tCompErg.user_valid).Add(InputData(tComp.user_valid)(i))
                         ErgValues(tCompErg.valid).Add(1)
                         ErgValues(tCompErg.used).Add(1)
@@ -531,9 +521,7 @@ Module Signal_identification
                     ' Calculate the results from the last section
                     ErgValues(tCompErg.delta_t)(run) = InputData(tComp.t)(i - 1) - ErgValues(tCompErg.delta_t)(run)
                     ErgValues(tCompErg.v_veh_CAN)(run) = ErgValues(tCompErg.v_veh_CAN)(run) / anz
-                    ErgValues(tCompErg.vair_ar)(run) = ErgValues(tCompErg.vair_ar)(run) / anz
                     ErgValues(tCompErg.vair_ic)(run) = ErgValues(tCompErg.vair_ic)(run) / anz
-                    ErgValues(tCompErg.beta_ar)(run) = ErgValues(tCompErg.beta_ar)(run) / anz
                     ErgValues(tCompErg.beta_ic)(run) = ErgValues(tCompErg.beta_ic)(run) / anz
                     ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
                     ErgValues(tCompErg.user_valid)(run) = ErgValues(tCompErg.user_valid)(run) / anz

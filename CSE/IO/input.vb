@@ -220,8 +220,8 @@ Public Module input
             MeasCheck.Add(tComp.hdg, False)
             MeasCheck.Add(tComp.v_veh_GPS, False)
             MeasCheck.Add(tComp.v_veh_CAN, False)
-            MeasCheck.Add(tComp.vair_ar, False)
-            MeasCheck.Add(tComp.beta_ar, False)
+            MeasCheck.Add(tComp.vair_ic, False)
+            MeasCheck.Add(tComp.beta_ic, False)
             MeasCheck.Add(tComp.n_eng, False)
             MeasCheck.Add(tComp.tq_l, False)
             MeasCheck.Add(tComp.tq_r, False)
@@ -345,13 +345,13 @@ Public Module input
                             End If
                         ElseIf sKV.Key = tComp.trigger Then
                             CalcData(tCompCali.trigger_c).Add(CDbl(Line(sKV.Value)))
-                        ElseIf sKV.Key = tComp.beta_ar Then
+                        ElseIf sKV.Key = tComp.beta_ic Then
                             If InputData(sKV.Key)(tDim) > 360 Or InputData(sKV.Key)(tDim) < -360 Then
-                                Throw New Exception("The beta_ar angle is higher then +-360°! This is not a possible angle. Please correct.")
-                            ElseIf InputData(sKV.Key)(tDim) > 180 Then
-                                InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) - 360
-                            ElseIf InputData(sKV.Key)(tDim) < -180 Then
-                                InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) + 360
+                                Throw New Exception("The beta_ic angle is higher then +-360°! This is not a possible angle. Please correct.")
+                                'ElseIf InputData(sKV.Key)(tDim) > 180 Then
+                                '    InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) - 360
+                                'ElseIf InputData(sKV.Key)(tDim) < -180 Then
+                                '    InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) + 360
                             End If
                         End If
                     Next sKV
