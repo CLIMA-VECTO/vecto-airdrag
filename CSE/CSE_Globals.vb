@@ -17,8 +17,8 @@ Module CSE_Globals
         hdg
         v_veh_GPS
         v_veh_CAN
-        vair_ar
-        beta_ar
+        vair_ic
+        beta_ic
         n_eng
         tq_l
         tq_r
@@ -50,9 +50,9 @@ Module CSE_Globals
         lati_root
         longi_root
         v_veh_c
-        vair_ic
+        'vair_ic
         vair_uf
-        beta_ic
+        'beta_ic
         beta_uf
         vwind_ha
         vwind_c
@@ -95,11 +95,9 @@ Module CSE_Globals
         v_MSC_GPS
         s_MSC
         v_veh_CAN
-        vair_ar
         vair_ic
         vair_uf
         vair
-        beta_ar
         beta_ic
         beta_uf
         user_valid
@@ -213,9 +211,9 @@ Module CSE_Globals
             Case sKey.Meas.v_veh_CAN
                 Return tComp.v_veh_CAN
             Case sKey.Meas.v_air
-                Return tComp.vair_ar
+                Return tComp.vair_ic
             Case sKey.Meas.beta
-                Return tComp.beta_ar
+                Return tComp.beta_ic
             Case sKey.Meas.n_eng
                 Return tComp.n_eng
             Case sKey.Meas.tq_l
@@ -285,10 +283,10 @@ Module CSE_Globals
                 Return "v_veh_GPS"
             Case tComp.v_veh_CAN
                 Return "v_veh_CAN"
-            Case tComp.vair_ar
-                Return "vair_ar"
-            Case tComp.beta_ar
-                Return "beta_ar"
+            Case tComp.vair_ic
+                Return "vair_ic"
+            Case tComp.beta_ic
+                Return "beta_ic"
             Case tComp.n_eng
                 Return "n_eng"
             Case tComp.tq_l
@@ -328,9 +326,9 @@ Module CSE_Globals
                 Return "[km/h]"
             Case tComp.v_veh_CAN
                 Return "[km/h]"
-            Case tComp.vair_ar
+            Case tComp.vair_ic
                 Return "[m/s]"
-            Case tComp.beta_ar
+            Case tComp.beta_ic
                 Return "[°]"
             Case tComp.n_eng
                 Return "[rpm]"
@@ -380,12 +378,8 @@ Module CSE_Globals
                 Return "Time"
             Case tCompCali.v_veh_c
                 Return "v_veh"
-            Case tCompCali.vair_ic
-                Return "vair_ic"
             Case tCompCali.vair_uf
                 Return "vair_uf"
-            Case tCompCali.beta_ic
-                Return "beta_ic"
             Case tCompCali.beta_uf
                 Return "beta_uf"
             Case tCompCali.vwind_c
@@ -467,12 +461,8 @@ Module CSE_Globals
         Select Case ID
             Case tCompCali.v_veh_c
                 Return "[km/h]"
-            Case tCompCali.vair_ic
-                Return "[m/s]"
             Case tCompCali.vair_uf
                 Return "[m/s]"
-            Case tCompCali.beta_ic
-                Return "[°]"
             Case tCompCali.beta_uf
                 Return "[°]"
             Case tCompCali.vwind_c
@@ -572,16 +562,12 @@ Module CSE_Globals
                 Return "v_veh_CAN"
             Case tCompErg.v_veh
                 Return "v_veh"
-            Case tCompErg.vair_ar
-                Return "vair_ar"
             Case tCompErg.vair_ic
                 Return "vair_ic"
             Case tCompErg.vair_uf
                 Return "vair_uf"
             Case tCompErg.vair
                 Return "vair"
-            Case tCompErg.beta_ar
-                Return "beta_ar"
             Case tCompErg.beta_ic
                 Return "beta_ic"
             Case tCompErg.beta_uf
@@ -729,16 +715,16 @@ Module CSE_Globals
                 Return "[km/h]"
             Case tCompErg.v_veh
                 Return "[km/h]"
-            Case tCompErg.vair_ar
-                Return "[m/s]"
+                'Case tCompErg.vair_ar
+                '    Return "[m/s]"
             Case tCompErg.vair_ic
                 Return "[m/s]"
             Case tCompErg.vair_uf
                 Return "[m/s]"
             Case tCompErg.vair
                 Return "[m/s]"
-            Case tCompErg.beta_ar
-                Return "[°]"
+                'Case tCompErg.beta_ar
+                '    Return "[°]"
             Case tCompErg.beta_ic
                 Return "[°]"
             Case tCompErg.beta_uf

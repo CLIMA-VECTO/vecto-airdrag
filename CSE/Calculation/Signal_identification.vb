@@ -14,6 +14,9 @@ Module Signal_identification
 
     ' Divide the signal into there directions
     Public Sub fIdentifyMS(ByVal MSC As cMSC, ByRef vMSC As cVirtMSC, Optional ByVal virtMSC As Boolean = True, Optional ByVal SectionDev As Boolean = True)
+        ' Declaration
+        Dim i As Integer
+
         If virtMSC Then
             ' Calculation of the virtual MSC points
             fvirtMSC(MSC, vMSC)
@@ -27,10 +30,12 @@ Module Signal_identification
             DevInSec(vMSC)
 
             ' Leap in time control
-            If JumpPoint <> -1 Then
-                If CalcData(tCompCali.SecID)(JumpPoint) <> 0 Then
-                    Throw New Exception(format("The detected leap in time({0}) is not allowed to be inside a measurement section!", CalcData(tCompCali.SecID)(JumpPoint)))
-                End If
+            If JumpPoint.Count > 0 Then
+                For i = 0 To JumpPoint.Count - 1
+                    If CalcData(tCompCali.SecID)(JumpPoint(i)) <> 0 Then
+                        Throw New Exception(format("The detected leap in time({0}) is not allowed to be inside a measurement section!", CalcData(tCompCali.SecID)(JumpPoint(i))))
+                    End If
+                Next i
             End If
 
             ' Calculate the root points from the measuered data between the MSC points
@@ -408,8 +413,6 @@ Module Signal_identification
 
         ' Calculate the section average values
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
-            CalcData(tCompCali.vair_ic).Add(InputData(tComp.vair_ar)(i) * Job.v_air_f + Job.v_air_d)
-            CalcData(tCompCali.beta_ic).Add(InputData(tComp.beta_ar)(i) * Job.beta_f + Job.beta_d)
             For Each sKVC In CalcData
                 If CalcData(sKVC.Key).Count <= i Then
                     CalcData(sKVC.Key).Add(0)
@@ -429,10 +432,8 @@ Module Signal_identification
                     Next
                     ErgValues(tCompErg.delta_t).Add(InputData(tComp.t)(i))
                     ErgValues(tCompErg.v_veh_CAN).Add(InputData(tComp.v_veh_CAN)(i))
-                    ErgValues(tCompErg.vair_ar).Add(InputData(tComp.vair_ar)(i))
-                    ErgValues(tCompErg.vair_ic).Add(CalcData(tCompCali.vair_ic)(i))
-                    ErgValues(tCompErg.beta_ar).Add(InputData(tComp.beta_ar)(i))
-                    ErgValues(tCompErg.beta_ic).Add(CalcData(tCompCali.beta_ic)(i))
+                    ErgValues(tCompErg.vair_ic).Add(InputData(tComp.vair_ic)(i))
+                    ErgValues(tCompErg.beta_ic).Add(InputData(tComp.beta_ic)(i))
                     ErgValues(tCompErg.user_valid).Add(InputData(tComp.user_valid)(i))
                     ErgValues(tCompErg.valid).Add(1)
                     ErgValues(tCompErg.used).Add(1)
@@ -457,10 +458,8 @@ Module Signal_identification
                     If (ErgValues(tCompErg.SecID).Last = CalcData(tCompCali.SecID)(i)) And (ErgValues(tCompErg.DirID).Last = CalcData(tCompCali.DirID)(i)) Then
                         ' Build the sum
                         ErgValues(tCompErg.v_veh_CAN)(run) += InputData(tComp.v_veh_CAN)(i)
-                        ErgValues(tCompErg.vair_ar)(run) += InputData(tComp.vair_ar)(i)
-                        ErgValues(tCompErg.vair_ic)(run) += CalcData(tCompCali.vair_ic)(i)
-                        ErgValues(tCompErg.beta_ar)(run) += InputData(tComp.beta_ar)(i)
-                        ErgValues(tCompErg.beta_ic)(run) += CalcData(tCompCali.beta_ic)(i)
+                        ErgValues(tCompErg.vair_ic)(run) += InputData(tComp.vair_ic)(i)
+                        ErgValues(tCompErg.beta_ic)(run) += InputData(tComp.beta_ic)(i)
                         ErgValues(tCompErg.user_valid)(run) += InputData(tComp.user_valid)(i)
                         If Not MSCX.tUse Then
                             ErgValues(tCompErg.v_MSC_GPS)(run) += InputData(tComp.v_veh_GPS)(i)
@@ -474,9 +473,7 @@ Module Signal_identification
                         ' Calculate the results from the last section
                         ErgValues(tCompErg.delta_t)(run) = InputData(tComp.t)(i - 1) - ErgValues(tCompErg.delta_t)(run)
                         ErgValues(tCompErg.v_veh_CAN)(run) = ErgValues(tCompErg.v_veh_CAN)(run) / anz
-                        ErgValues(tCompErg.vair_ar)(run) = ErgValues(tCompErg.vair_ar)(run) / anz
                         ErgValues(tCompErg.vair_ic)(run) = ErgValues(tCompErg.vair_ic)(run) / anz
-                        ErgValues(tCompErg.beta_ar)(run) = ErgValues(tCompErg.beta_ar)(run) / anz
                         ErgValues(tCompErg.beta_ic)(run) = ErgValues(tCompErg.beta_ic)(run) / anz
                         ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
                         ErgValues(tCompErg.user_valid)(run) = ErgValues(tCompErg.user_valid)(run) / anz
@@ -499,10 +496,8 @@ Module Signal_identification
                         Next
                         ErgValues(tCompErg.delta_t).Add(InputData(tComp.t)(i))
                         ErgValues(tCompErg.v_veh_CAN).Add(InputData(tComp.v_veh_CAN)(i))
-                        ErgValues(tCompErg.vair_ar).Add(InputData(tComp.vair_ar)(i))
-                        ErgValues(tCompErg.vair_ic).Add(CalcData(tCompCali.vair_ic)(i))
-                        ErgValues(tCompErg.beta_ar).Add(InputData(tComp.beta_ar)(i))
-                        ErgValues(tCompErg.beta_ic).Add(CalcData(tCompCali.beta_ic)(i))
+                        ErgValues(tCompErg.vair_ic).Add(InputData(tComp.vair_ic)(i))
+                        ErgValues(tCompErg.beta_ic).Add(InputData(tComp.beta_ic)(i))
                         ErgValues(tCompErg.user_valid).Add(InputData(tComp.user_valid)(i))
                         ErgValues(tCompErg.valid).Add(1)
                         ErgValues(tCompErg.used).Add(1)
@@ -531,9 +526,7 @@ Module Signal_identification
                     ' Calculate the results from the last section
                     ErgValues(tCompErg.delta_t)(run) = InputData(tComp.t)(i - 1) - ErgValues(tCompErg.delta_t)(run)
                     ErgValues(tCompErg.v_veh_CAN)(run) = ErgValues(tCompErg.v_veh_CAN)(run) / anz
-                    ErgValues(tCompErg.vair_ar)(run) = ErgValues(tCompErg.vair_ar)(run) / anz
                     ErgValues(tCompErg.vair_ic)(run) = ErgValues(tCompErg.vair_ic)(run) / anz
-                    ErgValues(tCompErg.beta_ar)(run) = ErgValues(tCompErg.beta_ar)(run) / anz
                     ErgValues(tCompErg.beta_ic)(run) = ErgValues(tCompErg.beta_ic)(run) / anz
                     ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
                     ErgValues(tCompErg.user_valid)(run) = ErgValues(tCompErg.user_valid)(run) / anz
@@ -790,8 +783,8 @@ Module Signal_identification
                         If CalcData(tCompCali.SecID)(i - 1) = CalcData(tCompCali.SecID)(i) And CalcData(tCompCali.SecID)(i + 1) = CalcData(tCompCali.SecID)(i) Then
                             If (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)) = 0 Then
                                 CalcData(tCompCali.slope_deg)(i) = 0
-                                logme(9, False, "Standstill or loss of vehicle speed signal inside MS not permitted (Error at line " & i & ")")
-                                BWorker.CancelAsync()
+                                logme(8, False, "Standstill or loss of vehicle speed signal inside MS (at line " & i & ")! Gradient set to 0")
+                                'BWorker.CancelAsync()
                                 ' XXXX: What is absolutely neccessary to run afterwards, and cannot return immediately here??
                             Else
                                 CalcData(tCompCali.slope_deg)(i) = (Math.Asin((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI

@@ -28,7 +28,6 @@ Public Class cJob
         Dim b As Object = New JObject()
         b.vehicle_fpath = ""
         b.ambient_fpath = ""
-        'b.Anemometer = Nothing  'JObject.Parse(<json>{'v_air_f':0, 'v_air_d': 0, beta_f':0, 'beta_d': 0}</json>)
         b.calib_track_fpath = ""
         b.calib_run_fpath = ""
         b.coast_track_fpath = ""
@@ -66,11 +65,6 @@ Public Class cJob
                     "type": ["null", "string"], 
                     <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csveh(\\.json)?$', ", "") %>
                     "description": "File-path to Vehicle file (*.csveh)", 
-                }, 
-                "Anemometer": {
-                    "type": "object", 
-                    "description": "The Anemometer calibration factors (floats).", 
-                    'default': {'v_air_f':1, 'v_air_d': 0, 'beta_f':1, 'beta_d': 0},
                 }, 
                 "ambient_fpath": {
                     "type": ["null", "string"], 
@@ -243,11 +237,6 @@ Public Class cJob
 
 
 #Region "json props"
-    Public v_air_f As Double
-    Public v_air_d As Double
-    Public beta_f As Double
-    Public beta_d As Double
-
     Public fv_veh As Double
     Public fv_veh_opt2 As Double
     Public fa_pe As Double
@@ -262,25 +251,9 @@ Public Class cJob
     Public valid_t_amb As Boolean
     Public valid_RRC As Boolean
 
-    Protected Overrides Sub OnContentUpdated()
-        Dim anem = PropOrDefault(".Anemometer")
-        Me.v_air_f = anem("v_air_f")
-        Me.v_air_d = anem("v_air_d")
-        Me.beta_f = anem("beta_f")
-        Me.beta_d = anem("beta_d")
-    End Sub
-
     ''' <summary>Override it to set custome fields</summary>
     Protected Overrides Sub OnBeforeContentStored()
         Dim b As Object = Me.Body
-
-        Dim a As Object = New JObject()
-        a.v_air_f = Me.v_air_f
-        a.v_air_d = Me.v_air_d
-        a.beta_f = Me.beta_f
-        a.beta_d = Me.beta_d
-
-        b.Anemometer = a
 
         b.fv_veh = Math.Round(fv_veh, 3)
         b.fa_pe = Math.Round(fa_pe, 3)
@@ -417,14 +390,6 @@ Public Class cJob
             ambient_fpath = FileInVECTO.ReadLine(0)
 
             Line = FileInVECTO.ReadLine
-            Dim factors(3) As Single
-            For i = 0 To UBound(factors) - 1
-                factors(i) = Line(i)
-            Next i
-            Me.v_air_f = factors(0)
-            Me.v_air_d = factors(1)
-            Me.beta_f = factors(2)
-            Me.beta_d = factors(3)
 
             ' Calibration test files
             calib_track_fpath = FileInVECTO.ReadLine(0)
@@ -442,12 +407,10 @@ Public Class cJob
             ' Acceleration Correction
             Line = FileInVECTO.ReadLine
             crt.accel_correction = CBool(Line(0))
-            'CSEMain.CheckBoxAcc.Checked = False
 
             ' Gradient correction
             Line = FileInVECTO.ReadLine
             crt.gradient_correction = CBool(Line(0))
-            'CSEMain.CheckBoxGrd.Checked = False
 
             ' Output sequence
             Line = FileInVECTO.ReadLine

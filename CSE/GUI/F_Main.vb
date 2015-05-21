@@ -27,8 +27,6 @@ Public Class F_Main
         Crt.hz_out = 1
 
         PBInfoIconCrt.Visible = False
-        TBInfoMain.Visible = False
-        TBInfoMain.BackColor = System.Drawing.Color.LightYellow
         TBInfoCrt.Visible = False
         TBInfoCrt.BackColor = System.Drawing.Color.LightYellow
         setupInfoBox()
@@ -86,6 +84,39 @@ Public Class F_Main
                 logme(9, False, format("Failed storing default Preferences({0}) due to: {1}", PrefsPath, ex.Message), ex)
             End Try
         End If
+
+        ' Load the default settings into criteria tab
+        UI_PopulateFromCriteria()
+    End Sub
+
+    ' Show the GUI and start direct if neccessary
+    Private Sub F_Main_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        ' If the start is done with command line then load jobfile and start calculation
+        If fGetArgs() Then
+            Dim reload As Boolean = True
+            doLoadJob(reload)
+
+            Try
+                ' Start the calibration
+                CalibrationHandler(sender, e)
+
+                ' Wait till Backgroundworker is no longer busy
+                Do While BWorker.IsBusy
+                    Application.DoEvents()
+                Loop
+
+                ' Start the evaluation
+                EvaluationHandler(sender, e)
+
+                ' Wait till Backgroundworker is no longer busy
+                Do While BWorker.IsBusy
+                    Application.DoEvents()
+                Loop
+            Finally
+                ' Close the form after calculation
+                Me.Close()
+            End Try
+        End If
     End Sub
 
     Private Sub ClickExitHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemExit.Click
@@ -105,8 +136,6 @@ Public Class F_Main
         ListBoxErr.Items.Clear()
         TabPageErr.Text = "Errors(0)"
     End Sub
-
-
 
 
 #Region "AsynJob"
@@ -187,8 +216,6 @@ Public Class F_Main
         Me.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3).ToString
         Me.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3).ToString
         Me.TextBoxRBetaMis.Text = Math.Round(Job.beta_ame, 2).ToString
-
-
     End Sub
 
 
@@ -224,6 +251,7 @@ Public Class F_Main
         End If
 
         ' Read the data from the GUI
+        UI_PopulatePath()
         UI_PopulateToJob(True)
         UI_PopulateToCriteria()
 
@@ -257,7 +285,11 @@ Public Class F_Main
             Job.ResetValue(True)
 
             ' Save the Jobfiles
-            doSaveJob(False)
+            If Not doSaveJob(False) Then
+                logme(9, False, format("No Jobfile name given!"))
+                Me.CalibrationState = False
+                Exit Sub
+            End If
 
             ' Clear the MSG on the GUI
             Me.ListBoxMSG.Items.Clear()
@@ -340,7 +372,11 @@ Public Class F_Main
             Job.ResetValue()
 
             ' Save the Jobfiles
-            doSaveJob(False)
+            If Not doSaveJob(False) Then
+                logme(9, False, format("No Jobfile name given!"))
+                Me.EvaluationState = False
+                Exit Sub
+            End If
 
             ' Clear the MSG on the GUI
             fClear_VECTO_Form(False, False)
@@ -429,7 +465,10 @@ Public Class F_Main
         doSaveJob(saveAs)
     End Sub
 
-    Private Sub doSaveJob(ByVal isSaveAs As Boolean)
+    Private Function doSaveJob(ByVal isSaveAs As Boolean) As Boolean
+        ' Control the texboxes
+        UI_PopulatePath()
+
         ' Identify if the file should save under a new name
         If JobFile = Nothing Or isSaveAs Then
             ' Open the filebrowser to select the folder and name of the Jobfile
@@ -439,7 +478,7 @@ Public Class F_Main
                 Me.Text = Formname & " " & JobFile
             End If
             If (JobFile = Nothing) Then
-                Exit Sub
+                Return False
             End If
         End If
 
@@ -452,7 +491,9 @@ Public Class F_Main
             JobFile = joinPaths(fPath(JobFile), fName(JobFile, False) & ".csjob.json")
         End If
         Job.Store(JobFile)
-    End Sub
+
+        Return True
+    End Function
 
 
 #Region "UI populate"
@@ -463,11 +504,6 @@ Public Class F_Main
         Job.vehicle_fpath = TextBoxVeh1.Text
         Job.ambient_fpath = TextBoxWeather.Text
 
-        Job.v_air_f = TextBoxAirf.Text
-        Job.v_air_d = TextBoxAird.Text
-        Job.beta_f = TextBoxbetaf.Text
-        Job.beta_d = TextBoxbetad.Text
-
         ' Appropriate the inputfiles from calibration run
         Job.calib_run_fpath = TextBoxDataC.Text
         Job.calib_track_fpath = TextBoxMSCC.Text
@@ -477,7 +513,6 @@ Public Class F_Main
         Job.high_fpath = TextBoxDataHS.Text
         Job.low2_fpath = TextBoxDataLS2.Text
         Job.coast_track_fpath = TextBoxMSCT.Text
-        Crt.rr_corr_factor = TB_rr_corr_factor.Text
 
         If validate Then
             Job.Validate()
@@ -508,6 +543,7 @@ Public Class F_Main
         Crt.delta_Hz_max = TB_delta_Hz_max.Text
         Crt.rho_air_ref = TB_rho_air_ref.Text
         Crt.acc_corr_avg = TB_acc_corr_avg.Text
+        Crt.rr_corr_factor = TB_rr_corr_factor.Text
         Crt.delta_parallel_max = TB_delta_parallel_max.Text
         ' Identification of measurement section
         Crt.trigger_delta_x_max = TB_trigger_delta_x_max.Text
@@ -546,17 +582,12 @@ Public Class F_Main
         ' Transfer the data to the GUI
         ' General
         TextBoxVeh1.Text = Job.vehicle_fpath
-        TextBoxAirf.Text = Job.v_air_f
-        TextBoxAird.Text = Job.v_air_d
-        TextBoxbetaf.Text = Job.beta_f
-        TextBoxbetad.Text = Job.beta_d
         TextBoxWeather.Text = Job.ambient_fpath
         ' Calibration
         TextBoxMSCC.Text = Job.calib_track_fpath
         TextBoxDataC.Text = Job.calib_run_fpath
         ' Test
         TextBoxMSCT.Text = Job.coast_track_fpath
-        TB_rr_corr_factor.Text = Crt.rr_corr_factor
         TextBoxDataLS1.Text = Job.low1_fpath
         TextBoxDataHS.Text = Job.high_fpath
         TextBoxDataLS2.Text = Job.low2_fpath
@@ -577,6 +608,7 @@ Public Class F_Main
         TB_delta_Hz_max.Text = Crt.delta_Hz_max
         TB_rho_air_ref.Text = Crt.rho_air_ref
         TB_acc_corr_avg.Text = Crt.acc_corr_avg
+        TB_rr_corr_factor.Text = Crt.rr_corr_factor
         TB_delta_parallel_max.Text = Crt.delta_parallel_max
         ' Identification of measurement section
         TB_trigger_delta_x_max.Text = Crt.trigger_delta_x_max
@@ -621,6 +653,14 @@ Public Class F_Main
         End If
     End Sub
 
+    ' Function to set Path to default by calibration if nothing is used by testrun
+    Sub UI_PopulatePath()
+        ' Control if all testrun pathes have a value
+        If TextBoxMSCT.Text = "" Then TextBoxMSCT.Text = MyPath
+        If TextBoxDataLS1.Text = "" Then TextBoxDataLS1.Text = MyPath
+        If TextBoxDataHS.Text = "" Then TextBoxDataHS.Text = MyPath
+        If TextBoxDataLS2.Text = "" Then TextBoxDataLS2.Text = MyPath
+    End Sub
 
     ' Clear the GUI
     Public Function fClear_VECTO_Form(ByVal Komplet As Boolean, Optional ByVal Fields As Boolean = True) As Boolean
@@ -634,17 +674,12 @@ Public Class F_Main
             ' Clear the Textboxes or set them to default
             TextBoxVeh1.Clear()
             TextBoxWeather.Clear()
-            TextBoxAirf.Text = 1
-            TextBoxAird.Text = 0
-            TextBoxbetaf.Text = 1
-            TextBoxbetad.Text = 0
             CB_accel_correction.Checked = True
             CB_gradient_correction.Checked = False
 
             ' Calibration fields
             TextBoxDataC.Clear()
             TextBoxMSCC.Clear()
-            TB_rr_corr_factor.Text = 1.0
 
             ' Test run fields
             TextBoxMSCT.Clear()
@@ -929,8 +964,10 @@ Public Class F_Main
     Private Sub doResetCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCrtReset.Click
         ' Set the parameter to standard
 
-        installJob(New cJob())
-        UI_PopulateFromJob()
+        If Not IsNothing(JobFile) Then
+            logme(8, False, format("The Job-file({0}) has changed because of criteria update", JobFile))
+        End If
+        Crt.accel_correction = True
         UI_PopulateFromCriteria()
     End Sub
 
@@ -956,7 +993,9 @@ Public Class F_Main
             Job.Criteria = newCrt
             Crt = newCrt
         End If
-        UI_PopulateFromJob()
+        If Not IsNothing(JobFile) Then
+            logme(8, False, format("The Job-file({0}) has changed because of criteria update", JobFile))
+        End If
         UI_PopulateFromCriteria()
     End Sub
 
@@ -997,13 +1036,6 @@ Public Class F_Main
 
         Dim schema As JObject
         Dim controls As Control()
-
-        controls = New Control() {
-                Me.GB_Anemometer, Nothing
-        }
-        schema = JObject.Parse(cJob.JSchemaStr(isStrict))
-        armControlsWithInfoBox(schema, controls, AddressOf showInfoBox_main, AddressOf hideInfoBox_main)
-
 
         controls = New Control() {
                 Me.TB_rho_air_ref, LRhoAirRef, _
@@ -1055,17 +1087,6 @@ Public Class F_Main
         armControlsWithInfoBox(schema, controls, AddressOf showInfoBox_crt, AddressOf hideInfoBox_crt)
     End Sub
 
-    Private Sub showInfoBox_main(ByVal sender As Object, ByVal e As System.EventArgs)
-        TBInfoMain.Text = sender.Tag
-        TBInfoMain.Visible = True
-        PbInfoIconMain.Visible = True
-    End Sub
-
-    Private Sub hideInfoBox_main(ByVal sender As Object, ByVal e As System.EventArgs)
-        TBInfoMain.Visible = False
-        PbInfoIconMain.Visible = False
-    End Sub
-
     Private Sub showInfoBox_crt(ByVal sender As Object, ByVal e As System.EventArgs)
         TBInfoCrt.Text = sender.Tag
         TBInfoCrt.Visible = True
@@ -1077,12 +1098,5 @@ Public Class F_Main
         PBInfoIconCrt.Visible = False
     End Sub
 
-
-
 #End Region
-
-    Private Sub ClearLogToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MenuItemClearLog.Click
-
-    End Sub
-
 End Class

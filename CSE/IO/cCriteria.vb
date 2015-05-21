@@ -31,7 +31,7 @@ Public Class cCriteria
         g = New JObject()
         b.Processing = g
         g.rho_air_ref = 1.1884
-        g.accel_correction = False
+        g.accel_correction = True
         g.gradient_correction = False
         g.hz_out = 1
         g.rr_corr_factor = 1
@@ -301,7 +301,7 @@ Public Class cCriteria
 #Region "json props"
     ' Processing params
     Public rr_corr_factor As Double
-    Public accel_correction As Boolean = False
+    Public accel_correction As Boolean = True
     Public gradient_correction As Boolean = False
     Public hz_out As Integer = 1
     Public acc_corr_avg As Single

@@ -15,6 +15,7 @@ Public Module input
     Sub ReadInputMSC(ByRef MSCX As cMSC, ByVal MSCfile As String, Optional ByVal calibration As Boolean = True)
         ' Declarations
         Dim i As Integer
+        Dim RefDID As Integer
         Dim RefHead As Double
         Dim Line() As String
         Using FileInMSCSpez As New cFile_V3
@@ -88,6 +89,14 @@ Public Module input
             Next i
         Else
             For i = 1 To MSCX.meID.Count - 1
+                If i = 1 Then
+                    RefHead = MSCX.head(i)
+                    RefDID = MSCX.dID(i)
+                Else
+                    If RefHead = MSCX.head(i) And Not RefDID = MSCX.dID(i) Then
+                        Throw New Exception("Two different directions for same heading given. Please correct your input in the File: " & MSCfile)
+                    End If
+                End If
                 MSCX.headID.Add(1)
             Next i
         End If
@@ -182,16 +191,15 @@ Public Module input
             Dim sKV As New KeyValuePair(Of tComp, Integer)
             Dim SpaltenUndef As New Dictionary(Of String, Integer)
             Dim sKVUndef As New KeyValuePair(Of String, Integer)
-            Dim ErrDat As Boolean = False
             Dim EnumStr As tCompCali
             Dim UTMCoord As New cUTMCoord
 
             ' Initialise
             tDim = -1
-            JumpPoint = -1
             InputData = New Dictionary(Of tComp, List(Of Double))
             InputUndefData = New Dictionary(Of String, List(Of Double))
             CalcData = New Dictionary(Of tCompCali, List(Of Double))
+            JumpPoint = New List(Of Integer)
             For i = 0 To UBound(OptPar)
                 OptPar(i) = True
             Next i
@@ -211,8 +219,8 @@ Public Module input
             MeasCheck.Add(tComp.hdg, False)
             MeasCheck.Add(tComp.v_veh_GPS, False)
             MeasCheck.Add(tComp.v_veh_CAN, False)
-            MeasCheck.Add(tComp.vair_ar, False)
-            MeasCheck.Add(tComp.beta_ar, False)
+            MeasCheck.Add(tComp.vair_ic, False)
+            MeasCheck.Add(tComp.beta_ic, False)
             MeasCheck.Add(tComp.n_eng, False)
             MeasCheck.Add(tComp.tq_l, False)
             MeasCheck.Add(tComp.tq_r, False)
@@ -290,12 +298,13 @@ Public Module input
                             CalcData(tCompCali.t).Add(CDbl(Line(sKV.Value)))
                             If tDim >= 1 Then
                                 If Math.Abs((InputData(sKV.Key)(tDim) - InputData(sKV.Key)(tDim - 1)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
-                                    If ErrDat Then
-                                        Throw New Exception("The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
-                                    Else
-                                        ErrDat = True
-                                        JumpPoint = tDim
-                                    End If
+                                    JumpPoint.Add(tDim)
+                                    'If ErrDat Then
+                                    '    Throw New Exception("The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
+                                    'Else
+                                    '    ErrDat = True
+                                    '    JumpPoint.Add(tDim)
+                                    'End If
                                 End If
                             End If
                         ElseIf sKV.Key = tComp.lati Then
@@ -336,13 +345,9 @@ Public Module input
                             End If
                         ElseIf sKV.Key = tComp.trigger Then
                             CalcData(tCompCali.trigger_c).Add(CDbl(Line(sKV.Value)))
-                        ElseIf sKV.Key = tComp.beta_ar Then
+                        ElseIf sKV.Key = tComp.beta_ic Then
                             If InputData(sKV.Key)(tDim) > 360 Or InputData(sKV.Key)(tDim) < -360 Then
-                                Throw New Exception("The beta_ar angle is higher then +-360°! This is not a possible angle. Please correct.")
-                            ElseIf InputData(sKV.Key)(tDim) > 180 Then
-                                InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) - 360
-                            ElseIf InputData(sKV.Key)(tDim) < -180 Then
-                                InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) + 360
+                                Throw New Exception("The beta_ic angle is higher then +-360°! This is not a possible angle. Please correct.")
                             End If
                         End If
                     Next sKV

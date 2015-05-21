@@ -55,49 +55,50 @@ Module Minor_routines_calculate
     ' Function for the calculation of the moving average
     Public Function fMoveAve(ByVal TimeX As List(Of Double), ByVal ValuesX As List(Of Double), ByRef NewValues As List(Of Double), Optional ByVal Ave_t As Single = AveSec) As Boolean
         ' Declaration
-        Dim i, lauf, laufE, zEnd, tI, Anz, pos, PktB, PktE, anzPkt As Integer
+        Dim i, lauf, laufE, zEnd, Anz, pos, PktB, PktE, anzPkt As Integer
         Dim t0, tstep As Double
         Dim Sprung As Boolean
         Dim Summe As Double
+        Dim tI As New List(Of Integer)
 
         ' Initialise
         Sprung = False
-        tI = 0
         tstep = 0
 
         'Check whether Time is not reversed
         For i = 1 To TimeX.Count - 1
             If i = 1 Then tstep = TimeX(i) - TimeX(i - 1)
             If tstep + (tstep * Crt.delta_Hz_max / 100) < Math.Abs(TimeX(i) - TimeX(i - 1)) Or tstep - (tstep * Crt.delta_Hz_max / 100) > Math.Abs(TimeX(i) - TimeX(i - 1)) Then
-                If Sprung Then
-                    logme(9, False, "Time step invalid! t(" & i - 1 & ") = " & TimeX(i - 1) & "[s], t(" & i & ") = " & TimeX(i) & "[s]")
-                    Return False
-                Else
-                    Sprung = True
-                    tI = i
-                End If
+                Sprung = True
+                TI.Add(i)
             End If
         Next i
 
         ' Initialise
+        If TI.Count = 0 Then TI.Add(0)
+        If Sprung Then TI.Add(TimeX.Count - 1)
         Anz = Math.Round(Ave_t / tstep, 0)
         zEnd = TimeX.Count - 1
         pos = 0
         t0 = 0
         anzPkt = 0
         If Sprung Then
-            laufE = 2
+            laufE = ti.Count - 1
         Else
-            laufE = 1
+            laufE = 0
         End If
 
-        For lauf = 1 To laufE
-            If Sprung And lauf = 1 Then
-                zEnd = tI - 1
+        For lauf = 0 To laufE
+            If Sprung And lauf = 0 Then
+                zEnd = tI(lauf) - 1
                 pos = 0
+            ElseIf Sprung And lauf <> 0 Then
+                zEnd = TI(lauf) - 1
+                t0 = TI(lauf - 1)
+                pos = TI(lauf - 1)
             Else
-                pos = tI
-                t0 = tI
+                pos = TI(lauf)
+                t0 = TI(lauf)
                 zEnd = TimeX.Count - 1
             End If
 
@@ -126,48 +127,49 @@ Module Minor_routines_calculate
     ' Function for the calculation of the moving average
     Public Function fMoveAve(ByVal TimeX As List(Of Double), ByVal ValuesX As List(Of Double), ByRef NewValues As List(Of Double), ByRef StepValues As List(Of Double)) As Boolean
         ' Declaration
-        Dim i, lauf, laufE, zEnd, tI, Anz, pos, PktB, PktE, anzPkt As Integer
+        Dim i, lauf, laufE, zEnd, Anz, pos, PktB, PktE, anzPkt As Integer
         Dim t0, tstep As Double
         Dim Sprung As Boolean
         Dim Summe As Double
+        Dim tI As New List(Of Integer)
 
         ' Initialise
         Sprung = False
-        tI = 0
         tstep = 0
 
         'Check whether Time is not reversed
         For i = 1 To TimeX.Count - 1
             If i = 1 Then tstep = TimeX(i) - TimeX(i - 1)
             If tstep + (tstep * Crt.delta_Hz_max / 100) < Math.Abs(TimeX(i) - TimeX(i - 1)) Or tstep - (tstep * Crt.delta_Hz_max / 100) > Math.Abs(TimeX(i) - TimeX(i - 1)) Then
-                If Sprung Then
-                    logme(9, False, "Time step invalid! t(" & i - 1 & ") = " & TimeX(i - 1) & "[s], t(" & i & ") = " & TimeX(i) & "[s]")
-                    Return False
-                Else
-                    Sprung = True
-                    tI = i
-                End If
+                Sprung = True
+                tI.Add(i)
             End If
         Next i
 
         ' Initialise
+        If tI.Count = 0 Then tI.Add(0)
+        If Sprung Then tI.Add(TimeX.Count - 1)
         zEnd = TimeX.Count - 1
         pos = 0
         t0 = 0
         anzPkt = 0
         If Sprung Then
-            laufE = 2
+            laufE = tI.Count - 1
         Else
-            laufE = 1
+            laufE = 0
         End If
 
-        For lauf = 1 To laufE
-            If Sprung And lauf = 1 Then
-                zEnd = tI - 1
+        For lauf = 0 To laufE
+            If Sprung And lauf = 0 Then
+                zEnd = tI(lauf) - 1
                 pos = 0
+            ElseIf Sprung And lauf <> 0 Then
+                zEnd = tI(lauf) - 1
+                t0 = tI(lauf - 1)
+                pos = tI(lauf - 1)
             Else
-                pos = tI
-                t0 = tI
+                pos = tI(lauf)
+                t0 = tI(lauf)
                 zEnd = TimeX.Count - 1
             End If
 
@@ -388,7 +390,6 @@ Module Minor_routines_calculate
             End If
         End Using
     End Function
-
 
     ' Calculate the UTM coordinates
     Function UTM(ByVal Lat As Double, ByVal Lon As Double) As cUTMCoord
