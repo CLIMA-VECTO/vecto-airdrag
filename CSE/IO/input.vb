@@ -191,16 +191,15 @@ Public Module input
             Dim sKV As New KeyValuePair(Of tComp, Integer)
             Dim SpaltenUndef As New Dictionary(Of String, Integer)
             Dim sKVUndef As New KeyValuePair(Of String, Integer)
-            Dim ErrDat As Boolean = False
             Dim EnumStr As tCompCali
             Dim UTMCoord As New cUTMCoord
 
             ' Initialise
             tDim = -1
-            JumpPoint = -1
             InputData = New Dictionary(Of tComp, List(Of Double))
             InputUndefData = New Dictionary(Of String, List(Of Double))
             CalcData = New Dictionary(Of tCompCali, List(Of Double))
+            JumpPoint = New List(Of Integer)
             For i = 0 To UBound(OptPar)
                 OptPar(i) = True
             Next i
@@ -299,12 +298,13 @@ Public Module input
                             CalcData(tCompCali.t).Add(CDbl(Line(sKV.Value)))
                             If tDim >= 1 Then
                                 If Math.Abs((InputData(sKV.Key)(tDim) - InputData(sKV.Key)(tDim - 1)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
-                                    If ErrDat Then
-                                        Throw New Exception("The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
-                                    Else
-                                        ErrDat = True
-                                        JumpPoint = tDim
-                                    End If
+                                    JumpPoint.Add(tDim)
+                                    'If ErrDat Then
+                                    '    Throw New Exception("The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
+                                    'Else
+                                    '    ErrDat = True
+                                    '    JumpPoint.Add(tDim)
+                                    'End If
                                 End If
                             End If
                         ElseIf sKV.Key = tComp.lati Then
@@ -348,10 +348,6 @@ Public Module input
                         ElseIf sKV.Key = tComp.beta_ic Then
                             If InputData(sKV.Key)(tDim) > 360 Or InputData(sKV.Key)(tDim) < -360 Then
                                 Throw New Exception("The beta_ic angle is higher then +-360°! This is not a possible angle. Please correct.")
-                                'ElseIf InputData(sKV.Key)(tDim) > 180 Then
-                                '    InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) - 360
-                                'ElseIf InputData(sKV.Key)(tDim) < -180 Then
-                                '    InputData(sKV.Key)(tDim) = InputData(sKV.Key)(tDim) + 360
                             End If
                         End If
                     Next sKV

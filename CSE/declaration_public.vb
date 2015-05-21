@@ -51,7 +51,7 @@ Module declaration_public
 
 
     ' Constances for the array declaration
-    Public JumpPoint As Integer = -1                            ' Point at that a jump in the time-resolved data is detected
+    Public JumpPoint As List(Of Integer)                        ' Point at that a jump in the time-resolved data is detected
     Public OptPar() As Boolean = ({True, True, True})           ' Array to identify if optional parameters are given
 
     ' Boolean for the programm control

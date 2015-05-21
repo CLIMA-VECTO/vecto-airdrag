@@ -14,6 +14,9 @@ Module Signal_identification
 
     ' Divide the signal into there directions
     Public Sub fIdentifyMS(ByVal MSC As cMSC, ByRef vMSC As cVirtMSC, Optional ByVal virtMSC As Boolean = True, Optional ByVal SectionDev As Boolean = True)
+        ' Declaration
+        Dim i As Integer
+
         If virtMSC Then
             ' Calculation of the virtual MSC points
             fvirtMSC(MSC, vMSC)
@@ -27,10 +30,12 @@ Module Signal_identification
             DevInSec(vMSC)
 
             ' Leap in time control
-            If JumpPoint <> -1 Then
-                If CalcData(tCompCali.SecID)(JumpPoint) <> 0 Then
-                    Throw New Exception(format("The detected leap in time({0}) is not allowed to be inside a measurement section!", CalcData(tCompCali.SecID)(JumpPoint)))
-                End If
+            If JumpPoint.Count > 0 Then
+                For i = 0 To JumpPoint.Count - 1
+                    If CalcData(tCompCali.SecID)(JumpPoint(i)) <> 0 Then
+                        Throw New Exception(format("The detected leap in time({0}) is not allowed to be inside a measurement section!", CalcData(tCompCali.SecID)(JumpPoint(i))))
+                    End If
+                Next i
             End If
 
             ' Calculate the root points from the measuered data between the MSC points
@@ -778,8 +783,8 @@ Module Signal_identification
                         If CalcData(tCompCali.SecID)(i - 1) = CalcData(tCompCali.SecID)(i) And CalcData(tCompCali.SecID)(i + 1) = CalcData(tCompCali.SecID)(i) Then
                             If (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)) = 0 Then
                                 CalcData(tCompCali.slope_deg)(i) = 0
-                                logme(9, False, "Standstill or loss of vehicle speed signal inside MS not permitted (Error at line " & i & ")")
-                                BWorker.CancelAsync()
+                                logme(8, False, "Standstill or loss of vehicle speed signal inside MS (at line " & i & ")! Gradient set to 0")
+                                'BWorker.CancelAsync()
                                 ' XXXX: What is absolutely neccessary to run afterwards, and cannot return immediately here??
                             Else
                                 CalcData(tCompCali.slope_deg)(i) = (Math.Asin((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI
