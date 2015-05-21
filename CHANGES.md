@@ -1,5 +1,20 @@
 VECTO-CSE: Changes
 ===================
+#### 2014-11-13: v2.0.1-beta5 ####
+Mostly TUG improvements:
+
+  * Handling of time steps where coordinates are constant over a certain time period (GPS accuracy issue) set gradient to 0 to avoid division by zero 
+  * Allow also non-continuous input data in *.csdat files
+  * Direct start option included 
+  * Anemometer instrument calibration removed from CSE calculation 
+  * Update of definition of beta-signal (180° = air flow from front)
+  * Acceleration correction: true as default
+  * Control if heading and given direction is always the same 
+  * set criteria to "standard" when CSE opens 
+  * store information when switching between tabs 
+  * ResetCriteria and ImportCriteria do not clear main tab
+  * New Version number.
+  
 #### 2014-11-13: v2.0.1-beta4 ####
 Mostly TUG improvements:
 

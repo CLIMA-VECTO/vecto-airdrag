@@ -1,6 +1,6 @@
-# trigger used (1=yes, 0=no)
-0
-# meas. section ID,direction ID,lenght,heading,latitude start,longitude start,latitude end,longitude end
+# trigger used (1=yes, 0=no),,,,,,,,
+0,,,,,,,,
+# meas. section ID,direction ID,lenght,heading,latitude start,longitude start,latitude end,longitude end,
 # [id],[id],[m],[°],[mm.mm],[mm.mm],[mm.mm],[mm.mm],altitude file
 1,1,250.64,45,2873.939,456.856,2874.0265,457.01,TrackDemo_1_1.csalt
 2,1,250.64,45,2874.0265,457.01,2874.114,457.164,TrackDemo_2_1.csalt
