@@ -2,8 +2,8 @@
   "Header": {
     "Title": "vecto-cse JOB",
     "FileVersion": "1.0.0",
-    "AppVersion": "2.0.1-beta4",
-    "ModifiedDate": "2015.05.21 10:58:40 +02:00",
+    "AppVersion": "2.0.1-beta5",
+    "ModifiedDate": "2015.05.21 11:30:53 +02:00",
     "CreatedBy": "VKMTHD\\martindippold@Dippold(lic: 88070b7c-1b69-4d65-a112-10c57f86f5ad)",
     "StrictBody": null,
     "BodySchema": {
@@ -342,17 +342,17 @@
         "t_amb_tarmac": 25
       }
     },
-    "fv_veh": 0.971,
-    "fa_pe": 1.0,
-    "fv_pe": 1.073,
-    "beta_ame": -0.02,
-    "CdxA": 5.59443,
-    "beta": 0.94591,
-    "delta_CdxA": 0.02895,
-    "CdxA0": 5.56548,
-    "CdxA0_opt2": 5.5631,
-    "valid_t_tire": true,
-    "valid_t_amb": true,
+    "fv_veh": 0.0,
+    "fa_pe": 0.0,
+    "fv_pe": 0.0,
+    "beta_ame": 0.0,
+    "CdxA": 0.0,
+    "beta": 0.0,
+    "delta_CdxA": 0.0,
+    "CdxA0": 0.0,
+    "CdxA0_opt2": 0.0,
+    "valid_t_tire": false,
+    "valid_t_amb": false,
     "valid_RRC": false
   }
 }
