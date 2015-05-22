@@ -267,6 +267,9 @@ Public Class cJob
         b.valid_t_tire = valid_t_tire
         b.valid_t_amb = valid_t_amb
         b.valid_RRC = valid_RRC
+
+        Crt.OnBeforeContentStored_hack()
+        Me.Criteria = Crt
     End Sub
 
     Public Property vehicle_fpath As String

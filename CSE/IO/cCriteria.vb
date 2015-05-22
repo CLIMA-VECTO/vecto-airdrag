@@ -395,6 +395,10 @@ Public Class cCriteria
         Me.t_amb_min = g("t_amb_min")
     End Sub
 
+    Public Sub OnBeforeContentStored_hack()
+        Me.OnBeforeContentStored()
+    End Sub
+
     ''' <summary>Override it to set custome fields</summary>
     Protected Overrides Sub OnBeforeContentStored()
         Dim g, b As Object
