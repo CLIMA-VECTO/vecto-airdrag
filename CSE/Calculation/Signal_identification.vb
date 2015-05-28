@@ -820,7 +820,7 @@ Module Signal_identification
                     ErgValues(tCompErg.tq_sum_float)(run) = (CalcData(tCompCali.tq_sum_float)(i))
                     ErgValues(tCompErg.t_float)(run) = (CalcData(tCompCali.t_float)(i))
                     ErgValues(tCompErg.F_trac)(run) = (CalcData(tCompCali.F_trac)(i))
-                    ErgValues(tCompErg.v_veh_avg)(run) = (CalcData(tCompCali.v_veh_acc)(i))
+                    ErgValues(tCompErg.v_veh_acc)(run) = (CalcData(tCompCali.v_veh_acc)(i))
                     ErgValues(tCompErg.a_veh_avg)(run) = (CalcData(tCompCali.a_veh_avg)(i))
                     ErgValues(tCompErg.F_acc)(run) = (CalcData(tCompCali.F_acc)(i))
                     ErgValues(tCompErg.F_grd)(run) = (CalcData(tCompCali.F_grd)(i))
@@ -856,7 +856,7 @@ Module Signal_identification
                         ErgValues(tCompErg.tq_sum_float)(run) += (CalcData(tCompCali.tq_sum_float)(i))
                         ErgValues(tCompErg.t_float)(run) += (CalcData(tCompCali.t_float)(i))
                         ErgValues(tCompErg.F_trac)(run) += (CalcData(tCompCali.F_trac)(i))
-                        ErgValues(tCompErg.v_veh_avg)(run) += (CalcData(tCompCali.v_veh_acc)(i))
+                        ErgValues(tCompErg.v_veh_acc)(run) += (CalcData(tCompCali.v_veh_acc)(i))
                         ErgValues(tCompErg.a_veh_avg)(run) += (CalcData(tCompCali.a_veh_avg)(i))
                         ErgValues(tCompErg.F_acc)(run) += (CalcData(tCompCali.F_acc)(i))
                         ErgValues(tCompErg.F_grd)(run) += (CalcData(tCompCali.F_grd)(i))
@@ -889,7 +889,7 @@ Module Signal_identification
                         ErgValues(tCompErg.tq_sum_float)(run) = ErgValues(tCompErg.tq_sum_float)(run) / anz
                         ErgValues(tCompErg.t_float)(run) = ErgValues(tCompErg.t_float)(run) / anz
                         ErgValues(tCompErg.F_trac)(run) = ErgValues(tCompErg.F_trac)(run) / anz
-                        ErgValues(tCompErg.v_veh_avg)(run) = ErgValues(tCompErg.v_veh_avg)(run) / anz
+                        ErgValues(tCompErg.v_veh_acc)(run) = ErgValues(tCompErg.v_veh_acc)(run) / anz
                         ErgValues(tCompErg.a_veh_avg)(run) = ErgValues(tCompErg.a_veh_avg)(run) / anz
                         ErgValues(tCompErg.F_acc)(run) = ErgValues(tCompErg.F_acc)(run) / anz
                         ErgValues(tCompErg.F_grd)(run) = ErgValues(tCompErg.F_grd)(run) / anz
@@ -905,9 +905,9 @@ Module Signal_identification
                         ErgValues(tCompErg.vp_H2O)(run) = ((ErgValues(tCompErg.rh_stat)(run) / 100) * 611 * 10 ^ ((7.5 * ErgValues(tCompErg.t_amb_stat)(run)) / (237 + ErgValues(tCompErg.t_amb_stat)(run))))
                         ErgValues(tCompErg.rho_air)(run) = (ErgValues(tCompErg.p_amb_stat)(run) * 100 - ErgValues(tCompErg.vp_H2O)(run)) / (287.05 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15)) + ErgValues(tCompErg.vp_H2O)(run) / (461.9 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15))
                         If ErgValues(tCompErg.RunID)(run) = IDHS Then
-                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS * (Crt.rho_air_ref / ErgValues(tCompErg.rho_air)(run))
+                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS
                         Else
-                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor * (Crt.rho_air_ref / ErgValues(tCompErg.rho_air)(run))
+                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor
                         End If
                         ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
                         If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz
@@ -924,7 +924,7 @@ Module Signal_identification
                         ErgValues(tCompErg.tq_sum_float)(run) = (CalcData(tCompCali.tq_sum_float)(i))
                         ErgValues(tCompErg.t_float)(run) = (CalcData(tCompCali.t_float)(i))
                         ErgValues(tCompErg.F_trac)(run) = (CalcData(tCompCali.F_trac)(i))
-                        ErgValues(tCompErg.v_veh_avg)(run) = (CalcData(tCompCali.v_veh_acc)(i))
+                        ErgValues(tCompErg.v_veh_acc)(run) = (CalcData(tCompCali.v_veh_acc)(i))
                         ErgValues(tCompErg.a_veh_avg)(run) = (CalcData(tCompCali.a_veh_avg)(i))
                         ErgValues(tCompErg.F_acc)(run) = (CalcData(tCompCali.F_acc)(i))
                         ErgValues(tCompErg.F_grd)(run) = (CalcData(tCompCali.F_grd)(i))
@@ -960,7 +960,7 @@ Module Signal_identification
                     ErgValues(tCompErg.tq_sum_float)(run) = ErgValues(tCompErg.tq_sum_float)(run) / anz
                     ErgValues(tCompErg.t_float)(run) = ErgValues(tCompErg.t_float)(run) / anz
                     ErgValues(tCompErg.F_trac)(run) = ErgValues(tCompErg.F_trac)(run) / anz
-                    ErgValues(tCompErg.v_veh_avg)(run) = ErgValues(tCompErg.v_veh_avg)(run) / anz
+                    ErgValues(tCompErg.v_veh_acc)(run) = ErgValues(tCompErg.v_veh_acc)(run) / anz
                     ErgValues(tCompErg.a_veh_avg)(run) = ErgValues(tCompErg.a_veh_avg)(run) / anz
                     ErgValues(tCompErg.F_acc)(run) = ErgValues(tCompErg.F_acc)(run) / anz
                     ErgValues(tCompErg.F_grd)(run) = ErgValues(tCompErg.F_grd)(run) / anz
@@ -976,9 +976,9 @@ Module Signal_identification
                     ErgValues(tCompErg.vp_H2O)(run) = ((ErgValues(tCompErg.rh_stat)(run) / 100) * 611 * 10 ^ ((7.5 * ErgValues(tCompErg.t_amb_stat)(run)) / (237 + ErgValues(tCompErg.t_amb_stat)(run))))
                     ErgValues(tCompErg.rho_air)(run) = (ErgValues(tCompErg.p_amb_stat)(run) * 100 - ErgValues(tCompErg.vp_H2O)(run)) / (287.05 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15)) + ErgValues(tCompErg.vp_H2O)(run) / (461.9 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15))
                     If ErgValues(tCompErg.RunID)(run) = IDHS Then
-                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS * (Crt.rho_air_ref / ErgValues(tCompErg.rho_air)(run))
+                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS
                     Else
-                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor * (Crt.rho_air_ref / ErgValues(tCompErg.rho_air)(run))
+                        ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor
                     End If
                     ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
                     If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz

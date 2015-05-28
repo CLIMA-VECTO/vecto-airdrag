@@ -50,9 +50,7 @@ Module CSE_Globals
         lati_root
         longi_root
         v_veh_c
-        'vair_ic
         vair_uf
-        'beta_ic
         beta_uf
         vwind_ha
         vwind_c
@@ -117,7 +115,7 @@ Module CSE_Globals
         tq_sum_float
         F_trac
         F_res_ref
-        v_veh_avg
+        v_veh_acc
         a_veh_avg
         F_acc
         F_grd
@@ -143,11 +141,6 @@ Module CSE_Globals
         rho_air
         t_tire
         p_tire
-        F0_ref_singleDS
-        F0_singleDS
-        F2_ref_singleDS
-        RRC_singleDS
-        CdxA_singleDS
         val_User
         val_vVeh_avg
         val_vVeh_1s
@@ -158,36 +151,33 @@ Module CSE_Globals
         val_tq_1s
         val_beta
         val_dist
+        CdxAß_singleDS
     End Enum
 
     Public Enum tCompErgReg
         SecID
         DirID
-        F0
-        F0_LS1
-        F0_LS2
-        F0_ref
-        F2_ref
-        F0_LS1_ref
-        F2_LS1_ref
-        F0_LS2_ref
-        F2_LS2_ref
-        rho_air_LS
-        beta_abs_HS
-        RRC
-        RRC_LS1
-        RRC_LS2
-        RRC_valid
-        CdxA
-        delta_CdxA
-        CdxA0
-        F0_95
-        F2_95
-        R_sq
-        t_tire_LS_min
-        t_tire_LS_max
-        t_tire_HS_min
-        t_tire_HS_max
+        F0_singleMS
+        F2_singleMS
+        F0_singleMS_95
+        F2_singleMS_95
+        R_sq_singleMS
+        RRC_singleMS
+        F0_singleMS_LS1
+        F2_singleMS_LS1
+        F0_singleMS_LS2
+        F2_singleMS_LS2
+        beta_ave_singleMS
+        RRC_singleMS_LS1
+        RRC_singleMS_LS2
+        valid_RRC
+        CdxAß_ave_singleMS
+        delta_CdxA_singleMS
+        CdxA0_singleMS
+        t_tire_ave_LS_min
+        t_tire_ave_LS_max
+        t_tire_ave_HS_min
+        t_tire_ave_HS_max
         valid_t_tire
         't_amb
         't_amb_min
@@ -431,7 +421,7 @@ Module CSE_Globals
             Case tCompCali.F_trac
                 Return "F_trac"
             Case tCompCali.v_veh_acc
-                Return "v_veh_avg"
+                Return "v_veh_acc"
             Case tCompCali.a_veh_avg
                 Return "a_veh_avg"
             Case tCompCali.F_acc
@@ -604,8 +594,8 @@ Module CSE_Globals
                 Return "tq_sum_float"
             Case tCompErg.F_trac
                 Return "F_trac"
-            Case tCompErg.v_veh_avg
-                Return "v_veh_avg"
+            Case tCompErg.v_veh_acc
+                Return "v_veh_acc"
             Case tCompErg.a_veh_avg
                 Return "a_veh_avg"
             Case tCompErg.F_acc
@@ -658,16 +648,6 @@ Module CSE_Globals
                 Return "t_tire"
             Case tCompErg.p_tire
                 Return "p_tire"
-            Case tCompErg.F0_ref_singleDS
-                Return "F0_ref_singleDS"
-            Case tCompErg.F0_singleDS
-                Return "F0_singleDS"
-            Case tCompErg.F2_ref_singleDS
-                Return "F2_ref_singleDS"
-            Case tCompErg.RRC_singleDS
-                Return "RRC_singleDS"
-            Case tCompErg.CdxA_singleDS
-                Return "CdxA_singleDS"
             Case tCompErg.val_User
                 Return "val_User"
             Case tCompErg.val_vVeh_avg
@@ -688,6 +668,8 @@ Module CSE_Globals
                 Return "val_beta"
             Case tCompErg.val_dist
                 Return "val_dist"
+            Case tCompErg.CdxAß_singleDS
+                Return "CdxA(ß)_singleDS"
             Case Else
                 Return "ERROR"
         End Select
@@ -715,16 +697,12 @@ Module CSE_Globals
                 Return "[km/h]"
             Case tCompErg.v_veh
                 Return "[km/h]"
-                'Case tCompErg.vair_ar
-                '    Return "[m/s]"
             Case tCompErg.vair_ic
                 Return "[m/s]"
             Case tCompErg.vair_uf
                 Return "[m/s]"
             Case tCompErg.vair
                 Return "[m/s]"
-                'Case tCompErg.beta_ar
-                '    Return "[°]"
             Case tCompErg.beta_ic
                 Return "[°]"
             Case tCompErg.beta_uf
@@ -761,7 +739,7 @@ Module CSE_Globals
                 Return "[Nm]"
             Case tCompErg.F_trac
                 Return "[N]"
-            Case tCompErg.v_veh_avg
+            Case tCompErg.v_veh_acc
                 Return "[km/h]"
             Case tCompErg.a_veh_avg
                 Return "[m/s2]"
@@ -815,16 +793,6 @@ Module CSE_Globals
                 Return "[°C]"
             Case tCompErg.p_tire
                 Return "[bar]"
-            Case tCompErg.F0_ref_singleDS
-                Return "[N]"
-            Case tCompErg.F0_singleDS
-                Return "[N]"
-            Case tCompErg.F2_ref_singleDS
-                Return "[N]"
-            Case tCompErg.RRC_singleDS
-                Return "[kg/t]"
-            Case tCompErg.CdxA_singleDS
-                Return "[m2]"
             Case tCompErg.val_User
                 Return "[-]"
             Case tCompErg.val_vVeh_avg
@@ -845,6 +813,8 @@ Module CSE_Globals
                 Return "[-]"
             Case tCompErg.val_dist
                 Return "[-]"
+            Case tCompErg.CdxAß_singleDS
+                Return "[m2]"
             Case Else
                 Return "ERROR"
         End Select
@@ -856,56 +826,48 @@ Module CSE_Globals
                 Return "SecID"
             Case tCompErgReg.DirID
                 Return "DirID"
-            Case tCompErgReg.F0
-                Return "F0"
-            Case tCompErgReg.F0_LS1
-                Return "F0_LS1"
-            Case tCompErgReg.F0_LS2
-                Return "F0_LS2"
-            Case tCompErgReg.F0_ref
-                Return "F0_ref"
-            Case tCompErgReg.F0_LS1_ref
-                Return "F0_LS1_ref"
-            Case tCompErgReg.F0_LS2_ref
-                Return "F0_LS2_ref"
-            Case tCompErgReg.F0_95
-                Return "F0 (95%)"
-            Case tCompErgReg.F2_ref
-                Return "F2_ref"
-            Case tCompErgReg.F2_LS1_ref
-                Return "F2_LS1_ref"
-            Case tCompErgReg.F2_LS2_ref
-                Return "F2_LS2_ref"
-            Case tCompErgReg.F2_95
-                Return "F2 (95%)"
-            Case tCompErgReg.RRC
-                Return "RRC"
-            Case tCompErgReg.RRC_LS1
-                Return "RRC_LS1"
-            Case tCompErgReg.RRC_LS2
-                Return "RRC_LS2"
-            Case tCompErgReg.RRC_valid
-                Return "RRC_valid"
-            Case tCompErgReg.R_sq
-                Return "R_sq"
-            Case tCompErgReg.CdxA
-                Return "CdxA"
-            Case tCompErgReg.CdxA0
-                Return "CdxA0"
-            Case tCompErgReg.delta_CdxA
-                Return "delta_CdxA"
-            Case tCompErgReg.rho_air_LS
-                Return "rho_air_LS"
-            Case tCompErgReg.beta_abs_HS
-                Return "beta_abs_HS"
-            Case tCompErgReg.t_tire_LS_max
-                Return "t_tire_LS_max"
-            Case tCompErgReg.t_tire_LS_min
-                Return "t_tire_LS_min"
-            Case tCompErgReg.t_tire_HS_max
-                Return "t_tire_HS_max"
-            Case tCompErgReg.t_tire_HS_min
-                Return "t_tire_HS_min"
+            Case tCompErgReg.F0_singleMS
+                Return "F0_singleMS"
+            Case tCompErgReg.F0_singleMS_95
+                Return "F0_singleMS (95%)"
+            Case tCompErgReg.F0_singleMS_LS1
+                Return "F0_singleMS_LS1"
+            Case tCompErgReg.F0_singleMS_LS2
+                Return "F0_singleMS_LS2"
+            Case tCompErgReg.F2_singleMS
+                Return "F2_singleMS"
+            Case tCompErgReg.F2_singleMS_95
+                Return "F2_singleMS (95%)"
+            Case tCompErgReg.F2_singleMS_LS1
+                Return "F2_singleMS_LS1"
+            Case tCompErgReg.F2_singleMS_LS2
+                Return "F2_singleMS_LS2"
+            Case tCompErgReg.RRC_singleMS
+                Return "RRC_singleMS"
+            Case tCompErgReg.RRC_singleMS_LS1
+                Return "RRC_singleMS_LS1"
+            Case tCompErgReg.RRC_singleMS_LS2
+                Return "RRC_singleMS_LS2"
+            Case tCompErgReg.valid_RRC
+                Return "valid_RRC"
+            Case tCompErgReg.R_sq_singleMS
+                Return "R_sq_singleMS"
+            Case tCompErgReg.CdxAß_ave_singleMS
+                Return "CdxA(ß)_ave_singleMS"
+            Case tCompErgReg.CdxA0_singleMS
+                Return "CdxA(0)_singleMS"
+            Case tCompErgReg.delta_CdxA_singleMS
+                Return "delta_CdxA_singleMS"
+            Case tCompErgReg.beta_ave_singleMS
+                Return "beta_ave_singleMS"
+            Case tCompErgReg.t_tire_ave_LS_max
+                Return "t_tire_ave_LS_max"
+            Case tCompErgReg.t_tire_ave_LS_min
+                Return "t_tire_ave_LS_min"
+            Case tCompErgReg.t_tire_ave_HS_max
+                Return "t_tire_ave_HS_max"
+            Case tCompErgReg.t_tire_ave_HS_min
+                Return "t_tire_ave_HS_min"
             Case tCompErgReg.valid_t_tire
                 Return "valid_t_tire"
             Case Else
@@ -919,55 +881,47 @@ Module CSE_Globals
                 Return "[-]"
             Case tCompErgReg.DirID
                 Return "[-]"
-            Case tCompErgReg.F0
+            Case tCompErgReg.F0_singleMS
                 Return "[N]"
-            Case tCompErgReg.F0_LS1
-                Return "[N]"
-            Case tCompErgReg.F0_LS2
-                Return "[N]"
-            Case tCompErgReg.F0_ref
-                Return "[N]"
-            Case tCompErgReg.F0_LS1_ref
-                Return "[N]"
-            Case tCompErgReg.F0_LS2_ref
-                Return "[N]"
-            Case tCompErgReg.F0_95
+            Case tCompErgReg.F0_singleMS_95
                 Return "[%]"
-            Case tCompErgReg.F2_ref
+            Case tCompErgReg.F0_singleMS_LS1
+                Return "[N]"
+            Case tCompErgReg.F0_singleMS_LS2
+                Return "[N]"
+            Case tCompErgReg.F2_singleMS
                 Return "[N/(m2/s2)]"
-            Case tCompErgReg.F2_LS1_ref
-                Return "[N/(m2/s2)]"
-            Case tCompErgReg.F2_LS2_ref
-                Return "[N/(m2/s2)]"
-            Case tCompErgReg.F2_95
+            Case tCompErgReg.F2_singleMS_95
                 Return "[%]"
-            Case tCompErgReg.RRC
+            Case tCompErgReg.F2_singleMS_LS1
+                Return "[N/(m2/s2)]"
+            Case tCompErgReg.F2_singleMS_LS2
+                Return "[N/(m2/s2)]"
+            Case tCompErgReg.RRC_singleMS
                 Return "[kg/t]"
-            Case tCompErgReg.RRC_LS1
+            Case tCompErgReg.RRC_singleMS_LS1
                 Return "[kg/t]"
-            Case tCompErgReg.RRC_LS2
+            Case tCompErgReg.RRC_singleMS_LS2
                 Return "[kg/t]"
-            Case tCompErgReg.RRC_valid
+            Case tCompErgReg.valid_RRC
                 Return "[-]"
-            Case tCompErgReg.R_sq
+            Case tCompErgReg.R_sq_singleMS
                 Return "[-]"
-            Case tCompErgReg.CdxA
+            Case tCompErgReg.CdxAß_ave_singleMS
                 Return "[m2]"
-            Case tCompErgReg.CdxA0
+            Case tCompErgReg.CdxA0_singleMS
                 Return "[m2]"
-            Case tCompErgReg.delta_CdxA
+            Case tCompErgReg.delta_CdxA_singleMS
                 Return "[m2]"
-            Case tCompErgReg.rho_air_LS
-                Return "[kg/m3]"
-            Case tCompErgReg.beta_abs_HS
+            Case tCompErgReg.beta_ave_singleMS
                 Return "[°]"
-            Case tCompErgReg.t_tire_LS_max
+            Case tCompErgReg.t_tire_ave_LS_max
                 Return "[°]"
-            Case tCompErgReg.t_tire_LS_min
+            Case tCompErgReg.t_tire_ave_LS_min
                 Return "[°]"
-            Case tCompErgReg.t_tire_HS_max
+            Case tCompErgReg.t_tire_ave_HS_max
                 Return "[°]"
-            Case tCompErgReg.t_tire_HS_min
+            Case tCompErgReg.t_tire_ave_HS_min
                 Return "[°]"
             Case tCompErgReg.valid_t_tire
                 Return "[-]"

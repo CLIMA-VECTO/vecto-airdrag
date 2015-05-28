@@ -150,7 +150,7 @@ Public Module main_calculation_call
             ' Check if all is valid
             For i = 0 To ErgValuesReg(tCompErgReg.SecID).Count - 1
                 If ErgValuesReg(tCompErgReg.valid_t_tire)(i) = 0 Then Job.valid_t_tire = False
-                If ErgValuesReg(tCompErgReg.RRC_valid)(i) = 0 Then Job.valid_RRC = False
+                If ErgValuesReg(tCompErgReg.valid_RRC)(i) = 0 Then Job.valid_RRC = False
             Next i
 
             ' Output of the final data

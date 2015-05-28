@@ -967,7 +967,8 @@ Public Class F_Main
         If Not IsNothing(JobFile) Then
             logme(8, False, format("The Job-file({0}) has changed because of criteria update", JobFile))
         End If
-        Crt.accel_correction = True
+        'Crt.accel_correction = True
+        'Crt.hz_out = 1
         UI_PopulateFromCriteria()
     End Sub
 

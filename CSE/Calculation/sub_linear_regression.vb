@@ -14,8 +14,8 @@ Module sub_linear_regression
     ' Main function for the calculate the regression
     Public Function fCalcReg(ByVal vehicle As cVehicle) As Boolean
         ' Declaration
-        Dim i, j, k, numLS1, numLS2, numHS, num, numT, PosHS(), lauf, t_amb_num As Integer
-        Dim XLS1_Array(,), XLS2_Array(,), XHS_Array(,), XHS_S(1, 1), YLS1_Array(), YLS2_Array(), YHS_Array(), YHS_S(1) As Double
+        Dim i, j, numLS1, numLS2, numHS, numHSg, numT, PosHS(), PosHSg(), lauf, t_amb_num As Integer
+        Dim XLS1_Array(,), XLS2_Array(,), XHS_Array(,), XHSg_Array(,), XHS_S(1, 1), YLS1_Array(), YLS2_Array(), YHS_Array(), YHSg_Array(), YHS_S(1) As Double
         Dim XLR(,), YLR(), WFLR(,), F0, F2, F095, F295, R2, Rho_air_LS1, Rho_air_LS2, t_amb_f, t_amb_max_f, t_amb_min_f As Double
         Dim FirstInLS1, FirstInLS2, FirstInHS, FirstInGes As Boolean
         Dim EnumStr As tCompErgReg
@@ -31,7 +31,7 @@ Module sub_linear_regression
         t_amb_num = 0
         FirstInGes = True
         ErgValuesReg = New Dictionary(Of tCompErgReg, List(Of Double))
-        Job.CdxA = 0
+        Job.CdxAß = 0
         Job.CdxA0 = 0
         Job.CdxA0_opt2 = 0
         Job.delta_CdxA = 0
@@ -52,6 +52,7 @@ Module sub_linear_regression
                 numLS1 = 0
                 numLS2 = 0
                 numHS = 0
+                numHSg = 0
                 lauf += 1
                 Rho_air_LS1 = 0
                 Rho_air_LS2 = 0
@@ -65,12 +66,15 @@ Module sub_linear_regression
                 ReDim YLS2_Array(0)
                 ReDim YHS_Array(0)
                 ReDim PosHS(0)
+                ReDim PosHSg(0)
+                ReDim XHSg_Array(1, 0)
+                ReDim YHSg_Array(0)
 
                 ' Save the SecID and DirID in result dictionary
                 ErgValuesReg(tCompErgReg.SecID).Add(ErgValuesComp(tCompErg.SecID)(i))
                 ErgValuesReg(tCompErgReg.DirID).Add(ErgValuesComp(tCompErg.DirID)(i))
-                ErgValuesReg(tCompErgReg.rho_air_LS).Add(0)
-                ErgValuesReg(tCompErgReg.beta_abs_HS).Add(0)
+                ErgValuesReg(tCompErgReg.beta_ave_singleMS).Add(0)
+                ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS).Add(0)
 
                 ' Go through all measurements
                 For j = i To ErgValuesComp(tCompErg.SecID).Count - 1
@@ -95,14 +99,13 @@ Module sub_linear_regression
 
                                     ' Add values for t_tire_min/max and rho_air into the result dictionary
                                     If FirstInLS1 Then
-                                        ErgValuesReg(tCompErgReg.t_tire_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                        ErgValuesReg(tCompErgReg.t_tire_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                        ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                        ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
                                         FirstInLS1 = False
                                     Else
-                                        If ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                        If ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                        If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                        If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
                                     End If
-                                    ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) += ErgValuesComp(tCompErg.rho_air)(j)
                                     Rho_air_LS1 += ErgValuesComp(tCompErg.rho_air)(j)
                                 Case IDLS2
                                     ' Initialise
@@ -117,14 +120,13 @@ Module sub_linear_regression
 
                                     ' Add values for t_tire_min/max and rho_air into the result dictionary
                                     If FirstInLS2 Then
-                                        ErgValuesReg(tCompErgReg.t_tire_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                        ErgValuesReg(tCompErgReg.t_tire_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                        ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                        ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
                                         FirstInLS2 = False
                                     Else
-                                        If ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                        If ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                        If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                        If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
                                     End If
-                                    ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) += ErgValuesComp(tCompErg.rho_air)(j)
                                     Rho_air_LS2 += ErgValuesComp(tCompErg.rho_air)(j)
                                 Case IDHS
                                     ' Initialise
@@ -141,14 +143,14 @@ Module sub_linear_regression
 
                                     ' Add values for t_tire_min/max and beta_HS into the result dictionary
                                     If FirstInHS Then
-                                        ErgValuesReg(tCompErgReg.t_tire_HS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                        ErgValuesReg(tCompErgReg.t_tire_HS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                        ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                        ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
                                         FirstInHS = False
                                     Else
-                                        If ErgValuesReg(tCompErgReg.t_tire_HS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_HS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                        If ErgValuesReg(tCompErgReg.t_tire_HS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_HS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                        If ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                        If ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
                                     End If
-                                    ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf) += ErgValuesComp(tCompErg.beta_abs)(j)
+                                    ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) += ErgValuesComp(tCompErg.beta_abs)(j)
                             End Select
 
                             ' Add values for tempreture into the result dictionary
@@ -162,6 +164,21 @@ Module sub_linear_regression
                                 If t_amb_max_f < ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_max_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
                                 If t_amb_min_f > ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_min_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
                             End If
+                        End If
+
+                        ' Extra calculation with not used values
+                        If ErgValuesComp(tCompErg.RunID)(j) = IDHS Then
+                            ' Initialise
+                            ReDim Preserve XHSg_Array(1, UBound(XHSg_Array, 2) + 1)
+                            ReDim Preserve YHSg_Array(UBound(YHSg_Array) + 1)
+                            ReDim Preserve PosHSg(UBound(PosHSg) + 1)
+                            numHSg += 1
+
+                            ' Get the values
+                            PosHSg(UBound(PosHSg)) = j
+                            XHSg_Array(0, UBound(XHSg_Array, 2)) = 1
+                            XHSg_Array(1, UBound(XHSg_Array, 2)) = ErgValuesComp(tCompErg.v_air_sq)(j)
+                            YHSg_Array(UBound(YHSg_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
                         End If
                     End If
                 Next j
@@ -188,42 +205,6 @@ Module sub_linear_regression
                         End If
                     Next j
 
-                    '***** Calculate the linear regression for every detected HS
-                    ' Redeminisionate the arrays
-                    num = 1
-                    numT = numLS1 + numLS2 + 1
-                    ReDim XLR(1, numT)
-                    ReDim YLR(numT)
-                    ReDim WFLR(numT, numT)
-
-                    ' Initialise
-                    For j = 1 To numT
-                        For k = 1 To numT
-                            WFLR(j, k) = 0
-                        Next k
-                    Next j
-
-                    ' Start the calculation for every HS
-                    For j = 1 To numHS
-                        ' Fill the sigle arrays
-                        XHS_S(0, 1) = 1
-                        XHS_S(1, 1) = XHS_Array(1, j)
-                        YHS_S(1) = YHS_Array(j)
-
-                        ' Fill the linear regression arrays
-                        fFillArray(XLS1_Array, XLS2_Array, YLS1_Array, YLS2_Array, XHS_S, YHS_S, XLR, YLR, WFLR)
-
-                        ' Do the linear regression
-                        linear_regression(XLR, YLR, WFLR, F0, F2, F095, F295, R2)
-
-                        ' Save the values
-                        ErgValuesComp(tCompErg.F0_ref_singleDS)(PosHS(j)) = F0
-                        ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) = F0 * (ErgValuesComp(tCompErg.rho_air)(PosHS(j)) / Crt.rho_air_ref)
-                        ErgValuesComp(tCompErg.F2_ref_singleDS)(PosHS(j)) = F2
-                        ErgValuesComp(tCompErg.RRC_singleDS)(PosHS(j)) = (ErgValuesComp(tCompErg.F0_singleDS)(PosHS(j)) / (vehicle.testMass * 9.81)) * 1000
-                        ErgValuesComp(tCompErg.CdxA_singleDS)(PosHS(j)) = 2 * F2 / Crt.rho_air_ref
-                    Next j
-
                     '***** Calculate the linear regression for LS1
                     ' Redeminisionate the arrays
                     numT = numLS1 + numHS
@@ -238,10 +219,9 @@ Module sub_linear_regression
                     linear_regression(XLR, YLR, WFLR, F0, F2, F095, F295, R2)
 
                     ' Save the values
-                    ErgValuesReg(tCompErgReg.F0_LS1_ref).Add(F0)
-                    ErgValuesReg(tCompErgReg.F0_LS1).Add(F0 * (Rho_air_LS1 / numLS1) / Crt.rho_air_ref)
-                    ErgValuesReg(tCompErgReg.F2_LS1_ref).Add(F2)
-                    ErgValuesReg(tCompErgReg.RRC_LS1).Add((ErgValuesReg(tCompErgReg.F0_LS1)(lauf) / (vehicle.testMass * 9.81)) * 1000)
+                    ErgValuesReg(tCompErgReg.F0_singleMS_LS1).Add(F0)
+                    ErgValuesReg(tCompErgReg.F2_singleMS_LS1).Add(F2)
+                    ErgValuesReg(tCompErgReg.RRC_singleMS_LS1).Add((ErgValuesReg(tCompErgReg.F0_singleMS_LS1)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
                     '***** Calculate the linear regression for LS2
                     ' Redeminisionate the arrays
@@ -257,15 +237,14 @@ Module sub_linear_regression
                     linear_regression(XLR, YLR, WFLR, F0, F2, F095, F295, R2)
 
                     ' Save the values
-                    ErgValuesReg(tCompErgReg.F0_LS2_ref).Add(F0)
-                    ErgValuesReg(tCompErgReg.F0_LS2).Add(F0 * (Rho_air_LS2 / numLS2) / Crt.rho_air_ref)
-                    ErgValuesReg(tCompErgReg.F2_LS2_ref).Add(F2)
-                    ErgValuesReg(tCompErgReg.RRC_LS2).Add((ErgValuesReg(tCompErgReg.F0_LS2)(lauf) / (vehicle.testMass * 9.81)) * 1000)
+                    ErgValuesReg(tCompErgReg.F0_singleMS_LS2).Add(F0)
+                    ErgValuesReg(tCompErgReg.F2_singleMS_LS2).Add(F2)
+                    ErgValuesReg(tCompErgReg.RRC_singleMS_LS2).Add((ErgValuesReg(tCompErgReg.F0_singleMS_LS2)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
-                    If Math.Abs(ErgValuesReg(tCompErgReg.RRC_LS1)(lauf) - ErgValuesReg(tCompErgReg.RRC_LS2)(lauf)) > Crt.delta_rr_corr_max Then
-                        ErgValuesReg(tCompErgReg.RRC_valid).Add(0)
+                    If Math.Abs(ErgValuesReg(tCompErgReg.RRC_singleMS_LS1)(lauf) - ErgValuesReg(tCompErgReg.RRC_singleMS_LS2)(lauf)) > Crt.delta_rr_corr_max Then
+                        ErgValuesReg(tCompErgReg.valid_RRC).Add(0)
                     Else
-                        ErgValuesReg(tCompErgReg.RRC_valid).Add(1)
+                        ErgValuesReg(tCompErgReg.valid_RRC).Add(1)
                     End If
 
                     '***** Calculate the linear regression for the MS
@@ -282,53 +261,60 @@ Module sub_linear_regression
                     linear_regression(XLR, YLR, WFLR, F0, F2, F095, F295, R2)
 
                     ' Save the values
-                    ErgValuesReg(tCompErgReg.F0_ref).Add(F0)
-                    ErgValuesReg(tCompErgReg.F2_ref).Add(F2)
-                    ErgValuesReg(tCompErgReg.F0_95).Add(F095)
-                    ErgValuesReg(tCompErgReg.F2_95).Add(F295)
-                    ErgValuesReg(tCompErgReg.R_sq).Add(R2)
+                    ErgValuesReg(tCompErgReg.F0_singleMS).Add(F0)
+                    ErgValuesReg(tCompErgReg.F2_singleMS).Add(F2)
+                    ErgValuesReg(tCompErgReg.F0_singleMS_95).Add(F095)
+                    ErgValuesReg(tCompErgReg.F2_singleMS_95).Add(F295)
+                    ErgValuesReg(tCompErgReg.R_sq_singleMS).Add(R2)
+
+                    ' Calculate CdxAß_singleDS for each HS
+                    For j = 1 To numHSg
+                        ErgValuesComp(tCompErg.CdxAß_singleDS)(PosHSg(j)) = 2 * (YHSg_Array(j) - F0) / (XHSg_Array(1, j) * ErgValuesComp(tCompErg.rho_air)(PosHSg(j)))
+                        ' Summarise only CdxAß_singleDS values that are used
+                        If ErgValuesComp(tCompErg.used)(PosHSg(j)) = 1 Then
+                            ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) += ErgValuesComp(tCompErg.CdxAß_singleDS)(PosHSg(j))
+                        End If
+                    Next j
+                    ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) = ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) / numHS
 
                     ' Calculate additional values
-                    ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) = ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) / (numLS1 + numLS2)
-                    ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf) = ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf) / (numHS)
-                    ErgValuesReg(tCompErgReg.F0).Add(F0 * (ErgValuesReg(tCompErgReg.rho_air_LS)(lauf) / Crt.rho_air_ref))
-                    ErgValuesReg(tCompErgReg.RRC).Add(ErgValuesReg(tCompErgReg.F0)(lauf) / (vehicle.testMass * 9.81) * 1000)
-                    ErgValuesReg(tCompErgReg.CdxA).Add(2 * F2 / Crt.rho_air_ref)
-                    ErgValuesReg(tCompErgReg.delta_CdxA).Add(fCalcGenShp(ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf), vehicle))
-                    ErgValuesReg(tCompErgReg.CdxA0).Add(ErgValuesReg(tCompErgReg.CdxA)(lauf) - ErgValuesReg(tCompErgReg.delta_CdxA)(lauf))
-                    If ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_HS_max)(lauf) - Crt.delta_t_tyre_max) Or _
-                       ErgValuesReg(tCompErgReg.t_tire_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_LS_max)(lauf) - Crt.delta_t_tyre_max) Or _
-                       ErgValuesReg(tCompErgReg.t_tire_HS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_HS_max)(lauf) - Crt.delta_t_tyre_max) Then
+                    ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) = ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) / (numHS)
+                    ErgValuesReg(tCompErgReg.RRC_singleMS).Add(ErgValuesReg(tCompErgReg.F0_singleMS)(lauf) / (vehicle.testMass * 9.81) * 1000)
+                    ErgValuesReg(tCompErgReg.delta_CdxA_singleMS).Add(fCalcGenShp(ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf), vehicle))
+                    ErgValuesReg(tCompErgReg.CdxA0_singleMS).Add(ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) - ErgValuesReg(tCompErgReg.delta_CdxA_singleMS)(lauf))
+
+                    If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) - Crt.delta_t_tyre_max) Or _
+                       ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) - Crt.delta_t_tyre_max) Or _
+                       ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) - Crt.delta_t_tyre_max) Then
                         ErgValuesReg(tCompErgReg.valid_t_tire).Add(0)
                     Else
                         ErgValuesReg(tCompErgReg.valid_t_tire).Add(1)
                     End If
 
                     ' Summerise for the endresults
-                    Job.CdxA += ErgValuesReg(tCompErgReg.CdxA)(lauf)
-                    Job.beta += ErgValuesReg(tCompErgReg.beta_abs_HS)(lauf)
-                    Job.CdxA0_opt2 += ErgValuesReg(tCompErgReg.CdxA0)(lauf)
+                    Job.CdxAß += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf)
+                    Job.beta += ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf)
+                    Job.CdxA0_opt2 += ErgValuesReg(tCompErgReg.CdxA0_singleMS)(lauf)
                 Else
                     ' Clear the data in the result dictionary
                     ErgValuesReg(tCompErgReg.SecID).RemoveAt(lauf)
                     ErgValuesReg(tCompErgReg.DirID).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.rho_air_LS).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.beta_abs_HS).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.t_tire_HS_max).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.t_tire_HS_min).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.t_tire_LS_max).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.t_tire_LS_min).RemoveAt(lauf)
+                    ErgValuesReg(tCompErgReg.beta_ave_singleMS).RemoveAt(lauf)
+                    ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).RemoveAt(lauf)
+                    ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).RemoveAt(lauf)
+                    ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).RemoveAt(lauf)
+                    ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).RemoveAt(lauf)
                     lauf -= 1
                 End If
             End If
         Next i
 
         ' Calculate the Endresults
-        Job.CdxA = Job.CdxA / (lauf + 1)
+        Job.CdxAß = Job.CdxAß / (lauf + 1)
         Job.beta = Job.beta / (lauf + 1)
         Job.delta_CdxA = fCalcGenShp(Job.beta, vehicle)
         Job.CdxA0_opt2 = Job.CdxA0_opt2 / (lauf + 1)
-        Job.CdxA0 = Job.CdxA - Job.delta_CdxA
+        Job.CdxA0 = Job.CdxAß - Job.delta_CdxA
 
         ' Test validation
         t_amb_f = t_amb_f / t_amb_num

@@ -301,9 +301,9 @@ Public Class cCriteria
 #Region "json props"
     ' Processing params
     Public rr_corr_factor As Double
-    Public accel_correction As Boolean = True
+    Public accel_correction As Boolean '= True
     Public gradient_correction As Boolean = False
-    Public hz_out As Integer = 1
+    Public hz_out As Integer '= 1
     Public acc_corr_avg As Single
     Public dist_float As Single
     Public rho_air_ref As Single
