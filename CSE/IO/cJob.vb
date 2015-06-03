@@ -362,7 +362,7 @@ Public Class cJob
     End Property
     Public ReadOnly Property coasting_fpaths As String()
         Get
-            Return {low1_fpath, high_fpath, low2_fpath}
+            Return {high_fpath, low1_fpath, low2_fpath}
         End Get
     End Property
 

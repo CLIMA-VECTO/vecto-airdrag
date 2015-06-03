@@ -688,9 +688,9 @@ Module Signal_identification
         ' Initialise
         run = 0
         anz = 0
-        If coastingSeq = 0 Or coastingSeq = 2 Then
+        If coastingSeq = 1 Or coastingSeq = 2 Then
             igear = vehicleX.gearRatio_low
-            If coastingSeq = 0 Then
+            If coastingSeq = 1 Then
                 RunIDx = IDLS1
             Else
                 RunIDx = IDLS2

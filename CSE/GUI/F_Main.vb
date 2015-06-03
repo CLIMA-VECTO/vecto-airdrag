@@ -190,6 +190,10 @@ Public Class F_Main
         If workerMsg IsNot Nothing Then
             workerMsg.forwardLog()
         End If
+        If uRB Then
+            updateResultBoxes()
+            uRB = False
+        End If
     End Sub
 
     ' Identify the ending from the backgroundworker
@@ -213,8 +217,8 @@ Public Class F_Main
         CalibrationState = False
         EvaluationState = False
 
-        Me.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3).ToString
-        Me.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3).ToString
+        'Me.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3).ToString
+        'Me.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3).ToString
         Me.TextBoxRBetaMis.Text = Math.Round(Job.beta_ame, 2).ToString
     End Sub
 

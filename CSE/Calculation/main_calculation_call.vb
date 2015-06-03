@@ -83,9 +83,9 @@ Public Module main_calculation_call
 
             ' Output which test are calculated
             For i = 0 To UBound(Job.coasting_fpaths)
-                If i = 0 Or i = 2 Then
+                If i = 1 Or i = 2 Then
                     ' Output on the GUI
-                    If i = 0 Then
+                    If i = 1 Then
                         logme(7, False, "Calculating the first low speed run...")
                     Else
                         logme(7, False, "Calculating the second low speed run...")
@@ -225,23 +225,63 @@ Public Module main_calculation_call
 
     ' Calculate the speed run parameter
     Function fCalcRun(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer) As Boolean
-        ' Calculate the corrected vehicle speed
-        fCalcCorVveh()
+        ' Declaration
+        Dim run As Integer
+        Dim Change As Boolean = True
 
-        ' Calculate the values for v_wind, beta and v_air
-        fWindBetaAir(vehicleX)
-
-        ' Calculate the moving average from v_vind
-        fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.vwind_c), CalcData(tCompCali.vwind_1s))
-
-        ' Calculate the average values for v_wind, beta and v_wind_1s_max
-        fWindBetaAirErg()
-
-        ' Calculate the other speed run relevant values
-        fCalcSpeedVal(MSCX, vehicleX, coastingSeq)
+        ' Calculate fv_veh + fv_pe by HS otherwise use the values
+        If coastingSeq = 0 Then
+            ' Initialisation
+            Job.fv_veh = 0
+            Job.fv_veh_opt2 = 0
+            Job.fv_pe = 0
+            run = 0
+        End If
 
         ' Evaluate the valid sections
-        fCalcValidSec(MSCX, coastingSeq)
+        'fCalcValidSec(MSCX, coastingSeq, run, Change)
+
+        Do While Change
+            If coastingSeq = 0 Then
+                ' Initialise Parameter
+                Job.fv_veh = 0
+                Job.fv_veh_opt2 = 0
+                Job.fv_pe = 0
+                run += 1
+            End If
+
+            ' Calculate fv_veh
+            If coastingSeq = 0 Then ffv_veh(MSCX)
+
+            ' Calculate the corrected vehicle speed
+            fCalcCorVveh()
+
+            ' Calculate fv_pe
+            If coastingSeq = 0 Then ffvpeBeta(False)
+
+            ' Calculate the values for v_wind, beta and v_air
+            fWindBetaAir(vehicleX)
+
+            ' Calculate the moving average from v_vind
+            fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.vwind_c), CalcData(tCompCali.vwind_1s))
+
+            ' Calculate the average values for v_wind, beta and v_wind_1s_max
+            fWindBetaAirErg()
+
+            ' Calculate the other speed run relevant values
+            fCalcSpeedVal(MSCX, vehicleX, coastingSeq)
+
+            ' Evaluate the valid sections
+            fCalcValidSec(MSCX, coastingSeq, run, Change)
+
+            ' Error
+            If run > 10 Then
+                Throw New Exception("The evaluation is not possible because iteration for valid datasets does not converge (n>10)!")
+            End If
+        Loop
+
+        ' Show the results on GUI
+        If coastingSeq = 0 Then uRB = True
 
         Return True
     End Function
@@ -249,167 +289,74 @@ Public Module main_calculation_call
     ' Function to calibrate fv_veh
     Sub ffv_veh(ByVal MSCX As cMSC)
         ' Declaration
-        Dim i, j, CalcX(0), VSec(0), num As Integer
-        Dim ave_vz(0), ave_vz2(0), ave_vn(0) As Double
+        Dim i, num As Integer
 
         ' Initialise
-        ave_vz(0) = 0
-        ave_vz2(0) = 0
+        Job.fv_veh = 0
+        Job.fv_veh_opt2 = 0
         num = 0
 
         ' Calculate velocity correction
         For i = 0 To ErgValues(tCompErg.SecID).Count - 1
-            ' Identify if the section already is done
-            If i = 0 Then
-                CalcX(UBound(CalcX)) = ErgValues(tCompErg.SecID)(i)
-                VSec(UBound(VSec)) = 0
-            Else
-                If Not CalcX.Contains(ErgValues(tCompErg.SecID)(i)) Then
-                    ReDim Preserve CalcX(UBound(CalcX) + 1)
-                    ReDim Preserve VSec(UBound(VSec) + 1)
-                    ReDim Preserve ave_vz(UBound(ave_vz) + 1)
-                    ReDim Preserve ave_vn(UBound(ave_vn) + 1)
-                    ReDim Preserve ave_vz2(UBound(ave_vz2) + 1)
-                    CalcX(UBound(CalcX)) = ErgValues(tCompErg.SecID)(i)
-                    VSec(UBound(VSec)) = 0
-                Else
-                    Continue For
+            If ErgValues(tCompErg.used)(i) = 1 Then
+                ' Error if the vehicle velocity of the CAN is 0
+                If ErgValues(tCompErg.v_veh_CAN)(i) = 0 Then
+                    Throw New Exception("The measured vehicle velocity (v_veh_CAN) is 0 in section: " & ErgValues(tCompErg.SecID)(i))
                 End If
-            End If
-
-            ' Calculate the values
-            For j = i + 1 To ErgValues(tCompErg.SecID).Count - 1
-                If ErgValues(tCompErg.used)(i) = 1 And j = i + 1 Then
-                    VSec(UBound(VSec)) = 1
-                    ave_vz(UBound(ave_vz)) += ErgValues(tCompErg.v_MSC)(i)
-                    ave_vn(UBound(ave_vn)) += ErgValues(tCompErg.v_veh_CAN)(i)
-                    If Not MSCX.tUse Then
-                        ave_vz2(UBound(ave_vz2)) += ErgValues(tCompErg.v_MSC_GPS)(i)
-                    End If
-                End If
-                If ErgValues(tCompErg.used)(j) = 1 And ErgValues(tCompErg.SecID)(i) = ErgValues(tCompErg.SecID)(j) Then
-                    VSec(UBound(VSec)) = 1
-                    ave_vz(UBound(ave_vz)) += ErgValues(tCompErg.v_MSC)(j)
-                    ave_vn(UBound(ave_vn)) += ErgValues(tCompErg.v_veh_CAN)(j)
-                    If Not MSCX.tUse Then
-                        ave_vz2(UBound(ave_vz2)) += ErgValues(tCompErg.v_MSC_GPS)(j)
-                    End If
-                End If
-            Next j
-        Next i
-
-        ' error message if the CAN velocity is 0
-        For i = 0 To UBound(CalcX)
-            If ave_vn(i) = 0 And VSec(i) = 1 Then
-                Throw New Exception("The measured vehicle velocity (v_veh_CAN) is 0 in section: " & CalcX(i))
-            End If
-        Next i
-
-        ' Calculate the factor
-        For i = 0 To UBound(CalcX)
-            If VSec(i) = 1 Then
                 If MSCX.tUse Then
-                    Job.fv_veh += ave_vz(i) / ave_vn(i)
+                    Job.fv_veh += ErgValues(tCompErg.v_MSC)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
                     Job.fv_veh_opt2 = 0
                     num += 1
                 Else
-                    Job.fv_veh += ave_vz2(i) / ave_vn(i)
-                    Job.fv_veh_opt2 += ave_vz(i) / ave_vn(i)
+                    Job.fv_veh += ErgValues(tCompErg.v_MSC_GPS)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
+                    Job.fv_veh_opt2 += ErgValues(tCompErg.v_MSC)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
                     num += 1
                 End If
             End If
         Next i
+
+        ' Error if no valid section is found
+        If num = 0 Then
+            Throw New Exception("No used/valid section is found for calculation of fv_veh!")
+        End If
 
         ' Calculate the average over all factors
         Job.fv_veh = Job.fv_veh / num
         Job.fv_veh_opt2 = Job.fv_veh_opt2 / num
     End Sub
 
-    Function ffvpeBeta() As Boolean
+    ' Function to calculate fv_pe & beta_amn
+    Function ffvpeBeta(Optional ByVal allData As Boolean = True) As Boolean
         ' Declaration
-        Dim anz_s(1, 0), i, j, CalcX(0), VSec(0), num As Integer
-        Dim ave_vc(1, 0), vair_ic(1, 0), beta_ic(1, 0), v_air_ges, beta_ges, ave_vc_ges As Double
+        Dim i, anz_DirID(1) As Integer
+        Dim vair_ic(1), beta_ic(1), sum_v_veh As Double
 
         ' Initialise
         For i = 0 To 1
-            ave_vc(i, 0) = 0
-            vair_ic(i, 0) = 0
-            beta_ic(i, 0) = 0
-            anz_s(i, 0) = 0
+            vair_ic(i) = 0
+            If allData Then beta_ic(i) = 0
+            anz_DirID(i) = 0
         Next i
-        num = 0
+        sum_v_veh = 0
 
         ' Calculate velocity correction
         For i = 0 To ErgValues(tCompErg.SecID).Count - 1
-            ' Identify if the section already is done
-            If i = 0 Then
-                CalcX(UBound(CalcX)) = ErgValues(tCompErg.SecID)(i)
-                VSec(UBound(VSec)) = 0
-            Else
-                If Not CalcX.Contains(ErgValues(tCompErg.SecID)(i)) Then
-                    ReDim Preserve CalcX(UBound(CalcX) + 1)
-                    ReDim Preserve VSec(UBound(VSec) + 1)
-                    ReDim Preserve ave_vc(1, UBound(ave_vc, 2) + 1)
-                    ReDim Preserve vair_ic(1, UBound(vair_ic, 2) + 1)
-                    ReDim Preserve beta_ic(1, UBound(beta_ic, 2) + 1)
-                    ReDim Preserve anz_s(1, UBound(anz_s, 2) + 1)
-                    CalcX(UBound(CalcX)) = ErgValues(tCompErg.SecID)(i)
-                    VSec(UBound(VSec)) = 0
+            If ErgValues(tCompErg.used)(i) = 1 Then
+                sum_v_veh += ErgValues(tCompErg.v_veh)(i) / 3.6
+                If ErgValues(tCompErg.DirID)(i) = ErgValues(tCompErg.DirID)(0) Then
+                    vair_ic(0) += ErgValues(tCompErg.vair_ic)(i)
+                    If allData Then beta_ic(0) += ErgValues(tCompErg.beta_ic)(i)
+                    anz_DirID(0) += 1
                 Else
-                    Continue For
+                    vair_ic(1) += ErgValues(tCompErg.vair_ic)(i)
+                    If allData Then beta_ic(1) += ErgValues(tCompErg.beta_ic)(i)
+                    anz_DirID(1) += 1
                 End If
             End If
-
-            ' Summerise the parameter
-            For j = i + 1 To ErgValues(tCompErg.SecID).Count - 1
-                If ErgValues(tCompErg.used)(i) = 1 And j = i + 1 Then
-                    VSec(UBound(VSec)) = 1
-                    If ErgValues(tCompErg.DirID)(i) = ErgValues(tCompErg.DirID)(0) Then
-                        ave_vc(0, (UBound(ave_vc, 2))) += ErgValues(tCompErg.v_veh)(i) / 3.6
-                        vair_ic(0, (UBound(vair_ic, 2))) += ErgValues(tCompErg.vair_ic)(i)
-                        beta_ic(0, (UBound(beta_ic, 2))) += ErgValues(tCompErg.beta_ic)(i)
-                        anz_s(0, (UBound(anz_s, 2))) += 1
-                    Else
-                        ave_vc(1, (UBound(ave_vc, 2))) += ErgValues(tCompErg.v_veh)(i) / 3.6
-                        vair_ic(1, (UBound(vair_ic, 2))) += ErgValues(tCompErg.vair_ic)(i)
-                        beta_ic(1, (UBound(beta_ic, 2))) += ErgValues(tCompErg.beta_ic)(i)
-                        anz_s(1, (UBound(anz_s, 2))) += 1
-                    End If
-                End If
-                If ErgValues(tCompErg.used)(j) = 1 And ErgValues(tCompErg.SecID)(i) = ErgValues(tCompErg.SecID)(j) Then
-                    VSec(UBound(VSec)) = 1
-                    If ErgValues(tCompErg.DirID)(j) = ErgValues(tCompErg.DirID)(0) Then
-                        ave_vc(0, (UBound(ave_vc, 2))) += ErgValues(tCompErg.v_veh)(j) / 3.6
-                        vair_ic(0, (UBound(vair_ic, 2))) += ErgValues(tCompErg.vair_ic)(j)
-                        beta_ic(0, (UBound(beta_ic, 2))) += ErgValues(tCompErg.beta_ic)(j)
-                        anz_s(0, (UBound(anz_s, 2))) += 1
-                    Else
-                        ave_vc(1, (UBound(ave_vc, 2))) += ErgValues(tCompErg.v_veh)(j) / 3.6
-                        vair_ic(1, (UBound(vair_ic, 2))) += ErgValues(tCompErg.vair_ic)(j)
-                        beta_ic(1, (UBound(beta_ic, 2))) += ErgValues(tCompErg.beta_ic)(j)
-                        anz_s(1, (UBound(anz_s, 2))) += 1
-                    End If
-                End If
-            Next j
         Next i
 
-        ' Calculate the average
-        For i = 0 To UBound(CalcX)
-            v_air_ges = 0
-            ave_vc_ges = 0
-            For j = 0 To 1
-                If VSec(i) = 1 Then
-                    v_air_ges += vair_ic(j, i) / anz_s(j, i)
-                    beta_ges += beta_ic(j, i) / anz_s(j, i)
-                    ave_vc_ges += ave_vc(j, i) / anz_s(j, i)
-                    num += 1
-                End If
-            Next j
-            Job.fv_pe += ave_vc_ges / v_air_ges
-        Next i
-
-        Job.fv_pe = Job.fv_pe / (UBound(CalcX) + 1)
-        Job.beta_ame += beta_ges / num - AmeAng
+        Job.fv_pe = (sum_v_veh / (anz_DirID(0) + anz_DirID(1))) / (0.5 * (vair_ic(0) / anz_DirID(0) + vair_ic(1) / anz_DirID(1)))
+        If allData Then Job.beta_ame = (0.5 * (beta_ic(0) / anz_DirID(0) + beta_ic(1) / anz_DirID(1))) - AmeAng
 
         Return True
     End Function
@@ -461,7 +408,7 @@ Public Module main_calculation_call
         Dim SecCount As New cValidSec
         Dim OldValid(ErgValues(tCompErg.SecID).Count - 1), OldUse(ErgValues(tCompErg.SecID).Count - 1) As Boolean
 
-        ' initialisation
+        ' Initialisation
         Change = False
 
         ' Save the old values
@@ -614,7 +561,7 @@ Public Module main_calculation_call
         End If
     End Sub
 
-    ' Function to check if the calibration run is valid
+    ' Function to check if the evaluation run is valid
     Sub fCheckLSHS()
         ' Declaration
         Dim i, j, k, anz, anzHS1, anzHS2 As Integer
@@ -861,13 +808,17 @@ Public Module main_calculation_call
     End Sub
 
     ' Evaluate the Valid sections
-    Sub fCalcValidSec(ByVal MSCX As cMSC, ByVal coastingSeq As Integer)
+    Sub fCalcValidSec(ByVal MSCX As cMSC, ByVal coastingSeq As Integer, ByVal Run As Integer, ByRef Change As Boolean)
         ' Declaration
         Dim i As Integer
+        Dim OldValid(ErgValues(tCompErg.SecID).Count - 1), OldUse(ErgValues(tCompErg.SecID).Count - 1) As Boolean
+
+        ' Initialisation
+        Change = False
 
         ' Evaluation
         Select Case coastingSeq
-            Case 0, 2 ' Low speed test
+            Case 1, 2 ' Low speed test
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
@@ -898,6 +849,13 @@ Public Module main_calculation_call
                     ErgValues(tCompErg.val_tq_1s)(i) = 1
                 Next i
             Case Else ' high speed test
+                ' Save the old values
+                For i = 0 To ErgValues(tCompErg.SecID).Count - 1
+                    OldValid(i) = ErgValues(tCompErg.valid)(i)
+                    OldUse(i) = ErgValues(tCompErg.used)(i)
+                Next i
+
+                ' Control the criterias
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
@@ -926,8 +884,18 @@ Public Module main_calculation_call
                     ErgValues(tCompErg.val_vVeh_f)(i) = 1
                     ErgValues(tCompErg.val_tq_f)(i) = 1
                 Next i
-        End Select
 
+                ' Look if something have changed
+                If Run <> 0 Then
+                    For i = 0 To ErgValues(tCompErg.SecID).Count - 1
+                        If Not Int(OldValid(i)) = ErgValues(tCompErg.valid)(i) And Not Int(OldUse(i)) = ErgValues(tCompErg.used)(i) Then
+                            Change = True
+                        End If
+                    Next i
+                Else
+                    Change = True
+                End If
+        End Select
     End Sub
 
     ' Save the Dictionaries

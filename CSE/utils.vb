@@ -310,6 +310,11 @@ Module utils
         lbox.Text = format("{0}({1})", label, lbox.Items.Count)
     End Sub
 
+    ' Update the Resultboxes on the GUI
+    Public Sub updateResultBoxes()
+        F_Main.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3).ToString
+        F_Main.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3).ToString
+    End Sub
 
     ' Definition for the Backgroundworker
     Class cLogMsg

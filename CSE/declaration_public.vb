@@ -56,7 +56,7 @@ Module declaration_public
 
     ' Boolean for the programm control
     Public FileBlock As Boolean = False                         ' Variable if a file is blocked by an other process
-
+    Public uRB As Boolean = False                               ' Update the result boxes on the GUI
 
     'File browser
     Public FB_Drives() As String

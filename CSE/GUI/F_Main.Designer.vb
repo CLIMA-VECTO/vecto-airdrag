@@ -215,6 +215,8 @@ Partial Class F_Main
         Me.Label20 = New System.Windows.Forms.Label()
         Me.LRhoAirRef = New System.Windows.Forms.Label()
         Me.TB_rho_air_ref = New System.Windows.Forms.TextBox()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
@@ -240,6 +242,8 @@ Partial Class F_Main
         CType(Me.PBInfoIconCrt, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox14.SuspendLayout()
         Me.GroupBox10.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
+        Me.GroupBox4.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -812,26 +816,20 @@ Partial Class F_Main
         '
         'GroupBox3
         '
-        Me.GroupBox3.Controls.Add(Me.Label17)
         Me.GroupBox3.Controls.Add(Me.Label16)
-        Me.GroupBox3.Controls.Add(Me.Label15)
         Me.GroupBox3.Controls.Add(Me.Label9)
         Me.GroupBox3.Controls.Add(Me.TextBoxRBetaMis)
-        Me.GroupBox3.Controls.Add(Me.Label8)
-        Me.GroupBox3.Controls.Add(Me.TextBoxRAirPos)
-        Me.GroupBox3.Controls.Add(Me.Label7)
-        Me.GroupBox3.Controls.Add(Me.TextBoxRVeh)
-        Me.GroupBox3.Location = New System.Drawing.Point(231, 166)
+        Me.GroupBox3.Location = New System.Drawing.Point(6, 18)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(463, 46)
+        Me.GroupBox3.Size = New System.Drawing.Size(135, 46)
         Me.GroupBox3.TabIndex = 31
         Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "Results"
+        Me.GroupBox3.Text = "From calibration"
         '
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(108, 16)
+        Me.Label17.Location = New System.Drawing.Point(108, 19)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(16, 13)
         Me.Label17.TabIndex = 35
@@ -840,7 +838,7 @@ Partial Class F_Main
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(422, 16)
+        Me.Label16.Location = New System.Drawing.Point(111, 19)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(17, 13)
         Me.Label16.TabIndex = 34
@@ -849,7 +847,7 @@ Partial Class F_Main
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(267, 16)
+        Me.Label15.Location = New System.Drawing.Point(270, 19)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(16, 13)
         Me.Label15.TabIndex = 33
@@ -858,7 +856,7 @@ Partial Class F_Main
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(317, 13)
+        Me.Label9.Location = New System.Drawing.Point(6, 16)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(44, 26)
         Me.Label9.TabIndex = 32
@@ -867,7 +865,7 @@ Partial Class F_Main
         'TextBoxRBetaMis
         '
         Me.TextBoxRBetaMis.Enabled = False
-        Me.TextBoxRBetaMis.Location = New System.Drawing.Point(367, 13)
+        Me.TextBoxRBetaMis.Location = New System.Drawing.Point(56, 16)
         Me.TextBoxRBetaMis.Name = "TextBoxRBetaMis"
         Me.TextBoxRBetaMis.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.TextBoxRBetaMis.Size = New System.Drawing.Size(55, 20)
@@ -877,7 +875,7 @@ Partial Class F_Main
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(154, 13)
+        Me.Label8.Location = New System.Drawing.Point(157, 16)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(48, 26)
         Me.Label8.TabIndex = 30
@@ -886,7 +884,7 @@ Partial Class F_Main
         'TextBoxRAirPos
         '
         Me.TextBoxRAirPos.Enabled = False
-        Me.TextBoxRAirPos.Location = New System.Drawing.Point(208, 13)
+        Me.TextBoxRAirPos.Location = New System.Drawing.Point(211, 16)
         Me.TextBoxRAirPos.Name = "TextBoxRAirPos"
         Me.TextBoxRAirPos.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.TextBoxRAirPos.Size = New System.Drawing.Size(59, 20)
@@ -896,7 +894,7 @@ Partial Class F_Main
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(6, 16)
+        Me.Label7.Location = New System.Drawing.Point(6, 19)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(37, 13)
         Me.Label7.TabIndex = 28
@@ -905,7 +903,7 @@ Partial Class F_Main
         'TextBoxRVeh
         '
         Me.TextBoxRVeh.Enabled = False
-        Me.TextBoxRVeh.Location = New System.Drawing.Point(49, 13)
+        Me.TextBoxRVeh.Location = New System.Drawing.Point(49, 16)
         Me.TextBoxRVeh.Name = "TextBoxRVeh"
         Me.TextBoxRVeh.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.TextBoxRVeh.Size = New System.Drawing.Size(59, 20)
@@ -1034,7 +1032,7 @@ Partial Class F_Main
         '
         'TPMain
         '
-        Me.TPMain.Controls.Add(Me.GroupBox3)
+        Me.TPMain.Controls.Add(Me.GroupBox4)
         Me.TPMain.Controls.Add(Me.GroupBoxJob)
         Me.TPMain.Controls.Add(Me.GroupBox1)
         Me.TPMain.Controls.Add(Me.GroupBoxInput)
@@ -2178,6 +2176,32 @@ Partial Class F_Main
         Me.TB_rho_air_ref.TabIndex = 1
         Me.TB_rho_air_ref.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.Label17)
+        Me.GroupBox2.Controls.Add(Me.Label8)
+        Me.GroupBox2.Controls.Add(Me.TextBoxRVeh)
+        Me.GroupBox2.Controls.Add(Me.Label15)
+        Me.GroupBox2.Controls.Add(Me.Label7)
+        Me.GroupBox2.Controls.Add(Me.TextBoxRAirPos)
+        Me.GroupBox2.Location = New System.Drawing.Point(147, 18)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(294, 46)
+        Me.GroupBox2.TabIndex = 34
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "From High-speed test"
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.GroupBox3)
+        Me.GroupBox4.Controls.Add(Me.GroupBox2)
+        Me.GroupBox4.Location = New System.Drawing.Point(202, 166)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(444, 70)
+        Me.GroupBox4.TabIndex = 35
+        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.Text = "Results"
+        '
         'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2237,6 +2261,9 @@ Partial Class F_Main
         Me.GroupBox14.PerformLayout()
         Me.GroupBox10.ResumeLayout(False)
         Me.GroupBox10.PerformLayout()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
+        Me.GroupBox4.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2433,5 +2460,7 @@ Partial Class F_Main
     Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents CreateActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
 
 End Class
