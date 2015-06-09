@@ -387,6 +387,7 @@ Module output
             AddToErg(tCompErg.val_tq_f, fCompName(tCompErg.val_tq_f), fCompUnit(tCompErg.val_tq_f), "ErgValues")
             AddToErg(tCompErg.val_tq_1s, fCompName(tCompErg.val_tq_1s), fCompUnit(tCompErg.val_tq_1s), "ErgValues")
             AddToErg(tCompErg.val_beta, fCompName(tCompErg.val_beta), fCompUnit(tCompErg.val_beta), "ErgValues")
+            AddToErg(tCompErg.val_n_eng, fCompName(tCompErg.val_n_eng), fCompUnit(tCompErg.val_n_eng), "ErgValues")
             AddToErg(tCompErg.val_dist, fCompName(tCompErg.val_dist), fCompUnit(tCompErg.val_dist), "ErgValues")
         End If
 
@@ -400,6 +401,11 @@ Module output
             AddToErg(tCompErg.beta_abs, fCompName(tCompErg.beta_abs), fCompUnit(tCompErg.beta_abs), "ErgValues")
             AddToErg(tCompErg.v_air_sq, fCompName(tCompErg.v_air_sq), fCompUnit(tCompErg.v_air_sq), "ErgValues")
             AddToErg(tCompErg.n_eng, fCompName(tCompErg.n_eng), fCompUnit(tCompErg.n_eng), "ErgValues")
+            AddToErg(tCompErg.n_eng_1s_max, fCompName(tCompErg.n_eng_1s_max), fCompUnit(tCompErg.n_eng_1s_max), "ErgValues")
+            AddToErg(tCompErg.n_eng_1s_min, fCompName(tCompErg.n_eng_1s_min), fCompUnit(tCompErg.n_eng_1s_min), "ErgValues")
+            AddToErg(tCompErg.n_eng_float_max, fCompName(tCompErg.n_eng_float_max), fCompUnit(tCompErg.n_eng_float_max), "ErgValues")
+            AddToErg(tCompErg.n_eng_float_min, fCompName(tCompErg.n_eng_float_min), fCompUnit(tCompErg.n_eng_float_min), "ErgValues")
+            AddToErg(tCompErg.r_dyn, fCompName(tCompErg.r_dyn), fCompUnit(tCompErg.r_dyn), "ErgValues")
             AddToErg(tCompErg.omega_wh, fCompName(tCompErg.omega_wh), fCompUnit(tCompErg.omega_wh), "ErgValues")
             AddToErg(tCompErg.omega_p_wh, fCompName(tCompErg.omega_p_wh), fCompUnit(tCompErg.omega_p_wh), "ErgValues")
             AddToErg(tCompErg.tq_sum, fCompName(tCompErg.tq_sum), fCompUnit(tCompErg.tq_sum), "ErgValues")

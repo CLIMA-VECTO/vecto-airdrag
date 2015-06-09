@@ -65,6 +65,7 @@ Public Module main_calculation_call
             ' Declaration
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
+            Dim r_dyn_ref As Double
 
             ' Output on the GUI
             logme(7, False, "Calculating the speed runs...")
@@ -109,7 +110,7 @@ Public Module main_calculation_call
                 If BWorker.CancellationPending Then Return
 
                 ' Calculate the run
-                fCalcRun(MSC, vehicle, i)
+                fCalcRun(MSC, vehicle, i, r_dyn_ref)
 
                 ' Exit function if error is detected
                 If BWorker.CancellationPending Then Return
@@ -224,7 +225,7 @@ Public Module main_calculation_call
     End Sub
 
     ' Calculate the speed run parameter
-    Function fCalcRun(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer) As Boolean
+    Function fCalcRun(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer, ByRef r_dyn_ref As Double) As Boolean
         ' Declaration
         Dim run As Integer
         Dim Change As Boolean = True
@@ -236,10 +237,8 @@ Public Module main_calculation_call
             Job.fv_veh_opt2 = 0
             Job.fv_pe = 0
             run = 0
+            r_dyn_ref = 0
         End If
-
-        ' Evaluate the valid sections
-        'fCalcValidSec(MSCX, coastingSeq, run, Change)
 
         Do While Change
             If coastingSeq = 0 Then
@@ -248,6 +247,7 @@ Public Module main_calculation_call
                 Job.fv_veh_opt2 = 0
                 Job.fv_pe = 0
                 run += 1
+                r_dyn_ref = 0
             End If
 
             ' Calculate fv_veh
@@ -269,10 +269,10 @@ Public Module main_calculation_call
             fWindBetaAirErg()
 
             ' Calculate the other speed run relevant values
-            fCalcSpeedVal(MSCX, vehicleX, coastingSeq)
+            fCalcSpeedVal(MSCX, vehicleX, coastingSeq, r_dyn_ref)
 
             ' Evaluate the valid sections
-            fCalcValidSec(MSCX, coastingSeq, run, Change)
+            fCalcValidSec(MSCX, vehicleX, coastingSeq, run, r_dyn_ref, Change)
 
             ' Error
             If run > 10 Then
@@ -808,10 +808,11 @@ Public Module main_calculation_call
     End Sub
 
     ' Evaluate the Valid sections
-    Sub fCalcValidSec(ByVal MSCX As cMSC, ByVal coastingSeq As Integer, ByVal Run As Integer, ByRef Change As Boolean)
+    Sub fCalcValidSec(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer, ByVal Run As Integer, ByVal r_dyn_ref As Double, ByRef Change As Boolean)
         ' Declaration
         Dim i As Integer
         Dim OldValid(ErgValues(tCompErg.SecID).Count - 1), OldUse(ErgValues(tCompErg.SecID).Count - 1) As Boolean
+        Dim igear As Double
 
         ' Initialisation
         Change = False
@@ -819,6 +820,7 @@ Public Module main_calculation_call
         ' Evaluation
         Select Case coastingSeq
             Case 1, 2 ' Low speed test
+                igear = vehicleX.gearRatio_low
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
@@ -830,12 +832,14 @@ Public Module main_calculation_call
                        ErgValues(tCompErg.v_veh_float_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_float_delta_LS) Then ErgValues(tCompErg.val_vVeh_f)(i) = 1
                     If ErgValues(tCompErg.tq_sum_float_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + Crt.tq_sum_float_delta_LS)) And _
                        ErgValues(tCompErg.tq_sum_float_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - Crt.tq_sum_float_delta_LS)) Then ErgValues(tCompErg.val_tq_f)(i) = 1
+                    If ErgValues(tCompErg.n_eng_float_max)(i) < ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_float_delta_LS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 + Crt.delta_n_eng_LS) And _
+                       ErgValues(tCompErg.n_eng_float_min)(i) > ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_float_delta_LS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 - Crt.delta_n_eng_LS) Then ErgValues(tCompErg.val_n_eng)(i) = 1
                     If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + Crt.leng_crit And _
                        ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - Crt.leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
 
                     ' Check if all criterias are valid
                     If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And _
-                       ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_vVeh_f)(i) = 1 And ErgValues(tCompErg.val_tq_f)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
+                       ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_vVeh_f)(i) = 1 And ErgValues(tCompErg.val_tq_f)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
                     Else
@@ -849,6 +853,7 @@ Public Module main_calculation_call
                     ErgValues(tCompErg.val_tq_1s)(i) = 1
                 Next i
             Case Else ' high speed test
+                igear = vehicleX.gearRatio_high
                 ' Save the old values
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     OldValid(i) = ErgValues(tCompErg.valid)(i)
@@ -867,12 +872,14 @@ Public Module main_calculation_call
                        ErgValues(tCompErg.v_veh_1s_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_HS) Then ErgValues(tCompErg.val_vVeh_1s)(i) = 1
                     If ErgValues(tCompErg.tq_sum_1s_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + Crt.tq_sum_1s_delta_HS)) And _
                        ErgValues(tCompErg.tq_sum_1s_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - Crt.tq_sum_1s_delta_HS)) Then ErgValues(tCompErg.val_tq_1s)(i) = 1
+                    If ErgValues(tCompErg.n_eng_1s_max)(i) < ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_1s_delta_HS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 + Crt.delta_n_eng_HS) And _
+                       ErgValues(tCompErg.n_eng_1s_min)(i) > ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_HS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 - Crt.delta_n_eng_HS) Then ErgValues(tCompErg.val_n_eng)(i) = 1
                     If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + Crt.leng_crit And _
                        ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - Crt.leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
 
                     ' Check if all criterias are valid
                     If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_vWind_1s)(i) = 1 And _
-                       ErgValues(tCompErg.val_beta)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And ErgValues(tCompErg.val_tq_1s)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
+                       ErgValues(tCompErg.val_beta)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And ErgValues(tCompErg.val_tq_1s)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
                     Else

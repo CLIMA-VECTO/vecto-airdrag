@@ -573,6 +573,7 @@ Public Class F_Main
         Crt.v_veh_avg_min_LS = TB_v_veh_avg_min_LS.Text
         Crt.v_veh_float_delta_LS = TB_v_veh_float_delta_LS.Text
         Crt.tq_sum_float_delta_LS = TB_tq_sum_float_delta_LS.Text
+        Crt.delta_n_eng_LS = TB_delta_n_eng_LS.Text
         ' High speed test
         Crt.v_wind_avg_max_HS = TB_v_wind_avg_max_HS.Text
         Crt.v_wind_1s_max_HS = TB_v_wind_1s_max_HS.Text
@@ -580,6 +581,7 @@ Public Class F_Main
         Crt.beta_avg_max_HS = TB_beta_avg_max_HS.Text
         Crt.v_veh_1s_delta_HS = TB_v_veh_1s_delta_HS.Text
         Crt.tq_sum_1s_delta_HS = TB_tq_sum_1s_delta_HS.Text
+        Crt.delta_n_eng_HS = TB_delta_n_eng_HS.Text
     End Sub
 
     Sub UI_PopulateFromJob()
@@ -638,6 +640,7 @@ Public Class F_Main
         TB_v_veh_avg_max_LS.Text = Crt.v_veh_avg_max_LS
         TB_v_veh_float_delta_LS.Text = Crt.v_veh_float_delta_LS
         TB_tq_sum_float_delta_LS.Text = Crt.tq_sum_float_delta_LS
+        TB_delta_n_eng_LS.Text = Crt.delta_n_eng_LS
         ' High speed test
         TB_v_wind_avg_max_HS.Text = Crt.v_wind_avg_max_HS
         TB_v_wind_1s_max_HS.Text = Crt.v_wind_1s_max_HS
@@ -645,6 +648,7 @@ Public Class F_Main
         TB_beta_avg_max_HS.Text = Crt.beta_avg_max_HS
         TB_v_veh_1s_delta_HS.Text = Crt.v_veh_1s_delta_HS
         TB_tq_sum_1s_delta_HS.Text = Crt.tq_sum_1s_delta_HS
+        TB_delta_n_eng_HS.Text = Crt.delta_n_eng_HS
         ' Evaluation box
         CB_accel_correction.Checked = Crt.accel_correction
         CB_gradient_correction.Checked = Crt.gradient_correction

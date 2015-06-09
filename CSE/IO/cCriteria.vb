@@ -61,8 +61,9 @@ Public Class cCriteria
         g.v_wind_1s_max_LS = 8
         g.v_veh_avg_min_LS = 9
         g.v_veh_avg_max_LS = 16
-        g.v_veh_float_delta_LS = 0.15
+        g.v_veh_float_delta_LS = 0.5
         g.tq_sum_float_delta_LS = 0.1
+        g.delta_n_eng_LS = 0.05
 
         g.v_wind_avg_max_HS = 5
         g.v_wind_1s_max_HS = 8
@@ -70,6 +71,7 @@ Public Class cCriteria
         g.v_veh_avg_min_HS = 80
         g.v_veh_1s_delta_HS = 0.3
         g.tq_sum_1s_delta_HS = 0.1
+        g.delta_n_eng_HS = 0.05
 
         g.delta_t_tyre_max = 5
         g.delta_rr_corr_max = 0.3
@@ -198,7 +200,10 @@ Public Class cCriteria
                             "units": "km/h", 
                         },
                         "tq_sum_float_delta_LS": {"type": "number", "required": true, 
-                            "description": "+/- maximum relative deviation of floating average torque from average torque over entire section (low speed)", 
+                            "description": "+/- maximum relative deviation of variance of engine speed compared to variance in vehicle speed (used as plausibility check for engine speed signal) (low speed test)", 
+                        },
+                        "delta_n_eng_LS": {"type": "number", "required": true, 
+                            "description": "+/- maximum relative deviation of n_eng (low speed)", 
                         },
 
                         "v_wind_avg_max_HS": {"type": "number", "required": true, 
@@ -223,6 +228,9 @@ Public Class cCriteria
                         },
                         "tq_sum_1s_delta_HS": {"type": "number", "required": true, 
                             "description": "+/- maximum relative deviation of 1s average torque from average torque over entire section (high speed).", 
+                        },
+                        "delta_n_eng_HS": {"type": "number", "required": true, 
+                            "description": "+/- maximum relative deviation of variance of engine speed compared to variance in vehicle speed (used as plausibility check for engine speed signal) (high speed test).", 
                         },
 
                         "delta_t_tyre_max": {"type": "number", "required": true, 
@@ -328,12 +336,14 @@ Public Class cCriteria
     Public v_veh_avg_min_LS As Single
     Public v_veh_float_delta_LS As Single
     Public tq_sum_float_delta_LS As Single
+    Public delta_n_eng_LS As Single
     Public v_wind_avg_max_HS As Single
     Public v_wind_1s_max_HS As Single
     Public v_veh_avg_min_HS As Single
     Public beta_avg_max_HS As Single
     Public v_veh_1s_delta_HS As Single
     Public tq_sum_1s_delta_HS As Single
+    Public delta_n_eng_HS As Single
     Public delta_t_tyre_max As Single
     Public delta_rr_corr_max As Single
     Public t_amb_min As Single
@@ -379,6 +389,7 @@ Public Class cCriteria
         Me.v_veh_avg_min_LS = g("v_veh_avg_min_LS")
         Me.v_veh_float_delta_LS = g("v_veh_float_delta_LS")
         Me.tq_sum_float_delta_LS = g("tq_sum_float_delta_LS")
+        Me.delta_n_eng_LS = g("delta_n_eng_LS")
 
         Me.v_wind_avg_max_HS = g("v_wind_avg_max_HS")
         Me.v_veh_avg_min_HS = g("v_veh_avg_min_HS")
@@ -386,6 +397,7 @@ Public Class cCriteria
         Me.beta_avg_max_HS = g("beta_avg_max_HS")
         Me.v_veh_1s_delta_HS = g("v_veh_1s_delta_HS")
         Me.tq_sum_1s_delta_HS = g("tq_sum_1s_delta_HS")
+        Me.delta_n_eng_HS = g("delta_n_eng_HS")
 
         Me.delta_t_tyre_max = g("delta_t_tyre_max")
         Me.delta_rr_corr_max = g("delta_rr_corr_max")
@@ -436,6 +448,7 @@ Public Class cCriteria
         g.v_veh_avg_max_LS = Me.v_veh_avg_max_LS
         g.v_veh_float_delta_LS = Me.v_veh_float_delta_LS
         g.tq_sum_float_delta_LS = Me.tq_sum_float_delta_LS
+        g.delta_n_eng_LS = Me.delta_n_eng_LS
 
         g.v_wind_avg_max_HS = Me.v_wind_avg_max_HS
         g.v_wind_1s_max_HS = Me.v_wind_1s_max_HS
@@ -443,6 +456,7 @@ Public Class cCriteria
         g.v_veh_avg_min_HS = Me.v_veh_avg_min_HS
         g.v_veh_1s_delta_HS = Me.v_veh_1s_delta_HS
         g.tq_sum_1s_delta_HS = Me.tq_sum_1s_delta_HS
+        g.delta_n_eng_HS = Me.delta_n_eng_HS
 
         g.delta_t_tyre_max = Me.delta_t_tyre_max
         g.delta_rr_corr_max = Me.delta_rr_corr_max

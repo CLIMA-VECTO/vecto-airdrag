@@ -297,13 +297,13 @@ Module sub_linear_regression
                     Job.CdxA0_opt2 += ErgValuesReg(tCompErgReg.CdxA0_singleMS)(lauf)
                 Else
                     ' Clear the data in the result dictionary
-                    ErgValuesReg(tCompErgReg.SecID).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.DirID).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.beta_ave_singleMS).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).RemoveAt(lauf)
-                    ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).RemoveAt(lauf)
+                    If ErgValuesReg(tCompErgReg.SecID).Count > 0 Then ErgValuesReg(tCompErgReg.SecID).RemoveAt(lauf)
+                    If ErgValuesReg(tCompErgReg.DirID).Count > 0 Then ErgValuesReg(tCompErgReg.DirID).RemoveAt(lauf)
+                    If ErgValuesReg(tCompErgReg.beta_ave_singleMS).Count > 0 Then ErgValuesReg(tCompErgReg.beta_ave_singleMS).RemoveAt(lauf)
+                    If ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).Count > 0 Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).RemoveAt(lauf)
+                    If ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).Count > 0 Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).RemoveAt(lauf)
+                    If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Count > 0 Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).RemoveAt(lauf)
+                    If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Count > 0 Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).RemoveAt(lauf)
                     lauf -= 1
                 End If
             End If
