@@ -133,6 +133,9 @@ Partial Class F_Main
         Me.TB_leng_crit = New System.Windows.Forms.TextBox()
         Me.Label79 = New System.Windows.Forms.Label()
         Me.GroupBox12 = New System.Windows.Forms.GroupBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.TB_delta_n_ec_HS = New System.Windows.Forms.TextBox()
+        Me.LB_delta_n_ec_HS = New System.Windows.Forms.Label()
         Me.Label74 = New System.Windows.Forms.Label()
         Me.TB_tq_sum_1s_delta_HS = New System.Windows.Forms.TextBox()
         Me.LB_tq_sum_1s_delta_HS = New System.Windows.Forms.Label()
@@ -152,6 +155,9 @@ Partial Class F_Main
         Me.LB_v_veh_avg_min_HS = New System.Windows.Forms.Label()
         Me.Label61 = New System.Windows.Forms.Label()
         Me.GroupBox11 = New System.Windows.Forms.GroupBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.TB_delta_n_ec_LS = New System.Windows.Forms.TextBox()
+        Me.LB_delta_n_ec_LS = New System.Windows.Forms.Label()
         Me.Label72 = New System.Windows.Forms.Label()
         Me.TB_tq_sum_float_delta_LS = New System.Windows.Forms.TextBox()
         Me.LB_tq_sum_float_delta_LS = New System.Windows.Forms.Label()
@@ -217,12 +223,6 @@ Partial Class F_Main
         Me.Label20 = New System.Windows.Forms.Label()
         Me.LRhoAirRef = New System.Windows.Forms.Label()
         Me.TB_rho_air_ref = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.TB_delta_n_eng_LS = New System.Windows.Forms.TextBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.TB_delta_n_eng_HS = New System.Windows.Forms.TextBox()
-        Me.Label6 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
@@ -968,7 +968,7 @@ Partial Class F_Main
         Me.TabPageWar.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageWar.Name = "TabPageWar"
         Me.TabPageWar.Padding = New System.Windows.Forms.Padding(2)
-        Me.TabPageWar.Size = New System.Drawing.Size(917, 161)
+        Me.TabPageWar.Size = New System.Drawing.Size(917, 151)
         Me.TabPageWar.TabIndex = 1
         Me.TabPageWar.Text = "Warnings (0)"
         Me.TabPageWar.UseVisualStyleBackColor = True
@@ -994,7 +994,7 @@ Partial Class F_Main
         Me.TabPageErr.Location = New System.Drawing.Point(4, 4)
         Me.TabPageErr.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageErr.Name = "TabPageErr"
-        Me.TabPageErr.Size = New System.Drawing.Size(917, 161)
+        Me.TabPageErr.Size = New System.Drawing.Size(917, 151)
         Me.TabPageErr.TabIndex = 2
         Me.TabPageErr.Text = "Errors (0)"
         Me.TabPageErr.UseVisualStyleBackColor = True
@@ -1392,8 +1392,8 @@ Partial Class F_Main
         'GroupBox12
         '
         Me.GroupBox12.Controls.Add(Me.Label5)
-        Me.GroupBox12.Controls.Add(Me.TB_delta_n_eng_HS)
-        Me.GroupBox12.Controls.Add(Me.Label6)
+        Me.GroupBox12.Controls.Add(Me.TB_delta_n_ec_HS)
+        Me.GroupBox12.Controls.Add(Me.LB_delta_n_ec_HS)
         Me.GroupBox12.Controls.Add(Me.Label74)
         Me.GroupBox12.Controls.Add(Me.TB_tq_sum_1s_delta_HS)
         Me.GroupBox12.Controls.Add(Me.LB_tq_sum_1s_delta_HS)
@@ -1418,6 +1418,32 @@ Partial Class F_Main
         Me.GroupBox12.TabIndex = 78
         Me.GroupBox12.TabStop = False
         Me.GroupBox12.Text = "High speed test"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(173, 177)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(16, 13)
+        Me.Label5.TabIndex = 97
+        Me.Label5.Text = "[-]"
+        '
+        'TB_delta_n_ec_HS
+        '
+        Me.TB_delta_n_ec_HS.Location = New System.Drawing.Point(128, 174)
+        Me.TB_delta_n_ec_HS.Name = "TB_delta_n_ec_HS"
+        Me.TB_delta_n_ec_HS.Size = New System.Drawing.Size(45, 20)
+        Me.TB_delta_n_ec_HS.TabIndex = 96
+        Me.TB_delta_n_ec_HS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'LB_delta_n_ec_HS
+        '
+        Me.LB_delta_n_ec_HS.AutoSize = True
+        Me.LB_delta_n_ec_HS.Location = New System.Drawing.Point(6, 177)
+        Me.LB_delta_n_ec_HS.Name = "LB_delta_n_ec_HS"
+        Me.LB_delta_n_ec_HS.Size = New System.Drawing.Size(87, 13)
+        Me.LB_delta_n_ec_HS.TabIndex = 95
+        Me.LB_delta_n_ec_HS.Text = "delta_n_eng_HS"
         '
         'Label74
         '
@@ -1578,8 +1604,8 @@ Partial Class F_Main
         'GroupBox11
         '
         Me.GroupBox11.Controls.Add(Me.Label3)
-        Me.GroupBox11.Controls.Add(Me.TB_delta_n_eng_LS)
-        Me.GroupBox11.Controls.Add(Me.Label4)
+        Me.GroupBox11.Controls.Add(Me.TB_delta_n_ec_LS)
+        Me.GroupBox11.Controls.Add(Me.LB_delta_n_ec_LS)
         Me.GroupBox11.Controls.Add(Me.Label72)
         Me.GroupBox11.Controls.Add(Me.TB_tq_sum_float_delta_LS)
         Me.GroupBox11.Controls.Add(Me.LB_tq_sum_float_delta_LS)
@@ -1604,6 +1630,32 @@ Partial Class F_Main
         Me.GroupBox11.TabIndex = 77
         Me.GroupBox11.TabStop = False
         Me.GroupBox11.Text = "Low speed test"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(173, 179)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(16, 13)
+        Me.Label3.TabIndex = 85
+        Me.Label3.Text = "[-]"
+        '
+        'TB_delta_n_ec_LS
+        '
+        Me.TB_delta_n_ec_LS.Location = New System.Drawing.Point(128, 176)
+        Me.TB_delta_n_ec_LS.Name = "TB_delta_n_ec_LS"
+        Me.TB_delta_n_ec_LS.Size = New System.Drawing.Size(45, 20)
+        Me.TB_delta_n_ec_LS.TabIndex = 84
+        Me.TB_delta_n_ec_LS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'LB_delta_n_ec_LS
+        '
+        Me.LB_delta_n_ec_LS.AutoSize = True
+        Me.LB_delta_n_ec_LS.Location = New System.Drawing.Point(6, 179)
+        Me.LB_delta_n_ec_LS.Name = "LB_delta_n_ec_LS"
+        Me.LB_delta_n_ec_LS.Size = New System.Drawing.Size(79, 13)
+        Me.LB_delta_n_ec_LS.TabIndex = 83
+        Me.LB_delta_n_ec_LS.Text = "delta_n_ec_LS"
         '
         'Label72
         '
@@ -2214,58 +2266,6 @@ Partial Class F_Main
         Me.TB_rho_air_ref.TabIndex = 1
         Me.TB_rho_air_ref.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(173, 179)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(16, 13)
-        Me.Label3.TabIndex = 85
-        Me.Label3.Text = "[-]"
-        '
-        'TB_delta_n_eng_LS
-        '
-        Me.TB_delta_n_eng_LS.Location = New System.Drawing.Point(128, 176)
-        Me.TB_delta_n_eng_LS.Name = "TB_delta_n_eng_LS"
-        Me.TB_delta_n_eng_LS.Size = New System.Drawing.Size(45, 20)
-        Me.TB_delta_n_eng_LS.TabIndex = 84
-        Me.TB_delta_n_eng_LS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(6, 179)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(85, 13)
-        Me.Label4.TabIndex = 83
-        Me.Label4.Text = "delta_n_eng_LS"
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(173, 177)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(16, 13)
-        Me.Label5.TabIndex = 97
-        Me.Label5.Text = "[-]"
-        '
-        'TB_delta_n_eng_HS
-        '
-        Me.TB_delta_n_eng_HS.Location = New System.Drawing.Point(128, 174)
-        Me.TB_delta_n_eng_HS.Name = "TB_delta_n_eng_HS"
-        Me.TB_delta_n_eng_HS.Size = New System.Drawing.Size(45, 20)
-        Me.TB_delta_n_eng_HS.TabIndex = 96
-        Me.TB_delta_n_eng_HS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(6, 177)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(87, 13)
-        Me.Label6.TabIndex = 95
-        Me.Label6.Text = "delta_n_eng_HS"
-        '
         'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2527,10 +2527,10 @@ Partial Class F_Main
     Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents TB_delta_n_eng_HS As System.Windows.Forms.TextBox
-    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents TB_delta_n_ec_HS As System.Windows.Forms.TextBox
+    Friend WithEvents LB_delta_n_ec_HS As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents TB_delta_n_eng_LS As System.Windows.Forms.TextBox
-    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents TB_delta_n_ec_LS As System.Windows.Forms.TextBox
+    Friend WithEvents LB_delta_n_ec_LS As System.Windows.Forms.Label
 
 End Class

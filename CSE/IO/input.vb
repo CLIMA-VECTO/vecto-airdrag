@@ -221,7 +221,13 @@ Public Module input
             MeasCheck.Add(tComp.v_veh_CAN, False)
             MeasCheck.Add(tComp.vair_ic, False)
             MeasCheck.Add(tComp.beta_ic, False)
-            MeasCheck.Add(tComp.n_eng, False)
+            If gearBoxConfig.AT Then
+                MeasCheck.Add(tComp.n_card, False)
+            ElseIf gearBoxConfig.MT_AMT Then
+                MeasCheck.Add(tComp.n_eng, False)
+            Else
+                Throw New Exception("gearBox_type in vehicle file not defined")
+            End If
             MeasCheck.Add(tComp.tq_l, False)
             MeasCheck.Add(tComp.tq_r, False)
             MeasCheck.Add(tComp.t_amb_veh, False)
@@ -299,12 +305,6 @@ Public Module input
                             If tDim >= 1 Then
                                 If Math.Abs((InputData(sKV.Key)(tDim) - InputData(sKV.Key)(tDim - 1)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
                                     JumpPoint.Add(tDim)
-                                    'If ErrDat Then
-                                    '    Throw New Exception("The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
-                                    'Else
-                                    '    ErrDat = True
-                                    '    JumpPoint.Add(tDim)
-                                    'End If
                                 End If
                             End If
                         ElseIf sKV.Key = tComp.lati Then
@@ -367,7 +367,7 @@ Public Module input
                     Next
                 Loop
             Catch ex As Exception
-                Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tdim + 1, ex.Message), ex)
+                Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tDim + 1, ex.Message), ex)
             End Try
 
 

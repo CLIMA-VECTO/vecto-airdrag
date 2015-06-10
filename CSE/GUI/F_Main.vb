@@ -573,7 +573,7 @@ Public Class F_Main
         Crt.v_veh_avg_min_LS = TB_v_veh_avg_min_LS.Text
         Crt.v_veh_float_delta_LS = TB_v_veh_float_delta_LS.Text
         Crt.tq_sum_float_delta_LS = TB_tq_sum_float_delta_LS.Text
-        Crt.delta_n_eng_LS = TB_delta_n_eng_LS.Text
+        Crt.delta_n_ec_LS = TB_delta_n_ec_LS.Text
         ' High speed test
         Crt.v_wind_avg_max_HS = TB_v_wind_avg_max_HS.Text
         Crt.v_wind_1s_max_HS = TB_v_wind_1s_max_HS.Text
@@ -581,7 +581,7 @@ Public Class F_Main
         Crt.beta_avg_max_HS = TB_beta_avg_max_HS.Text
         Crt.v_veh_1s_delta_HS = TB_v_veh_1s_delta_HS.Text
         Crt.tq_sum_1s_delta_HS = TB_tq_sum_1s_delta_HS.Text
-        Crt.delta_n_eng_HS = TB_delta_n_eng_HS.Text
+        Crt.delta_n_ec_HS = TB_delta_n_ec_HS.Text
     End Sub
 
     Sub UI_PopulateFromJob()
@@ -640,7 +640,7 @@ Public Class F_Main
         TB_v_veh_avg_max_LS.Text = Crt.v_veh_avg_max_LS
         TB_v_veh_float_delta_LS.Text = Crt.v_veh_float_delta_LS
         TB_tq_sum_float_delta_LS.Text = Crt.tq_sum_float_delta_LS
-        TB_delta_n_eng_LS.Text = Crt.delta_n_eng_LS
+        TB_delta_n_ec_LS.Text = Crt.delta_n_ec_LS
         ' High speed test
         TB_v_wind_avg_max_HS.Text = Crt.v_wind_avg_max_HS
         TB_v_wind_1s_max_HS.Text = Crt.v_wind_1s_max_HS
@@ -648,7 +648,7 @@ Public Class F_Main
         TB_beta_avg_max_HS.Text = Crt.beta_avg_max_HS
         TB_v_veh_1s_delta_HS.Text = Crt.v_veh_1s_delta_HS
         TB_tq_sum_1s_delta_HS.Text = Crt.tq_sum_1s_delta_HS
-        TB_delta_n_eng_HS.Text = Crt.delta_n_eng_HS
+        TB_delta_n_ec_HS.Text = Crt.delta_n_ec_HS
         ' Evaluation box
         CB_accel_correction.Checked = Crt.accel_correction
         CB_gradient_correction.Checked = Crt.gradient_correction
@@ -959,7 +959,7 @@ Public Class F_Main
     Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_delta_t_tyre_max.KeyPress, TB_delta_rr_corr_max.KeyPress, TB_t_amb_var.KeyPress, _
         TB_t_amb_tarmac.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_rho_air_ref.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
         TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_MS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
-        TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_v_wind_1s_max_LS.KeyPress, TB_v_wind_avg_max_LS.KeyPress, _
+        TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_delta_n_ec_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_v_wind_1s_max_LS.KeyPress, TB_v_wind_avg_max_LS.KeyPress, TB_delta_n_ec_LS.KeyPress, _
         TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress
         Select Case Asc(e.KeyChar)
             Case 48 To 57, 46 ' Zahlen zulassen (ASCII)
@@ -1079,12 +1079,14 @@ Public Class F_Main
             TB_v_veh_avg_max_LS, LB_v_veh_avg_max_LS, _
             TB_v_veh_float_delta_LS, LB_v_veh_float_delta_LS, _
             TB_tq_sum_float_delta_LS, LB_tq_sum_float_delta_LS, _
+            TB_delta_n_ec_LS, LB_delta_n_ec_LS, _
             TB_v_wind_avg_max_HS, LB_v_wind_avg_max_HS, _
             TB_v_wind_1s_max_HS, LB_v_wind_1s_max_HS, _
             TB_beta_avg_max_HS, LB_beta_avg_max_HS, _
             TB_v_veh_avg_min_HS, LB_v_veh_avg_min_HS, _
             TB_v_veh_1s_delta_HS, LB_v_veh_1s_delta_HS, _
             TB_tq_sum_1s_delta_HS, LB_tq_sum_1s_delta_HS, _
+            TB_delta_n_ec_HS, LB_delta_n_ec_HS, _
             TB_delta_t_tyre_max, LB_delta_t_tyre_max, _
             TB_delta_rr_corr_max, LB_delta_rr_corr_max, _
             TB_t_amb_min, LB_t_amb_min, _

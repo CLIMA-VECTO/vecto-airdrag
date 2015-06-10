@@ -18,5 +18,6 @@
         "gearRatio_low":    2.5,
         "gearRatio_high":   1,
         "axleRatio":        3.6,
+		"gearBox_type":     "MT_AMT",
    }
 }

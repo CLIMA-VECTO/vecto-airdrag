@@ -820,7 +820,11 @@ Public Module main_calculation_call
         ' Evaluation
         Select Case coastingSeq
             Case 1, 2 ' Low speed test
-                igear = vehicleX.gearRatio_low
+                If gearBoxConfig.MT_AMT Then
+                    igear = vehicleX.gearRatio_low
+                Else
+                    igear = 1
+                End If
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
@@ -832,8 +836,8 @@ Public Module main_calculation_call
                        ErgValues(tCompErg.v_veh_float_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_float_delta_LS) Then ErgValues(tCompErg.val_vVeh_f)(i) = 1
                     If ErgValues(tCompErg.tq_sum_float_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + Crt.tq_sum_float_delta_LS)) And _
                        ErgValues(tCompErg.tq_sum_float_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - Crt.tq_sum_float_delta_LS)) Then ErgValues(tCompErg.val_tq_f)(i) = 1
-                    If ErgValues(tCompErg.n_eng_float_max)(i) < ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_float_delta_LS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 + Crt.delta_n_eng_LS) And _
-                       ErgValues(tCompErg.n_eng_float_min)(i) > ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_float_delta_LS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 - Crt.delta_n_eng_LS) Then ErgValues(tCompErg.val_n_eng)(i) = 1
+                    If ErgValues(tCompErg.n_ec_float_max)(i) < ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_float_delta_LS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 + Crt.delta_n_ec_LS) And _
+                       ErgValues(tCompErg.n_ec_float_min)(i) > ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_float_delta_LS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 - Crt.delta_n_ec_LS) Then ErgValues(tCompErg.val_n_eng)(i) = 1
                     If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + Crt.leng_crit And _
                        ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - Crt.leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
 
@@ -853,7 +857,11 @@ Public Module main_calculation_call
                     ErgValues(tCompErg.val_tq_1s)(i) = 1
                 Next i
             Case Else ' high speed test
-                igear = vehicleX.gearRatio_high
+                If gearBoxConfig.MT_AMT Then
+                    igear = vehicleX.gearRatio_high
+                Else
+                    igear = 1
+                End If
                 ' Save the old values
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     OldValid(i) = ErgValues(tCompErg.valid)(i)
@@ -872,8 +880,8 @@ Public Module main_calculation_call
                        ErgValues(tCompErg.v_veh_1s_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_HS) Then ErgValues(tCompErg.val_vVeh_1s)(i) = 1
                     If ErgValues(tCompErg.tq_sum_1s_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + Crt.tq_sum_1s_delta_HS)) And _
                        ErgValues(tCompErg.tq_sum_1s_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - Crt.tq_sum_1s_delta_HS)) Then ErgValues(tCompErg.val_tq_1s)(i) = 1
-                    If ErgValues(tCompErg.n_eng_1s_max)(i) < ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_1s_delta_HS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 + Crt.delta_n_eng_HS) And _
-                       ErgValues(tCompErg.n_eng_1s_min)(i) > ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_HS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 - Crt.delta_n_eng_HS) Then ErgValues(tCompErg.val_n_eng)(i) = 1
+                    If ErgValues(tCompErg.n_ec_1s_max)(i) < ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_1s_delta_HS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 + Crt.delta_n_ec_HS) And _
+                       ErgValues(tCompErg.n_ec_1s_min)(i) > ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_HS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 - Crt.delta_n_ec_HS) Then ErgValues(tCompErg.val_n_eng)(i) = 1
                     If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + Crt.leng_crit And _
                        ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - Crt.leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
 

@@ -17,6 +17,11 @@ Public Enum VehicleConfig
     Tractor
 End Enum
 
+Public Enum gearBoxConfig
+    AT
+    MT_AMT
+End Enum
+
 Public Class cVehicle
     Inherits cJsonFile
 
@@ -41,6 +46,7 @@ Public Class cVehicle
                 "gearRatio_low":    null,
                 "gearRatio_high":   null,
                 "axleRatio":        null,
+                "gearBox_type":     null,
             }</json>.Value)
     End Function
 
@@ -105,6 +111,12 @@ The generic parameters for classes are stored in the GenShape.shp",
                     "type":"number",                    
                     "required": true,
                 }, 
+                "gearBox_type": {
+                    "title": "gearBox type", 
+                    "enum": ["MT_AMT", "AT"],
+                    "required": true,
+                    "title": "Gear box type is MT_AMT or AT?",
+                },
             }
         }</json>.Value
     End Function
@@ -245,6 +257,17 @@ The generic parameters for classes are stored in the GenShape.shp",
             Me.Body("axleRatio") = value
         End Set
     End Property
+
+    Public Property gearBox_type As gearBoxConfig
+        Get
+            Dim value As String = Me.Body("gearBox_type")
+
+            Return [Enum].Parse(GetType(gearBoxConfig), value, True)
+        End Get
+        Set(ByVal value As gearBoxConfig)
+            Me.Body("gearBox_type") = value.ToString()
+        End Set
+    End Property
 #End Region ' "json props"
 
     Public ReadOnly Property IsRigid As Boolean
@@ -252,6 +275,4 @@ The generic parameters for classes are stored in the GenShape.shp",
             Return Me.configuration = VehicleConfig.Rigid
         End Get
     End Property
-
-
 End Class

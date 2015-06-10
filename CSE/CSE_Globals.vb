@@ -20,6 +20,7 @@ Module CSE_Globals
         vair_ic
         beta_ic
         n_eng
+        n_card
         tq_l
         tq_r
         t_amb_veh
@@ -80,9 +81,9 @@ Module CSE_Globals
         t_amp_stat
         p_amp_stat
         rh_stat
-        n_eng
-        n_eng_1s
-        n_eng_float
+        n_ec
+        n_ec_1s
+        n_ec_float
     End Enum
 
     Public Enum tCompErg
@@ -105,13 +106,13 @@ Module CSE_Globals
         valid
         used
         calcT
-        n_eng
-        n_eng_1s
-        n_eng_float
-        n_eng_1s_max
-        n_eng_1s_min
-        n_eng_float_max
-        n_eng_float_min
+        n_ec
+        n_ec_1s
+        n_ec_float
+        n_ec_1s_max
+        n_ec_1s_min
+        n_ec_float_max
+        n_ec_float_min
         v_wind_avg
         v_wind_1s
         v_wind_1s_max
@@ -190,9 +191,6 @@ Module CSE_Globals
         t_tire_ave_HS_min
         t_tire_ave_HS_max
         valid_t_tire
-        't_amb
-        't_amb_min
-        't_amb_max
     End Enum
 
 
@@ -217,6 +215,8 @@ Module CSE_Globals
                 Return tComp.beta_ic
             Case sKey.Meas.n_eng
                 Return tComp.n_eng
+            Case sKey.Meas.n_card
+                Return tComp.n_card
             Case sKey.Meas.tq_l
                 Return tComp.tq_l
             Case sKey.Meas.tq_r
@@ -290,6 +290,8 @@ Module CSE_Globals
                 Return "beta_ic"
             Case tComp.n_eng
                 Return "n_eng"
+            Case tComp.n_card
+                Return "n_card"
             Case tComp.tq_l
                 Return "tq_l"
             Case tComp.tq_r
@@ -332,6 +334,8 @@ Module CSE_Globals
             Case tComp.beta_ic
                 Return "[°]"
             Case tComp.n_eng
+                Return "[rpm]"
+            Case tComp.n_card
                 Return "[rpm]"
             Case tComp.tq_l
                 Return "[Nm]"
@@ -453,12 +457,30 @@ Module CSE_Globals
                 Return "p_amp_stat"
             Case tCompCali.rh_stat
                 Return "rh_stat"
-            Case tCompCali.n_eng
-                Return "n_eng"
-            Case tCompCali.n_eng_1s
-                Return "n_eng_1s"
-            Case tCompCali.n_eng_float
-                Return "n_eng_float"
+            Case tCompCali.n_ec
+                If gearBoxConfig.AT Then
+                    Return "n_card"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng"
+                Else
+                    Return "ERROR"
+                End If
+            Case tCompCali.n_ec_1s
+                If gearBoxConfig.AT Then
+                    Return "n_card_1s"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng_1s"
+                Else
+                    Return "ERROR"
+                End If
+            Case tCompCali.n_ec_float
+                If gearBoxConfig.AT Then
+                    Return "n_card_float"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng_float"
+                Else
+                    Return "ERROR"
+                End If
             Case Else
                 Return "ERROR"
         End Select
@@ -542,11 +564,11 @@ Module CSE_Globals
                 Return "[mbar]"
             Case tCompCali.rh_stat
                 Return "[%]"
-            Case tCompCali.n_eng
+            Case tCompCali.n_ec
                 Return "[rpm]"
-            Case tCompCali.n_eng_1s
+            Case tCompCali.n_ec_1s
                 Return "[rpm]"
-            Case tCompCali.n_eng_float
+            Case tCompCali.n_ec_float
                 Return "[rpm]"
             Case Else
                 Return "ERROR"
@@ -593,20 +615,62 @@ Module CSE_Globals
                 Return "used"
             Case tCompErg.calcT
                 Return "calcT"
-            Case tCompErg.n_eng
-                Return "n_eng"
-            Case tCompErg.n_eng_1s
-                Return "n_eng_1s"
-            Case tCompErg.n_eng_float
-                Return "n_eng_float"
-            Case tCompErg.n_eng_1s_max
-                Return "n_eng_1s_max"
-            Case tCompErg.n_eng_1s_min
-                Return "n_eng_1s_min"
-            Case tCompErg.n_eng_float_max
-                Return "n_eng_float_max"
-            Case tCompErg.n_eng_float_min
-                Return "n_eng_float_min"
+            Case tCompErg.n_ec
+                If gearBoxConfig.AT Then
+                    Return "n_card"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng"
+                Else
+                    Return "ERROR"
+                End If
+            Case tCompErg.n_ec_1s
+                If gearBoxConfig.AT Then
+                    Return "n_card_1s"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng_1s"
+                Else
+                    Return "ERROR"
+                End If
+            Case tCompErg.n_ec_float
+                If gearBoxConfig.AT Then
+                    Return "n_card_float"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng_float"
+                Else
+                    Return "ERROR"
+                End If
+            Case tCompErg.n_ec_1s_max
+                If gearBoxConfig.AT Then
+                    Return "n_card_1s_max"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng_1s_max"
+                Else
+                    Return "ERROR"
+                End If
+            Case tCompErg.n_ec_1s_min
+                If gearBoxConfig.AT Then
+                    Return "n_card_1s_min"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng_1s_min"
+                Else
+                    Return "ERROR"
+                End If
+            Case tCompErg.n_ec_float_max
+                If gearBoxConfig.AT Then
+                    Return "n_card_float_max"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng_float_max"
+                Else
+                    Return "ERROR"
+                End If
+            Case tCompErg.n_ec_float_min
+                If gearBoxConfig.AT Then
+                    Return "n_card_float_min"
+                ElseIf gearBoxConfig.MT_AMT Then
+                    Return "n_eng_float_min"
+                Else
+                    Return "ERROR"
+                End If
             Case tCompErg.v_wind_avg
                 Return "v_wind_avg"
             Case tCompErg.v_wind_1s
@@ -754,19 +818,19 @@ Module CSE_Globals
                 Return "[-]"
             Case tCompErg.calcT
                 Return "[-]"
-            Case tCompErg.n_eng
+            Case tCompErg.n_ec
                 Return "[rpm]"
-            Case tCompErg.n_eng_1s
+            Case tCompErg.n_ec_1s
                 Return "[rpm]"
-            Case tCompErg.n_eng_float
+            Case tCompErg.n_ec_float
                 Return "[rpm]"
-            Case tCompErg.n_eng_1s_max
+            Case tCompErg.n_ec_1s_max
                 Return "[rpm]"
-            Case tCompErg.n_eng_1s_min
+            Case tCompErg.n_ec_1s_min
                 Return "[rpm]"
-            Case tCompErg.n_eng_float_max
+            Case tCompErg.n_ec_float_max
                 Return "[rpm]"
-            Case tCompErg.n_eng_float_min
+            Case tCompErg.n_ec_float_min
                 Return "[rpm]"
             Case tCompErg.v_wind_avg
                 Return "[m/s]"

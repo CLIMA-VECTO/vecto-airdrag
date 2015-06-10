@@ -296,7 +296,11 @@ Module output
         AddToErg(tComp.v_veh_CAN, fCompName(tComp.v_veh_CAN), fCompUnit(tComp.v_veh_CAN), "InputData")
         AddToErg(tComp.vair_ic, fCompName(tComp.vair_ic), fCompUnit(tComp.vair_ic), "InputData")
         AddToErg(tComp.beta_ic, fCompName(tComp.beta_ic), fCompUnit(tComp.beta_ic), "InputData")
-        AddToErg(tComp.n_eng, fCompName(tComp.n_eng), fCompUnit(tComp.n_eng), "InputData")
+        If gearBoxConfig.MT_AMT Then
+            AddToErg(tComp.n_eng, fCompName(tComp.n_eng), fCompUnit(tComp.n_eng), "InputData")
+        Else
+            AddToErg(tComp.n_card, fCompName(tComp.n_card), fCompUnit(tComp.n_card), "InputData")
+        End If
         AddToErg(tComp.tq_l, fCompName(tComp.tq_l), fCompUnit(tComp.tq_l), "InputData")
         AddToErg(tComp.tq_r, fCompName(tComp.tq_r), fCompUnit(tComp.tq_r), "InputData")
         AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), fCompUnit(tComp.t_amb_veh), "InputData")
@@ -400,11 +404,11 @@ Module output
         If Not calibration Then
             AddToErg(tCompErg.beta_abs, fCompName(tCompErg.beta_abs), fCompUnit(tCompErg.beta_abs), "ErgValues")
             AddToErg(tCompErg.v_air_sq, fCompName(tCompErg.v_air_sq), fCompUnit(tCompErg.v_air_sq), "ErgValues")
-            AddToErg(tCompErg.n_eng, fCompName(tCompErg.n_eng), fCompUnit(tCompErg.n_eng), "ErgValues")
-            AddToErg(tCompErg.n_eng_1s_max, fCompName(tCompErg.n_eng_1s_max), fCompUnit(tCompErg.n_eng_1s_max), "ErgValues")
-            AddToErg(tCompErg.n_eng_1s_min, fCompName(tCompErg.n_eng_1s_min), fCompUnit(tCompErg.n_eng_1s_min), "ErgValues")
-            AddToErg(tCompErg.n_eng_float_max, fCompName(tCompErg.n_eng_float_max), fCompUnit(tCompErg.n_eng_float_max), "ErgValues")
-            AddToErg(tCompErg.n_eng_float_min, fCompName(tCompErg.n_eng_float_min), fCompUnit(tCompErg.n_eng_float_min), "ErgValues")
+            AddToErg(tCompErg.n_ec, fCompName(tCompErg.n_ec), fCompUnit(tCompErg.n_ec), "ErgValues")
+            AddToErg(tCompErg.n_ec_1s_max, fCompName(tCompErg.n_ec_1s_max), fCompUnit(tCompErg.n_ec_1s_max), "ErgValues")
+            AddToErg(tCompErg.n_ec_1s_min, fCompName(tCompErg.n_ec_1s_min), fCompUnit(tCompErg.n_ec_1s_min), "ErgValues")
+            AddToErg(tCompErg.n_ec_float_max, fCompName(tCompErg.n_ec_float_max), fCompUnit(tCompErg.n_ec_float_max), "ErgValues")
+            AddToErg(tCompErg.n_ec_float_min, fCompName(tCompErg.n_ec_float_min), fCompUnit(tCompErg.n_ec_float_min), "ErgValues")
             AddToErg(tCompErg.r_dyn, fCompName(tCompErg.r_dyn), fCompUnit(tCompErg.r_dyn), "ErgValues")
             AddToErg(tCompErg.omega_wh, fCompName(tCompErg.omega_wh), fCompUnit(tCompErg.omega_wh), "ErgValues")
             AddToErg(tCompErg.omega_p_wh, fCompName(tCompErg.omega_p_wh), fCompUnit(tCompErg.omega_p_wh), "ErgValues")
