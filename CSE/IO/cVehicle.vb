@@ -150,16 +150,23 @@ The generic parameters for classes are stored in the GenShape.shp",
             Return
         End If
 
-        '' Check schema
-        ''
+        ' Check schema
         Dim schema = JsonSchema.Parse(JSchemaStr(isStrictBody))
         ValidateJson(Body, schema, validateMsgs)
 
         If validateMsgs.Any() Then Return
 
-        '' Check others
-        ''
-        '' Check if vehicle class with the given configuration class is available
+        ' Set transmission
+        If IsAT Then
+            AT = True
+            MT_AMT = False
+        ElseIf IsMT Then
+            AT = False
+            MT_AMT = True
+        End If
+
+        ' Check others
+        ' Check if vehicle class with the given configuration class is available
         For i = 0 To GenShape.veh_class.Count - 1
             If GenShape.veh_class(i) = Me.classCode AndAlso CBool(GenShape.veh_conf(i)) = CBool(Me.configuration) Then
                 Job.fa_pe = GenShape.fa_pe(i)
@@ -167,12 +174,9 @@ The generic parameters for classes are stored in the GenShape.shp",
             End If
         Next i
 
-        '' The configuration was not found!
-        ''
+        ' The configuration was not found!
         validateMsgs.Add(format("The vehicle (class: {0}, configuration {1}) was not found in the generic shape file. \n\iPlease add it in .", Me.classCode, Me.configuration))
     End Sub
-
-
 
 #Region "json props"
     Public Property classCode As Integer
@@ -257,7 +261,6 @@ The generic parameters for classes are stored in the GenShape.shp",
             Me.Body("axleRatio") = value
         End Set
     End Property
-
     Public Property gearBox_type As gearBoxConfig
         Get
             Dim value As String = Me.Body("gearBox_type")
@@ -273,6 +276,18 @@ The generic parameters for classes are stored in the GenShape.shp",
     Public ReadOnly Property IsRigid As Boolean
         Get
             Return Me.configuration = VehicleConfig.Rigid
+        End Get
+    End Property
+
+    Public ReadOnly Property IsAT As Boolean
+        Get
+            Return Me.gearBox_type = gearBoxConfig.AT
+        End Get
+    End Property
+
+    Public ReadOnly Property IsMT As Boolean
+        Get
+            Return Me.gearBox_type = gearBoxConfig.MT_AMT
         End Get
     End Property
 End Class

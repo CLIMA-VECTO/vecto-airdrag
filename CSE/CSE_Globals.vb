@@ -8,7 +8,6 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-
 Module CSE_Globals
     Public Enum tComp
         t
@@ -458,25 +457,25 @@ Module CSE_Globals
             Case tCompCali.rh_stat
                 Return "rh_stat"
             Case tCompCali.n_ec
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng"
                 Else
                     Return "ERROR"
                 End If
             Case tCompCali.n_ec_1s
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card_1s"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng_1s"
                 Else
                     Return "ERROR"
                 End If
             Case tCompCali.n_ec_float
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card_float"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng_float"
                 Else
                     Return "ERROR"
@@ -616,57 +615,57 @@ Module CSE_Globals
             Case tCompErg.calcT
                 Return "calcT"
             Case tCompErg.n_ec
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng"
                 Else
                     Return "ERROR"
                 End If
             Case tCompErg.n_ec_1s
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card_1s"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng_1s"
                 Else
                     Return "ERROR"
                 End If
             Case tCompErg.n_ec_float
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card_float"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng_float"
                 Else
                     Return "ERROR"
                 End If
             Case tCompErg.n_ec_1s_max
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card_1s_max"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng_1s_max"
                 Else
                     Return "ERROR"
                 End If
             Case tCompErg.n_ec_1s_min
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card_1s_min"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng_1s_min"
                 Else
                     Return "ERROR"
                 End If
             Case tCompErg.n_ec_float_max
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card_float_max"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng_float_max"
                 Else
                     Return "ERROR"
                 End If
             Case tCompErg.n_ec_float_min
-                If gearBoxConfig.AT Then
+                If AT Then
                     Return "n_card_float_min"
-                ElseIf gearBoxConfig.MT_AMT Then
+                ElseIf MT_AMT Then
                     Return "n_eng_float_min"
                 Else
                     Return "ERROR"
@@ -768,7 +767,13 @@ Module CSE_Globals
             Case tCompErg.val_dist
                 Return "val_dist"
             Case tCompErg.val_n_eng
-                Return "val_n_eng"
+                If AT Then
+                    Return "val_n_card"
+                ElseIf MT_AMT Then
+                    Return "val_n_eng"
+                Else
+                    Return "ERROR"
+                End If
             Case tCompErg.CdxAß_singleDS
                 Return "CdxA(ß)_singleDS"
             Case tCompErg.r_dyn

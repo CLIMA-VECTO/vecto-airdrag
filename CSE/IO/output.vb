@@ -296,9 +296,10 @@ Module output
         AddToErg(tComp.v_veh_CAN, fCompName(tComp.v_veh_CAN), fCompUnit(tComp.v_veh_CAN), "InputData")
         AddToErg(tComp.vair_ic, fCompName(tComp.vair_ic), fCompUnit(tComp.vair_ic), "InputData")
         AddToErg(tComp.beta_ic, fCompName(tComp.beta_ic), fCompUnit(tComp.beta_ic), "InputData")
-        If gearBoxConfig.MT_AMT Then
+        If MT_AMT Then
             AddToErg(tComp.n_eng, fCompName(tComp.n_eng), fCompUnit(tComp.n_eng), "InputData")
-        Else
+        ElseIf AT Then
+            If InputData(tComp.n_eng).Count > 0 Then AddToErg(tComp.n_eng, fCompName(tComp.n_eng), fCompUnit(tComp.n_eng), "InputData")
             AddToErg(tComp.n_card, fCompName(tComp.n_card), fCompUnit(tComp.n_card), "InputData")
         End If
         AddToErg(tComp.tq_l, fCompName(tComp.tq_l), fCompUnit(tComp.tq_l), "InputData")

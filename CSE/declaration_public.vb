@@ -49,10 +49,11 @@ Module declaration_public
     Public Zone1CentralMeridian = -177                          ' Central UTM zone meridian (Will be changed by zone adjustment)
     Public Const AmeAng = 180                                   ' Installation angle of the anemomenter
 
-
     ' Constances for the array declaration
     Public JumpPoint As List(Of Integer)                        ' Point at that a jump in the time-resolved data is detected
     Public OptPar() As Boolean = ({True, True, True})           ' Array to identify if optional parameters are given
+    Public AT As Boolean = False                                ' Calculation of an automatic transmission (with n_card)
+    Public MT_AMT As Boolean = False                            ' Calculation of an manual transmission (always when n_eng available)
 
     ' Boolean for the programm control
     Public FileBlock As Boolean = False                         ' Variable if a file is blocked by an other process
@@ -116,5 +117,4 @@ Module declaration_public
     ' *****************************************************************
     ' Backgroundworker
     Public BWorker As System.ComponentModel.BackgroundWorker
-
 End Module

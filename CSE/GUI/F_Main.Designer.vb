@@ -985,7 +985,7 @@ Partial Class F_Main
         Me.ListBoxWar.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxWar.Name = "ListBoxWar"
         Me.ListBoxWar.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
-        Me.ListBoxWar.Size = New System.Drawing.Size(915, 160)
+        Me.ListBoxWar.Size = New System.Drawing.Size(915, 147)
         Me.ListBoxWar.TabIndex = 26
         '
         'TabPageErr
@@ -1011,7 +1011,7 @@ Partial Class F_Main
         Me.ListBoxErr.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxErr.Name = "ListBoxErr"
         Me.ListBoxErr.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
-        Me.ListBoxErr.Size = New System.Drawing.Size(913, 160)
+        Me.ListBoxErr.Size = New System.Drawing.Size(913, 147)
         Me.ListBoxErr.TabIndex = 27
         '
         'TextBoxVeh

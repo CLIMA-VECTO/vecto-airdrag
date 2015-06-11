@@ -32,7 +32,7 @@ Public Module main_calculation_call
             logme(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
             ReadInputMSC(MSC, Job.calib_track_fpath, isCalibrate)
-            ReadDataFile(Job.calib_run_fpath, MSC)
+            ReadDataFile(Job.calib_run_fpath, MSC, vehicle)
 
             ' Exit function if error is detected
             If BWorker.CancellationPending Then Return
@@ -98,7 +98,7 @@ Public Module main_calculation_call
 
                 ' Output on the GUI
                 logme(6, False, "Reading the data file...")
-                ReadDataFile(Job.coasting_fpaths(i), MSC)
+                ReadDataFile(Job.coasting_fpaths(i), MSC, vehicle)
 
                 ' Exit function if error is detected
                 If BWorker.CancellationPending Then Return
@@ -820,7 +820,7 @@ Public Module main_calculation_call
         ' Evaluation
         Select Case coastingSeq
             Case 1, 2 ' Low speed test
-                If gearBoxConfig.MT_AMT Then
+                If MT_AMT Then
                     igear = vehicleX.gearRatio_low
                 Else
                     igear = 1
@@ -857,7 +857,7 @@ Public Module main_calculation_call
                     ErgValues(tCompErg.val_tq_1s)(i) = 1
                 Next i
             Case Else ' high speed test
-                If gearBoxConfig.MT_AMT Then
+                If MT_AMT Then
                     igear = vehicleX.gearRatio_high
                 Else
                     igear = 1

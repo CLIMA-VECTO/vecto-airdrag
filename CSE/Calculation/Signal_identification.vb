@@ -690,7 +690,7 @@ Module Signal_identification
         anz = 0
         If coastingSeq = 1 Or coastingSeq = 2 Then
             ' Set the gearRatio
-            If gearBoxConfig.MT_AMT Then
+            If MT_AMT Then
                 igear = vehicleX.gearRatio_low
             Else
                 igear = 1
@@ -702,7 +702,7 @@ Module Signal_identification
             End If
         Else
             ' Set the gearRatio
-            If gearBoxConfig.MT_AMT Then
+            If MT_AMT Then
                 igear = vehicleX.gearRatio_high
             Else
                 igear = 1
@@ -712,7 +712,7 @@ Module Signal_identification
 
         ' Calculate n_eng/n_card of the speed run
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
-            If gearBoxConfig.MT_AMT Then
+            If MT_AMT Then
                 CalcData(tCompCali.n_ec)(i) = InputData(tComp.n_eng)(i)
             Else
                 CalcData(tCompCali.n_ec)(i) = InputData(tComp.n_card)(i)

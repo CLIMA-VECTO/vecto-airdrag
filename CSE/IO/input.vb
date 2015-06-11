@@ -176,7 +176,7 @@ Public Module input
     End Sub
 
     ' Read the data file
-    Public Sub ReadDataFile(ByVal Datafile As String, ByVal MSCX As cMSC)
+    Public Sub ReadDataFile(ByVal Datafile As String, ByVal MSCX As cMSC, ByVal vehicleX As cVehicle)
         ' Declarations
         Using FileInMeasure As New cFile_V3
             Dim Line(), txt As String
@@ -221,13 +221,8 @@ Public Module input
             MeasCheck.Add(tComp.v_veh_CAN, False)
             MeasCheck.Add(tComp.vair_ic, False)
             MeasCheck.Add(tComp.beta_ic, False)
-            If gearBoxConfig.AT Then
-                MeasCheck.Add(tComp.n_card, False)
-            ElseIf gearBoxConfig.MT_AMT Then
-                MeasCheck.Add(tComp.n_eng, False)
-            Else
-                Throw New Exception("gearBox_type in vehicle file not defined")
-            End If
+            MeasCheck.Add(tComp.n_card, False)
+            MeasCheck.Add(tComp.n_eng, False)
             MeasCheck.Add(tComp.tq_l, False)
             MeasCheck.Add(tComp.tq_r, False)
             MeasCheck.Add(tComp.t_amb_veh, False)
@@ -286,6 +281,27 @@ Public Module input
                             OptPar(2) = False
                         Case tComp.user_valid
                             valid_set = True
+                        Case tComp.n_card, tComp.n_eng
+                            If vehicleX.IsAT Then
+                                If MeasCheck(tComp.n_card) = False Then
+                                    If MeasCheck(tComp.n_eng) = False Then
+                                        Throw New Exception("Missing signal for " & fCompName(tComp.n_eng) & " or " & fCompName(tComp.n_card))
+                                    Else
+                                        MT_AMT = True
+                                        AT = False
+                                    End If
+                                Else
+                                    AT = True
+                                    MT_AMT = False
+                                End If
+                            End If
+                            If vehicleX.IsMT Then
+                                MT_AMT = True
+                                AT = False
+                                If MeasCheck(tComp.n_eng) = False Then
+                                    Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
+                                End If
+                            End If
                         Case Else
                             Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
                     End Select
