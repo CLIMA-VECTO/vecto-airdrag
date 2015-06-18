@@ -192,12 +192,12 @@ Public Class cJob
     ' Reset the Values to Standard
     Friend Sub ResetValue(Optional IsCalibration As Boolean = False)
         If IsCalibration Then
-            Job.fv_veh = 0
             Job.fa_pe = 1
-            Job.fv_pe = 0
             Job.beta_ame = 0
         End If
 
+        Job.fv_veh = 0
+        Job.fv_pe = 0
         Job.CdxAß = 0
         Job.beta = 0
         Job.delta_CdxA = 0

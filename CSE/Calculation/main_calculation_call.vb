@@ -109,6 +109,9 @@ Public Module main_calculation_call
                 ' Exit function if error is detected
                 If BWorker.CancellationPending Then Return
 
+                ' Output on the GUI
+                If i = 0 Then logme(6, False, "Calculating the HS parameter")
+
                 ' Calculate the run
                 fCalcRun(MSC, vehicle, i, r_dyn_ref)
 
@@ -315,18 +318,13 @@ Public Module main_calculation_call
             End If
         Next i
 
-        ' Error if no valid section is found
-        If num = 0 Then
-            Throw New Exception("No used/valid section is found for calculation of fv_veh!")
-        End If
-
         ' Calculate the average over all factors
         Job.fv_veh = Job.fv_veh / num
         Job.fv_veh_opt2 = Job.fv_veh_opt2 / num
     End Sub
 
     ' Function to calculate fv_pe & beta_amn
-    Function ffvpeBeta(Optional ByVal allData As Boolean = True) As Boolean
+    Function ffvpeBeta(Optional ByVal CalibRun As Boolean = True) As Boolean
         ' Declaration
         Dim i, anz_DirID(1) As Integer
         Dim vair_ic(1), beta_ic(1), sum_v_veh As Double
@@ -334,30 +332,39 @@ Public Module main_calculation_call
         ' Initialise
         For i = 0 To 1
             vair_ic(i) = 0
-            If allData Then beta_ic(i) = 0
+            If CalibRun Then beta_ic(i) = 0
             anz_DirID(i) = 0
         Next i
         sum_v_veh = 0
 
-        ' Calculate velocity correction
+        ' Calculate velocity and beta correction
         For i = 0 To ErgValues(tCompErg.SecID).Count - 1
             If ErgValues(tCompErg.used)(i) = 1 Then
                 sum_v_veh += ErgValues(tCompErg.v_veh)(i) / 3.6
-                If ErgValues(tCompErg.DirID)(i) = ErgValues(tCompErg.DirID)(0) Then
-                    vair_ic(0) += ErgValues(tCompErg.vair_ic)(i)
-                    If allData Then beta_ic(0) += ErgValues(tCompErg.beta_ic)(i)
-                    anz_DirID(0) += 1
+                If CalibRun Then
+                    If ErgValues(tCompErg.DirID)(i) = ErgValues(tCompErg.DirID)(0) Then
+                        vair_ic(0) += ErgValues(tCompErg.vair_ic)(i)
+                        beta_ic(0) += ErgValues(tCompErg.beta_ic)(i)
+                        anz_DirID(0) += 1
+                    Else
+                        vair_ic(1) += ErgValues(tCompErg.vair_ic)(i)
+                        beta_ic(1) += ErgValues(tCompErg.beta_ic)(i)
+                        anz_DirID(1) += 1
+                    End If
                 Else
-                    vair_ic(1) += ErgValues(tCompErg.vair_ic)(i)
-                    If allData Then beta_ic(1) += ErgValues(tCompErg.beta_ic)(i)
-                    anz_DirID(1) += 1
+                    If ErgValues(tCompErg.HeadID)(i) = ErgValues(tCompErg.HeadID)(0) Then
+                        vair_ic(0) += ErgValues(tCompErg.vair_ic)(i)
+                        anz_DirID(0) += 1
+                    Else
+                        vair_ic(1) += ErgValues(tCompErg.vair_ic)(i)
+                        anz_DirID(1) += 1
+                    End If
                 End If
             End If
         Next i
 
         Job.fv_pe = (sum_v_veh / (anz_DirID(0) + anz_DirID(1))) / (0.5 * (vair_ic(0) / anz_DirID(0) + vair_ic(1) / anz_DirID(1)))
-        If allData Then Job.beta_ame = (0.5 * (beta_ic(0) / anz_DirID(0) + beta_ic(1) / anz_DirID(1))) - AmeAng
-
+        If CalibRun Then Job.beta_ame = (0.5 * (beta_ic(0) / anz_DirID(0) + beta_ic(1) / anz_DirID(1))) - AmeAng
         Return True
     End Function
 
@@ -419,7 +426,14 @@ Public Module main_calculation_call
 
         ' Set the values
         For i = 0 To ErgValues(tCompErg.SecID).Count - 1
-            If ErgValues(tCompErg.v_wind_avg)(i) < Crt.v_wind_avg_max_CAL And Math.Abs(ErgValues(tCompErg.beta_avg)(i)) < Crt.beta_avg_max_CAL And ErgValues(tCompErg.v_wind_1s_max)(i) < Crt.v_wind_1s_max_CAL And ErgValues(tCompErg.user_valid)(i) = 1 Then
+            If ErgValues(tCompErg.v_wind_avg)(i) < Crt.v_wind_avg_max_CAL Then ErgValues(tCompErg.val_vWind)(i) = 1
+            If Math.Abs(ErgValues(tCompErg.beta_avg)(i)) < Crt.beta_avg_max_CAL Then ErgValues(tCompErg.val_beta)(i) = 1
+            If ErgValues(tCompErg.v_wind_1s_max)(i) < Crt.v_wind_1s_max_CAL Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
+            If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
+
+            ' Check if all criterias are valid
+            If ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_beta)(i) = 1 And _
+               ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_User)(i) = 1 Then
                 ErgValues(tCompErg.valid)(i) = 1
                 ErgValues(tCompErg.used)(i) = 1
             Else
@@ -813,9 +827,11 @@ Public Module main_calculation_call
         Dim i As Integer
         Dim OldValid(ErgValues(tCompErg.SecID).Count - 1), OldUse(ErgValues(tCompErg.SecID).Count - 1) As Boolean
         Dim igear As Double
+        Dim allFalse As Boolean
 
         ' Initialisation
         Change = False
+        allFalse = True
 
         ' Evaluation
         Select Case coastingSeq
@@ -846,6 +862,7 @@ Public Module main_calculation_call
                        ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_vVeh_f)(i) = 1 And ErgValues(tCompErg.val_tq_f)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
+                        allFalse = False
                     Else
                         ErgValues(tCompErg.valid)(i) = 0
                         ErgValues(tCompErg.used)(i) = 0
@@ -890,6 +907,7 @@ Public Module main_calculation_call
                        ErgValues(tCompErg.val_beta)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And ErgValues(tCompErg.val_tq_1s)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
+                        allFalse = False
                     Else
                         ErgValues(tCompErg.valid)(i) = 0
                         ErgValues(tCompErg.used)(i) = 0
@@ -909,6 +927,12 @@ Public Module main_calculation_call
                     Next i
                 Else
                     Change = True
+                End If
+
+                ' Look if something is true
+                If allFalse Then
+                    logme(8, False, "No used/valid section is found for calculation of fv_veh and fv_pe in HS test!")
+                    Change = False
                 End If
         End Select
     End Sub

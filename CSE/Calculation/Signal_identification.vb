@@ -724,12 +724,6 @@ Module Signal_identification
             ' Wheel rotation
             CalcData(tCompCali.omega_wh)(i) = (CalcData(tCompCali.n_ec)(i) * Math.PI / (30 * vehicleX.axleRatio * igear))
 
-            If i = 0 Or i = CalcData(tCompCali.SecID).Count - 1 Then
-                CalcData(tCompCali.omega_p_wh)(i) = 0
-            Else
-                CalcData(tCompCali.omega_p_wh)(i) = ((CalcData(tCompCali.n_ec)(i + 1) - CalcData(tCompCali.n_ec)(i - 1)) / 2) * Math.PI / (30 * vehicleX.axleRatio * igear)
-            End If
-
             ' Torque sum
             CalcData(tCompCali.tq_sum)(i) = InputData(tComp.tq_l)(i) + InputData(tComp.tq_r)(i)
 
@@ -786,14 +780,17 @@ Module Signal_identification
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.v_veh_c), CalcData(tCompCali.v_veh_float), CalcData(tCompCali.t_float))
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.n_ec), CalcData(tCompCali.n_ec_1s))
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.n_ec), CalcData(tCompCali.n_ec_float), CalcData(tCompCali.t_float))
+        fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.omega_wh), CalcData(tCompCali.omega_wh_acc))
 
         ' Calculate the remaining values
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
-            ' Acceleration
+            ' Acceleration and omega_p
             If i = 0 Or i = CalcData(tCompCali.SecID).Count - 1 Then
                 CalcData(tCompCali.a_veh_avg)(i) = 0
+                CalcData(tCompCali.omega_p_wh_acc)(i) = 0
             Else
                 CalcData(tCompCali.a_veh_avg)(i) = (CalcData(tCompCali.v_veh_acc)(i + 1) - CalcData(tCompCali.v_veh_acc)(i - 1)) / (3.6 * 2) * HzIn
+                CalcData(tCompCali.omega_p_wh_acc)(i) = ((CalcData(tCompCali.omega_wh_acc)(i + 1) - CalcData(tCompCali.omega_wh_acc)(i - 1)) / 2) * Math.PI / (30 * vehicleX.axleRatio * igear)
             End If
 
             If Crt.gradient_correction Then
@@ -818,7 +815,7 @@ Module Signal_identification
             End If
 
             ' Force acceleration
-            CalcData(tCompCali.F_acc)(i) = vehicleX.testMass * CalcData(tCompCali.a_veh_avg)(i) + vehicleX.wheelsInertia * CalcData(tCompCali.omega_wh)(i) * CalcData(tCompCali.omega_p_wh)(i) / (CalcData(tCompCali.v_veh_c)(i) / 3.6)
+            CalcData(tCompCali.F_acc)(i) = vehicleX.testMass * CalcData(tCompCali.a_veh_avg)(i) + vehicleX.wheelsInertia * CalcData(tCompCali.omega_wh_acc)(i) * CalcData(tCompCali.omega_p_wh_acc)(i) / (CalcData(tCompCali.v_veh_acc)(i) / 3.6)
 
             ' Force trajectory
             CalcData(tCompCali.F_res)(i) = CalcData(tCompCali.F_trac)(i)
@@ -834,7 +831,8 @@ Module Signal_identification
                     ErgValues(tCompErg.RunID)(run) = RunIDx
                     ErgValues(tCompErg.n_ec)(run) = (CalcData(tCompCali.n_ec)(i))
                     ErgValues(tCompErg.omega_wh)(run) = (CalcData(tCompCali.omega_wh)(i))
-                    ErgValues(tCompErg.omega_p_wh)(run) = (CalcData(tCompCali.omega_p_wh)(i))
+                    ErgValues(tCompErg.omega_wh_acc)(run) = (CalcData(tCompCali.omega_wh_acc)(i))
+                    ErgValues(tCompErg.omega_p_wh_acc)(run) = (CalcData(tCompCali.omega_p_wh_acc)(i))
                     ErgValues(tCompErg.tq_sum)(run) = (CalcData(tCompCali.tq_sum)(i))
                     ErgValues(tCompErg.tq_sum_1s)(run) = (CalcData(tCompCali.tq_sum_1s)(i))
                     ErgValues(tCompErg.tq_sum_float)(run) = (CalcData(tCompCali.tq_sum_float)(i))
@@ -874,7 +872,8 @@ Module Signal_identification
                         ' Build the sum
                         ErgValues(tCompErg.n_ec)(run) += (CalcData(tCompCali.n_ec)(i))
                         ErgValues(tCompErg.omega_wh)(run) += (CalcData(tCompCali.omega_wh)(i))
-                        ErgValues(tCompErg.omega_p_wh)(run) += (CalcData(tCompCali.omega_p_wh)(i))
+                        ErgValues(tCompErg.omega_wh_acc)(run) += (CalcData(tCompCali.omega_wh_acc)(i))
+                        ErgValues(tCompErg.omega_p_wh_acc)(run) += (CalcData(tCompCali.omega_p_wh_acc)(i))
                         ErgValues(tCompErg.tq_sum)(run) += (CalcData(tCompCali.tq_sum)(i))
                         ErgValues(tCompErg.tq_sum_1s)(run) += (CalcData(tCompCali.tq_sum_1s)(i))
                         ErgValues(tCompErg.tq_sum_float)(run) += (CalcData(tCompCali.tq_sum_float)(i))
@@ -911,7 +910,8 @@ Module Signal_identification
                         ' Calculate the results from the last section
                         ErgValues(tCompErg.n_ec)(run) = ErgValues(tCompErg.n_ec)(run) / anz
                         ErgValues(tCompErg.omega_wh)(run) = ErgValues(tCompErg.omega_wh)(run) / anz
-                        ErgValues(tCompErg.omega_p_wh)(run) = ErgValues(tCompErg.omega_p_wh)(run) / anz
+                        ErgValues(tCompErg.omega_wh_acc)(run) = ErgValues(tCompErg.omega_wh_acc)(run) / anz
+                        ErgValues(tCompErg.omega_p_wh_acc)(run) = ErgValues(tCompErg.omega_p_wh_acc)(run) / anz
                         ErgValues(tCompErg.tq_sum)(run) = ErgValues(tCompErg.tq_sum)(run) / anz
                         ErgValues(tCompErg.tq_sum_1s)(run) = ErgValues(tCompErg.tq_sum_1s)(run) / anz
                         ErgValues(tCompErg.tq_sum_float)(run) = ErgValues(tCompErg.tq_sum_float)(run) / anz
@@ -947,7 +947,8 @@ Module Signal_identification
                         ErgValues(tCompErg.RunID)(run) = RunIDx
                         ErgValues(tCompErg.n_ec)(run) = (CalcData(tCompCali.n_ec)(i))
                         ErgValues(tCompErg.omega_wh)(run) = (CalcData(tCompCali.omega_wh)(i))
-                        ErgValues(tCompErg.omega_p_wh)(run) = (CalcData(tCompCali.omega_p_wh)(i))
+                        ErgValues(tCompErg.omega_wh_acc)(run) = (CalcData(tCompCali.omega_wh_acc)(i))
+                        ErgValues(tCompErg.omega_p_wh_acc)(run) = (CalcData(tCompCali.omega_p_wh_acc)(i))
                         ErgValues(tCompErg.tq_sum)(run) = (CalcData(tCompCali.tq_sum)(i))
                         ErgValues(tCompErg.tq_sum_1s)(run) = (CalcData(tCompCali.tq_sum_1s)(i))
                         ErgValues(tCompErg.tq_sum_float)(run) = (CalcData(tCompCali.tq_sum_float)(i))
@@ -987,7 +988,8 @@ Module Signal_identification
                     ' Calculate the results from the last section
                     ErgValues(tCompErg.n_ec)(run) = ErgValues(tCompErg.n_ec)(run) / anz
                     ErgValues(tCompErg.omega_wh)(run) = ErgValues(tCompErg.omega_wh)(run) / anz
-                    ErgValues(tCompErg.omega_p_wh)(run) = ErgValues(tCompErg.omega_p_wh)(run) / anz
+                    ErgValues(tCompErg.omega_wh_acc)(run) = ErgValues(tCompErg.omega_wh_acc)(run) / anz
+                    ErgValues(tCompErg.omega_p_wh_acc)(run) = ErgValues(tCompErg.omega_p_wh_acc)(run) / anz
                     ErgValues(tCompErg.tq_sum)(run) = ErgValues(tCompErg.tq_sum)(run) / anz
                     ErgValues(tCompErg.tq_sum_1s)(run) = ErgValues(tCompErg.tq_sum_1s)(run) / anz
                     ErgValues(tCompErg.tq_sum_float)(run) = ErgValues(tCompErg.tq_sum_float)(run) / anz

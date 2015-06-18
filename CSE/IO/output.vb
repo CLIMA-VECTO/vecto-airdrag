@@ -339,7 +339,8 @@ Module output
 
         If Not calibration Then
             AddToErg(tCompCali.omega_wh, fCompName(tCompCali.omega_wh), fCompUnit(tCompCali.omega_wh), "CalcData")
-            AddToErg(tCompCali.omega_p_wh, fCompName(tCompCali.omega_p_wh), fCompUnit(tCompCali.omega_p_wh), "CalcData")
+            AddToErg(tCompCali.omega_wh_acc, fCompName(tCompCali.omega_wh_acc), fCompUnit(tCompCali.omega_wh_acc), "CalcData")
+            AddToErg(tCompCali.omega_p_wh_acc, fCompName(tCompCali.omega_p_wh_acc), fCompUnit(tCompCali.omega_p_wh_acc), "CalcData")
             AddToErg(tCompCali.tq_sum, fCompName(tCompCali.tq_sum), fCompUnit(tCompCali.tq_sum), "CalcData")
             AddToErg(tCompCali.tq_sum_1s, fCompName(tCompCali.tq_sum_1s), fCompUnit(tCompCali.tq_sum_1s), "CalcData")
             AddToErg(tCompCali.tq_sum_float, fCompName(tCompCali.tq_sum_float), fCompUnit(tCompCali.tq_sum_float), "CalcData")
@@ -382,6 +383,13 @@ Module output
         AddToErg(tCompErg.valid, fCompName(tCompErg.valid), fCompUnit(tCompErg.valid), "ErgValues")
         AddToErg(tCompErg.used, fCompName(tCompErg.used), fCompUnit(tCompErg.used), "ErgValues")
 
+        If calibration Then
+            AddToErg(tCompErg.val_User, fCompName(tCompErg.val_User), fCompUnit(tCompErg.val_User), "ErgValues")
+            AddToErg(tCompErg.val_vWind, fCompName(tCompErg.val_vWind), fCompUnit(tCompErg.val_vWind), "ErgValues")
+            AddToErg(tCompErg.val_vWind_1s, fCompName(tCompErg.val_vWind_1s), fCompUnit(tCompErg.val_vWind_1s), "ErgValues")
+            AddToErg(tCompErg.val_beta, fCompName(tCompErg.val_beta), fCompUnit(tCompErg.val_beta), "ErgValues")
+        End If
+
         If Not calibration Then
             AddToErg(tCompErg.val_User, fCompName(tCompErg.val_User), fCompUnit(tCompErg.val_User), "ErgValues")
             AddToErg(tCompErg.val_vVeh_avg, fCompName(tCompErg.val_vVeh_avg), fCompUnit(tCompErg.val_vVeh_avg), "ErgValues")
@@ -412,7 +420,8 @@ Module output
             AddToErg(tCompErg.n_ec_float_min, fCompName(tCompErg.n_ec_float_min), fCompUnit(tCompErg.n_ec_float_min), "ErgValues")
             AddToErg(tCompErg.r_dyn, fCompName(tCompErg.r_dyn), fCompUnit(tCompErg.r_dyn), "ErgValues")
             AddToErg(tCompErg.omega_wh, fCompName(tCompErg.omega_wh), fCompUnit(tCompErg.omega_wh), "ErgValues")
-            AddToErg(tCompErg.omega_p_wh, fCompName(tCompErg.omega_p_wh), fCompUnit(tCompErg.omega_p_wh), "ErgValues")
+            AddToErg(tCompErg.omega_wh_acc, fCompName(tCompErg.omega_wh_acc), fCompUnit(tCompErg.omega_wh_acc), "ErgValues")
+            AddToErg(tCompErg.omega_p_wh_acc, fCompName(tCompErg.omega_p_wh_acc), fCompUnit(tCompErg.omega_p_wh_acc), "ErgValues")
             AddToErg(tCompErg.tq_sum, fCompName(tCompErg.tq_sum), fCompUnit(tCompErg.tq_sum), "ErgValues")
             AddToErg(tCompErg.tq_sum_1s, fCompName(tCompErg.tq_sum_1s), fCompUnit(tCompErg.tq_sum_1s), "ErgValues")
             AddToErg(tCompErg.tq_sum_1s_max, fCompName(tCompErg.tq_sum_1s_max), fCompUnit(tCompErg.tq_sum_1s_max), "ErgValues")

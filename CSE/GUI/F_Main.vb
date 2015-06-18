@@ -347,6 +347,9 @@ Public Class F_Main
         UI_PopulateToJob(True)
         UI_PopulateToCriteria()
 
+        Me.TextBoxRVeh.Text = 0
+        Me.TextBoxRAirPos.Text = 0
+
         ' Check if outfolder exist. If not then generate the folder
         If Not System.IO.Directory.Exists(OutFolder) Then
             If OutFolder <> Nothing Then
@@ -704,6 +707,13 @@ Public Class F_Main
             UI_PopulateFromJob()
             UI_PopulateFromCriteria()
         End If
+
+        ' Clear the text in the WarnigBox and ErrorBox and activate the MessageBox
+        Me.ListBoxWar.Items.Clear()
+        Me.ListBoxErr.Items.Clear()
+        Me.TabControlOutMsg.SelectTab(0)
+        Me.TabPageErr.Text = "Errors (0)"
+        Me.TabPageWar.Text = "Warnings (0)"
 
         Return True
     End Function

@@ -63,7 +63,8 @@ Module CSE_Globals
         alt
         slope_deg
         omega_wh
-        omega_p_wh
+        omega_wh_acc
+        omega_p_wh_acc
         tq_sum
         tq_sum_1s
         t_float
@@ -118,7 +119,8 @@ Module CSE_Globals
         beta_avg
         dist
         omega_wh
-        omega_p_wh
+        omega_wh_acc
+        omega_p_wh_acc
         tq_sum_1s
         t_float
         tq_sum_float
@@ -422,8 +424,10 @@ Module CSE_Globals
                 Return "slope_deg"
             Case tCompCali.omega_wh
                 Return "omega_wh"
-            Case tCompCali.omega_p_wh
-                Return "omega_p_wh"
+            Case tCompCali.omega_wh_acc
+                Return "omega_wh_acc"
+            Case tCompCali.omega_p_wh_acc
+                Return "omega_p_wh_acc"
             Case tCompCali.tq_sum
                 Return "tq_sum"
             Case tCompCali.tq_sum_1s
@@ -529,7 +533,9 @@ Module CSE_Globals
                 Return "[°]"
             Case tCompCali.omega_wh
                 Return "[rad/s]"
-            Case tCompCali.omega_p_wh
+            Case tCompCali.omega_wh_acc
+                Return "[rad/s]"
+            Case tCompCali.omega_p_wh_acc
                 Return "[rad/s2]"
             Case tCompCali.tq_sum
                 Return "[Nm]"
@@ -682,8 +688,10 @@ Module CSE_Globals
                 Return "delta s"
             Case tCompErg.omega_wh
                 Return "omega_wh"
-            Case tCompErg.omega_p_wh
-                Return "omega_p_wh"
+            Case tCompErg.omega_wh_acc
+                Return "omega_wh_acc"
+            Case tCompErg.omega_p_wh_acc
+                Return "omega_p_wh_acc"
             Case tCompErg.tq_sum_1s
                 Return "tq_sum_1s"
             Case tCompErg.t_float
@@ -849,7 +857,9 @@ Module CSE_Globals
                 Return "[m]"
             Case tCompErg.omega_wh
                 Return "[rad/s]"
-            Case tCompErg.omega_p_wh
+            Case tCompErg.omega_wh_acc
+                Return "[rad/s]"
+            Case tCompErg.omega_p_wh_acc
                 Return "[rad/s2]"
             Case tCompErg.tq_sum_1s
                 Return "[Nm]"
