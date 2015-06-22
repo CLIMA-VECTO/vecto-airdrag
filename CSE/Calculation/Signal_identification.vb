@@ -1028,18 +1028,16 @@ Module Signal_identification
 
         ' Calculate r_dyn_ref
         anz = 0
-        If coastingSeq = 0 Then
-            For i = 0 To ErgValues(tCompErg.valid).Count - 1
-                If ErgValues(tCompErg.valid)(i) = 1 Then
-                    r_dyn_ref += ErgValues(tCompErg.r_dyn)(i)
-                    anz += 1
-                End If
-            Next i
-            If anz > 0 Then
-                r_dyn_ref = r_dyn_ref / anz
-            Else
-                r_dyn_ref = 0
+        For i = 0 To ErgValues(tCompErg.valid).Count - 1
+            If ErgValues(tCompErg.valid)(i) = 1 Then
+                r_dyn_ref += ErgValues(tCompErg.r_dyn)(i)
+                anz += 1
             End If
+        Next i
+        If anz > 0 Then
+            r_dyn_ref = r_dyn_ref / anz
+        Else
+            r_dyn_ref = 0
         End If
 
         Return True

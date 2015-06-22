@@ -63,7 +63,7 @@ Public Class cCriteria
         g.v_veh_avg_max_LS = 16
         g.v_veh_float_delta_LS = 0.5
         g.tq_sum_float_delta_LS = 0.1
-        g.delta_n_ec_LS = 0.06
+        g.delta_n_ec_LS = 0.02
 
         g.v_wind_avg_max_HS = 5
         g.v_wind_1s_max_HS = 8
@@ -71,7 +71,7 @@ Public Class cCriteria
         g.v_veh_avg_min_HS = 80
         g.v_veh_1s_delta_HS = 0.3
         g.tq_sum_1s_delta_HS = 0.1
-        g.delta_n_ec_HS = 0.01
+        g.delta_n_ec_HS = 0.02
 
         g.delta_t_tyre_max = 5
         g.delta_rr_corr_max = 0.3

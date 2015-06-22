@@ -240,17 +240,16 @@ Public Module main_calculation_call
             Job.fv_veh_opt2 = 0
             Job.fv_pe = 0
             run = 0
-            r_dyn_ref = 0
         End If
 
         Do While Change
+            ' Initialise Parameter
+            r_dyn_ref = 0
             If coastingSeq = 0 Then
-                ' Initialise Parameter
                 Job.fv_veh = 0
                 Job.fv_veh_opt2 = 0
                 Job.fv_pe = 0
                 run += 1
-                r_dyn_ref = 0
             End If
 
             ' Calculate fv_veh
