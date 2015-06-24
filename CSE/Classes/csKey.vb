@@ -31,6 +31,7 @@ Public Class csKeyMeas
     Public v_air As String = "<V_AIR>"
     Public beta As String = "<BETA>"
     Public n_eng As String = "<N_ENG>"
+    Public n_card As String = "<N_CARD>"
     Public tq_l As String = "<TQ_L>"
     Public tq_r As String = "<TQ_R>"
     Public t_amb_veh As String = "<T_AMB_VEH>"

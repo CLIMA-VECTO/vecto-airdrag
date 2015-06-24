@@ -40,7 +40,7 @@ Public Class cJob
         b.fa_pe = 1
         b.fv_pe = 0
         b.beta_ame = 0
-        b.CdxA = 0
+        b.CdxAß = 0
         b.beta = 0
         b.delta_CdxA = 0
         b.CdxA0 = 0
@@ -122,7 +122,7 @@ Public Class cJob
                     'default': 0,
                     "units": "°",
                 },
-                "CdxA": {
+                "CdxAß": {
                     "type": "number", 
                     "description": "Average CdxA before yaw angle correction", 
                     'default': 0,
@@ -192,13 +192,13 @@ Public Class cJob
     ' Reset the Values to Standard
     Friend Sub ResetValue(Optional IsCalibration As Boolean = False)
         If IsCalibration Then
-            Job.fv_veh = 0
             Job.fa_pe = 1
-            Job.fv_pe = 0
             Job.beta_ame = 0
         End If
 
-        Job.CdxA = 0
+        Job.fv_veh = 0
+        Job.fv_pe = 0
+        Job.CdxAß = 0
         Job.beta = 0
         Job.delta_CdxA = 0
         Job.CdxA0 = 0
@@ -242,7 +242,7 @@ Public Class cJob
     Public fa_pe As Double
     Public fv_pe As Double
     Public beta_ame As Double
-    Public CdxA As Double
+    Public CdxAß As Double
     Public beta As Double
     Public delta_CdxA As Double
     Public CdxA0 As Double
@@ -259,7 +259,7 @@ Public Class cJob
         b.fa_pe = Math.Round(fa_pe, 3)
         b.fv_pe = Math.Round(fv_pe, 3)
         b.beta_ame = Math.Round(beta_ame, 2)
-        b.CdxA = Math.Round(CdxA, 5)
+        b.CdxAß = Math.Round(CdxAß, 5)
         b.beta = Math.Round(beta, 5)
         b.delta_CdxA = Math.Round(delta_CdxA, 5)
         b.CdxA0 = Math.Round(CdxA0, 5)
@@ -362,7 +362,7 @@ Public Class cJob
     End Property
     Public ReadOnly Property coasting_fpaths As String()
         Get
-            Return {low1_fpath, high_fpath, low2_fpath}
+            Return {high_fpath, low1_fpath, low2_fpath}
         End Get
     End Property
 

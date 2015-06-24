@@ -80,11 +80,11 @@ Partial Class F_Main
         Me.ButtonMSCC = New System.Windows.Forms.Button()
         Me.ButtonSelectMSCC = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.Label17 = New System.Windows.Forms.Label()
         Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label15 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.TextBoxRBetaMis = New System.Windows.Forms.TextBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.TextBoxRAirPos = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -99,6 +99,8 @@ Partial Class F_Main
         Me.TextBoxVeh = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TPMain = New System.Windows.Forms.TabPage()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.TPCriteria = New System.Windows.Forms.TabPage()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.Label26 = New System.Windows.Forms.Label()
@@ -131,6 +133,9 @@ Partial Class F_Main
         Me.TB_leng_crit = New System.Windows.Forms.TextBox()
         Me.Label79 = New System.Windows.Forms.Label()
         Me.GroupBox12 = New System.Windows.Forms.GroupBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.TB_delta_n_ec_HS = New System.Windows.Forms.TextBox()
+        Me.LB_delta_n_ec_HS = New System.Windows.Forms.Label()
         Me.Label74 = New System.Windows.Forms.Label()
         Me.TB_tq_sum_1s_delta_HS = New System.Windows.Forms.TextBox()
         Me.LB_tq_sum_1s_delta_HS = New System.Windows.Forms.Label()
@@ -150,6 +155,9 @@ Partial Class F_Main
         Me.LB_v_veh_avg_min_HS = New System.Windows.Forms.Label()
         Me.Label61 = New System.Windows.Forms.Label()
         Me.GroupBox11 = New System.Windows.Forms.GroupBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.TB_delta_n_ec_LS = New System.Windows.Forms.TextBox()
+        Me.LB_delta_n_ec_LS = New System.Windows.Forms.Label()
         Me.Label72 = New System.Windows.Forms.Label()
         Me.TB_tq_sum_float_delta_LS = New System.Windows.Forms.TextBox()
         Me.LB_tq_sum_float_delta_LS = New System.Windows.Forms.Label()
@@ -215,6 +223,7 @@ Partial Class F_Main
         Me.Label20 = New System.Windows.Forms.Label()
         Me.LRhoAirRef = New System.Windows.Forms.Label()
         Me.TB_rho_air_ref = New System.Windows.Forms.TextBox()
+        Me.ReleaseNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
@@ -229,6 +238,8 @@ Partial Class F_Main
         Me.TabPageErr.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TPMain.SuspendLayout()
+        Me.GroupBox4.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
         Me.TPCriteria.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
@@ -339,27 +350,28 @@ Partial Class F_Main
         'InfoToolStripMenuItem
         '
         Me.InfoToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout})
+        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ReleaseNotesToolStripMenuItem, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout})
+        Me.InfoToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.Help
         Me.InfoToolStripMenuItem.Name = "InfoToolStripMenuItem"
-        Me.InfoToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.InfoToolStripMenuItem.Size = New System.Drawing.Size(60, 20)
         Me.InfoToolStripMenuItem.Text = "Help"
         '
         'ToolStripMenuItemManu
         '
         Me.ToolStripMenuItemManu.Name = "ToolStripMenuItemManu"
-        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(140, 22)
+        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemManu.Text = "User Manual"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(137, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(149, 6)
         '
         'ToolStripMenuItemAbout
         '
         Me.ToolStripMenuItemAbout.Image = Global.CSE.My.Resources.Resources.Info
         Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
-        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(140, 22)
+        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemAbout.Text = "About CSE"
         '
         'BackgroundWorkerVECTO
@@ -812,53 +824,29 @@ Partial Class F_Main
         '
         'GroupBox3
         '
-        Me.GroupBox3.Controls.Add(Me.Label17)
         Me.GroupBox3.Controls.Add(Me.Label16)
-        Me.GroupBox3.Controls.Add(Me.Label15)
         Me.GroupBox3.Controls.Add(Me.Label9)
         Me.GroupBox3.Controls.Add(Me.TextBoxRBetaMis)
-        Me.GroupBox3.Controls.Add(Me.Label8)
-        Me.GroupBox3.Controls.Add(Me.TextBoxRAirPos)
-        Me.GroupBox3.Controls.Add(Me.Label7)
-        Me.GroupBox3.Controls.Add(Me.TextBoxRVeh)
-        Me.GroupBox3.Location = New System.Drawing.Point(231, 166)
+        Me.GroupBox3.Location = New System.Drawing.Point(6, 18)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(463, 46)
+        Me.GroupBox3.Size = New System.Drawing.Size(135, 46)
         Me.GroupBox3.TabIndex = 31
         Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "Results"
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(108, 16)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(16, 13)
-        Me.Label17.TabIndex = 35
-        Me.Label17.Text = "[-]"
+        Me.GroupBox3.Text = "From calibration test"
         '
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(422, 16)
+        Me.Label16.Location = New System.Drawing.Point(111, 19)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(17, 13)
         Me.Label16.TabIndex = 34
         Me.Label16.Text = "[°]"
         '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(267, 16)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(16, 13)
-        Me.Label15.TabIndex = 33
-        Me.Label15.Text = "[-]"
-        '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(317, 13)
+        Me.Label9.Location = New System.Drawing.Point(6, 16)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(44, 26)
         Me.Label9.TabIndex = 32
@@ -867,26 +855,44 @@ Partial Class F_Main
         'TextBoxRBetaMis
         '
         Me.TextBoxRBetaMis.Enabled = False
-        Me.TextBoxRBetaMis.Location = New System.Drawing.Point(367, 13)
+        Me.TextBoxRBetaMis.Location = New System.Drawing.Point(56, 16)
         Me.TextBoxRBetaMis.Name = "TextBoxRBetaMis"
         Me.TextBoxRBetaMis.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.TextBoxRBetaMis.Size = New System.Drawing.Size(55, 20)
         Me.TextBoxRBetaMis.TabIndex = 31
         Me.TextBoxRBetaMis.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(150, 19)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(16, 13)
+        Me.Label17.TabIndex = 35
+        Me.Label17.Text = "[-]"
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(382, 19)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(16, 13)
+        Me.Label15.TabIndex = 33
+        Me.Label15.Text = "[-]"
+        '
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(154, 13)
+        Me.Label8.Location = New System.Drawing.Point(192, 13)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(48, 26)
+        Me.Label8.Size = New System.Drawing.Size(119, 26)
         Me.Label8.TabIndex = 30
-        Me.Label8.Text = "v_air" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "pos error"
+        Me.Label8.Text = "              fv_pe" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(air speed position error)"
         '
         'TextBoxRAirPos
         '
         Me.TextBoxRAirPos.Enabled = False
-        Me.TextBoxRAirPos.Location = New System.Drawing.Point(208, 13)
+        Me.TextBoxRAirPos.Location = New System.Drawing.Point(317, 16)
         Me.TextBoxRAirPos.Name = "TextBoxRAirPos"
         Me.TextBoxRAirPos.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.TextBoxRAirPos.Size = New System.Drawing.Size(59, 20)
@@ -896,16 +902,16 @@ Partial Class F_Main
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(6, 16)
+        Me.Label7.Location = New System.Drawing.Point(6, 13)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(37, 13)
+        Me.Label7.Size = New System.Drawing.Size(79, 26)
         Me.Label7.TabIndex = 28
-        Me.Label7.Text = "v_veh"
+        Me.Label7.Text = "      fv_veh" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(vehicle speed)"
         '
         'TextBoxRVeh
         '
         Me.TextBoxRVeh.Enabled = False
-        Me.TextBoxRVeh.Location = New System.Drawing.Point(49, 13)
+        Me.TextBoxRVeh.Location = New System.Drawing.Point(91, 16)
         Me.TextBoxRVeh.Name = "TextBoxRVeh"
         Me.TextBoxRVeh.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.TextBoxRVeh.Size = New System.Drawing.Size(59, 20)
@@ -922,11 +928,11 @@ Partial Class F_Main
         Me.TabControlOutMsg.Controls.Add(Me.TabPageWar)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageErr)
         Me.TabControlOutMsg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabControlOutMsg.Location = New System.Drawing.Point(8, 510)
+        Me.TabControlOutMsg.Location = New System.Drawing.Point(8, 520)
         Me.TabControlOutMsg.Margin = New System.Windows.Forms.Padding(2)
         Me.TabControlOutMsg.Name = "TabControlOutMsg"
         Me.TabControlOutMsg.SelectedIndex = 0
-        Me.TabControlOutMsg.Size = New System.Drawing.Size(925, 187)
+        Me.TabControlOutMsg.Size = New System.Drawing.Size(925, 177)
         Me.TabControlOutMsg.TabIndex = 34
         '
         'TabPageMSG
@@ -937,7 +943,7 @@ Partial Class F_Main
         Me.TabPageMSG.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageMSG.Name = "TabPageMSG"
         Me.TabPageMSG.Padding = New System.Windows.Forms.Padding(2)
-        Me.TabPageMSG.Size = New System.Drawing.Size(917, 161)
+        Me.TabPageMSG.Size = New System.Drawing.Size(917, 151)
         Me.TabPageMSG.TabIndex = 0
         Me.TabPageMSG.Text = "Messages(0)"
         Me.TabPageMSG.UseVisualStyleBackColor = True
@@ -954,7 +960,7 @@ Partial Class F_Main
         Me.ListBoxMSG.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxMSG.Name = "ListBoxMSG"
         Me.ListBoxMSG.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
-        Me.ListBoxMSG.Size = New System.Drawing.Size(913, 160)
+        Me.ListBoxMSG.Size = New System.Drawing.Size(913, 147)
         Me.ListBoxMSG.TabIndex = 23
         '
         'TabPageWar
@@ -964,7 +970,7 @@ Partial Class F_Main
         Me.TabPageWar.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageWar.Name = "TabPageWar"
         Me.TabPageWar.Padding = New System.Windows.Forms.Padding(2)
-        Me.TabPageWar.Size = New System.Drawing.Size(917, 161)
+        Me.TabPageWar.Size = New System.Drawing.Size(917, 151)
         Me.TabPageWar.TabIndex = 1
         Me.TabPageWar.Text = "Warnings (0)"
         Me.TabPageWar.UseVisualStyleBackColor = True
@@ -981,7 +987,7 @@ Partial Class F_Main
         Me.ListBoxWar.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxWar.Name = "ListBoxWar"
         Me.ListBoxWar.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
-        Me.ListBoxWar.Size = New System.Drawing.Size(915, 160)
+        Me.ListBoxWar.Size = New System.Drawing.Size(915, 147)
         Me.ListBoxWar.TabIndex = 26
         '
         'TabPageErr
@@ -990,7 +996,7 @@ Partial Class F_Main
         Me.TabPageErr.Location = New System.Drawing.Point(4, 4)
         Me.TabPageErr.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageErr.Name = "TabPageErr"
-        Me.TabPageErr.Size = New System.Drawing.Size(917, 161)
+        Me.TabPageErr.Size = New System.Drawing.Size(917, 151)
         Me.TabPageErr.TabIndex = 2
         Me.TabPageErr.Text = "Errors (0)"
         Me.TabPageErr.UseVisualStyleBackColor = True
@@ -1007,7 +1013,7 @@ Partial Class F_Main
         Me.ListBoxErr.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxErr.Name = "ListBoxErr"
         Me.ListBoxErr.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
-        Me.ListBoxErr.Size = New System.Drawing.Size(913, 160)
+        Me.ListBoxErr.Size = New System.Drawing.Size(913, 147)
         Me.ListBoxErr.TabIndex = 27
         '
         'TextBoxVeh
@@ -1029,22 +1035,48 @@ Partial Class F_Main
         Me.TabControl1.Location = New System.Drawing.Point(8, 72)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(925, 433)
+        Me.TabControl1.Size = New System.Drawing.Size(925, 443)
         Me.TabControl1.TabIndex = 35
         '
         'TPMain
         '
-        Me.TPMain.Controls.Add(Me.GroupBox3)
+        Me.TPMain.Controls.Add(Me.GroupBox4)
         Me.TPMain.Controls.Add(Me.GroupBoxJob)
         Me.TPMain.Controls.Add(Me.GroupBox1)
         Me.TPMain.Controls.Add(Me.GroupBoxInput)
         Me.TPMain.Location = New System.Drawing.Point(4, 22)
         Me.TPMain.Name = "TPMain"
         Me.TPMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.TPMain.Size = New System.Drawing.Size(917, 407)
+        Me.TPMain.Size = New System.Drawing.Size(917, 417)
         Me.TPMain.TabIndex = 0
         Me.TPMain.Text = "Main"
         Me.TPMain.UseVisualStyleBackColor = True
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.GroupBox3)
+        Me.GroupBox4.Controls.Add(Me.GroupBox2)
+        Me.GroupBox4.Location = New System.Drawing.Point(179, 166)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(560, 70)
+        Me.GroupBox4.TabIndex = 35
+        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.Text = "Calibration results"
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.Label17)
+        Me.GroupBox2.Controls.Add(Me.Label8)
+        Me.GroupBox2.Controls.Add(Me.TextBoxRVeh)
+        Me.GroupBox2.Controls.Add(Me.Label15)
+        Me.GroupBox2.Controls.Add(Me.Label7)
+        Me.GroupBox2.Controls.Add(Me.TextBoxRAirPos)
+        Me.GroupBox2.Location = New System.Drawing.Point(147, 18)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(405, 46)
+        Me.GroupBox2.TabIndex = 34
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "From high speed test"
         '
         'TPCriteria
         '
@@ -1058,7 +1090,7 @@ Partial Class F_Main
         Me.TPCriteria.Location = New System.Drawing.Point(4, 22)
         Me.TPCriteria.Name = "TPCriteria"
         Me.TPCriteria.Padding = New System.Windows.Forms.Padding(3)
-        Me.TPCriteria.Size = New System.Drawing.Size(917, 407)
+        Me.TPCriteria.Size = New System.Drawing.Size(917, 417)
         Me.TPCriteria.TabIndex = 1
         Me.TPCriteria.Text = "Criteria"
         Me.TPCriteria.UseVisualStyleBackColor = True
@@ -1256,7 +1288,7 @@ Partial Class F_Main
         Me.GroupBox9.Controls.Add(Me.GroupBox13)
         Me.GroupBox9.Location = New System.Drawing.Point(456, 6)
         Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(455, 397)
+        Me.GroupBox9.Size = New System.Drawing.Size(455, 405)
         Me.GroupBox9.TabIndex = 44
         Me.GroupBox9.TabStop = False
         Me.GroupBox9.Text = "Dataset validity criteria"
@@ -1328,7 +1360,7 @@ Partial Class F_Main
         Me.GroupBox15.Controls.Add(Me.GroupBox11)
         Me.GroupBox15.Location = New System.Drawing.Point(6, 152)
         Me.GroupBox15.Name = "GroupBox15"
-        Me.GroupBox15.Size = New System.Drawing.Size(442, 233)
+        Me.GroupBox15.Size = New System.Drawing.Size(442, 249)
         Me.GroupBox15.TabIndex = 81
         Me.GroupBox15.TabStop = False
         Me.GroupBox15.Text = "Low and high speed test"
@@ -1361,6 +1393,9 @@ Partial Class F_Main
         '
         'GroupBox12
         '
+        Me.GroupBox12.Controls.Add(Me.Label5)
+        Me.GroupBox12.Controls.Add(Me.TB_delta_n_ec_HS)
+        Me.GroupBox12.Controls.Add(Me.LB_delta_n_ec_HS)
         Me.GroupBox12.Controls.Add(Me.Label74)
         Me.GroupBox12.Controls.Add(Me.TB_tq_sum_1s_delta_HS)
         Me.GroupBox12.Controls.Add(Me.LB_tq_sum_1s_delta_HS)
@@ -1381,10 +1416,36 @@ Partial Class F_Main
         Me.GroupBox12.Controls.Add(Me.Label61)
         Me.GroupBox12.Location = New System.Drawing.Point(223, 45)
         Me.GroupBox12.Name = "GroupBox12"
-        Me.GroupBox12.Size = New System.Drawing.Size(211, 176)
+        Me.GroupBox12.Size = New System.Drawing.Size(211, 200)
         Me.GroupBox12.TabIndex = 78
         Me.GroupBox12.TabStop = False
         Me.GroupBox12.Text = "High speed test"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(173, 177)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(16, 13)
+        Me.Label5.TabIndex = 97
+        Me.Label5.Text = "[-]"
+        '
+        'TB_delta_n_ec_HS
+        '
+        Me.TB_delta_n_ec_HS.Location = New System.Drawing.Point(128, 174)
+        Me.TB_delta_n_ec_HS.Name = "TB_delta_n_ec_HS"
+        Me.TB_delta_n_ec_HS.Size = New System.Drawing.Size(45, 20)
+        Me.TB_delta_n_ec_HS.TabIndex = 96
+        Me.TB_delta_n_ec_HS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'LB_delta_n_ec_HS
+        '
+        Me.LB_delta_n_ec_HS.AutoSize = True
+        Me.LB_delta_n_ec_HS.Location = New System.Drawing.Point(6, 177)
+        Me.LB_delta_n_ec_HS.Name = "LB_delta_n_ec_HS"
+        Me.LB_delta_n_ec_HS.Size = New System.Drawing.Size(87, 13)
+        Me.LB_delta_n_ec_HS.TabIndex = 95
+        Me.LB_delta_n_ec_HS.Text = "delta_n_eng_HS"
         '
         'Label74
         '
@@ -1544,6 +1605,9 @@ Partial Class F_Main
         '
         'GroupBox11
         '
+        Me.GroupBox11.Controls.Add(Me.Label3)
+        Me.GroupBox11.Controls.Add(Me.TB_delta_n_ec_LS)
+        Me.GroupBox11.Controls.Add(Me.LB_delta_n_ec_LS)
         Me.GroupBox11.Controls.Add(Me.Label72)
         Me.GroupBox11.Controls.Add(Me.TB_tq_sum_float_delta_LS)
         Me.GroupBox11.Controls.Add(Me.LB_tq_sum_float_delta_LS)
@@ -1564,10 +1628,36 @@ Partial Class F_Main
         Me.GroupBox11.Controls.Add(Me.TB_v_veh_avg_min_LS)
         Me.GroupBox11.Location = New System.Drawing.Point(6, 45)
         Me.GroupBox11.Name = "GroupBox11"
-        Me.GroupBox11.Size = New System.Drawing.Size(211, 178)
+        Me.GroupBox11.Size = New System.Drawing.Size(211, 200)
         Me.GroupBox11.TabIndex = 77
         Me.GroupBox11.TabStop = False
         Me.GroupBox11.Text = "Low speed test"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(173, 179)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(16, 13)
+        Me.Label3.TabIndex = 85
+        Me.Label3.Text = "[-]"
+        '
+        'TB_delta_n_ec_LS
+        '
+        Me.TB_delta_n_ec_LS.Location = New System.Drawing.Point(128, 176)
+        Me.TB_delta_n_ec_LS.Name = "TB_delta_n_ec_LS"
+        Me.TB_delta_n_ec_LS.Size = New System.Drawing.Size(45, 20)
+        Me.TB_delta_n_ec_LS.TabIndex = 84
+        Me.TB_delta_n_ec_LS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'LB_delta_n_ec_LS
+        '
+        Me.LB_delta_n_ec_LS.AutoSize = True
+        Me.LB_delta_n_ec_LS.Location = New System.Drawing.Point(6, 179)
+        Me.LB_delta_n_ec_LS.Name = "LB_delta_n_ec_LS"
+        Me.LB_delta_n_ec_LS.Size = New System.Drawing.Size(79, 13)
+        Me.LB_delta_n_ec_LS.TabIndex = 83
+        Me.LB_delta_n_ec_LS.Text = "delta_n_ec_LS"
         '
         'Label72
         '
@@ -1826,7 +1916,7 @@ Partial Class F_Main
         Me.TBInfoCrt.Location = New System.Drawing.Point(37, 347)
         Me.TBInfoCrt.Multiline = True
         Me.TBInfoCrt.Name = "TBInfoCrt"
-        Me.TBInfoCrt.Size = New System.Drawing.Size(413, 56)
+        Me.TBInfoCrt.Size = New System.Drawing.Size(413, 64)
         Me.TBInfoCrt.TabIndex = 83
         '
         'PBInfoIconCrt
@@ -2178,6 +2268,12 @@ Partial Class F_Main
         Me.TB_rho_air_ref.TabIndex = 1
         Me.TB_rho_air_ref.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'ReleaseNotesToolStripMenuItem
+        '
+        Me.ReleaseNotesToolStripMenuItem.Name = "ReleaseNotesToolStripMenuItem"
+        Me.ReleaseNotesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ReleaseNotesToolStripMenuItem.Text = "Release Notes"
+        '
         'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2216,6 +2312,9 @@ Partial Class F_Main
         Me.TabPageErr.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.TPMain.ResumeLayout(False)
+        Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
         Me.TPCriteria.ResumeLayout(False)
         Me.TPCriteria.PerformLayout()
         Me.GroupBox7.ResumeLayout(False)
@@ -2433,5 +2532,14 @@ Partial Class F_Main
     Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents CreateActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents TB_delta_n_ec_HS As System.Windows.Forms.TextBox
+    Friend WithEvents LB_delta_n_ec_HS As System.Windows.Forms.Label
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents TB_delta_n_ec_LS As System.Windows.Forms.TextBox
+    Friend WithEvents LB_delta_n_ec_LS As System.Windows.Forms.Label
+    Friend WithEvents ReleaseNotesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

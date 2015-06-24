@@ -233,7 +233,7 @@ Module output
             FileOut.WriteLine("# fv_pe:", Job.fv_pe, "[-] calibration factor for air speed (position error)")
             FileOut.WriteLine("# fa_pe:", Job.fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
             FileOut.WriteLine("# beta_ame:", Job.beta_ame, "[°] calibration factor for beta (misalignment)")
-            FileOut.WriteLine("# CdxA:", Job.CdxA, "[m²] average CdxA before yaw angle correction")
+            FileOut.WriteLine("# CdxA(ß):", Job.CdxAß, "[m²] average CdxA before yaw angle correction")
             FileOut.WriteLine("# beta:", Job.beta, "[°] average absolute yaw angle from high speed tests")
             FileOut.WriteLine("# delta_CdxA:", Job.delta_CdxA, "[m²] correction of CdxA for yaw angle")
             FileOut.WriteLine("# CdxA(0):", Job.CdxA0, "[m²] average CdxA for zero yaw angle")
@@ -296,7 +296,12 @@ Module output
         AddToErg(tComp.v_veh_CAN, fCompName(tComp.v_veh_CAN), fCompUnit(tComp.v_veh_CAN), "InputData")
         AddToErg(tComp.vair_ic, fCompName(tComp.vair_ic), fCompUnit(tComp.vair_ic), "InputData")
         AddToErg(tComp.beta_ic, fCompName(tComp.beta_ic), fCompUnit(tComp.beta_ic), "InputData")
-        AddToErg(tComp.n_eng, fCompName(tComp.n_eng), fCompUnit(tComp.n_eng), "InputData")
+        If MT_AMT Then
+            AddToErg(tComp.n_eng, fCompName(tComp.n_eng), fCompUnit(tComp.n_eng), "InputData")
+        ElseIf AT Then
+            If InputData(tComp.n_eng).Count > 0 Then AddToErg(tComp.n_eng, fCompName(tComp.n_eng), fCompUnit(tComp.n_eng), "InputData")
+            AddToErg(tComp.n_card, fCompName(tComp.n_card), fCompUnit(tComp.n_card), "InputData")
+        End If
         AddToErg(tComp.tq_l, fCompName(tComp.tq_l), fCompUnit(tComp.tq_l), "InputData")
         AddToErg(tComp.tq_r, fCompName(tComp.tq_r), fCompUnit(tComp.tq_r), "InputData")
         AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), fCompUnit(tComp.t_amb_veh), "InputData")
@@ -334,7 +339,8 @@ Module output
 
         If Not calibration Then
             AddToErg(tCompCali.omega_wh, fCompName(tCompCali.omega_wh), fCompUnit(tCompCali.omega_wh), "CalcData")
-            AddToErg(tCompCali.omega_p_wh, fCompName(tCompCali.omega_p_wh), fCompUnit(tCompCali.omega_p_wh), "CalcData")
+            AddToErg(tCompCali.omega_wh_acc, fCompName(tCompCali.omega_wh_acc), fCompUnit(tCompCali.omega_wh_acc), "CalcData")
+            AddToErg(tCompCali.omega_p_wh_acc, fCompName(tCompCali.omega_p_wh_acc), fCompUnit(tCompCali.omega_p_wh_acc), "CalcData")
             AddToErg(tCompCali.tq_sum, fCompName(tCompCali.tq_sum), fCompUnit(tCompCali.tq_sum), "CalcData")
             AddToErg(tCompCali.tq_sum_1s, fCompName(tCompCali.tq_sum_1s), fCompUnit(tCompCali.tq_sum_1s), "CalcData")
             AddToErg(tCompCali.tq_sum_float, fCompName(tCompCali.tq_sum_float), fCompUnit(tCompCali.tq_sum_float), "CalcData")
@@ -377,6 +383,13 @@ Module output
         AddToErg(tCompErg.valid, fCompName(tCompErg.valid), fCompUnit(tCompErg.valid), "ErgValues")
         AddToErg(tCompErg.used, fCompName(tCompErg.used), fCompUnit(tCompErg.used), "ErgValues")
 
+        If calibration Then
+            AddToErg(tCompErg.val_User, fCompName(tCompErg.val_User), fCompUnit(tCompErg.val_User), "ErgValues")
+            AddToErg(tCompErg.val_vWind, fCompName(tCompErg.val_vWind), fCompUnit(tCompErg.val_vWind), "ErgValues")
+            AddToErg(tCompErg.val_vWind_1s, fCompName(tCompErg.val_vWind_1s), fCompUnit(tCompErg.val_vWind_1s), "ErgValues")
+            AddToErg(tCompErg.val_beta, fCompName(tCompErg.val_beta), fCompUnit(tCompErg.val_beta), "ErgValues")
+        End If
+
         If Not calibration Then
             AddToErg(tCompErg.val_User, fCompName(tCompErg.val_User), fCompUnit(tCompErg.val_User), "ErgValues")
             AddToErg(tCompErg.val_vVeh_avg, fCompName(tCompErg.val_vVeh_avg), fCompUnit(tCompErg.val_vVeh_avg), "ErgValues")
@@ -387,6 +400,7 @@ Module output
             AddToErg(tCompErg.val_tq_f, fCompName(tCompErg.val_tq_f), fCompUnit(tCompErg.val_tq_f), "ErgValues")
             AddToErg(tCompErg.val_tq_1s, fCompName(tCompErg.val_tq_1s), fCompUnit(tCompErg.val_tq_1s), "ErgValues")
             AddToErg(tCompErg.val_beta, fCompName(tCompErg.val_beta), fCompUnit(tCompErg.val_beta), "ErgValues")
+            AddToErg(tCompErg.val_n_eng, fCompName(tCompErg.val_n_eng), fCompUnit(tCompErg.val_n_eng), "ErgValues")
             AddToErg(tCompErg.val_dist, fCompName(tCompErg.val_dist), fCompUnit(tCompErg.val_dist), "ErgValues")
         End If
 
@@ -399,9 +413,15 @@ Module output
         If Not calibration Then
             AddToErg(tCompErg.beta_abs, fCompName(tCompErg.beta_abs), fCompUnit(tCompErg.beta_abs), "ErgValues")
             AddToErg(tCompErg.v_air_sq, fCompName(tCompErg.v_air_sq), fCompUnit(tCompErg.v_air_sq), "ErgValues")
-            AddToErg(tCompErg.n_eng, fCompName(tCompErg.n_eng), fCompUnit(tCompErg.n_eng), "ErgValues")
+            AddToErg(tCompErg.n_ec, fCompName(tCompErg.n_ec), fCompUnit(tCompErg.n_ec), "ErgValues")
+            AddToErg(tCompErg.n_ec_1s_max, fCompName(tCompErg.n_ec_1s_max), fCompUnit(tCompErg.n_ec_1s_max), "ErgValues")
+            AddToErg(tCompErg.n_ec_1s_min, fCompName(tCompErg.n_ec_1s_min), fCompUnit(tCompErg.n_ec_1s_min), "ErgValues")
+            AddToErg(tCompErg.n_ec_float_max, fCompName(tCompErg.n_ec_float_max), fCompUnit(tCompErg.n_ec_float_max), "ErgValues")
+            AddToErg(tCompErg.n_ec_float_min, fCompName(tCompErg.n_ec_float_min), fCompUnit(tCompErg.n_ec_float_min), "ErgValues")
+            AddToErg(tCompErg.r_dyn, fCompName(tCompErg.r_dyn), fCompUnit(tCompErg.r_dyn), "ErgValues")
             AddToErg(tCompErg.omega_wh, fCompName(tCompErg.omega_wh), fCompUnit(tCompErg.omega_wh), "ErgValues")
-            AddToErg(tCompErg.omega_p_wh, fCompName(tCompErg.omega_p_wh), fCompUnit(tCompErg.omega_p_wh), "ErgValues")
+            AddToErg(tCompErg.omega_wh_acc, fCompName(tCompErg.omega_wh_acc), fCompUnit(tCompErg.omega_wh_acc), "ErgValues")
+            AddToErg(tCompErg.omega_p_wh_acc, fCompName(tCompErg.omega_p_wh_acc), fCompUnit(tCompErg.omega_p_wh_acc), "ErgValues")
             AddToErg(tCompErg.tq_sum, fCompName(tCompErg.tq_sum), fCompUnit(tCompErg.tq_sum), "ErgValues")
             AddToErg(tCompErg.tq_sum_1s, fCompName(tCompErg.tq_sum_1s), fCompUnit(tCompErg.tq_sum_1s), "ErgValues")
             AddToErg(tCompErg.tq_sum_1s_max, fCompName(tCompErg.tq_sum_1s_max), fCompUnit(tCompErg.tq_sum_1s_max), "ErgValues")
@@ -418,7 +438,7 @@ Module output
             AddToErg(tCompErg.v_veh_1s, fCompName(tCompErg.v_veh_1s), fCompUnit(tCompErg.v_veh_1s), "ErgValues")
             AddToErg(tCompErg.v_veh_1s_max, fCompName(tCompErg.v_veh_1s_max), fCompUnit(tCompErg.v_veh_1s_max), "ErgValues")
             AddToErg(tCompErg.v_veh_1s_min, fCompName(tCompErg.v_veh_1s_min), fCompUnit(tCompErg.v_veh_1s_min), "ErgValues")
-            AddToErg(tCompErg.v_veh_avg, fCompName(tCompErg.v_veh_avg), fCompUnit(tCompErg.v_veh_avg), "ErgValues")
+            AddToErg(tCompErg.v_veh_acc, fCompName(tCompErg.v_veh_acc), fCompUnit(tCompErg.v_veh_acc), "ErgValues")
             AddToErg(tCompErg.a_veh_avg, fCompName(tCompErg.a_veh_avg), fCompUnit(tCompErg.a_veh_avg), "ErgValues")
             AddToErg(tCompErg.v_veh_float, fCompName(tCompErg.v_veh_float), fCompUnit(tCompErg.v_veh_float), "ErgValues")
             AddToErg(tCompErg.v_veh_float_max, fCompName(tCompErg.v_veh_float_max), fCompUnit(tCompErg.v_veh_float_max), "ErgValues")
@@ -431,11 +451,7 @@ Module output
             AddToErg(tCompErg.rho_air, fCompName(tCompErg.rho_air), fCompUnit(tCompErg.rho_air), "ErgValues")
             AddToErg(tCompErg.t_tire, fCompName(tCompErg.t_tire), fCompUnit(tCompErg.t_tire), "ErgValues")
             AddToErg(tCompErg.p_tire, fCompName(tCompErg.p_tire), fCompUnit(tCompErg.p_tire), "ErgValues")
-            AddToErg(tCompErg.F0_ref_singleDS, fCompName(tCompErg.F0_ref_singleDS), fCompUnit(tCompErg.F0_ref_singleDS), "ErgValues")
-            AddToErg(tCompErg.F2_ref_singleDS, fCompName(tCompErg.F2_ref_singleDS), fCompUnit(tCompErg.F2_ref_singleDS), "ErgValues")
-            AddToErg(tCompErg.F0_singleDS, fCompName(tCompErg.F0_singleDS), fCompUnit(tCompErg.F0_singleDS), "ErgValues")
-            AddToErg(tCompErg.CdxA_singleDS, fCompName(tCompErg.CdxA_singleDS), fCompUnit(tCompErg.CdxA_singleDS), "ErgValues")
-            AddToErg(tCompErg.RRC_singleDS, fCompName(tCompErg.RRC_singleDS), fCompUnit(tCompErg.RRC_singleDS), "ErgValues")
+            AddToErg(tCompErg.CdxAß_singleDS, fCompName(tCompErg.CdxAß_singleDS), fCompUnit(tCompErg.CdxAß_singleDS), "ErgValues")
         End If
 
         ' Undefined input data
@@ -455,28 +471,24 @@ Module output
         ' Result data
         AddToErg(tCompErgReg.SecID, fCompName(tCompErgReg.SecID), fCompUnit(tCompErgReg.SecID), "ErgValuesReg")
         AddToErg(tCompErgReg.DirID, fCompName(tCompErgReg.DirID), fCompUnit(tCompErgReg.DirID), "ErgValuesReg")
-        AddToErg(tCompErgReg.F2_ref, fCompName(tCompErgReg.F2_ref), fCompUnit(tCompErgReg.F2_ref), "ErgValuesReg")
-        AddToErg(tCompErgReg.F2_LS1_ref, fCompName(tCompErgReg.F2_LS1_ref), fCompUnit(tCompErgReg.F2_LS1_ref), "ErgValuesReg")
-        AddToErg(tCompErgReg.F2_LS2_ref, fCompName(tCompErgReg.F2_LS2_ref), fCompUnit(tCompErgReg.F2_LS2_ref), "ErgValuesReg")
-        AddToErg(tCompErgReg.F0_ref, fCompName(tCompErgReg.F0_ref), fCompUnit(tCompErgReg.F0_ref), "ErgValuesReg")
-        AddToErg(tCompErgReg.F0, fCompName(tCompErgReg.F0), fCompUnit(tCompErgReg.F0), "ErgValuesReg")
-        AddToErg(tCompErgReg.F0_LS1_ref, fCompName(tCompErgReg.F0_LS1_ref), fCompUnit(tCompErgReg.F0_LS1_ref), "ErgValuesReg")
-        AddToErg(tCompErgReg.F0_LS1, fCompName(tCompErgReg.F0_LS1), fCompUnit(tCompErgReg.F0_LS1), "ErgValuesReg")
-        AddToErg(tCompErgReg.F0_LS2_ref, fCompName(tCompErgReg.F0_LS2_ref), fCompUnit(tCompErgReg.F0_LS2_ref), "ErgValuesReg")
-        AddToErg(tCompErgReg.F0_LS2, fCompName(tCompErgReg.F0_LS2), fCompUnit(tCompErgReg.F0_LS2), "ErgValuesReg")
-        AddToErg(tCompErgReg.CdxA, fCompName(tCompErgReg.CdxA), fCompUnit(tCompErgReg.CdxA), "ErgValuesReg")
-        AddToErg(tCompErgReg.CdxA0, fCompName(tCompErgReg.CdxA0), fCompUnit(tCompErgReg.CdxA0), "ErgValuesReg")
-        AddToErg(tCompErgReg.delta_CdxA, fCompName(tCompErgReg.delta_CdxA), fCompUnit(tCompErgReg.delta_CdxA), "ErgValuesReg")
-        AddToErg(tCompErgReg.beta_abs_HS, fCompName(tCompErgReg.beta_abs_HS), fCompUnit(tCompErgReg.beta_abs_HS), "ErgValuesReg")
-        AddToErg(tCompErgReg.rho_air_LS, fCompName(tCompErgReg.rho_air_LS), fCompUnit(tCompErgReg.rho_air_LS), "ErgValuesReg")
-        AddToErg(tCompErgReg.RRC, fCompName(tCompErgReg.RRC), fCompUnit(tCompErgReg.RRC), "ErgValuesReg")
-        AddToErg(tCompErgReg.RRC_LS1, fCompName(tCompErgReg.RRC_LS1), fCompUnit(tCompErgReg.RRC_LS1), "ErgValuesReg")
-        AddToErg(tCompErgReg.RRC_LS2, fCompName(tCompErgReg.RRC_LS2), fCompUnit(tCompErgReg.RRC_LS2), "ErgValuesReg")
-        AddToErg(tCompErgReg.RRC_valid, fCompName(tCompErgReg.RRC_valid), fCompUnit(tCompErgReg.RRC_valid), "ErgValuesReg")
-        AddToErg(tCompErgReg.t_tire_LS_min, fCompName(tCompErgReg.t_tire_LS_min), fCompUnit(tCompErgReg.t_tire_LS_min), "ErgValuesReg")
-        AddToErg(tCompErgReg.t_tire_LS_max, fCompName(tCompErgReg.t_tire_LS_max), fCompUnit(tCompErgReg.t_tire_LS_max), "ErgValuesReg")
-        AddToErg(tCompErgReg.t_tire_HS_min, fCompName(tCompErgReg.t_tire_HS_min), fCompUnit(tCompErgReg.t_tire_HS_min), "ErgValuesReg")
-        AddToErg(tCompErgReg.t_tire_HS_max, fCompName(tCompErgReg.t_tire_HS_max), fCompUnit(tCompErgReg.t_tire_HS_max), "ErgValuesReg")
+        AddToErg(tCompErgReg.F0_singleMS, fCompName(tCompErgReg.F0_singleMS), fCompUnit(tCompErgReg.F0_singleMS), "ErgValuesReg")
+        AddToErg(tCompErgReg.F0_singleMS_LS1, fCompName(tCompErgReg.F0_singleMS_LS1), fCompUnit(tCompErgReg.F0_singleMS_LS1), "ErgValuesReg")
+        AddToErg(tCompErgReg.F0_singleMS_LS2, fCompName(tCompErgReg.F0_singleMS_LS2), fCompUnit(tCompErgReg.F0_singleMS_LS2), "ErgValuesReg")
+        AddToErg(tCompErgReg.CdxAß_ave_singleMS, fCompName(tCompErgReg.CdxAß_ave_singleMS), fCompUnit(tCompErgReg.CdxAß_ave_singleMS), "ErgValuesReg")
+        AddToErg(tCompErgReg.CdxA0_singleMS, fCompName(tCompErgReg.CdxA0_singleMS), fCompUnit(tCompErgReg.CdxA0_singleMS), "ErgValuesReg")
+        AddToErg(tCompErgReg.delta_CdxA_singleMS, fCompName(tCompErgReg.delta_CdxA_singleMS), fCompUnit(tCompErgReg.delta_CdxA_singleMS), "ErgValuesReg")
+        AddToErg(tCompErgReg.beta_ave_singleMS, fCompName(tCompErgReg.beta_ave_singleMS), fCompUnit(tCompErgReg.beta_ave_singleMS), "ErgValuesReg")
+        AddToErg(tCompErgReg.RRC_singleMS, fCompName(tCompErgReg.RRC_singleMS), fCompUnit(tCompErgReg.RRC_singleMS), "ErgValuesReg")
+        AddToErg(tCompErgReg.RRC_singleMS_LS1, fCompName(tCompErgReg.RRC_singleMS_LS1), fCompUnit(tCompErgReg.RRC_singleMS_LS1), "ErgValuesReg")
+        AddToErg(tCompErgReg.RRC_singleMS_LS2, fCompName(tCompErgReg.RRC_singleMS_LS2), fCompUnit(tCompErgReg.RRC_singleMS_LS2), "ErgValuesReg")
+        AddToErg(tCompErgReg.valid_RRC, fCompName(tCompErgReg.valid_RRC), fCompUnit(tCompErgReg.valid_RRC), "ErgValuesReg")
+        AddToErg(tCompErgReg.t_tire_ave_LS_min, fCompName(tCompErgReg.t_tire_ave_LS_min), fCompUnit(tCompErgReg.t_tire_ave_LS_min), "ErgValuesReg")
+        AddToErg(tCompErgReg.t_tire_ave_LS_max, fCompName(tCompErgReg.t_tire_ave_LS_max), fCompUnit(tCompErgReg.t_tire_ave_LS_max), "ErgValuesReg")
+        AddToErg(tCompErgReg.t_tire_ave_HS_min, fCompName(tCompErgReg.t_tire_ave_HS_min), fCompUnit(tCompErgReg.t_tire_ave_HS_min), "ErgValuesReg")
+        AddToErg(tCompErgReg.t_tire_ave_HS_max, fCompName(tCompErgReg.t_tire_ave_HS_max), fCompUnit(tCompErgReg.t_tire_ave_HS_max), "ErgValuesReg")
+        AddToErg(tCompErgReg.F2_singleMS, fCompName(tCompErgReg.F2_singleMS), fCompUnit(tCompErgReg.F2_singleMS), "ErgValuesReg")
+        AddToErg(tCompErgReg.F2_singleMS_LS1, fCompName(tCompErgReg.F2_singleMS_LS1), fCompUnit(tCompErgReg.F2_singleMS_LS1), "ErgValuesReg")
+        AddToErg(tCompErgReg.F2_singleMS_LS2, fCompName(tCompErgReg.F2_singleMS_LS2), fCompUnit(tCompErgReg.F2_singleMS_LS2), "ErgValuesReg")
     End Sub
 
     ' Generate the output sequence for input data

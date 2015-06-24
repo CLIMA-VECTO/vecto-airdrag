@@ -239,12 +239,10 @@ Module utils
         fWriteLog(2, logFileLevel, text, ex)
 
         '' Print only filtered msgs in log-window
-        ''
         If logLevel >= Prefs.logLevel Then
             Dim wintext = AnzeigeMessage(logLevel) & text
             If BWorker IsNot Nothing AndAlso BWorker.IsBusy Then
                 '' If in Worker-thread, update GUI through a ProgressChanged event
-                ''
                 Dim WorkerMsg As New cLogMsg(logFileLevel, asMsgBox, wintext, ex, tabLabel)
                 BWorker.ReportProgress(0, WorkerMsg)
             Else
@@ -253,7 +251,6 @@ Module utils
         End If
 
         '' Output as an messagebox (if requested)
-        ''
         If asMsgBox Then
             ' Output in a MsgBox
             If RestartN Then
@@ -273,6 +270,7 @@ Module utils
         ' Established the text wit the symbol from the style
         Dim printEx = False
         Dim lbox As ListBox
+        Dim Page As TabPage
 
         Dim mtext = text
         If (ex IsNot Nothing) Then
@@ -281,21 +279,22 @@ Module utils
         End If
 
         ' Always write to log-msg tab.
-        ''
         lbox = F_Main.ListBoxMSG
+        Page = F_Main.TabPageMSG
         lbox.Items.Add(mtext)
-        F_Main.TabPageMSG.Text = format("Messages({0})", lbox.Items.Count)
+        Page.Text = format("Messages({0})", lbox.Items.Count)
         ' Set the Scrollbars in the Listboxes at the end
         lbox.TopIndex = lbox.Items.Count - 1
 
         ''Write to other Log-windows.
-        ''
         Dim label As String
         If logFileLevel = 2 Then        ' Warning
             lbox = F_Main.ListBoxWar
+            Page = F_Main.TabPageWar
             label = "Warnings"
         ElseIf logFileLevel = 3 Then    ' Error
             lbox = F_Main.ListBoxErr
+            Page = F_Main.TabPageErr
             label = "Errors"
         Else
             Return
@@ -307,9 +306,14 @@ Module utils
         End If
 
         lbox.TopIndex = lbox.Items.Count - 1
-        lbox.Text = format("{0}({1})", label, lbox.Items.Count)
+        Page.Text = format("{0}({1})", label, lbox.Items.Count)
     End Sub
 
+    ' Update the Resultboxes on the GUI
+    Public Sub updateResultBoxes()
+        F_Main.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3).ToString
+        F_Main.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3).ToString
+    End Sub
 
     ' Definition for the Backgroundworker
     Class cLogMsg

@@ -176,7 +176,7 @@ Public Module input
     End Sub
 
     ' Read the data file
-    Public Sub ReadDataFile(ByVal Datafile As String, ByVal MSCX As cMSC)
+    Public Sub ReadDataFile(ByVal Datafile As String, ByVal MSCX As cMSC, ByVal vehicleX As cVehicle)
         ' Declarations
         Using FileInMeasure As New cFile_V3
             Dim Line(), txt As String
@@ -221,6 +221,7 @@ Public Module input
             MeasCheck.Add(tComp.v_veh_CAN, False)
             MeasCheck.Add(tComp.vair_ic, False)
             MeasCheck.Add(tComp.beta_ic, False)
+            MeasCheck.Add(tComp.n_card, False)
             MeasCheck.Add(tComp.n_eng, False)
             MeasCheck.Add(tComp.tq_l, False)
             MeasCheck.Add(tComp.tq_r, False)
@@ -280,6 +281,27 @@ Public Module input
                             OptPar(2) = False
                         Case tComp.user_valid
                             valid_set = True
+                        Case tComp.n_card, tComp.n_eng
+                            If vehicleX.IsAT Then
+                                If MeasCheck(tComp.n_card) = False Then
+                                    If MeasCheck(tComp.n_eng) = False Then
+                                        Throw New Exception("Missing signal for " & fCompName(tComp.n_eng) & " or " & fCompName(tComp.n_card))
+                                    Else
+                                        MT_AMT = True
+                                        AT = False
+                                    End If
+                                Else
+                                    AT = True
+                                    MT_AMT = False
+                                End If
+                            End If
+                            If vehicleX.IsMT Then
+                                MT_AMT = True
+                                AT = False
+                                If MeasCheck(tComp.n_eng) = False Then
+                                    Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
+                                End If
+                            End If
                         Case Else
                             Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
                     End Select
@@ -299,12 +321,6 @@ Public Module input
                             If tDim >= 1 Then
                                 If Math.Abs((InputData(sKV.Key)(tDim) - InputData(sKV.Key)(tDim - 1)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
                                     JumpPoint.Add(tDim)
-                                    'If ErrDat Then
-                                    '    Throw New Exception("The input data is not recorded at " & HzIn & "Hz at line: " & JumpPoint & " and " & tDim)
-                                    'Else
-                                    '    ErrDat = True
-                                    '    JumpPoint.Add(tDim)
-                                    'End If
                                 End If
                             End If
                         ElseIf sKV.Key = tComp.lati Then
@@ -367,7 +383,7 @@ Public Module input
                     Next
                 Loop
             Catch ex As Exception
-                Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tdim + 1, ex.Message), ex)
+                Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tDim + 1, ex.Message), ex)
             End Try
 
 

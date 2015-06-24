@@ -1,6 +1,28 @@
 VECTO-CSE: Changes
 ===================
-#### 2014-11-13: v2.0.1-beta5 ####
+#### 2015-06-24: v2.0.2-beta5 ####
+Mostly TUG improvements:
+
+  * FIX Job-save missing criteria (hack)
+  * Update of calculation of the CdxA value from measured drag forces
+  * Update GenShape File
+  * Update of calibration of vehicle speed and anemometer speed (high speed test instead of "claibration test")
+  * new criteria delta_n_eng for LS/HS included
+  * Option in VECTO-CSE to read in cardan speed instead of engine speed and gear ratios for HS and LS
+  --> Update of the vehicle file
+  * Update calculation with cardan speed: Calculation only if engine speed is not given an automated transmission is used
+  * Program user friendly updates
+  * Update F_acc calculation
+  * Update r_dyn calculation for each test (HS, LS1, LS2)
+  * Update DemoData
+  * Update user manual and release notes
+  * Output folder will be now created automatically if it´s not existing without questioning
+  * Welcome form added for first application start
+  * Correction of welcome window
+  * Add the Excel-makro to generate the input data into the DemoData files
+  * New Version number.
+  
+#### 2015-05-21: v2.0.1-beta5 ####
 Mostly TUG improvements:
 
   * Handling of time steps where coordinates are constant over a certain time period (GPS accuracy issue) set gradient to 0 to avoid division by zero 

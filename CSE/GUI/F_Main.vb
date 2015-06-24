@@ -15,6 +15,7 @@ Imports Newtonsoft.Json.Linq
 Public Class F_Main
     ' Declarations
     Private ToolstripSave As Boolean = False
+    Private firstrun As Boolean = False
     Private Formname As String = "Job configurations"
 
     ' Load the GUI
@@ -42,7 +43,6 @@ Public Class F_Main
         AppFormStarted = True
 
         ' Load the config file
-        '
         Try
             Prefs = New cPreferences(PrefsPath)
         Catch ex As Exception
@@ -50,6 +50,7 @@ Public Class F_Main
                     "Failed loading Preferences({0}) due to: {1}\n\iThis is normal the first time you launch the application.", _
                     PrefsPath, ex.Message), ex)
             configL = False
+            firstrun = True
         End Try
 
         ' Load the generic shape curve file
@@ -91,6 +92,9 @@ Public Class F_Main
 
     ' Show the GUI and start direct if neccessary
     Private Sub F_Main_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        ' Declaration
+        Dim fwelcome As F_Welcome
+
         ' If the start is done with command line then load jobfile and start calculation
         If fGetArgs() Then
             Dim reload As Boolean = True
@@ -116,6 +120,12 @@ Public Class F_Main
                 ' Close the form after calculation
                 Me.Close()
             End Try
+        Else
+            ' Start the welcome only if not a direct start
+            If firstrun Then
+                fwelcome = New F_Welcome
+                fwelcome.ShowDialog()
+            End If
         End If
     End Sub
 
@@ -190,6 +200,10 @@ Public Class F_Main
         If workerMsg IsNot Nothing Then
             workerMsg.forwardLog()
         End If
+        If uRB Then
+            updateResultBoxes()
+            uRB = False
+        End If
     End Sub
 
     ' Identify the ending from the backgroundworker
@@ -213,8 +227,8 @@ Public Class F_Main
         CalibrationState = False
         EvaluationState = False
 
-        Me.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3).ToString
-        Me.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3).ToString
+        'Me.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3).ToString
+        'Me.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3).ToString
         Me.TextBoxRBetaMis.Text = Math.Round(Job.beta_ame, 2).ToString
     End Sub
 
@@ -240,7 +254,6 @@ Public Class F_Main
         End Set
     End Property
 
-
     ' Calculate button calibration test
     Private Sub CalibrationHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCalC.Click
         ' Generate cancel butten if the backgroundworker is busy
@@ -259,23 +272,6 @@ Public Class F_Main
         Me.TextBoxRAirPos.Text = 0
         Me.TextBoxRBetaMis.Text = 0
 
-        ' Check if outfolder exist. If not then generate the folder
-        If Not System.IO.Directory.Exists(OutFolder) Then
-            If OutFolder <> Nothing Then
-                ' Generate the folder if it is desired
-                Dim resEx As MsgBoxResult
-                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                If resEx = MsgBoxResult.Yes Then
-                    IO.Directory.CreateDirectory(OutFolder)
-                Else
-                    Exit Sub
-                End If
-            Else
-                logme(9, False, "No outputfolder is given!")
-                Exit Sub
-            End If
-        End If
-
         Dim ok = False
         Try
             ' Change the button "Exec" --> "Cancel" 
@@ -289,6 +285,19 @@ Public Class F_Main
                 logme(9, False, format("No Jobfile name given!"))
                 Me.CalibrationState = False
                 Exit Sub
+            End If
+
+            ' Check if outfolder exist. If not then generate the folder
+            If Not System.IO.Directory.Exists(OutFolder) Then
+                If OutFolder <> Nothing Then
+                    ' Generate the folder if it is desired
+                    logme(7, False, format("Output-folder({0}) doesn´t exist an is created!", OutFolder))
+                    IO.Directory.CreateDirectory(OutFolder)
+                Else
+                    logme(9, False, "No outputfolder is given!")
+                    Me.CalibrationState = False
+                    Exit Sub
+                End If
             End If
 
             ' Clear the MSG on the GUI
@@ -335,7 +344,6 @@ Public Class F_Main
         If BWorker.IsBusy Then
             BWorker.CancelAsync()
             logme(8, False, "Cancel requested for background-operation...")
-
             Return
         End If
 
@@ -343,23 +351,8 @@ Public Class F_Main
         UI_PopulateToJob(True)
         UI_PopulateToCriteria()
 
-        ' Check if outfolder exist. If not then generate the folder
-        If Not System.IO.Directory.Exists(OutFolder) Then
-            If OutFolder <> Nothing Then
-                ' Generate the folder if it is desired
-                Dim resEx As MsgBoxResult
-                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                If resEx = MsgBoxResult.Yes Then
-                    IO.Directory.CreateDirectory(OutFolder)
-                Else
-                    Exit Sub
-                End If
-            Else
-                logme(9, False, "No outputfolder is given!")
-                Exit Sub
-            End If
-        End If
-
+        Me.TextBoxRVeh.Text = 0
+        Me.TextBoxRAirPos.Text = 0
 
         Dim ok = False
         Try
@@ -376,6 +369,19 @@ Public Class F_Main
                 logme(9, False, format("No Jobfile name given!"))
                 Me.EvaluationState = False
                 Exit Sub
+            End If
+
+            ' Check if outfolder exist. If not then generate the folder
+            If Not System.IO.Directory.Exists(OutFolder) Then
+                If OutFolder <> Nothing Then
+                    ' Generate the folder if it is desired
+                    logme(7, False, format("Output-folder({0}) doesn´t exist an is created!", OutFolder))
+                    IO.Directory.CreateDirectory(OutFolder)
+                Else
+                    logme(9, False, "No outputfolder is given!")
+                    Me.EvaluationState = False
+                    Exit Sub
+                End If
             End If
 
             ' Clear the MSG on the GUI
@@ -569,6 +575,7 @@ Public Class F_Main
         Crt.v_veh_avg_min_LS = TB_v_veh_avg_min_LS.Text
         Crt.v_veh_float_delta_LS = TB_v_veh_float_delta_LS.Text
         Crt.tq_sum_float_delta_LS = TB_tq_sum_float_delta_LS.Text
+        Crt.delta_n_ec_LS = TB_delta_n_ec_LS.Text
         ' High speed test
         Crt.v_wind_avg_max_HS = TB_v_wind_avg_max_HS.Text
         Crt.v_wind_1s_max_HS = TB_v_wind_1s_max_HS.Text
@@ -576,6 +583,7 @@ Public Class F_Main
         Crt.beta_avg_max_HS = TB_beta_avg_max_HS.Text
         Crt.v_veh_1s_delta_HS = TB_v_veh_1s_delta_HS.Text
         Crt.tq_sum_1s_delta_HS = TB_tq_sum_1s_delta_HS.Text
+        Crt.delta_n_ec_HS = TB_delta_n_ec_HS.Text
     End Sub
 
     Sub UI_PopulateFromJob()
@@ -634,6 +642,7 @@ Public Class F_Main
         TB_v_veh_avg_max_LS.Text = Crt.v_veh_avg_max_LS
         TB_v_veh_float_delta_LS.Text = Crt.v_veh_float_delta_LS
         TB_tq_sum_float_delta_LS.Text = Crt.tq_sum_float_delta_LS
+        TB_delta_n_ec_LS.Text = Crt.delta_n_ec_LS
         ' High speed test
         TB_v_wind_avg_max_HS.Text = Crt.v_wind_avg_max_HS
         TB_v_wind_1s_max_HS.Text = Crt.v_wind_1s_max_HS
@@ -641,6 +650,7 @@ Public Class F_Main
         TB_beta_avg_max_HS.Text = Crt.beta_avg_max_HS
         TB_v_veh_1s_delta_HS.Text = Crt.v_veh_1s_delta_HS
         TB_tq_sum_1s_delta_HS.Text = Crt.tq_sum_1s_delta_HS
+        TB_delta_n_ec_HS.Text = Crt.delta_n_ec_HS
         ' Evaluation box
         CB_accel_correction.Checked = Crt.accel_correction
         CB_gradient_correction.Checked = Crt.gradient_correction
@@ -696,6 +706,13 @@ Public Class F_Main
             UI_PopulateFromJob()
             UI_PopulateFromCriteria()
         End If
+
+        ' Clear the text in the WarnigBox and ErrorBox and activate the MessageBox
+        Me.ListBoxWar.Items.Clear()
+        Me.ListBoxErr.Items.Clear()
+        Me.TabControlOutMsg.SelectTab(0)
+        Me.TabPageErr.Text = "Errors (0)"
+        Me.TabPageWar.Text = "Warnings (0)"
 
         Return True
     End Function
@@ -933,11 +950,21 @@ Public Class F_Main
 
     ' Menu open the user manual
     Private Sub ToolStripMenuItemManu_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemManu.Click
-        Dim manual_fname As String = joinPaths(MyPath, "Docs", "VECTO_CSE-User Manual.pdf")
+        Dim manual_fname As String = joinPaths(MyPath, "Docs", "VECTO_CSE-User Manual_" & AppVers & ".pdf")
         Try
             System.Diagnostics.Process.Start(manual_fname)
         Catch ex As Exception
             logme(8, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
+        End Try
+    End Sub
+
+    ' Menu open the release nodes
+    Private Sub ReleaseNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseNotesToolStripMenuItem.Click
+        Dim release_fname As String = joinPaths(MyPath, "Docs", "VECTO-CSE_ReleaseNotes_" & AppVers & ".pdf")
+        Try
+            System.Diagnostics.Process.Start(release_fname)
+        Catch ex As Exception
+            logme(8, False, format("Failed opening User Manual({0}) due to: {1}", release_fname, ex.Message), ex)
         End Try
     End Sub
 #End Region  ' Infos menu
@@ -951,7 +978,7 @@ Public Class F_Main
     Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_delta_t_tyre_max.KeyPress, TB_delta_rr_corr_max.KeyPress, TB_t_amb_var.KeyPress, _
         TB_t_amb_tarmac.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_rho_air_ref.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
         TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_MS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
-        TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_v_wind_1s_max_LS.KeyPress, TB_v_wind_avg_max_LS.KeyPress, _
+        TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_delta_n_ec_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_v_wind_1s_max_LS.KeyPress, TB_v_wind_avg_max_LS.KeyPress, TB_delta_n_ec_LS.KeyPress, _
         TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress
         Select Case Asc(e.KeyChar)
             Case 48 To 57, 46 ' Zahlen zulassen (ASCII)
@@ -967,7 +994,8 @@ Public Class F_Main
         If Not IsNothing(JobFile) Then
             logme(8, False, format("The Job-file({0}) has changed because of criteria update", JobFile))
         End If
-        Crt.accel_correction = True
+        'Crt.accel_correction = True
+        'Crt.hz_out = 1
         UI_PopulateFromCriteria()
     End Sub
 
@@ -1070,12 +1098,14 @@ Public Class F_Main
             TB_v_veh_avg_max_LS, LB_v_veh_avg_max_LS, _
             TB_v_veh_float_delta_LS, LB_v_veh_float_delta_LS, _
             TB_tq_sum_float_delta_LS, LB_tq_sum_float_delta_LS, _
+            TB_delta_n_ec_LS, LB_delta_n_ec_LS, _
             TB_v_wind_avg_max_HS, LB_v_wind_avg_max_HS, _
             TB_v_wind_1s_max_HS, LB_v_wind_1s_max_HS, _
             TB_beta_avg_max_HS, LB_beta_avg_max_HS, _
             TB_v_veh_avg_min_HS, LB_v_veh_avg_min_HS, _
             TB_v_veh_1s_delta_HS, LB_v_veh_1s_delta_HS, _
             TB_tq_sum_1s_delta_HS, LB_tq_sum_1s_delta_HS, _
+            TB_delta_n_ec_HS, LB_delta_n_ec_HS, _
             TB_delta_t_tyre_max, LB_delta_t_tyre_max, _
             TB_delta_rr_corr_max, LB_delta_rr_corr_max, _
             TB_t_amb_min, LB_t_amb_min, _
@@ -1099,4 +1129,5 @@ Public Class F_Main
     End Sub
 
 #End Region
+
 End Class
