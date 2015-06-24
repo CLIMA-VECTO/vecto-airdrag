@@ -34,8 +34,8 @@ Partial Class F_Welcome
     Private Sub InitializeComponent()
         Me.Cancel_Button = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.B_Release = New System.Windows.Forms.Button()
+        Me.B_UserM = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'Cancel_Button
@@ -58,23 +58,24 @@ Partial Class F_Welcome
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Welcome!"
         '
-        'Button1
+        'B_Release
         '
-        Me.Button1.Location = New System.Drawing.Point(12, 47)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(294, 37)
-        Me.Button1.TabIndex = 2
-        Me.Button1.Text = "Open Release Notes (pdf)"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.B_Release.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.B_Release.Location = New System.Drawing.Point(12, 47)
+        Me.B_Release.Name = "B_Release"
+        Me.B_Release.Size = New System.Drawing.Size(294, 37)
+        Me.B_Release.TabIndex = 2
+        Me.B_Release.Text = "Open Release Notes (pdf) RECOMMENDED"
+        Me.B_Release.UseVisualStyleBackColor = True
         '
-        'Button2
+        'B_UserM
         '
-        Me.Button2.Location = New System.Drawing.Point(12, 90)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(294, 37)
-        Me.Button2.TabIndex = 2
-        Me.Button2.Text = "Open User Manual (html)"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.B_UserM.Location = New System.Drawing.Point(12, 90)
+        Me.B_UserM.Name = "B_UserM"
+        Me.B_UserM.Size = New System.Drawing.Size(294, 37)
+        Me.B_UserM.TabIndex = 2
+        Me.B_UserM.Text = "Open User Manual (pdf)"
+        Me.B_UserM.UseVisualStyleBackColor = True
         '
         'F_Welcome
         '
@@ -82,9 +83,9 @@ Partial Class F_Welcome
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
         Me.ClientSize = New System.Drawing.Size(318, 187)
-        Me.Controls.Add(Me.Button2)
+        Me.Controls.Add(Me.B_UserM)
         Me.Controls.Add(Me.Cancel_Button)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.B_Release)
         Me.Controls.Add(Me.Label1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
@@ -99,7 +100,7 @@ Partial Class F_Welcome
     End Sub
     Friend WithEvents Cancel_Button As System.Windows.Forms.Button
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents B_Release As System.Windows.Forms.Button
+    Friend WithEvents B_UserM As System.Windows.Forms.Button
 
 End Class

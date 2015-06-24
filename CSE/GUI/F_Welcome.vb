@@ -28,22 +28,22 @@ Public Class F_Welcome
     End Sub
 
     'Open Release Notes
-    Private Sub Button1_Click(sender As System.Object, e As System.EventArgs) Handles Button1.Click
-        Dim manual_fname As String = joinPaths(MyPath, "Docs", "VECTO_CSE-User Manual_" & AppVers & ".pdf")
-        Try
-            System.Diagnostics.Process.Start(manual_fname)
-        Catch ex As Exception
-            logme(8, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
-        End Try
-    End Sub
-
-    'Open Quick Start Guide
-    Private Sub Button2_Click(sender As System.Object, e As System.EventArgs) Handles Button2.Click
+    Private Sub B_Release_Click(sender As System.Object, e As System.EventArgs) Handles B_Release.Click
         Dim release_fname As String = joinPaths(MyPath, "Docs", "VECTO-CSE_ReleaseNotes_" & AppVers & ".pdf")
         Try
             System.Diagnostics.Process.Start(release_fname)
         Catch ex As Exception
             logme(8, False, format("Failed opening User Manual({0}) due to: {1}", release_fname, ex.Message), ex)
+        End Try
+    End Sub
+
+    'Open Quick Start Guide
+    Private Sub B_UserM_Click(sender As System.Object, e As System.EventArgs) Handles B_UserM.Click
+        Dim manual_fname As String = joinPaths(MyPath, "Docs", "VECTO_CSE-User Manual_" & AppVers & ".pdf")
+        Try
+            System.Diagnostics.Process.Start(manual_fname)
+        Catch ex As Exception
+            logme(8, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
         End Try
     End Sub
 End Class
