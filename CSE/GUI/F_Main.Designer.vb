@@ -223,6 +223,7 @@ Partial Class F_Main
         Me.Label20 = New System.Windows.Forms.Label()
         Me.LRhoAirRef = New System.Windows.Forms.Label()
         Me.TB_rho_air_ref = New System.Windows.Forms.TextBox()
+        Me.ReleaseNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
@@ -349,27 +350,28 @@ Partial Class F_Main
         'InfoToolStripMenuItem
         '
         Me.InfoToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout})
+        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ReleaseNotesToolStripMenuItem, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout})
+        Me.InfoToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.Help
         Me.InfoToolStripMenuItem.Name = "InfoToolStripMenuItem"
-        Me.InfoToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.InfoToolStripMenuItem.Size = New System.Drawing.Size(60, 20)
         Me.InfoToolStripMenuItem.Text = "Help"
         '
         'ToolStripMenuItemManu
         '
         Me.ToolStripMenuItemManu.Name = "ToolStripMenuItemManu"
-        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(140, 22)
+        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemManu.Text = "User Manual"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(137, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(149, 6)
         '
         'ToolStripMenuItemAbout
         '
         Me.ToolStripMenuItemAbout.Image = Global.CSE.My.Resources.Resources.Info
         Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
-        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(140, 22)
+        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemAbout.Text = "About CSE"
         '
         'BackgroundWorkerVECTO
@@ -830,7 +832,7 @@ Partial Class F_Main
         Me.GroupBox3.Size = New System.Drawing.Size(135, 46)
         Me.GroupBox3.TabIndex = 31
         Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "From calibration"
+        Me.GroupBox3.Text = "From calibration test"
         '
         'Label16
         '
@@ -863,7 +865,7 @@ Partial Class F_Main
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(108, 19)
+        Me.Label17.Location = New System.Drawing.Point(150, 19)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(16, 13)
         Me.Label17.TabIndex = 35
@@ -872,7 +874,7 @@ Partial Class F_Main
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(270, 19)
+        Me.Label15.Location = New System.Drawing.Point(382, 19)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(16, 13)
         Me.Label15.TabIndex = 33
@@ -881,16 +883,16 @@ Partial Class F_Main
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(157, 16)
+        Me.Label8.Location = New System.Drawing.Point(192, 13)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(48, 26)
+        Me.Label8.Size = New System.Drawing.Size(119, 26)
         Me.Label8.TabIndex = 30
-        Me.Label8.Text = "v_air" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "pos error"
+        Me.Label8.Text = "              fv_pe" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(air speed position error)"
         '
         'TextBoxRAirPos
         '
         Me.TextBoxRAirPos.Enabled = False
-        Me.TextBoxRAirPos.Location = New System.Drawing.Point(211, 16)
+        Me.TextBoxRAirPos.Location = New System.Drawing.Point(317, 16)
         Me.TextBoxRAirPos.Name = "TextBoxRAirPos"
         Me.TextBoxRAirPos.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.TextBoxRAirPos.Size = New System.Drawing.Size(59, 20)
@@ -900,16 +902,16 @@ Partial Class F_Main
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(6, 19)
+        Me.Label7.Location = New System.Drawing.Point(6, 13)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(37, 13)
+        Me.Label7.Size = New System.Drawing.Size(79, 26)
         Me.Label7.TabIndex = 28
-        Me.Label7.Text = "v_veh"
+        Me.Label7.Text = "      fv_veh" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(vehicle speed)"
         '
         'TextBoxRVeh
         '
         Me.TextBoxRVeh.Enabled = False
-        Me.TextBoxRVeh.Location = New System.Drawing.Point(49, 16)
+        Me.TextBoxRVeh.Location = New System.Drawing.Point(91, 16)
         Me.TextBoxRVeh.Name = "TextBoxRVeh"
         Me.TextBoxRVeh.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.TextBoxRVeh.Size = New System.Drawing.Size(59, 20)
@@ -1054,12 +1056,12 @@ Partial Class F_Main
         '
         Me.GroupBox4.Controls.Add(Me.GroupBox3)
         Me.GroupBox4.Controls.Add(Me.GroupBox2)
-        Me.GroupBox4.Location = New System.Drawing.Point(202, 166)
+        Me.GroupBox4.Location = New System.Drawing.Point(179, 166)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(444, 70)
+        Me.GroupBox4.Size = New System.Drawing.Size(560, 70)
         Me.GroupBox4.TabIndex = 35
         Me.GroupBox4.TabStop = False
-        Me.GroupBox4.Text = "Results"
+        Me.GroupBox4.Text = "Calibration results"
         '
         'GroupBox2
         '
@@ -1071,10 +1073,10 @@ Partial Class F_Main
         Me.GroupBox2.Controls.Add(Me.TextBoxRAirPos)
         Me.GroupBox2.Location = New System.Drawing.Point(147, 18)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(294, 46)
+        Me.GroupBox2.Size = New System.Drawing.Size(405, 46)
         Me.GroupBox2.TabIndex = 34
         Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "From High-speed test"
+        Me.GroupBox2.Text = "From high speed test"
         '
         'TPCriteria
         '
@@ -2266,6 +2268,12 @@ Partial Class F_Main
         Me.TB_rho_air_ref.TabIndex = 1
         Me.TB_rho_air_ref.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'ReleaseNotesToolStripMenuItem
+        '
+        Me.ReleaseNotesToolStripMenuItem.Name = "ReleaseNotesToolStripMenuItem"
+        Me.ReleaseNotesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ReleaseNotesToolStripMenuItem.Text = "Release Notes"
+        '
         'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2532,5 +2540,6 @@ Partial Class F_Main
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents TB_delta_n_ec_LS As System.Windows.Forms.TextBox
     Friend WithEvents LB_delta_n_ec_LS As System.Windows.Forms.Label
+    Friend WithEvents ReleaseNotesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

@@ -15,6 +15,7 @@ Imports Newtonsoft.Json.Linq
 Public Class F_Main
     ' Declarations
     Private ToolstripSave As Boolean = False
+    Private firstrun As Boolean = False
     Private Formname As String = "Job configurations"
 
     ' Load the GUI
@@ -42,7 +43,6 @@ Public Class F_Main
         AppFormStarted = True
 
         ' Load the config file
-        '
         Try
             Prefs = New cPreferences(PrefsPath)
         Catch ex As Exception
@@ -50,6 +50,7 @@ Public Class F_Main
                     "Failed loading Preferences({0}) due to: {1}\n\iThis is normal the first time you launch the application.", _
                     PrefsPath, ex.Message), ex)
             configL = False
+            firstrun = True
         End Try
 
         ' Load the generic shape curve file
@@ -91,6 +92,9 @@ Public Class F_Main
 
     ' Show the GUI and start direct if neccessary
     Private Sub F_Main_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        ' Declaration
+        Dim fwelcome As F_Welcome
+
         ' If the start is done with command line then load jobfile and start calculation
         If fGetArgs() Then
             Dim reload As Boolean = True
@@ -116,6 +120,12 @@ Public Class F_Main
                 ' Close the form after calculation
                 Me.Close()
             End Try
+        Else
+            ' Start the welcome only if not a direct start
+            If firstrun Then
+                fwelcome = New F_Welcome
+                fwelcome.ShowDialog()
+            End If
         End If
     End Sub
 
@@ -244,7 +254,6 @@ Public Class F_Main
         End Set
     End Property
 
-
     ' Calculate button calibration test
     Private Sub CalibrationHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCalC.Click
         ' Generate cancel butten if the backgroundworker is busy
@@ -263,23 +272,6 @@ Public Class F_Main
         Me.TextBoxRAirPos.Text = 0
         Me.TextBoxRBetaMis.Text = 0
 
-        ' Check if outfolder exist. If not then generate the folder
-        If Not System.IO.Directory.Exists(OutFolder) Then
-            If OutFolder <> Nothing Then
-                ' Generate the folder if it is desired
-                Dim resEx As MsgBoxResult
-                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                If resEx = MsgBoxResult.Yes Then
-                    IO.Directory.CreateDirectory(OutFolder)
-                Else
-                    Exit Sub
-                End If
-            Else
-                logme(9, False, "No outputfolder is given!")
-                Exit Sub
-            End If
-        End If
-
         Dim ok = False
         Try
             ' Change the button "Exec" --> "Cancel" 
@@ -293,6 +285,19 @@ Public Class F_Main
                 logme(9, False, format("No Jobfile name given!"))
                 Me.CalibrationState = False
                 Exit Sub
+            End If
+
+            ' Check if outfolder exist. If not then generate the folder
+            If Not System.IO.Directory.Exists(OutFolder) Then
+                If OutFolder <> Nothing Then
+                    ' Generate the folder if it is desired
+                    logme(7, False, format("Output-folder({0}) doesn´t exist an is created!", OutFolder))
+                    IO.Directory.CreateDirectory(OutFolder)
+                Else
+                    logme(9, False, "No outputfolder is given!")
+                    Me.CalibrationState = False
+                    Exit Sub
+                End If
             End If
 
             ' Clear the MSG on the GUI
@@ -339,7 +344,6 @@ Public Class F_Main
         If BWorker.IsBusy Then
             BWorker.CancelAsync()
             logme(8, False, "Cancel requested for background-operation...")
-
             Return
         End If
 
@@ -349,24 +353,6 @@ Public Class F_Main
 
         Me.TextBoxRVeh.Text = 0
         Me.TextBoxRAirPos.Text = 0
-
-        ' Check if outfolder exist. If not then generate the folder
-        If Not System.IO.Directory.Exists(OutFolder) Then
-            If OutFolder <> Nothing Then
-                ' Generate the folder if it is desired
-                Dim resEx As MsgBoxResult
-                resEx = MsgBox(format("Output-folder({0}) doesn´t exist! \n\nCreate Folder?", OutFolder), MsgBoxStyle.YesNo, "Create folder?")
-                If resEx = MsgBoxResult.Yes Then
-                    IO.Directory.CreateDirectory(OutFolder)
-                Else
-                    Exit Sub
-                End If
-            Else
-                logme(9, False, "No outputfolder is given!")
-                Exit Sub
-            End If
-        End If
-
 
         Dim ok = False
         Try
@@ -383,6 +369,19 @@ Public Class F_Main
                 logme(9, False, format("No Jobfile name given!"))
                 Me.EvaluationState = False
                 Exit Sub
+            End If
+
+            ' Check if outfolder exist. If not then generate the folder
+            If Not System.IO.Directory.Exists(OutFolder) Then
+                If OutFolder <> Nothing Then
+                    ' Generate the folder if it is desired
+                    logme(7, False, format("Output-folder({0}) doesn´t exist an is created!", OutFolder))
+                    IO.Directory.CreateDirectory(OutFolder)
+                Else
+                    logme(9, False, "No outputfolder is given!")
+                    Me.EvaluationState = False
+                    Exit Sub
+                End If
             End If
 
             ' Clear the MSG on the GUI
@@ -951,11 +950,21 @@ Public Class F_Main
 
     ' Menu open the user manual
     Private Sub ToolStripMenuItemManu_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemManu.Click
-        Dim manual_fname As String = joinPaths(MyPath, "Docs", "VECTO_CSE-User Manual.pdf")
+        Dim manual_fname As String = joinPaths(MyPath, "Docs", "VECTO_CSE-User Manual_" & AppVers & ".pdf")
         Try
             System.Diagnostics.Process.Start(manual_fname)
         Catch ex As Exception
             logme(8, False, format("Failed opening User Manual({0}) due to: {1}", manual_fname, ex.Message), ex)
+        End Try
+    End Sub
+
+    ' Menu open the release nodes
+    Private Sub ReleaseNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseNotesToolStripMenuItem.Click
+        Dim release_fname As String = joinPaths(MyPath, "Docs", "VECTO-CSE_ReleaseNotes_" & AppVers & ".pdf")
+        Try
+            System.Diagnostics.Process.Start(release_fname)
+        Catch ex As Exception
+            logme(8, False, format("Failed opening User Manual({0}) due to: {1}", release_fname, ex.Message), ex)
         End Try
     End Sub
 #End Region  ' Infos menu
@@ -1120,4 +1129,5 @@ Public Class F_Main
     End Sub
 
 #End Region
+
 End Class
