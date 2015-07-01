@@ -196,7 +196,7 @@ When False, it overrides Application's choice and is not replaced ever.",
     Overridable Sub Store(ByVal fpath As String, Optional ByVal prefs As cPreferences = Nothing)
         OnBeforeContentStored()
 
-        logme(4, False, format("Writting JSON-file({0})...", fpath))
+        logme(4, False, format("Writing JSON-file({0})...", fpath))
         Me.UpdateHeader(prefs)
 
         Me.Validate(Me.StrictBody)
