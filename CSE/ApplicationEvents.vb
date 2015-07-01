@@ -47,6 +47,18 @@ Namespace My
                 Job = New cJob(True)  ' !!!Skip schema
                 Crt = Job.Criteria
 
+                'Separator!
+                SetCulture = False
+                If System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator <> "." Then
+                    SetCulture = True
+                    Try
+                        System.Threading.Thread.CurrentThread.CurrentCulture = New System.Globalization.CultureInfo("en-US")
+                        System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("en-US")
+                        'MSGtoForm(8, "Set CurrentCulture to 'en-US'", True)
+                    Catch ex As Exception
+                        logme(9, False, "Failed to set Application Regional Settings to 'en-US'! Check system decimal- and group- separators!")
+                    End Try
+                End If
 
                 ' Path to the *.exe 
                 MyPath = My.Application.Info.DirectoryPath & "\"
@@ -118,10 +130,6 @@ Namespace My
                 MsgBox(format("{0} failed after init due to: \n\i{1}", AppName, ex), MsgBoxStyle.Critical, format("{0} failed to Start!", AppName))
             End If
         End Sub
-        'Private Sub MyApplicationDomain_UnhandledException(ByVal sender As Object, ByVal ev As UnhandledExceptionEventArgs)
-        '    Dim ex As Exception = DirectCast(ev.ExceptionObject, Exception)
-        '    logme(9, False, format("Worker's unhandled exception: {0}", ex.Message), ex)
-        'End Sub
     End Class
 
 End Namespace

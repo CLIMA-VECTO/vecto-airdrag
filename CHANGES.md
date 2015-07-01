@@ -1,5 +1,12 @@
 VECTO-CSE: Changes
 ===================
+#### 2015-07-24: v2.0.2-beta6 ####
+TUG improvements:
+
+  * New Version number.
+  * Update region and language settings: now it is regardless of the system which settings are used ! But the file definitions are still the same
+  * Update of the excel makro in terms of the system region and language settings
+  
 #### 2015-06-24: v2.0.2-beta5 ####
 Mostly TUG improvements:
 
@@ -23,7 +30,7 @@ Mostly TUG improvements:
   * New Version number.
   
 #### 2015-05-21: v2.0.1-beta5 ####
-Mostly TUG improvements:
+TUG improvements:
 
   * Handling of time steps where coordinates are constant over a certain time period (GPS accuracy issue) set gradient to 0 to avoid division by zero 
   * Allow also non-continuous input data in *.csdat files
@@ -38,7 +45,7 @@ Mostly TUG improvements:
   * New Version number.
   
 #### 2014-11-13: v2.0.1-beta4 ####
-Mostly TUG improvements:
+TUG improvements:
 
   * Bugfix linear regression calculation LS
   * Add control for beta angle <= 360° and calculation to +-180° if angle > +-180°
@@ -46,7 +53,7 @@ Mostly TUG improvements:
   * New Version number.
   
 #### 2014-11-10: v2.0.1-beta3 ####
-Mostly TUG improvements:
+TUG improvements:
 
   * Correction HS calculation
   * Correction length calculation for the first section in the dat-file when there is a gap between the first and second MS.
@@ -54,13 +61,13 @@ Mostly TUG improvements:
   * New Version number.
   
 #### 2014-09-30: v2.0.1-beta2 ####
-Mostly TUG improvements:
+TUG improvements:
 
   * Correction GenShape Check
   * New Version number.
 
 #### 2014-09-15: v2.0.1-beta1 ####
-Mostly TUG improvements:
+TUG improvements:
 
   * IO: Data reading corrected for first data set in measurement section file, weather file and data files.
   * New Version number.

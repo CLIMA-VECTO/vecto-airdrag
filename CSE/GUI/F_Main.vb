@@ -179,8 +179,16 @@ Public Class F_Main
         Handles BackgroundWorkerVECTO.DoWork
 
         Dim asyncJob As cAsyncJob = e.Argument
-        '' Pass the async-job datum down the road.
+        ' Pass the async-job datum down the road.
         e.Result = asyncJob
+
+        If SetCulture Then
+            Try
+                System.Threading.Thread.CurrentThread.CurrentCulture = New System.Globalization.CultureInfo("en-US")
+            Catch ex As Exception
+                logme(9, False, "Failed to set thread culture 'en-US'! Check system decimal- and group- separators!")
+            End Try
+        End If
 
         '##### START THE CALCULATION #####
         '#################################

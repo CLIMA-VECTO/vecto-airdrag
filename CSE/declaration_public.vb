@@ -13,11 +13,12 @@ Module declaration_public
 
     ' Description of the form
     Public Const AppName As String = "VECTO_CSE"                ' Name of the programm
-    Public Const AppVers As String = "2.0.2-beta5"                    ' Version of the Programm
+    Public Const AppVers As String = "2.0.2-beta6"                    ' Version of the Programm
     Public AppDate As String                                    ' Date of the compilation of the programm
 
     ' Control variables
     Public Const komment = "#"                                  ' Symbol for a comment in the input files
+    Public SetCulture As Boolean                                ' Culture information for the background worker
     Public AnzeigeMessage() As String = ({"", "", "", "         + ", "      ~ ", "   * ", " - ", "", "", ""})
 
     Public AppFormStarted = False
