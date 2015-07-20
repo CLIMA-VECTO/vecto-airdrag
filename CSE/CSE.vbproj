@@ -312,6 +312,7 @@
     <None Include="Resources\Play-icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\bug-edit-icon.png" />
     <Content Include="Resources\Stop-icon.png" />
     <None Include="Resources\Stop-icon1.png" />
   </ItemGroup>

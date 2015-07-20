@@ -975,6 +975,11 @@ Public Class F_Main
             logme(8, False, format("Failed opening User Manual({0}) due to: {1}", release_fname, ex.Message), ex)
         End Try
     End Sub
+
+    ' Menue report a bug
+    Private Sub ReportBugToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReportBugToolStripMenuItem.Click
+
+    End Sub
 #End Region  ' Infos menu
 
 #End Region ' Main tab

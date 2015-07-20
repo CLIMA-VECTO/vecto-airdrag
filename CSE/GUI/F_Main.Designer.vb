@@ -39,8 +39,11 @@ Partial Class F_Main
         Me.ToolStripMenuItemOption = New System.Windows.Forms.ToolStripMenuItem()
         Me.InfoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemManu = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReleaseNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripMenuItemAbout = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ReportBugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BackgroundWorkerVECTO = New System.ComponentModel.BackgroundWorker()
         Me.GroupBoxJob = New System.Windows.Forms.GroupBox()
         Me.TextBoxWeather = New System.Windows.Forms.TextBox()
@@ -223,7 +226,6 @@ Partial Class F_Main
         Me.Label20 = New System.Windows.Forms.Label()
         Me.LRhoAirRef = New System.Windows.Forms.Label()
         Me.TB_rho_air_ref = New System.Windows.Forms.TextBox()
-        Me.ReleaseNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
@@ -350,7 +352,7 @@ Partial Class F_Main
         'InfoToolStripMenuItem
         '
         Me.InfoToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ReleaseNotesToolStripMenuItem, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout})
+        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ReleaseNotesToolStripMenuItem, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout, Me.ToolStripSeparator1, Me.ReportBugToolStripMenuItem})
         Me.InfoToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.Help
         Me.InfoToolStripMenuItem.Name = "InfoToolStripMenuItem"
         Me.InfoToolStripMenuItem.Size = New System.Drawing.Size(60, 20)
@@ -361,6 +363,12 @@ Partial Class F_Main
         Me.ToolStripMenuItemManu.Name = "ToolStripMenuItemManu"
         Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemManu.Text = "User Manual"
+        '
+        'ReleaseNotesToolStripMenuItem
+        '
+        Me.ReleaseNotesToolStripMenuItem.Name = "ReleaseNotesToolStripMenuItem"
+        Me.ReleaseNotesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ReleaseNotesToolStripMenuItem.Text = "Release Notes"
         '
         'ToolStripMenuItem1
         '
@@ -373,6 +381,18 @@ Partial Class F_Main
         Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
         Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemAbout.Text = "About CSE"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(149, 6)
+        '
+        'ReportBugToolStripMenuItem
+        '
+        Me.ReportBugToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.bug_edit_icon
+        Me.ReportBugToolStripMenuItem.Name = "ReportBugToolStripMenuItem"
+        Me.ReportBugToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ReportBugToolStripMenuItem.Text = "Report Bug"
         '
         'BackgroundWorkerVECTO
         '
@@ -2268,12 +2288,6 @@ Partial Class F_Main
         Me.TB_rho_air_ref.TabIndex = 1
         Me.TB_rho_air_ref.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'ReleaseNotesToolStripMenuItem
-        '
-        Me.ReleaseNotesToolStripMenuItem.Name = "ReleaseNotesToolStripMenuItem"
-        Me.ReleaseNotesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.ReleaseNotesToolStripMenuItem.Text = "Release Notes"
-        '
         'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2541,5 +2555,7 @@ Partial Class F_Main
     Friend WithEvents TB_delta_n_ec_LS As System.Windows.Forms.TextBox
     Friend WithEvents LB_delta_n_ec_LS As System.Windows.Forms.Label
     Friend WithEvents ReleaseNotesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ReportBugToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

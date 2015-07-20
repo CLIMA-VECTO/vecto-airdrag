@@ -14,8 +14,8 @@ Public Module input
     ' Read the measurement section config file
     Sub ReadInputMSC(ByRef MSCX As cMSC, ByVal MSCfile As String, Optional ByVal calibration As Boolean = True)
         ' Declarations
-        Dim i As Integer
-        Dim RefDID As Integer
+        Dim i, j As Integer
+        Dim RefDID, RefID As Integer
         Dim RefHead As Double
         Dim Line() As String
         Using FileInMSCSpez As New cFile_V3
@@ -89,14 +89,14 @@ Public Module input
             Next i
         Else
             For i = 1 To MSCX.meID.Count - 1
-                If i = 1 Then
-                    RefHead = MSCX.head(i)
-                    RefDID = MSCX.dID(i)
-                Else
-                    If RefHead = MSCX.head(i) And Not RefDID = MSCX.dID(i) Then
+                RefID = MSCX.meID(i)
+                RefHead = MSCX.head(i)
+                RefDID = MSCX.dID(i)
+                For j = i + 1 To MSCX.meID.Count - 1
+                    If RefID = MSCX.meID(j) And RefDID = MSCX.dID(j) And RefHead <> MSCX.head(j) Or RefID = MSCX.meID(j) And RefDID <> MSCX.dID(j) And RefHead = MSCX.head(j) Then
                         Throw New Exception("Two different directions for same heading given. Please correct your input in the File: " & MSCfile)
                     End If
-                End If
+                Next j
                 MSCX.headID.Add(1)
             Next i
         End If

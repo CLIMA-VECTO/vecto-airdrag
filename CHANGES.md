@@ -1,6 +1,13 @@
 VECTO-CSE: Changes
 ===================
-#### 2015-07-24: v2.0.2-beta6 ####
+#### 2015-07-20: v2.0.2-beta6 ####
+TUG improvements:
+
+  * Bugfix heading control
+  * Update user manual
+  * Input "Report bug" button (at the moment this does nothing)
+  
+#### 2015-07-01: v2.0.2-beta6 ####
 TUG improvements:
 
   * New Version number.
