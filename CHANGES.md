@@ -8,7 +8,7 @@ TUG improvements:
   * Add "Report bug" option
   * Add JIRA Quick Start Guide
   * Delete valid_t_tire from output files and job-file
-  * Change t_tire from required in input data to optional (like p_tire)
+  * Change t_tire from required input data to optional (like p_tire)
   * Delete rho_air_ref from criteria and GUI
   
 #### 2015-07-01: v2.0.2-beta6 ####
