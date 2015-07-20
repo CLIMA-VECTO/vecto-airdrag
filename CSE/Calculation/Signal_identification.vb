@@ -862,7 +862,7 @@ Module Signal_identification
                     ErgValues(tCompErg.n_ec_1s_min)(run) = (CalcData(tCompCali.n_ec_1s)(i))
                     ErgValues(tCompErg.n_ec_float_max)(run) = (CalcData(tCompCali.n_ec_float)(i))
                     ErgValues(tCompErg.n_ec_float_min)(run) = (CalcData(tCompCali.n_ec_float)(i))
-                    ErgValues(tCompErg.t_tire)(run) = (InputData(tComp.t_tire)(i))
+                    If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) = (InputData(tComp.t_tire)(i))
                     If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = (InputData(tComp.p_tire)(i))
 
                     firstIn = False
@@ -903,7 +903,7 @@ Module Signal_identification
                         If ErgValues(tCompErg.n_ec_1s_min)(run) > CalcData(tCompCali.n_ec_1s)(i) Then ErgValues(tCompErg.n_ec_1s_min)(run) = CalcData(tCompCali.n_ec_1s)(i)
                         If ErgValues(tCompErg.n_ec_float_max)(run) < CalcData(tCompCali.n_ec_float)(i) Then ErgValues(tCompErg.n_ec_float_max)(run) = CalcData(tCompCali.n_ec_float)(i)
                         If ErgValues(tCompErg.n_ec_float_min)(run) > CalcData(tCompCali.n_ec_float)(i) Then ErgValues(tCompErg.n_ec_float_min)(run) = CalcData(tCompCali.n_ec_float)(i)
-                        ErgValues(tCompErg.t_tire)(run) += (InputData(tComp.t_tire)(i))
+                        If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) += (InputData(tComp.t_tire)(i))
                         If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) += (InputData(tComp.p_tire)(i))
                         anz += 1
                     Else
@@ -937,7 +937,7 @@ Module Signal_identification
                         Else
                             ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor
                         End If
-                        ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
+                        If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
                         If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz
                         ErgValues(tCompErg.r_dyn)(run) = (30 * igear * vehicleX.axleRatio * ErgValues(tCompErg.v_veh)(run) / 3.6) / (ErgValues(tCompErg.n_ec)(run) * Math.PI)
 
@@ -978,7 +978,7 @@ Module Signal_identification
                         ErgValues(tCompErg.n_ec_1s_min)(run) = (CalcData(tCompCali.n_ec_1s)(i))
                         ErgValues(tCompErg.n_ec_float_max)(run) = (CalcData(tCompCali.n_ec_float)(i))
                         ErgValues(tCompErg.n_ec_float_min)(run) = (CalcData(tCompCali.n_ec_float)(i))
-                        ErgValues(tCompErg.t_tire)(run) = (InputData(tComp.t_tire)(i))
+                        If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) = (InputData(tComp.t_tire)(i))
                         If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = (InputData(tComp.p_tire)(i))
                     End If
                 End If
@@ -1015,7 +1015,7 @@ Module Signal_identification
                     Else
                         ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor
                     End If
-                    ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
+                    If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
                     If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz
                     ErgValues(tCompErg.r_dyn)(run) = (30 * igear * vehicleX.axleRatio * ErgValues(tCompErg.v_veh)(run) / 3.6) / (ErgValues(tCompErg.n_ec)(run) * Math.PI)
 

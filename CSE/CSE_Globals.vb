@@ -191,7 +191,6 @@ Module CSE_Globals
         t_tire_ave_LS_max
         t_tire_ave_HS_min
         t_tire_ave_HS_max
-        valid_t_tire
     End Enum
 
 
@@ -1002,8 +1001,6 @@ Module CSE_Globals
                 Return "t_tire_ave_HS_max"
             Case tCompErgReg.t_tire_ave_HS_min
                 Return "t_tire_ave_HS_min"
-            Case tCompErgReg.valid_t_tire
-                Return "valid_t_tire"
             Case Else
                 Return "ERROR"
         End Select
@@ -1057,8 +1054,6 @@ Module CSE_Globals
                 Return "[°]"
             Case tCompErgReg.t_tire_ave_HS_min
                 Return "[°]"
-            Case tCompErgReg.valid_t_tire
-                Return "[-]"
             Case Else
                 Return "ERROR"
         End Select

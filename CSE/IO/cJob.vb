@@ -45,7 +45,6 @@ Public Class cJob
         b.delta_CdxA = 0
         b.CdxA0 = 0
         b.CdxA0_opt2 = 0
-        b.valid_t_tire = True
         b.valid_t_amb = True
         b.valid_RRC = True
         Return b
@@ -152,11 +151,6 @@ Public Class cJob
                     'default': 0,
                     "units": "m^2",
                 },
-                "valid_t_tire": {
-                    "type": "boolean", 
-                    "description": "Invalid if the maximum ambient temperature exceeded.", 
-                    'default': true,
-                },
                 "valid_t_amb": {
                     "type": "boolean", 
                     "description": "Invalid if the ambient temperature fallen below minimum.", 
@@ -203,7 +197,6 @@ Public Class cJob
         Job.delta_CdxA = 0
         Job.CdxA0 = 0
         Job.CdxA0_opt2 = 0
-        Job.valid_t_tire = True
         Job.valid_t_amb = True
         Job.valid_RRC = True
     End Sub
@@ -247,7 +240,6 @@ Public Class cJob
     Public delta_CdxA As Double
     Public CdxA0 As Double
     Public CdxA0_opt2 As Double
-    Public valid_t_tire As Boolean
     Public valid_t_amb As Boolean
     Public valid_RRC As Boolean
 
@@ -264,7 +256,6 @@ Public Class cJob
         b.delta_CdxA = Math.Round(delta_CdxA, 5)
         b.CdxA0 = Math.Round(CdxA0, 5)
         b.CdxA0_opt2 = Math.Round(CdxA0_opt2, 5)
-        b.valid_t_tire = valid_t_tire
         b.valid_t_amb = valid_t_amb
         b.valid_RRC = valid_RRC
 
@@ -375,154 +366,6 @@ Public Class cJob
             Me.Body("Criteria") = value.Body
         End Set
     End Property
-
-    ' Function for reading the jobfile
-    Public Sub fReadOldJobFile(ByVal jobFile As String)
-        ' Declarations
-        Dim i As Integer
-        Dim Line() As String
-        Dim crt As Object = Me.Criteria
-
-
-        Using FileInVECTO As New cFile_V3
-            ' Open the jobfile
-            FileInVECTO.OpenReadWithEx(jobFile)
-
-            ' Read the data from the jobfile
-            vehicle_fpath = FileInVECTO.ReadLine(0)
-            ambient_fpath = FileInVECTO.ReadLine(0)
-
-            Line = FileInVECTO.ReadLine
-
-            ' Calibration test files
-            calib_track_fpath = FileInVECTO.ReadLine(0)
-            calib_run_fpath = FileInVECTO.ReadLine(0)
-
-            ' Test run files
-            coast_track_fpath = FileInVECTO.ReadLine(0)
-            crt.rr_corr_factor = FileInVECTO.ReadLine(0)
-
-            low1_fpath = FileInVECTO.ReadLine(0)
-            high_fpath = FileInVECTO.ReadLine(0)
-            low2_fpath = FileInVECTO.ReadLine(0)
-
-            ' Appropriate the Checkboxes
-            ' Acceleration Correction
-            Line = FileInVECTO.ReadLine
-            crt.accel_correction = CBool(Line(0))
-
-            ' Gradient correction
-            Line = FileInVECTO.ReadLine
-            crt.gradient_correction = CBool(Line(0))
-
-            ' Output sequence
-            Line = FileInVECTO.ReadLine
-            If Line(0) = 1 OrElse Line(0) = 100 Then
-                crt.hz_out = Line(0)
-            Else
-                crt.hz_out = 1
-            End If
-
-            ' Read the parameters
-            Try
-                i = 0
-                Do While Not FileInVECTO.EndOfFile
-                    ' Gradient correction
-                    Line = FileInVECTO.ReadLine
-                    i += 1
-                    If IsNumeric(Line(0)) Then
-                        Select Case i
-                            Case 1 ' TBDeltaTTireMax
-                                crt.delta_t_tyre_max = Line(0)
-                            Case 2 ' TBDeltaRRCMax.Text
-                                crt.delta_rr_corr_max = Line(0)
-                            Case 3 ' TBTambVar
-                                crt.t_amb_var = Line(0)
-                            Case 4 ' TBTambTamac
-                                crt.t_amb_tarmac = Line(0)
-                            Case 5 ' TBTambMax
-                                crt.t_amb_max = Line(0)
-                            Case 6 ' TBTambMin
-                                crt.t_amb_min = Line(0)
-                            Case 7 ' TBContHz
-                                crt.delta_Hz_max = Line(0)
-                            Case 8 ' TBRhoAirRef
-                                crt.rho_air_ref = Line(0)
-                            Case 9 ' TBAveSecAcc
-                                crt.acc_corr_avg = Line(0)
-                            Case 10 ' TBDeltaHeadMax
-                                crt.delta_parallel_max = Line(0)
-                            Case 11 ' TBContSecL
-                                crt.trigger_delta_x_max = Line(0)
-                            Case 12 ' TBLRec
-                                crt.trigger_delta_y_max = Line(0)
-                            Case 13 ' TBContAng
-                                crt.delta_head_max = Line(0)
-                            Case 14 ' TBNSecAnz
-                                crt.segruns_min_CAL = Line(0)
-                            Case 15 ' TBNSecAnzLS
-                                crt.segruns_min_LS = Line(0)
-                            Case 16 ' TBNSecAnzHS
-                                crt.segruns_min_HS = Line(0)
-                            Case 17 ' TBMSHSMin
-                                crt.segruns_min_head_MS = Line(0)
-                            Case 18 ' TBDistFloat
-                                crt.dist_float = Line(0)
-                            Case 19 ' TBvWindAveCALMax
-                                crt.v_wind_avg_max_CAL = Line(0)
-                            Case 20 ' TBvWind1sCALMax
-                                crt.v_wind_1s_max_CAL = Line(0)
-                            Case 21 ' TBBetaAveCALMax
-                                crt.beta_avg_max_CAL = Line(0)
-                            Case 22 ' TBLengCrit
-                                crt.leng_crit = Line(0)
-                            Case 23 ' TBvWindAveLSMax
-                                crt.v_wind_avg_max_LS = Line(0)
-                            Case 24 ' TBvWind1sLSMin
-                                crt.v_wind_1s_max_LS = Line(0)
-                            Case 25 ' TBvVehAveLSMax
-                                crt.v_veh_avg_max_LS = Line(0)
-                            Case 26 ' TBvVehAveLSMin
-                                crt.v_veh_avg_min_LS = Line(0)
-                            Case 27 ' TBvVehFloatD
-                                crt.v_veh_float_delta_LS = Line(0)
-                            Case 28 ' TBTqSumFloatD
-                                crt.tq_sum_float_delta_LS = Line(0)
-                            Case 29 ' TBvWindAveHSMax
-                                crt.v_wind_avg_max_HS = Line(0)
-                            Case 30 ' TBvWind1sHSMax
-                                crt.v_wind_1s_max_HS = Line(0)
-                            Case 31 ' TBvVehAveHSMin
-                                crt.v_veh_avg_min_HS = Line(0)
-                            Case 32 ' TBBetaAveHSMax
-                                crt.beta_avg_max_HS = Line(0)
-                            Case 33 ' TBvVeh1sD
-                                crt.v_veh_1s_delta_HS = Line(0)
-                            Case 34 ' TBTq1sD
-                                crt.tq_sum_1s_delta_HS = Line(0)
-                        End Select
-                    Else
-                        Throw New ArgumentException(format("The given value in the Job-file({0}) at position({1}) is not a number!", jobFile, i))
-                    End If
-                Loop
-            Catch ex As Exception
-                Throw New ArgumentException("Invalid value in the job file at position: " & i)
-            End Try
-
-            ' Look if enough parameters are given
-            If i < 34 Then
-                Throw New ArgumentException(format("Premature ending of the Job-file({0})!", jobFile))
-            End If
-
-
-        End Using
-
-        Me.OnBeforeContentStored()
-
-        F_Main.UI_PopulateFromJob()
-        F_Main.UI_PopulateFromCriteria()
-    End Sub
-
 #End Region ' "json props"
 
 End Class
