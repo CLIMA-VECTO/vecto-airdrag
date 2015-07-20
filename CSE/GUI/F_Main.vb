@@ -457,7 +457,7 @@ Public Class F_Main
                 newJob = New cJob(jobFileToLoad)
             Else
                 newJob = New cJob(True)
-                newJob.fReadOldJobFile(jobFileToLoad)
+                logme(9, False, format("The jobfile ending is not known ({0}). Please use the correct format", JobFile))
             End If
             newJob.Validate()
 
@@ -555,7 +555,6 @@ Public Class F_Main
         Crt.t_amb_min = TB_t_amb_min.Text
         ' General
         Crt.delta_Hz_max = TB_delta_Hz_max.Text
-        Crt.rho_air_ref = TB_rho_air_ref.Text
         Crt.acc_corr_avg = TB_acc_corr_avg.Text
         Crt.rr_corr_factor = TB_rr_corr_factor.Text
         Crt.delta_parallel_max = TB_delta_parallel_max.Text
@@ -622,7 +621,6 @@ Public Class F_Main
         TB_t_amb_min.Text = Crt.t_amb_min
         ' General
         TB_delta_Hz_max.Text = Crt.delta_Hz_max
-        TB_rho_air_ref.Text = Crt.rho_air_ref
         TB_acc_corr_avg.Text = Crt.acc_corr_avg
         TB_rr_corr_factor.Text = Crt.rr_corr_factor
         TB_delta_parallel_max.Text = Crt.delta_parallel_max
@@ -978,7 +976,7 @@ Public Class F_Main
 
     ' Menue report a bug
     Private Sub ReportBugToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReportBugToolStripMenuItem.Click
-
+        F_JIRA.Show()
     End Sub
 #End Region  ' Infos menu
 
@@ -989,7 +987,7 @@ Public Class F_Main
 
     ' Check if the input is a number
     Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_delta_t_tyre_max.KeyPress, TB_delta_rr_corr_max.KeyPress, TB_t_amb_var.KeyPress, _
-        TB_t_amb_tarmac.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_rho_air_ref.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
+        TB_t_amb_tarmac.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
         TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_MS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
         TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_delta_n_ec_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_v_wind_1s_max_LS.KeyPress, TB_v_wind_avg_max_LS.KeyPress, TB_delta_n_ec_LS.KeyPress, _
         TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress
@@ -1079,7 +1077,6 @@ Public Class F_Main
         Dim controls As Control()
 
         controls = New Control() {
-                Me.TB_rho_air_ref, LRhoAirRef, _
                 Me.CB_accel_correction, Nothing, _
                 Me.CB_gradient_correction, Nothing, _
                 Me.TB_rr_corr_factor, Me.Label2, _
@@ -1142,5 +1139,4 @@ Public Class F_Main
     End Sub
 
 #End Region
-
 End Class

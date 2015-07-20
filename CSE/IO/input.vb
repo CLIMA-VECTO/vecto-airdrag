@@ -279,6 +279,8 @@ Public Module input
                             OptPar(1) = False
                         Case tComp.fc
                             OptPar(2) = False
+                        Case tComp.t_tire
+                            OptPar(3) = False
                         Case tComp.user_valid
                             valid_set = True
                         Case tComp.n_card, tComp.n_eng

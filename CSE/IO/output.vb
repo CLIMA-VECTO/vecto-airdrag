@@ -240,11 +240,6 @@ Module output
             FileOut.WriteLine("# CdxA(0)_opt2:", Job.CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Validity criteria:")
-            If Job.valid_t_tire Then
-                FileOut.WriteLine("# Tire temp:", "Ok")
-            Else
-                FileOut.WriteLine("# Tire temp:", "Invalid test - maximum variation of tyre temperature exceeded")
-            End If
             If Job.valid_RRC Then
                 FileOut.WriteLine("# RRC:", "Ok")
             Else
@@ -305,7 +300,7 @@ Module output
         AddToErg(tComp.tq_l, fCompName(tComp.tq_l), fCompUnit(tComp.tq_l), "InputData")
         AddToErg(tComp.tq_r, fCompName(tComp.tq_r), fCompUnit(tComp.tq_r), "InputData")
         AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), fCompUnit(tComp.t_amb_veh), "InputData")
-        AddToErg(tComp.t_tire, fCompName(tComp.t_tire), fCompUnit(tComp.t_tire), "InputData")
+        If OptPar(3) Then AddToErg(tComp.t_tire, fCompName(tComp.t_tire), fCompUnit(tComp.t_tire), "InputData")
         ' Write optional parameters
         If OptPar(0) Then AddToErg(tComp.trigger, fCompName(tComp.trigger), fCompUnit(tComp.trigger), "InputData")
         If OptPar(1) Then AddToErg(tComp.p_tire, fCompName(tComp.p_tire), fCompUnit(tComp.p_tire), "InputData")
@@ -482,10 +477,10 @@ Module output
         AddToErg(tCompErgReg.RRC_singleMS_LS1, fCompName(tCompErgReg.RRC_singleMS_LS1), fCompUnit(tCompErgReg.RRC_singleMS_LS1), "ErgValuesReg")
         AddToErg(tCompErgReg.RRC_singleMS_LS2, fCompName(tCompErgReg.RRC_singleMS_LS2), fCompUnit(tCompErgReg.RRC_singleMS_LS2), "ErgValuesReg")
         AddToErg(tCompErgReg.valid_RRC, fCompName(tCompErgReg.valid_RRC), fCompUnit(tCompErgReg.valid_RRC), "ErgValuesReg")
-        AddToErg(tCompErgReg.t_tire_ave_LS_min, fCompName(tCompErgReg.t_tire_ave_LS_min), fCompUnit(tCompErgReg.t_tire_ave_LS_min), "ErgValuesReg")
-        AddToErg(tCompErgReg.t_tire_ave_LS_max, fCompName(tCompErgReg.t_tire_ave_LS_max), fCompUnit(tCompErgReg.t_tire_ave_LS_max), "ErgValuesReg")
-        AddToErg(tCompErgReg.t_tire_ave_HS_min, fCompName(tCompErgReg.t_tire_ave_HS_min), fCompUnit(tCompErgReg.t_tire_ave_HS_min), "ErgValuesReg")
-        AddToErg(tCompErgReg.t_tire_ave_HS_max, fCompName(tCompErgReg.t_tire_ave_HS_max), fCompUnit(tCompErgReg.t_tire_ave_HS_max), "ErgValuesReg")
+        If OptPar(3) Then AddToErg(tCompErgReg.t_tire_ave_LS_min, fCompName(tCompErgReg.t_tire_ave_LS_min), fCompUnit(tCompErgReg.t_tire_ave_LS_min), "ErgValuesReg")
+        If OptPar(3) Then AddToErg(tCompErgReg.t_tire_ave_LS_max, fCompName(tCompErgReg.t_tire_ave_LS_max), fCompUnit(tCompErgReg.t_tire_ave_LS_max), "ErgValuesReg")
+        If OptPar(3) Then AddToErg(tCompErgReg.t_tire_ave_HS_min, fCompName(tCompErgReg.t_tire_ave_HS_min), fCompUnit(tCompErgReg.t_tire_ave_HS_min), "ErgValuesReg")
+        If OptPar(3) Then AddToErg(tCompErgReg.t_tire_ave_HS_max, fCompName(tCompErgReg.t_tire_ave_HS_max), fCompUnit(tCompErgReg.t_tire_ave_HS_max), "ErgValuesReg")
         AddToErg(tCompErgReg.F2_singleMS, fCompName(tCompErgReg.F2_singleMS), fCompUnit(tCompErgReg.F2_singleMS), "ErgValuesReg")
         AddToErg(tCompErgReg.F2_singleMS_LS1, fCompName(tCompErgReg.F2_singleMS_LS1), fCompUnit(tCompErgReg.F2_singleMS_LS1), "ErgValuesReg")
         AddToErg(tCompErgReg.F2_singleMS_LS2, fCompName(tCompErgReg.F2_singleMS_LS2), fCompUnit(tCompErgReg.F2_singleMS_LS2), "ErgValuesReg")

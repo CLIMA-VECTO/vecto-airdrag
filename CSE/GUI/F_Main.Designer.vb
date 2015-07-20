@@ -223,9 +223,6 @@ Partial Class F_Main
         Me.Label22 = New System.Windows.Forms.Label()
         Me.LAccCorrAve = New System.Windows.Forms.Label()
         Me.TB_acc_corr_avg = New System.Windows.Forms.TextBox()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.LRhoAirRef = New System.Windows.Forms.Label()
-        Me.TB_rho_air_ref = New System.Windows.Forms.TextBox()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
@@ -352,7 +349,7 @@ Partial Class F_Main
         'InfoToolStripMenuItem
         '
         Me.InfoToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ReleaseNotesToolStripMenuItem, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout, Me.ToolStripSeparator1, Me.ReportBugToolStripMenuItem})
+        Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ReleaseNotesToolStripMenuItem, Me.ToolStripSeparator1, Me.ReportBugToolStripMenuItem, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout})
         Me.InfoToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.Help
         Me.InfoToolStripMenuItem.Name = "InfoToolStripMenuItem"
         Me.InfoToolStripMenuItem.Size = New System.Drawing.Size(60, 20)
@@ -361,38 +358,38 @@ Partial Class F_Main
         'ToolStripMenuItemManu
         '
         Me.ToolStripMenuItemManu.Name = "ToolStripMenuItemManu"
-        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(152, 22)
+        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(189, 22)
         Me.ToolStripMenuItemManu.Text = "User Manual"
         '
         'ReleaseNotesToolStripMenuItem
         '
         Me.ReleaseNotesToolStripMenuItem.Name = "ReleaseNotesToolStripMenuItem"
-        Me.ReleaseNotesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ReleaseNotesToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.ReleaseNotesToolStripMenuItem.Text = "Release Notes"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(186, 6)
         '
         'ToolStripMenuItemAbout
         '
         Me.ToolStripMenuItemAbout.Image = Global.CSE.My.Resources.Resources.Info
         Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
-        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(152, 22)
+        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(189, 22)
         Me.ToolStripMenuItemAbout.Text = "About CSE"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(186, 6)
         '
         'ReportBugToolStripMenuItem
         '
         Me.ReportBugToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.bug_edit_icon
         Me.ReportBugToolStripMenuItem.Name = "ReportBugToolStripMenuItem"
-        Me.ReportBugToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.ReportBugToolStripMenuItem.Text = "Report Bug"
+        Me.ReportBugToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+        Me.ReportBugToolStripMenuItem.Text = "Report Bug via CITnet"
         '
         'BackgroundWorkerVECTO
         '
@@ -488,7 +485,7 @@ Partial Class F_Main
         '
         Me.GB_hz_out.Controls.Add(Me.RB100Hz)
         Me.GB_hz_out.Controls.Add(Me.RB1Hz)
-        Me.GB_hz_out.Location = New System.Drawing.Point(129, 94)
+        Me.GB_hz_out.Location = New System.Drawing.Point(129, 65)
         Me.GB_hz_out.Name = "GB_hz_out"
         Me.GB_hz_out.Size = New System.Drawing.Size(90, 67)
         Me.GB_hz_out.TabIndex = 6
@@ -520,7 +517,7 @@ Partial Class F_Main
         'CB_gradient_correction
         '
         Me.CB_gradient_correction.AutoSize = True
-        Me.CB_gradient_correction.Location = New System.Drawing.Point(6, 137)
+        Me.CB_gradient_correction.Location = New System.Drawing.Point(6, 108)
         Me.CB_gradient_correction.Name = "CB_gradient_correction"
         Me.CB_gradient_correction.Size = New System.Drawing.Size(123, 17)
         Me.CB_gradient_correction.TabIndex = 5
@@ -530,7 +527,7 @@ Partial Class F_Main
         'CB_accel_correction
         '
         Me.CB_accel_correction.AutoSize = True
-        Me.CB_accel_correction.Location = New System.Drawing.Point(6, 111)
+        Me.CB_accel_correction.Location = New System.Drawing.Point(6, 82)
         Me.CB_accel_correction.Name = "CB_accel_correction"
         Me.CB_accel_correction.Size = New System.Drawing.Size(111, 17)
         Me.CB_accel_correction.TabIndex = 4
@@ -2200,12 +2197,9 @@ Partial Class F_Main
         Me.GroupBox10.Controls.Add(Me.LAccCorrAve)
         Me.GroupBox10.Controls.Add(Me.TB_acc_corr_avg)
         Me.GroupBox10.Controls.Add(Me.GB_hz_out)
-        Me.GroupBox10.Controls.Add(Me.Label20)
-        Me.GroupBox10.Controls.Add(Me.LRhoAirRef)
-        Me.GroupBox10.Controls.Add(Me.TB_rho_air_ref)
         Me.GroupBox10.Location = New System.Drawing.Point(6, 6)
         Me.GroupBox10.Name = "GroupBox10"
-        Me.GroupBox10.Size = New System.Drawing.Size(219, 167)
+        Me.GroupBox10.Size = New System.Drawing.Size(219, 168)
         Me.GroupBox10.TabIndex = 0
         Me.GroupBox10.TabStop = False
         Me.GroupBox10.Text = "Processing"
@@ -2213,7 +2207,7 @@ Partial Class F_Main
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(173, 98)
+        Me.Label14.Location = New System.Drawing.Point(179, 42)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(16, 13)
         Me.Label14.TabIndex = 86
@@ -2222,7 +2216,7 @@ Partial Class F_Main
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(7, 71)
+        Me.Label2.Location = New System.Drawing.Point(7, 42)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(70, 13)
         Me.Label2.TabIndex = 85
@@ -2230,7 +2224,7 @@ Partial Class F_Main
         '
         'TB_rr_corr_factor
         '
-        Me.TB_rr_corr_factor.Location = New System.Drawing.Point(129, 68)
+        Me.TB_rr_corr_factor.Location = New System.Drawing.Point(129, 39)
         Me.TB_rr_corr_factor.Name = "TB_rr_corr_factor"
         Me.TB_rr_corr_factor.Size = New System.Drawing.Size(48, 20)
         Me.TB_rr_corr_factor.TabIndex = 84
@@ -2239,7 +2233,7 @@ Partial Class F_Main
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(177, 45)
+        Me.Label22.Location = New System.Drawing.Point(177, 16)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(18, 13)
         Me.Label22.TabIndex = 37
@@ -2248,7 +2242,7 @@ Partial Class F_Main
         'LAccCorrAve
         '
         Me.LAccCorrAve.AutoSize = True
-        Me.LAccCorrAve.Location = New System.Drawing.Point(7, 45)
+        Me.LAccCorrAve.Location = New System.Drawing.Point(7, 16)
         Me.LAccCorrAve.Name = "LAccCorrAve"
         Me.LAccCorrAve.Size = New System.Drawing.Size(73, 13)
         Me.LAccCorrAve.TabIndex = 36
@@ -2256,37 +2250,11 @@ Partial Class F_Main
         '
         'TB_acc_corr_avg
         '
-        Me.TB_acc_corr_avg.Location = New System.Drawing.Point(129, 42)
+        Me.TB_acc_corr_avg.Location = New System.Drawing.Point(129, 13)
         Me.TB_acc_corr_avg.Name = "TB_acc_corr_avg"
         Me.TB_acc_corr_avg.Size = New System.Drawing.Size(45, 20)
         Me.TB_acc_corr_avg.TabIndex = 2
         Me.TB_acc_corr_avg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(177, 21)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(44, 13)
-        Me.Label20.TabIndex = 34
-        Me.Label20.Text = "[kg/m3]"
-        '
-        'LRhoAirRef
-        '
-        Me.LRhoAirRef.AutoSize = True
-        Me.LRhoAirRef.Location = New System.Drawing.Point(7, 19)
-        Me.LRhoAirRef.Name = "LRhoAirRef"
-        Me.LRhoAirRef.Size = New System.Drawing.Size(57, 13)
-        Me.LRhoAirRef.TabIndex = 33
-        Me.LRhoAirRef.Text = "rho_air_ref"
-        '
-        'TB_rho_air_ref
-        '
-        Me.TB_rho_air_ref.Location = New System.Drawing.Point(129, 16)
-        Me.TB_rho_air_ref.Name = "TB_rho_air_ref"
-        Me.TB_rho_air_ref.Size = New System.Drawing.Size(45, 20)
-        Me.TB_rho_air_ref.TabIndex = 1
-        Me.TB_rho_air_ref.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'F_Main
         '
@@ -2415,9 +2383,6 @@ Partial Class F_Main
     Friend WithEvents GroupBox10 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox8 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox7 As System.Windows.Forms.GroupBox
-    Friend WithEvents Label20 As System.Windows.Forms.Label
-    Friend WithEvents LRhoAirRef As System.Windows.Forms.Label
-    Friend WithEvents TB_rho_air_ref As System.Windows.Forms.TextBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents LDeltaHzMax As System.Windows.Forms.Label
     Friend WithEvents TB_delta_Hz_max As System.Windows.Forms.TextBox

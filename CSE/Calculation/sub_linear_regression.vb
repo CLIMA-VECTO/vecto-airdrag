@@ -38,7 +38,6 @@ Module sub_linear_regression
         Job.beta = 0
         Job.valid_t_amb = True
         Job.valid_RRC = True
-        Job.valid_t_tire = True
 
         ' Generate the result dictionary variables
         For Each EnumStr In System.Enum.GetValues(GetType(tCompErgReg))
@@ -98,13 +97,15 @@ Module sub_linear_regression
                                     YLS1_Array(UBound(YLS1_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
 
                                     ' Add values for t_tire_min/max and rho_air into the result dictionary
-                                    If FirstInLS1 Then
-                                        ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                        ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                        FirstInLS1 = False
-                                    Else
-                                        If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                        If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                    If OptPar(3) Then
+                                        If FirstInLS1 Then
+                                            ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                            ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                            FirstInLS1 = False
+                                        Else
+                                            If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                            If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                        End If
                                     End If
                                     Rho_air_LS1 += ErgValuesComp(tCompErg.rho_air)(j)
                                 Case IDLS2
@@ -119,13 +120,15 @@ Module sub_linear_regression
                                     YLS2_Array(UBound(YLS2_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
 
                                     ' Add values for t_tire_min/max and rho_air into the result dictionary
-                                    If FirstInLS2 Then
-                                        ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                        ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                        FirstInLS2 = False
-                                    Else
-                                        If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                        If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                    If OptPar(3) Then
+                                        If FirstInLS2 Then
+                                            ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                            ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                            FirstInLS2 = False
+                                        Else
+                                            If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                            If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                        End If
                                     End If
                                     Rho_air_LS2 += ErgValuesComp(tCompErg.rho_air)(j)
                                 Case IDHS
@@ -142,13 +145,15 @@ Module sub_linear_regression
                                     YHS_Array(UBound(YHS_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
 
                                     ' Add values for t_tire_min/max and beta_HS into the result dictionary
-                                    If FirstInHS Then
-                                        ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                        ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                        FirstInHS = False
-                                    Else
-                                        If ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                        If ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                    If OptPar(3) Then
+                                        If FirstInHS Then
+                                            ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                            ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
+                                            FirstInHS = False
+                                        Else
+                                            If ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                            If ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
+                                        End If
                                     End If
                                     ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) += ErgValuesComp(tCompErg.beta_abs)(j)
                             End Select
@@ -283,13 +288,13 @@ Module sub_linear_regression
                     ErgValuesReg(tCompErgReg.delta_CdxA_singleMS).Add(fCalcGenShp(ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf), vehicle))
                     ErgValuesReg(tCompErgReg.CdxA0_singleMS).Add(ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) - ErgValuesReg(tCompErgReg.delta_CdxA_singleMS)(lauf))
 
-                    If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) - Crt.delta_t_tyre_max) Or _
-                       ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) - Crt.delta_t_tyre_max) Or _
-                       ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) - Crt.delta_t_tyre_max) Then
-                        ErgValuesReg(tCompErgReg.valid_t_tire).Add(0)
-                    Else
-                        ErgValuesReg(tCompErgReg.valid_t_tire).Add(1)
-                    End If
+                    'If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) - Crt.delta_t_tyre_max) Or _
+                    '   ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) - Crt.delta_t_tyre_max) Or _
+                    '   ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) - Crt.delta_t_tyre_max) Then
+                    '    ErgValuesReg(tCompErgReg.valid_t_tire).Add(0)
+                    'Else
+                    '    ErgValuesReg(tCompErgReg.valid_t_tire).Add(1)
+                    'End If
 
                     ' Summerise for the endresults
                     Job.CdxAß += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf)
