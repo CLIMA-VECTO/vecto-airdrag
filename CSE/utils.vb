@@ -151,8 +151,7 @@ Module utils
     End Function
 #End Region ' File paths'
 
-    ' Function for a linear interpolation
-
+    ' Functions for linear interpolation
 #Region "Calculation programms"
 
     ' Function for a linear interpolation

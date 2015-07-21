@@ -956,7 +956,8 @@ Public Class F_Main
 
     ' Menu open the user manual
     Private Sub ToolStripMenuItemManu_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemManu.Click
-        Dim manual_fname As String = joinPaths(MyPath, "Docs", "VECTO_CSE-User Manual_" & AppVers & ".pdf")
+        Dim manual_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO_CSE-User Manual*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
+
         Try
             System.Diagnostics.Process.Start(manual_fname)
         Catch ex As Exception
@@ -966,7 +967,8 @@ Public Class F_Main
 
     ' Menu open the release nodes
     Private Sub ReleaseNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseNotesToolStripMenuItem.Click
-        Dim release_fname As String = joinPaths(MyPath, "Docs", "VECTO-CSE_ReleaseNotes_" & AppVers & ".pdf")
+        Dim release_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO-CSE_ReleaseNotes*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
+
         Try
             System.Diagnostics.Process.Start(release_fname)
         Catch ex As Exception
