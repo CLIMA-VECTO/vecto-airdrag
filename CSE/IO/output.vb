@@ -29,7 +29,7 @@ Module output
             ErgEntryListC = New List(Of tCompCali)
             GenErgOutData(calibration)
             If Crt.hz_out = 1 Then
-                ConvTo1Hz(InputData(tComp.t), InputUndefData)
+                If InputUndefData.Count > 0 Then ConvTo1Hz(InputData(tComp.t), InputUndefData)
                 ConvTo1Hz(InputData)
                 ConvTo1Hz(CalcData)
             End If
