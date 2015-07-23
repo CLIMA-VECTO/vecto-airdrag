@@ -75,9 +75,9 @@ Public Class cCriteria
         g.delta_t_tyre_max = 5
         g.delta_rr_corr_max = 0.3
         g.t_amb_min = 0
-        g.t_amb_max = 35
+        g.t_amb_max = 25
         g.t_amb_var = 3
-        g.t_amb_tarmac = 25
+        g.t_ground_max = 40
 
         Return b
     End Function
@@ -248,8 +248,8 @@ Public Class cCriteria
                             "description": "Maximum variation of ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only).", 
                             "units": "°C", 
                         },
-                        "t_amb_tarmac": {"type": "number", "required": true, 
-                            "description": "Maximum temperature below which no documentation of tarmac conditions is necessary.", 
+                        "t_ground_max": {"type": "number", "required": true, 
+                            "description": "Maximum temperature of the ground.", 
                             "units": "°C", 
                         },
                     }
@@ -343,7 +343,7 @@ Public Class cCriteria
     Public t_amb_min As Single
     Public t_amb_max As Single
     Public t_amb_var As Single
-    Public t_amb_tarmac As Single
+    Public t_ground_max As Single
 
 
     Protected Overrides Sub OnContentUpdated()
@@ -395,7 +395,7 @@ Public Class cCriteria
         Me.delta_t_tyre_max = g("delta_t_tyre_max")
         Me.delta_rr_corr_max = g("delta_rr_corr_max")
         Me.t_amb_var = g("t_amb_var")
-        Me.t_amb_tarmac = g("t_amb_tarmac")
+        Me.t_ground_max = g("t_ground_max")
         Me.t_amb_max = g("t_amb_max")
         Me.t_amb_min = g("t_amb_min")
     End Sub
@@ -453,7 +453,7 @@ Public Class cCriteria
         g.delta_t_tyre_max = Me.delta_t_tyre_max
         g.delta_rr_corr_max = Me.delta_rr_corr_max
         g.t_amb_var = Me.t_amb_var
-        g.t_amb_tarmac = Me.t_amb_tarmac
+        g.t_ground_max = Me.t_ground_max
         g.t_amb_max = Me.t_amb_max
         g.t_amb_min = Me.t_amb_min
     End Sub

@@ -16,7 +16,7 @@ Module sub_linear_regression
         ' Declaration
         Dim i, j, numLS1, numLS2, numHS, numHSg, numT, PosHS(), PosHSg(), lauf, t_amb_num As Integer
         Dim XLS1_Array(,), XLS2_Array(,), XHS_Array(,), XHSg_Array(,), XHS_S(1, 1), YLS1_Array(), YLS2_Array(), YHS_Array(), YHSg_Array(), YHS_S(1) As Double
-        Dim XLR(,), YLR(), WFLR(,), F0, F2, F095, F295, R2, Rho_air_LS1, Rho_air_LS2, t_amb_f, t_amb_max_f, t_amb_min_f As Double
+        Dim XLR(,), YLR(), WFLR(,), F0, F2, F095, F295, R2, Rho_air_LS1, Rho_air_LS2, t_amb_f, t_amb_max_f, t_amb_min_f, t_ground_max_f As Double
         Dim FirstInLS1, FirstInLS2, FirstInHS, FirstInGes As Boolean
         Dim EnumStr As tCompErgReg
 
@@ -28,6 +28,7 @@ Module sub_linear_regression
         t_amb_f = 0
         t_amb_max_f = 0
         t_amb_min_f = 0
+        t_ground_max_f = 0
         t_amb_num = 0
         FirstInGes = True
         ErgValuesReg = New Dictionary(Of tCompErgReg, List(Of Double))
@@ -37,6 +38,7 @@ Module sub_linear_regression
         Job.delta_CdxA = 0
         Job.beta = 0
         Job.valid_t_amb = True
+        Job.valid_t_ground = True
         Job.valid_RRC = True
 
         ' Generate the result dictionary variables
@@ -164,10 +166,12 @@ Module sub_linear_regression
                             If FirstInGes Then
                                 t_amb_max_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
                                 t_amb_min_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
+                                If OptPar(2) Then t_ground_max_f = ErgValuesComp(tCompErg.t_ground)(j)
                                 FirstInGes = False
                             Else
                                 If t_amb_max_f < ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_max_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
                                 If t_amb_min_f > ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_min_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
+                                If OptPar(2) Then If t_ground_max_f < ErgValuesComp(tCompErg.t_ground)(j) Then t_ground_max_f = ErgValuesComp(tCompErg.t_ground)(j)
                             End If
                         End If
 
@@ -201,10 +205,12 @@ Module sub_linear_regression
                                 If FirstInGes Then
                                     t_amb_max_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
                                     t_amb_min_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
+                                    If OptPar(2) Then t_ground_max_f = ErgValuesComp(tCompErg.t_ground)(j)
                                     FirstInGes = False
                                 Else
                                     If t_amb_max_f < ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_max_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
                                     If t_amb_min_f > ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_min_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
+                                    If OptPar(2) Then If t_ground_max_f < ErgValuesComp(tCompErg.t_ground)(j) Then t_ground_max_f = ErgValuesComp(tCompErg.t_ground)(j)
                                 End If
                             End If
                         End If
@@ -332,10 +338,11 @@ Module sub_linear_regression
             logme(9, False, "Invalid test - maximum ambient temperature exceeded")
         ElseIf t_amb_min_f < Crt.t_amb_min Then
             logme(9, False, "Invalid test - fallen below minimum ambient temperature")
-        ElseIf t_amb_max_f > Crt.t_amb_tarmac Then
-            logme(9, False, "Invalid test - Ambient temperature higher than " & Crt.t_amb_tarmac & "°C")
         End If
-
+        If OptPar(2) And t_ground_max_f > Crt.t_ground_max Then
+            logme(9, False, "Invalid test - range of ground temperature exceeded")
+            Job.valid_t_ground = False
+        End If
         Return True
     End Function
 

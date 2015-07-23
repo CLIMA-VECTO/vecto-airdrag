@@ -40,10 +40,10 @@ Partial Class F_Main
         Me.InfoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemManu = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReleaseNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripMenuItemAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.ReportBugToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripMenuItemAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.BackgroundWorkerVECTO = New System.ComponentModel.BackgroundWorker()
         Me.GroupBoxJob = New System.Windows.Forms.GroupBox()
         Me.TextBoxWeather = New System.Windows.Forms.TextBox()
@@ -197,7 +197,7 @@ Partial Class F_Main
         Me.TB_t_amb_min = New System.Windows.Forms.TextBox()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.Label84 = New System.Windows.Forms.Label()
-        Me.TB_t_amb_tarmac = New System.Windows.Forms.TextBox()
+        Me.TB_t_ground_max = New System.Windows.Forms.TextBox()
         Me.LB_t_amb_min = New System.Windows.Forms.Label()
         Me.LDeltaParaMax = New System.Windows.Forms.Label()
         Me.LB_delta_t_tyre_max = New System.Windows.Forms.Label()
@@ -367,18 +367,6 @@ Partial Class F_Main
         Me.ReleaseNotesToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.ReleaseNotesToolStripMenuItem.Text = "Release Notes"
         '
-        'ToolStripMenuItem1
-        '
-        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(186, 6)
-        '
-        'ToolStripMenuItemAbout
-        '
-        Me.ToolStripMenuItemAbout.Image = Global.CSE.My.Resources.Resources.Info
-        Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
-        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(189, 22)
-        Me.ToolStripMenuItemAbout.Text = "About CSE"
-        '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
@@ -390,6 +378,18 @@ Partial Class F_Main
         Me.ReportBugToolStripMenuItem.Name = "ReportBugToolStripMenuItem"
         Me.ReportBugToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.ReportBugToolStripMenuItem.Text = "Report Bug via CITnet"
+        '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(186, 6)
+        '
+        'ToolStripMenuItemAbout
+        '
+        Me.ToolStripMenuItemAbout.Image = Global.CSE.My.Resources.Resources.Info
+        Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
+        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(189, 22)
+        Me.ToolStripMenuItemAbout.Text = "About CSE"
         '
         'BackgroundWorkerVECTO
         '
@@ -1952,7 +1952,7 @@ Partial Class F_Main
         Me.GroupBox14.Controls.Add(Me.TB_t_amb_min)
         Me.GroupBox14.Controls.Add(Me.Label24)
         Me.GroupBox14.Controls.Add(Me.Label84)
-        Me.GroupBox14.Controls.Add(Me.TB_t_amb_tarmac)
+        Me.GroupBox14.Controls.Add(Me.TB_t_ground_max)
         Me.GroupBox14.Controls.Add(Me.LB_t_amb_min)
         Me.GroupBox14.Controls.Add(Me.LDeltaParaMax)
         Me.GroupBox14.Controls.Add(Me.LB_delta_t_tyre_max)
@@ -1994,7 +1994,7 @@ Partial Class F_Main
         Me.LB_t_amb_tarmac.Name = "LB_t_amb_tarmac"
         Me.LB_t_amb_tarmac.Size = New System.Drawing.Size(74, 13)
         Me.LB_t_amb_tarmac.TabIndex = 69
-        Me.LB_t_amb_tarmac.Text = "t_amb_tarmac"
+        Me.LB_t_amb_tarmac.Text = "t_ground_max"
         '
         'TB_t_amb_min
         '
@@ -2022,13 +2022,13 @@ Partial Class F_Main
         Me.Label84.TabIndex = 67
         Me.Label84.Text = "[°C]"
         '
-        'TB_t_amb_tarmac
+        'TB_t_ground_max
         '
-        Me.TB_t_amb_tarmac.Location = New System.Drawing.Point(133, 147)
-        Me.TB_t_amb_tarmac.Name = "TB_t_amb_tarmac"
-        Me.TB_t_amb_tarmac.Size = New System.Drawing.Size(45, 20)
-        Me.TB_t_amb_tarmac.TabIndex = 65
-        Me.TB_t_amb_tarmac.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TB_t_ground_max.Location = New System.Drawing.Point(133, 147)
+        Me.TB_t_ground_max.Name = "TB_t_ground_max"
+        Me.TB_t_ground_max.Size = New System.Drawing.Size(45, 20)
+        Me.TB_t_ground_max.TabIndex = 65
+        Me.TB_t_ground_max.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'LB_t_amb_min
         '
@@ -2426,7 +2426,7 @@ Partial Class F_Main
     Friend WithEvents LB_t_amb_tarmac As System.Windows.Forms.Label
     Friend WithEvents TB_t_amb_min As System.Windows.Forms.TextBox
     Friend WithEvents Label84 As System.Windows.Forms.Label
-    Friend WithEvents TB_t_amb_tarmac As System.Windows.Forms.TextBox
+    Friend WithEvents TB_t_ground_max As System.Windows.Forms.TextBox
     Friend WithEvents LB_t_amb_min As System.Windows.Forms.Label
     Friend WithEvents PBInfoIconCrt As System.Windows.Forms.PictureBox
     Friend WithEvents TBInfoCrt As System.Windows.Forms.TextBox

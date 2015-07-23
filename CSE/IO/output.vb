@@ -250,6 +250,13 @@ Module output
             Else
                 FileOut.WriteLine("# Ambient temp:", "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
             End If
+            If OptPar(2) Then
+                If Job.valid_t_ground Then
+                    FileOut.WriteLine("# Ground temp:", "Ok")
+                Else
+                    FileOut.WriteLine("# Ground temp:", "Invalid test - range of ground temperature exceeded")
+                End If
+            End If
 
             FileOut.WriteLine("#")
 
@@ -299,12 +306,12 @@ Module output
         End If
         AddToErg(tComp.tq_l, fCompName(tComp.tq_l), fCompUnit(tComp.tq_l), "InputData")
         AddToErg(tComp.tq_r, fCompName(tComp.tq_r), fCompUnit(tComp.tq_r), "InputData")
+        If OptPar(2) Then AddToErg(tComp.t_ground, fCompName(tComp.t_ground), fCompUnit(tComp.t_ground), "InputData")
         AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), fCompUnit(tComp.t_amb_veh), "InputData")
         If OptPar(3) Then AddToErg(tComp.t_tire, fCompName(tComp.t_tire), fCompUnit(tComp.t_tire), "InputData")
         ' Write optional parameters
         If OptPar(0) Then AddToErg(tComp.trigger, fCompName(tComp.trigger), fCompUnit(tComp.trigger), "InputData")
         If OptPar(1) Then AddToErg(tComp.p_tire, fCompName(tComp.p_tire), fCompUnit(tComp.p_tire), "InputData")
-        If OptPar(2) Then AddToErg(tComp.fc, fCompName(tComp.fc), fCompUnit(tComp.fc), "InputData")
 
         ' Undefined input data
         For Each sKV In InputUndefData
@@ -438,6 +445,7 @@ Module output
             AddToErg(tCompErg.v_veh_float, fCompName(tCompErg.v_veh_float), fCompUnit(tCompErg.v_veh_float), "ErgValues")
             AddToErg(tCompErg.v_veh_float_max, fCompName(tCompErg.v_veh_float_max), fCompUnit(tCompErg.v_veh_float_max), "ErgValues")
             AddToErg(tCompErg.v_veh_float_min, fCompName(tCompErg.v_veh_float_min), fCompUnit(tCompErg.v_veh_float_min), "ErgValues")
+            AddToErg(tCompErg.t_ground, fCompName(tCompErg.t_ground), fCompUnit(tCompErg.t_ground), "ErgValues")
             AddToErg(tCompErg.t_amb_veh, fCompName(tCompErg.t_amb_veh), fCompUnit(tCompErg.t_amb_veh), "ErgValues")
             AddToErg(tCompErg.t_amb_stat, fCompName(tCompErg.t_amb_stat), fCompUnit(tCompErg.t_amb_stat), "ErgValues")
             AddToErg(tCompErg.p_amb_stat, fCompName(tCompErg.p_amb_stat), fCompUnit(tCompErg.p_amb_stat), "ErgValues")
