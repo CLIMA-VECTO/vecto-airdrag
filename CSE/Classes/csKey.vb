@@ -34,10 +34,10 @@ Public Class csKeyMeas
     Public n_card As String = "<N_CARD>"
     Public tq_l As String = "<TQ_L>"
     Public tq_r As String = "<TQ_R>"
+    Public t_ground As String = "<T_GROUND>"
     Public t_amb_veh As String = "<T_AMB_VEH>"
     Public t_tire As String = "<T_TIRE>"
     Public p_tire As String = "<P_TIRE>"
-    Public fc As String = "<FC>"
     Public trigger As String = "<TRIGGER>"
     Public valid As String = "<VALID>"
 End Class

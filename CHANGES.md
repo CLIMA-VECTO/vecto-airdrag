@@ -1,5 +1,16 @@
 VECTO-CSE: Changes
 ===================
+#### 2015-07-23: v2.0.2-beta6 ####
+TUG improvements:
+
+  * New version number
+  * Bugfix calculation without additional signals
+  * Update user manual and release notes (Now always the newest version will be opened)
+  * Deleted unused variables (FC from input data, t_amb_tamac from criteria)
+  * Add ground temperature as optional signal to input data (<t_ground>)
+  * Add new criteria parameter t_ground_max = 40°C
+  * Set t_amb_max to 25°C (old 35°C)
+  
 #### 2015-07-20: v2.0.2-beta6 ####
 TUG improvements:
 

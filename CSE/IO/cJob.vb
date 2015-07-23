@@ -46,6 +46,7 @@ Public Class cJob
         b.CdxA0 = 0
         b.CdxA0_opt2 = 0
         b.valid_t_amb = True
+        b.valid_t_ground = True
         b.valid_RRC = True
         Return b
     End Function
@@ -156,6 +157,11 @@ Public Class cJob
                     "description": "Invalid if the ambient temperature fallen below minimum.", 
                     'default': true,
                 },
+                "valid_t_ground": {
+                    "type": "boolean", 
+                    "description": "Invalid if the ground temperature is higher than allowed.", 
+                    'default': true,
+                },
                 "valid_RRC": {
                     "type": "boolean", 
                     "description": "Invalid if the ambient temperature higher than allowed.", 
@@ -198,6 +204,7 @@ Public Class cJob
         Job.CdxA0 = 0
         Job.CdxA0_opt2 = 0
         Job.valid_t_amb = True
+        Job.valid_t_ground = True
         Job.valid_RRC = True
     End Sub
 
@@ -241,6 +248,7 @@ Public Class cJob
     Public CdxA0 As Double
     Public CdxA0_opt2 As Double
     Public valid_t_amb As Boolean
+    Public valid_t_ground As Boolean
     Public valid_RRC As Boolean
 
     ''' <summary>Override it to set custome fields</summary>
@@ -257,6 +265,7 @@ Public Class cJob
         b.CdxA0 = Math.Round(CdxA0, 5)
         b.CdxA0_opt2 = Math.Round(CdxA0_opt2, 5)
         b.valid_t_amb = valid_t_amb
+        b.valid_t_ground = valid_t_ground
         b.valid_RRC = valid_RRC
 
         Crt.OnBeforeContentStored_hack()

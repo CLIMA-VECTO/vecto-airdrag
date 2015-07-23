@@ -22,10 +22,10 @@ Module CSE_Globals
         n_card
         tq_l
         tq_r
+        t_ground
         t_amb_veh
         t_tire
         p_tire
-        fc
         trigger
         user_valid
         Undefined
@@ -77,7 +77,6 @@ Module CSE_Globals
         F_res
         v_veh_1s
         v_veh_float
-        t_amp_veh
         t_amp_stat
         p_amp_stat
         rh_stat
@@ -133,6 +132,7 @@ Module CSE_Globals
         F_res
         v_veh_1s
         v_veh_float
+        t_ground
         t_amb_veh
         t_amb_stat
         p_amb_stat
@@ -221,14 +221,14 @@ Module CSE_Globals
                 Return tComp.tq_l
             Case sKey.Meas.tq_r
                 Return tComp.tq_r
+            Case sKey.Meas.t_ground
+                Return tComp.t_ground
             Case sKey.Meas.t_amb_veh
                 Return tComp.t_amb_veh
             Case sKey.Meas.t_tire
                 Return tComp.t_tire
             Case sKey.Meas.p_tire
                 Return tComp.p_tire
-            Case sKey.Meas.fc
-                Return tComp.fc
             Case sKey.Meas.trigger
                 Return tComp.trigger
             Case sKey.Meas.valid
@@ -296,14 +296,14 @@ Module CSE_Globals
                 Return "tq_l"
             Case tComp.tq_r
                 Return "tq_r"
+            Case tComp.t_ground
+                Return "t_ground"
             Case tComp.t_amb_veh
                 Return "t_amb_veh"
             Case tComp.t_tire
                 Return "t_tire"
             Case tComp.p_tire
                 Return "p_tire"
-            Case tComp.fc
-                Return "FC"
             Case tComp.trigger
                 Return "trigger"
             Case tComp.user_valid
@@ -341,14 +341,14 @@ Module CSE_Globals
                 Return "[Nm]"
             Case tComp.tq_r
                 Return "[Nm]"
+            Case tComp.t_ground
+                Return "[°C]"
             Case tComp.t_amb_veh
                 Return "[°C]"
             Case tComp.t_tire
                 Return "[°C]"
             Case tComp.p_tire
                 Return "[bar]"
-            Case tComp.fc
-                Return "[kg/h]"
             Case tComp.trigger
                 Return "[-]"
             Case tComp.user_valid
@@ -451,8 +451,6 @@ Module CSE_Globals
                 Return "v_veh_1s"
             Case tCompCali.v_veh_float
                 Return "v_veh_float"
-            Case tCompCali.t_amp_veh
-                Return "t_amp_veh"
             Case tCompCali.t_amp_stat
                 Return "t_amp_stat"
             Case tCompCali.p_amp_stat
@@ -560,8 +558,6 @@ Module CSE_Globals
                 Return "[km/h]"
             Case tCompCali.v_veh_float
                 Return "[km/h]"
-            Case tCompCali.t_amp_veh
-                Return "[°C]"
             Case tCompCali.t_amp_stat
                 Return "[°C]"
             Case tCompCali.p_amp_stat
@@ -715,6 +711,8 @@ Module CSE_Globals
                 Return "v_veh_1s"
             Case tCompErg.v_veh_float
                 Return "v_veh_float"
+            Case tCompErg.t_ground
+                Return "t_ground"
             Case tCompErg.t_amb_veh
                 Return "t_amb_veh"
             Case tCompErg.t_amb_stat
@@ -884,6 +882,8 @@ Module CSE_Globals
                 Return "[km/h]"
             Case tCompErg.v_veh_float
                 Return "[km/h]"
+            Case tCompErg.t_ground
+                Return "[°C]"
             Case tCompErg.t_amb_veh
                 Return "[°C]"
             Case tCompErg.t_amb_stat

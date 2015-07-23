@@ -225,10 +225,10 @@ Public Module input
             MeasCheck.Add(tComp.n_eng, False)
             MeasCheck.Add(tComp.tq_l, False)
             MeasCheck.Add(tComp.tq_r, False)
+            MeasCheck.Add(tComp.t_ground, False)
             MeasCheck.Add(tComp.t_amb_veh, False)
             MeasCheck.Add(tComp.t_tire, False)
             MeasCheck.Add(tComp.p_tire, False)
-            MeasCheck.Add(tComp.fc, False)
             MeasCheck.Add(tComp.trigger, False)
             MeasCheck.Add(tComp.user_valid, False)
 
@@ -277,7 +277,7 @@ Public Module input
                             OptPar(0) = False
                         Case tComp.p_tire
                             OptPar(1) = False
-                        Case tComp.fc
+                        Case tComp.t_ground
                             OptPar(2) = False
                         Case tComp.t_tire
                             OptPar(3) = False
