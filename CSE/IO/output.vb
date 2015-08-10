@@ -132,8 +132,8 @@ Module output
             If calibration Then
                 FileOut.WriteLine("# Datafile: ", Job.calib_run_fpath)
             Else
-                FileOut.WriteLine("# Datafile LS1: ", coasting_fpaths(0))
-                FileOut.WriteLine("# Datafile HS: ", coasting_fpaths(1))
+                FileOut.WriteLine("# Datafile HS: ", coasting_fpaths(0))
+                FileOut.WriteLine("# Datafile LS1: ", coasting_fpaths(1))
                 FileOut.WriteLine("# Datafile LS2: ", coasting_fpaths(2))
             End If
             FileOut.WriteLine("#")
