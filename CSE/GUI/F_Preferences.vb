@@ -21,6 +21,8 @@ Public Class F_Preferences
         controlPairs.Add({Me.writeLog, Nothing})
         controlPairs.Add({Me.logLevel, Label1})
         controlPairs.Add({Me.logSize, Label16})
+        controlPairs.Add({Me.listSep, Label2})
+        controlPairs.Add({Me.decSep, Label4})
         controlPairs.Add({Me.includeSchemas, Nothing})
         controlPairs.Add({Me.strictBodies, Nothing})
         controlPairs.Add({Me.hideUsername, Nothing})
@@ -87,6 +89,8 @@ Public Class F_Preferences
         Me.writeLog.Checked = value.writeLog
         Me.logLevel.Text = value.logLevel
         Me.logSize.Text = value.logSize
+        Me.listSep.Text = value.listSep
+        Me.decSep.Text = value.decSep
         Me.includeSchemas.Checked = value.includeSchemas
         Me.strictBodies.Checked = value.strictBodies
         Me.hideUsername.Checked = value.hideUsername
@@ -100,6 +104,8 @@ Public Class F_Preferences
         value.writeLog = Me.writeLog.Checked
         value.logLevel = Me.logLevel.Text
         value.logSize = Me.logSize.Text
+        value.listSep = Me.listSep.Text
+        value.decSep = Me.decSep.Text
         value.includeSchemas = Me.includeSchemas.Checked
         value.strictBodies = Me.strictBodies.Checked
         value.hideUsername = Me.hideUsername.Checked
@@ -114,9 +120,15 @@ Public Class F_Preferences
 
     Private Sub SaveHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click, ButtonSave.Click
         Try
+            ' Look if List and Dec seperator are the same
+            If Me.decSep.Text = Me.listSep.Text Then
+                logme(8, True, format("List and decimal seperator are the same ({0})! \n  Both are set to default", Me.decSep.Text))
+                Me.decSep.Text = Prefs.PropDefault("decSep")
+                Me.listSep.Text = Prefs.PropDefault("listSep")
+            End If
+
             '' OK-btn save when dirty, always closes-form.
             '' Save-btn: always saves, burt not closes-form.
-            ''
             If sender IsNot ButtonOK OrElse Me.Dirty Then
                 StorePrefs()
             End If
@@ -147,8 +159,7 @@ Public Class F_Preferences
             Prefs = New cPreferences(PrefsPath)
             UI_PopulateFrom(Prefs)
         Catch ex As Exception
-            logme(9, True, format("Failed loading Preferences({0}) due to: {1}", _
-                                        PrefsPath, ex.Message), ex)
+            logme(9, True, format("Failed loading Preferences({0}) due to: {1}", PrefsPath, ex.Message), ex)
         End Try
     End Sub
 
@@ -201,7 +212,25 @@ Public Class F_Preferences
     ' Changes in the LogSizeBox
     Private Sub TextBoxLogSize_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles logSize.KeyPress, TextBox1.KeyPress
         Select Case Asc(e.KeyChar)
-            Case 48 To 58, 8 ' Numbers allowed (ASCII)
+            Case 48 To 57, 8 ' Numbers allowed (ASCII)
+            Case Else ' Eliminate all other input data
+                e.Handled = True
+        End Select
+    End Sub
+
+    ' Changes in the lisSepBox
+    Private Sub TextBoxlistSep_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles listSep.KeyPress
+        Select Case Asc(e.KeyChar)
+            Case 44, 46, 58, 59, 8 ' Numbers allowed (ASCII)
+            Case Else ' Eliminate all other input data
+                e.Handled = True
+        End Select
+    End Sub
+
+    ' Changes in the lisSepBox
+    Private Sub TextBoxdecSep_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles decSep.KeyPress
+        Select Case Asc(e.KeyChar)
+            Case 44, 46, 58, 59, 8 ' Numbers allowed (ASCII)
             Case Else ' Eliminate all other input data
                 e.Handled = True
         End Select
@@ -212,5 +241,14 @@ Public Class F_Preferences
         If Me.logSize.Text = Nothing Then Me.logSize.Text = Prefs.PropDefault("logSize")
     End Sub
 
+    ' Set the listsep to default if it is leave without an input
+    Private Sub TextBoxlistSep_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles listSep.Leave
+        If Me.listSep.Text = Nothing Then Me.listSep.Text = Prefs.PropDefault("listSep")
+    End Sub
+
+    ' Set the decsep to default if it is leave without an input
+    Private Sub TextBoxdecSep_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles decSep.Leave
+        If Me.decSep.Text = Nothing Then Me.decSep.Text = Prefs.PropDefault("decSep")
+    End Sub
 End Class
 

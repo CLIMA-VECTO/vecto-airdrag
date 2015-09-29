@@ -12,7 +12,11 @@ Module CSE_Globals
     Public Enum tComp
         t
         lati
+        lati_D
+        lati_S
         longi
+        longi_D
+        longi_S
         hdg
         v_veh_GPS
         v_veh_CAN
@@ -201,8 +205,16 @@ Module CSE_Globals
                 Return tComp.t
             Case sKey.Meas.lati
                 Return tComp.lati
+            Case sKey.Meas.lati_D
+                Return tComp.lati_D
+            Case sKey.Meas.lati_S
+                Return tComp.lati_S
             Case sKey.Meas.longi
                 Return tComp.longi
+            Case sKey.Meas.longi_D
+                Return tComp.longi_D
+            Case sKey.Meas.longi_S
+                Return tComp.longi_S
             Case sKey.Meas.hdg
                 Return tComp.hdg
             Case sKey.Meas.v_veh_GPS
@@ -278,6 +290,14 @@ Module CSE_Globals
                 Return "Lat"
             Case tComp.longi
                 Return "Long"
+            Case tComp.lati_D
+                Return "Lat_D"
+            Case tComp.longi_D
+                Return "Long_D"
+            Case tComp.lati_S
+                Return "Lat_S"
+            Case tComp.longi_S
+                Return "Long_S"
             Case tComp.hdg
                 Return "Heading"
             Case tComp.v_veh_GPS
@@ -323,6 +343,14 @@ Module CSE_Globals
                 Return "[mm.mm]"
             Case tComp.longi
                 Return "[mm.mm]"
+            Case tComp.lati_D
+                Return "[dd.dd]"
+            Case tComp.longi_D
+                Return "[dd.dd]"
+            Case tComp.lati_S
+                Return "[ss.ss]"
+            Case tComp.longi_S
+                Return "[ss.ss]"
             Case tComp.hdg
                 Return "[°]"
             Case tComp.v_veh_GPS

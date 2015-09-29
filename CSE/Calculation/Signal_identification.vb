@@ -33,7 +33,7 @@ Module Signal_identification
             If JumpPoint.Count > 0 Then
                 For i = 0 To JumpPoint.Count - 1
                     If CalcData(tCompCali.SecID)(JumpPoint(i)) <> 0 Then
-                        Throw New Exception(format("The detected leap in time({0}) is not allowed to be inside a measurement section!", CalcData(tCompCali.SecID)(JumpPoint(i))))
+                        Throw New Exception(format("The detected leap in time({0}) is not allowed to be inside a measurement section!", JumpPoint(i)))
                     End If
                 Next i
             End If
@@ -364,7 +364,13 @@ Module Signal_identification
                 CalcData(tCompCali.lati_root).Add(koord(1))
 
                 ' Calculate the root distance
-                If FirstIn Or CalcData(tCompCali.SecID)(i - 1) <> CalcData(tCompCali.SecID)(i) Then
+                If i = 0 Then
+                    logme(8, False, "The first data point started in a measurement section! This is not allowed and this section is set to invalid.")
+                    BegCoordX = koord(0)
+                    BegCoordY = koord(1)
+                    CalcData(tCompCali.dist_root).Add(0)
+                    FirstIn = False
+                ElseIf FirstIn Or CalcData(tCompCali.SecID)(i - 1) <> CalcData(tCompCali.SecID)(i) Then
                     BegCoordX = koord(0)
                     BegCoordY = koord(1)
                     CalcData(tCompCali.dist_root).Add(0)

@@ -43,26 +43,22 @@ Namespace My
                 Dim fiAss As New IO.FileInfo(joinPaths(Application.Info.DirectoryPath, Application.Info.AssemblyName & ".exe"))
 
                 Prefs = New cPreferences(True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
-                'F_Main.installJob(New cJob()) NO! cannot instantiate form without JOB/Crt.
                 Job = New cJob(True)  ' !!!Skip schema
                 Crt = Job.Criteria
-
-                'Separator!
-                SetCulture = False
-                If System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator <> "." Then
-                    SetCulture = True
-                    Try
-                        System.Threading.Thread.CurrentThread.CurrentCulture = New System.Globalization.CultureInfo("en-US")
-                        System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("en-US")
-                        'MSGtoForm(8, "Set CurrentCulture to 'en-US'", True)
-                    Catch ex As Exception
-                        logme(9, False, "Failed to set Application Regional Settings to 'en-US'! Check system decimal- and group- separators!")
-                    End Try
-                End If
 
                 ' Path to the *.exe 
                 MyPath = My.Application.Info.DirectoryPath & "\"
                 PrefsPath = joinPaths(MyPath, "config", "preferences.json")
+
+                'Separator!
+                If System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator <> "." Then
+                    Try
+                        System.Threading.Thread.CurrentThread.CurrentCulture = New System.Globalization.CultureInfo("en-US")
+                        System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("en-US")
+                    Catch ex As Exception
+                        logme(9, False, "Failed to set Application Regional Settings to 'en-US'! Check system decimal- and group- separators!")
+                    End Try
+                End If
 
                 ' Generateion of folder for the file history if not exists
                 FB_FilHisDir = joinPaths(MyPath, "config", "fileHistory\")

@@ -16,6 +16,7 @@ Public Module input
         ' Declarations
         Dim i, j As Integer
         Dim RefDID, RefID As Integer
+        Dim DemoDataF As Boolean = False
         Dim RefHead As Double
         Dim Line() As String
         Using FileInMSCSpez As New cFile_V3
@@ -25,7 +26,13 @@ Public Module input
             logme(5, False, "Read MS configuration file")
 
             ' Open the MSC spezification file
-            FileInMSCSpez.OpenReadWithEx(MSCfile)
+            If fPath(MSCfile) = joinPaths(MyPath, "DemoData") Then
+                System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = "."
+                FileInMSCSpez.OpenReadWithEx(MSCfile)
+                DemoDataF = True
+            Else
+                FileInMSCSpez.OpenReadWithEx(MSCfile, Prefs.listSep)
+            End If
 
             ' Determine the trigger status 
             MSCX.tUse = FileInMSCSpez.ReadLine(0)
@@ -100,6 +107,12 @@ Public Module input
                 MSCX.headID.Add(1)
             Next i
         End If
+
+        ' Change the decimal seperator back
+        If DemoDataF Then
+            System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = Prefs.decSep
+            DemoDataF = False
+        End If
     End Sub
 
     ' Read the wather data
@@ -108,6 +121,7 @@ Public Module input
         Using FileInWeather As New cFile_V3
             Dim Line() As String
             Dim i, tdim As Integer
+            Dim DemoDataF As Boolean = False
             Dim Comp As tCompWeat
             Dim WeathCheck As New Dictionary(Of tCompWeat, Boolean)
             Dim sKVW As New KeyValuePair(Of tCompWeat, Boolean)
@@ -119,7 +133,13 @@ Public Module input
             InputWeatherData = New Dictionary(Of tCompWeat, List(Of Double))
 
             'Open file
-            FileInWeather.OpenReadWithEx(Datafile)
+            If fPath(Datafile) = joinPaths(MyPath, "DemoData") Then
+                System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = "."
+                FileInWeather.OpenReadWithEx(Datafile)
+                DemoDataF = True
+            Else
+                FileInWeather.OpenReadWithEx(Datafile, Prefs.listSep)
+            End If
 
             ' Build check key
             WeathCheck.Add(tCompWeat.t, False)
@@ -172,6 +192,13 @@ Public Module input
                 Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tdim + 1, ex.Message), ex)
             End Try
 
+
+            ' Change the decimal seperator back
+            If DemoDataF Then
+                System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = Prefs.decSep
+                DemoDataF = False
+            End If
+
         End Using
     End Sub
 
@@ -184,6 +211,7 @@ Public Module input
             Dim valid_set As Boolean = False
             Dim UTMcalc As Boolean = False
             Dim ZoneChange As Boolean = False
+            Dim DemoDataF As Boolean = False
             Dim Comp As tComp
             Dim MeasCheck As New Dictionary(Of tComp, Boolean)
             Dim sKVM As New KeyValuePair(Of tComp, Boolean)
@@ -203,6 +231,9 @@ Public Module input
             For i = 0 To UBound(OptPar)
                 OptPar(i) = True
             Next i
+            For i = 0 To UBound(KoordSys)
+                KoordSys(i) = False
+            Next i
 
             ' Generate the calculation dictionary variables
             For Each EnumStr In System.Enum.GetValues(GetType(tCompCali))
@@ -210,12 +241,22 @@ Public Module input
             Next
 
             'Open file
-            FileInMeasure.OpenReadWithEx(Datafile)
+            If fPath(Datafile) = joinPaths(MyPath, "DemoData") Then
+                System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = "."
+                FileInMeasure.OpenReadWithEx(Datafile)
+                DemoDataF = True
+            Else
+                FileInMeasure.OpenReadWithEx(Datafile, Prefs.listSep)
+            End If
 
             ' Build check key
             MeasCheck.Add(tComp.t, False)
             MeasCheck.Add(tComp.lati, False)
             MeasCheck.Add(tComp.longi, False)
+            MeasCheck.Add(tComp.lati_D, False)
+            MeasCheck.Add(tComp.longi_D, False)
+            MeasCheck.Add(tComp.lati_S, False)
+            MeasCheck.Add(tComp.longi_S, False)
             MeasCheck.Add(tComp.hdg, False)
             MeasCheck.Add(tComp.v_veh_GPS, False)
             MeasCheck.Add(tComp.v_veh_CAN, False)
@@ -304,6 +345,22 @@ Public Module input
                                     Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
                                 End If
                             End If
+                        Case tComp.lati, tComp.lati_D, tComp.lati_S, tComp.longi, tComp.longi_D, tComp.longi_S, tComp.longi, tComp.longi_D, tComp.longi_S
+                            ' Latitude controlling
+                            If Not MeasCheck(tComp.lati) And Not MeasCheck(tComp.lati_D) And Not MeasCheck(tComp.lati_S) Then
+                                Throw New Exception("Missing coordinate signal for " & fCompName(sKVM.Key))
+                            End If
+                            ' Longitude controlling
+                            If Not MeasCheck(tComp.longi) And Not MeasCheck(tComp.longi_D) And Not MeasCheck(tComp.longi_S) Then
+                                Throw New Exception("Missing coordinate signal for " & fCompName(sKVM.Key))
+                            End If
+                            ' Combination controlling
+                            If MeasCheck(tComp.lati) And MeasCheck(tComp.longi) Then KoordSys(0) = True
+                            If MeasCheck(tComp.lati_D) And MeasCheck(tComp.longi_D) Then KoordSys(1) = True
+                            If MeasCheck(tComp.lati_S) And MeasCheck(tComp.longi_S) Then KoordSys(2) = True
+                            If Not KoordSys(0) And Not KoordSys(1) And Not KoordSys(2) Then
+                                Throw New Exception("Only same coordinate system allowed for calculation. Please give the coordinates in one system [DD.DD], [MM.MM] or [SS.SS].")
+                            End If
                         Case Else
                             Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
                     End Select
@@ -325,9 +382,12 @@ Public Module input
                                     JumpPoint.Add(tDim)
                                 End If
                             End If
-                        ElseIf sKV.Key = tComp.lati Then
+                        ElseIf sKV.Key = tComp.lati Or sKV.Key = tComp.lati_D Or sKV.Key = tComp.lati_S Then
                             If UTMcalc Then
-                                UTMCoord = UTM(InputData(sKV.Key)(tDim) / 60, InputData(tComp.longi)(tDim) / 60)
+                                If MeasCheck(tComp.lati) And sKV.Key = tComp.lati Then UTMCoord = UTM(InputData(sKV.Key)(tDim) / 60, InputData(tComp.longi)(tDim) / 60)
+                                If Not MeasCheck(tComp.lati) And MeasCheck(tComp.lati_D) And sKV.Key = tComp.lati_D Then UTMCoord = UTM(InputData(sKV.Key)(tDim), InputData(tComp.longi_D)(tDim))
+                                If Not MeasCheck(tComp.lati) And Not MeasCheck(tComp.lati_D) And MeasCheck(tComp.lati_S) And sKV.Key = tComp.lati_S Then UTMCoord = UTM(InputData(sKV.Key)(tDim) / 3600, InputData(tComp.longi_S)(tDim) / 3600)
+
                                 If Not ZoneChange Then
                                     If tDim > 0 Then
                                         If CalcData(tCompCali.zone_UTM).Last <> UTMCoord.Zone Then
@@ -343,9 +403,12 @@ Public Module input
                             Else
                                 UTMcalc = True
                             End If
-                        ElseIf sKV.Key = tComp.longi Then
+                        ElseIf sKV.Key = tComp.longi Or sKV.Key = tComp.longi_D Or sKV.Key = tComp.longi_S Then
                             If UTMcalc Then
-                                UTMCoord = UTM(InputData(tComp.lati)(tDim) / 60, InputData(sKV.Key)(tDim) / 60)
+                                If MeasCheck(tComp.longi) And sKV.Key = tComp.longi Then UTMCoord = UTM(InputData(tComp.lati)(tDim) / 60, InputData(sKV.Key)(tDim) / 60)
+                                If Not MeasCheck(tComp.longi) And MeasCheck(tComp.longi_D) And sKV.Key = tComp.longi_D Then UTMCoord = UTM(InputData(tComp.lati_D)(tDim), InputData(sKV.Key)(tDim))
+                                If Not MeasCheck(tComp.longi) And Not MeasCheck(tComp.longi_D) And MeasCheck(tComp.longi_S) And sKV.Key = tComp.longi_S Then UTMCoord = UTM(InputData(tComp.lati_S)(tDim) / 3600, InputData(sKV.Key)(tDim) / 3600)
+
                                 If Not ZoneChange Then
                                     If tDim > 0 Then
                                         If CalcData(tCompCali.zone_UTM).Last <> UTMCoord.Zone Then
@@ -388,13 +451,13 @@ Public Module input
                 Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tDim + 1, ex.Message), ex)
             End Try
 
-
-
             ' Make the zone adjustment for the UTM coords
             Do While ZoneChange
                 Zone1CentralMeridian = Zone1CentralMeridian + 5
                 For i = 0 To CalcData(tCompCali.lati_UTM).Count - 1
-                    UTMCoord = UTM(InputData(tComp.lati)(i) / 60, InputData(tComp.longi)(i) / 60)
+                    If MeasCheck(tComp.lati) Then UTMCoord = UTM(InputData(tComp.lati)(i) / 60, InputData(tComp.longi)(i) / 60)
+                    If Not MeasCheck(tComp.lati) And MeasCheck(tComp.lati_D) Then UTMCoord = UTM(InputData(tComp.lati_D)(i), InputData(tComp.longi_D)(i))
+                    If Not MeasCheck(tComp.lati) And Not MeasCheck(tComp.lati_D) And MeasCheck(tComp.lati_S) Then UTMCoord = UTM(InputData(tComp.lati_S)(i) / 3600, InputData(tComp.longi_S)(i) / 3600)
                     If i > 0 Then
                         If CalcData(tCompCali.zone_UTM)(i - 1) <> UTMCoord.Zone Then
                             Exit For
@@ -410,11 +473,16 @@ Public Module input
                 End If
             Loop
 
+            ' Change the decimal seperator back
+            If DemoDataF Then
+                System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = Prefs.decSep
+                DemoDataF = False
+            End If
+
             'Developer export of input data converted from MM.MM to UTM
             'fOuttest(Datafile)
         End Using
     End Sub
-
 
     ' Function to read the generic shape file
     Sub fGenShpLoad(ByVal genShpFile As String)
@@ -424,6 +492,8 @@ Public Module input
         Dim Line(), Line2(), Line3() As String
         Dim XVal(,), YVal(,), XClone(), YClone() As Double
         Using FileInGenShp As New cFile_V3
+
+            ' Open the file
             FileInGenShp.OpenReadWithEx(genShpFile)
 
             ' Read the line
