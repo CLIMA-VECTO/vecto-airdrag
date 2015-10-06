@@ -15,7 +15,7 @@ Public Module input
     Sub ReadInputMSC(ByRef MSCX As cMSC, ByVal MSCfile As String, Optional ByVal calibration As Boolean = True)
         ' Declarations
         Dim i, j As Integer
-        Dim RefDID, RefID As Integer
+        Dim RefDID, RefID, CoordID As Integer
         Dim DemoDataF As Boolean = False
         Dim RefHead As Double
         Dim Line() As String
@@ -35,7 +35,25 @@ Public Module input
             End If
 
             ' Determine the trigger status 
-            MSCX.tUse = FileInMSCSpez.ReadLine(0)
+            Line = FileInMSCSpez.ReadLine
+            If Line(0).Length <> 1 Then
+                Throw New Exception(format("The configuration file does not fit the file format. Control the seperators under Tools/preferences and in the file. Readed value can not converted ({0})", Line(0)))
+            Else
+                MSCX.tUse = Line(0)
+            End If
+
+            ' Check the headers for the coordinate unit
+            Line = FileInMSCSpez.ReadLine
+            If IsNumeric(Line(0)) Then
+                Throw New Exception(format("The header of the configuration file is missing. Please include it or comment it in the file ({0}).", MSCfile))
+            Else
+                CoordID = 0
+                If Line(4).ToUpper.Contains("(D)") Then
+                    CoordID = 1
+                ElseIf Line(4).ToUpper.Contains("(S)") Then
+                    CoordID = 2
+                End If
+            End If
 
             ' Input loop
             Try
@@ -47,10 +65,27 @@ Public Module input
                     MSCX.dID.Add(Line(1))
                     MSCX.len.Add(Line(2))
                     MSCX.head.Add(Line(3))
-                    MSCX.latS.Add(Line(4))
-                    MSCX.longS.Add(Line(5))
-                    MSCX.latE.Add(Line(6))
-                    MSCX.longE.Add(Line(7))
+                    ' Save the coordinates in minutes
+                    Select Case CoordID
+                        Case 0
+                            ' [MM.MM]
+                            MSCX.latS.Add(Line(4))
+                            MSCX.longS.Add(Line(5))
+                            MSCX.latE.Add(Line(6))
+                            MSCX.longE.Add(Line(7))
+                        Case 1
+                            ' [DD.DD]
+                            MSCX.latS.Add(Line(4) * 60)
+                            MSCX.longS.Add(Line(5) * 60)
+                            MSCX.latE.Add(Line(6) * 60)
+                            MSCX.longE.Add(Line(7) * 60)
+                        Case 2
+                            ' [SS.SS]
+                            MSCX.latS.Add(Line(4) / 60)
+                            MSCX.longS.Add(Line(5) / 60)
+                            MSCX.latE.Add(Line(6) / 60)
+                            MSCX.longE.Add(Line(7) / 60)
+                    End Select
                     If Crt.gradient_correction And Not calibration Then MSCX.AltPath.Add(Line(8))
                 Loop
             Catch ex As Exception
@@ -60,6 +95,19 @@ Public Module input
 
         End Using
 
+        ' Minimum datacheck
+        If (MSCX.meID.Count - 1) < 2 Then
+            Throw New Exception(format("Not eneough measurement sections definied in file ({0}). Minimum number of definitions are two.", fName(MSCfile, True)))
+        End If
+
+        ' Checks for same definition
+        For i = 1 To MSCX.meID.Count - 1
+            For j = i + 1 To MSCX.meID.Count - 1
+                If MSCX.meID(i) = MSCX.meID(j) And MSCX.dID(i) = MSCX.dID(j) Then
+                    Throw New Exception(format("Double definition of measurement section ({0}) in file ({1}).", MSCX.meID(i), fName(MSCfile, True)))
+                End If
+            Next j
+        Next i
 
         ' Checks by test runs
         If Not calibration Then
@@ -149,6 +197,11 @@ Public Module input
 
             '*** Second row: Name/Identification of the Components
             Line = FileInWeather.ReadLine
+
+            ' Datacheck
+            If Line.Length = 1 Then
+                Throw New Exception(format("The weather file does not fit the file format. Control the seperators under Tools/preferences and in the file. Readed value can not converted ({0})", Line(0)))
+            End If
 
             'Check Number of Columns/Components
             For i = 0 To UBound(Line)
@@ -275,6 +328,11 @@ Public Module input
 
             '*** Second row: Name/Identification of the Components
             Line = FileInMeasure.ReadLine
+
+            ' Datacheck
+            If Line.Length = 1 Then
+                Throw New Exception(format("The data file does not fit the file format. Control the seperators under Tools/preferences and in the file. Readed value can not converted ({0})", Line(0)))
+            End If
 
             'Check Number of Columns/Components
             For i = 0 To UBound(Line)
@@ -501,6 +559,11 @@ Public Module input
             Line2 = FileInGenShp.ReadLine()
             Line3 = FileInGenShp.ReadLine()
             anz = Int(Line.Length / 2)
+
+            ' Datacheck
+            If anz = 0 Then
+                Throw New Exception(format("The GenShape file does not fit the file format. Control the seperators in the file this must be list seperator ("","") and decimal seperator (""."")"))
+            End If
 
             ' Initialise
             pos = 1

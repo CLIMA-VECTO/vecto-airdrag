@@ -939,7 +939,7 @@ Public Module main_calculation_call
 
                 ' Look if something is true
                 If allFalse Then
-                    logme(8, False, "No used/valid section is found for calculation of fv_veh and fv_pe in HS test!")
+                    logme(9, False, "No used/valid section is found for calculation of fv_veh and fv_pe in HS test!")
                     Change = False
                 End If
         End Select
