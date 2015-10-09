@@ -35,8 +35,13 @@ Partial Class F_Preferences
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.logLevel = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.listSep = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.decSep = New System.Windows.Forms.TextBox()
         Me.GroupBoxNotepad = New System.Windows.Forms.GroupBox()
         Me.ButtonSelectNotepad = New System.Windows.Forms.Button()
         Me.editor = New System.Windows.Forms.TextBox()
@@ -53,6 +58,7 @@ Partial Class F_Preferences
         Me.GroupBoxInterface.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
         Me.GroupBoxNotepad.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -61,13 +67,13 @@ Partial Class F_Preferences
         '
         Me.workingDir.Location = New System.Drawing.Point(6, 19)
         Me.workingDir.Name = "workingDir"
-        Me.workingDir.Size = New System.Drawing.Size(444, 20)
+        Me.workingDir.Size = New System.Drawing.Size(514, 20)
         Me.workingDir.TabIndex = 1
         '
         'ButtonSelectWorDir
         '
         Me.ButtonSelectWorDir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectWorDir.Location = New System.Drawing.Point(456, 19)
+        Me.ButtonSelectWorDir.Location = New System.Drawing.Point(526, 18)
         Me.ButtonSelectWorDir.Name = "ButtonSelectWorDir"
         Me.ButtonSelectWorDir.Size = New System.Drawing.Size(26, 20)
         Me.ButtonSelectWorDir.TabIndex = 2
@@ -80,7 +86,7 @@ Partial Class F_Preferences
         Me.GroupBoxWorDir.Controls.Add(Me.workingDir)
         Me.GroupBoxWorDir.Location = New System.Drawing.Point(5, 6)
         Me.GroupBoxWorDir.Name = "GroupBoxWorDir"
-        Me.GroupBoxWorDir.Size = New System.Drawing.Size(490, 51)
+        Me.GroupBoxWorDir.Size = New System.Drawing.Size(558, 51)
         Me.GroupBoxWorDir.TabIndex = 2
         Me.GroupBoxWorDir.TabStop = False
         Me.GroupBoxWorDir.Text = "Working Directory"
@@ -89,7 +95,7 @@ Partial Class F_Preferences
         '
         Me.ButtonOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonOK.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.ButtonOK.Location = New System.Drawing.Point(436, 248)
+        Me.ButtonOK.Location = New System.Drawing.Point(502, 266)
         Me.ButtonOK.Name = "ButtonOK"
         Me.ButtonOK.Size = New System.Drawing.Size(75, 23)
         Me.ButtonOK.TabIndex = 0
@@ -100,7 +106,7 @@ Partial Class F_Preferences
         '
         Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButtonCancel.Location = New System.Drawing.Point(355, 248)
+        Me.ButtonCancel.Location = New System.Drawing.Point(421, 266)
         Me.ButtonCancel.Name = "ButtonCancel"
         Me.ButtonCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButtonCancel.TabIndex = 1
@@ -110,7 +116,7 @@ Partial Class F_Preferences
         'writeLog
         '
         Me.writeLog.AutoSize = True
-        Me.writeLog.Location = New System.Drawing.Point(13, 58)
+        Me.writeLog.Location = New System.Drawing.Point(13, 45)
         Me.writeLog.Name = "writeLog"
         Me.writeLog.Size = New System.Drawing.Size(108, 17)
         Me.writeLog.TabIndex = 2
@@ -127,10 +133,10 @@ Partial Class F_Preferences
         Me.GroupBoxInterface.Controls.Add(Me.writeLog)
         Me.GroupBoxInterface.Location = New System.Drawing.Point(5, 120)
         Me.GroupBoxInterface.Name = "GroupBoxInterface"
-        Me.GroupBoxInterface.Size = New System.Drawing.Size(341, 89)
+        Me.GroupBoxInterface.Size = New System.Drawing.Size(285, 104)
         Me.GroupBoxInterface.TabIndex = 11
         Me.GroupBoxInterface.TabStop = False
-        Me.GroupBoxInterface.Text = "Logging && Messages"
+        Me.GroupBoxInterface.Text = "Logging, Messages && Seperator"
         '
         'LabelInfo
         '
@@ -139,11 +145,11 @@ Partial Class F_Preferences
         Me.LabelInfo.Name = "LabelInfo"
         Me.LabelInfo.Size = New System.Drawing.Size(39, 13)
         Me.LabelInfo.TabIndex = 12
-        Me.LabelInfo.Text = "Label2"
+        Me.LabelInfo.Text = "Lable2"
         '
         'logSize
         '
-        Me.logSize.Location = New System.Drawing.Point(299, 55)
+        Me.logSize.Location = New System.Drawing.Point(128, 70)
         Me.logSize.Name = "logSize"
         Me.logSize.Size = New System.Drawing.Size(36, 20)
         Me.logSize.TabIndex = 3
@@ -151,7 +157,7 @@ Partial Class F_Preferences
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(181, 59)
+        Me.Label16.Location = New System.Drawing.Point(10, 74)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(112, 13)
         Me.Label16.TabIndex = 10
@@ -173,20 +179,37 @@ Partial Class F_Preferences
         Me.logLevel.Size = New System.Drawing.Size(36, 20)
         Me.logLevel.TabIndex = 1
         '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(6, 22)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(70, 13)
+        Me.Label2.TabIndex = 18
+        Me.Label2.Text = "List seperator"
+        '
+        'listSep
+        '
+        Me.listSep.Location = New System.Drawing.Point(103, 19)
+        Me.listSep.Name = "listSep"
+        Me.listSep.Size = New System.Drawing.Size(36, 20)
+        Me.listSep.TabIndex = 17
+        '
         'TabControl1
         '
         Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Location = New System.Drawing.Point(3, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(508, 239)
+        Me.TabControl1.Size = New System.Drawing.Size(574, 257)
         Me.TabControl1.TabIndex = 12
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.GroupBox2)
         Me.TabPage2.Controls.Add(Me.GroupBoxNotepad)
         Me.TabPage2.Controls.Add(Me.GroupBoxWorDir)
         Me.TabPage2.Controls.Add(Me.GroupBox1)
@@ -194,10 +217,39 @@ Partial Class F_Preferences
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(500, 213)
+        Me.TabPage2.Size = New System.Drawing.Size(566, 231)
         Me.TabPage2.TabIndex = 0
         Me.TabPage2.Text = "General"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.Label2)
+        Me.GroupBox2.Controls.Add(Me.Label4)
+        Me.GroupBox2.Controls.Add(Me.listSep)
+        Me.GroupBox2.Controls.Add(Me.decSep)
+        Me.GroupBox2.Location = New System.Drawing.Point(296, 120)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(145, 71)
+        Me.GroupBox2.TabIndex = 21
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "File settings"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(6, 49)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(92, 13)
+        Me.Label4.TabIndex = 20
+        Me.Label4.Text = "Decimal seperator"
+        '
+        'decSep
+        '
+        Me.decSep.Location = New System.Drawing.Point(103, 45)
+        Me.decSep.Name = "decSep"
+        Me.decSep.Size = New System.Drawing.Size(36, 20)
+        Me.decSep.TabIndex = 19
         '
         'GroupBoxNotepad
         '
@@ -205,7 +257,7 @@ Partial Class F_Preferences
         Me.GroupBoxNotepad.Controls.Add(Me.editor)
         Me.GroupBoxNotepad.Location = New System.Drawing.Point(5, 63)
         Me.GroupBoxNotepad.Name = "GroupBoxNotepad"
-        Me.GroupBoxNotepad.Size = New System.Drawing.Size(490, 51)
+        Me.GroupBoxNotepad.Size = New System.Drawing.Size(558, 51)
         Me.GroupBoxNotepad.TabIndex = 3
         Me.GroupBoxNotepad.TabStop = False
         Me.GroupBoxNotepad.Text = "Editor"
@@ -213,7 +265,7 @@ Partial Class F_Preferences
         'ButtonSelectNotepad
         '
         Me.ButtonSelectNotepad.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectNotepad.Location = New System.Drawing.Point(456, 19)
+        Me.ButtonSelectNotepad.Location = New System.Drawing.Point(526, 18)
         Me.ButtonSelectNotepad.Name = "ButtonSelectNotepad"
         Me.ButtonSelectNotepad.Size = New System.Drawing.Size(26, 20)
         Me.ButtonSelectNotepad.TabIndex = 2
@@ -224,7 +276,7 @@ Partial Class F_Preferences
         '
         Me.editor.Location = New System.Drawing.Point(6, 19)
         Me.editor.Name = "editor"
-        Me.editor.Size = New System.Drawing.Size(444, 20)
+        Me.editor.Size = New System.Drawing.Size(514, 20)
         Me.editor.TabIndex = 1
         '
         'GroupBox1
@@ -235,9 +287,9 @@ Partial Class F_Preferences
         Me.GroupBox1.Controls.Add(Me.TextBox1)
         Me.GroupBox1.Controls.Add(Me.Label3)
         Me.GroupBox1.Controls.Add(Me.CheckBox1)
-        Me.GroupBox1.Location = New System.Drawing.Point(352, 120)
+        Me.GroupBox1.Location = New System.Drawing.Point(447, 120)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(143, 89)
+        Me.GroupBox1.Size = New System.Drawing.Size(116, 71)
         Me.GroupBox1.TabIndex = 11
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "JSON"
@@ -245,7 +297,7 @@ Partial Class F_Preferences
         'hideUsername
         '
         Me.hideUsername.AutoSize = True
-        Me.hideUsername.Location = New System.Drawing.Point(6, 67)
+        Me.hideUsername.Location = New System.Drawing.Point(6, 48)
         Me.hideUsername.Name = "hideUsername"
         Me.hideUsername.Size = New System.Drawing.Size(94, 17)
         Me.hideUsername.TabIndex = 12
@@ -255,7 +307,7 @@ Partial Class F_Preferences
         'strictBodies
         '
         Me.strictBodies.AutoSize = True
-        Me.strictBodies.Location = New System.Drawing.Point(6, 44)
+        Me.strictBodies.Location = New System.Drawing.Point(6, 31)
         Me.strictBodies.Name = "strictBodies"
         Me.strictBodies.Size = New System.Drawing.Size(91, 17)
         Me.strictBodies.TabIndex = 12
@@ -265,7 +317,7 @@ Partial Class F_Preferences
         'includeSchemas
         '
         Me.includeSchemas.AutoSize = True
-        Me.includeSchemas.Location = New System.Drawing.Point(6, 21)
+        Me.includeSchemas.Location = New System.Drawing.Point(6, 15)
         Me.includeSchemas.Name = "includeSchemas"
         Me.includeSchemas.Size = New System.Drawing.Size(114, 17)
         Me.includeSchemas.TabIndex = 12
@@ -301,7 +353,7 @@ Partial Class F_Preferences
         'ButtonReload
         '
         Me.ButtonReload.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonReload.Location = New System.Drawing.Point(18, 248)
+        Me.ButtonReload.Location = New System.Drawing.Point(3, 266)
         Me.ButtonReload.Name = "ButtonReload"
         Me.ButtonReload.Size = New System.Drawing.Size(75, 23)
         Me.ButtonReload.TabIndex = 0
@@ -312,7 +364,7 @@ Partial Class F_Preferences
         '
         Me.ButtonSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSave.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.ButtonSave.Location = New System.Drawing.Point(99, 248)
+        Me.ButtonSave.Location = New System.Drawing.Point(84, 266)
         Me.ButtonSave.Name = "ButtonSave"
         Me.ButtonSave.Size = New System.Drawing.Size(75, 23)
         Me.ButtonSave.TabIndex = 13
@@ -325,7 +377,7 @@ Partial Class F_Preferences
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButtonCancel
-        Me.ClientSize = New System.Drawing.Size(515, 283)
+        Me.ClientSize = New System.Drawing.Size(581, 301)
         Me.Controls.Add(Me.ButtonSave)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.ButtonCancel)
@@ -344,6 +396,8 @@ Partial Class F_Preferences
         Me.GroupBoxInterface.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
         Me.GroupBoxNotepad.ResumeLayout(False)
         Me.GroupBoxNotepad.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
@@ -377,4 +431,9 @@ Partial Class F_Preferences
     Friend WithEvents includeSchemas As System.Windows.Forms.CheckBox
     Friend WithEvents hideUsername As System.Windows.Forms.CheckBox
     Friend WithEvents ButtonSave As System.Windows.Forms.Button
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents listSep As System.Windows.Forms.TextBox
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents decSep As System.Windows.Forms.TextBox
+    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
 End Class

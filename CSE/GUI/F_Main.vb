@@ -88,6 +88,9 @@ Public Class F_Main
 
         ' Load the default settings into criteria tab
         UI_PopulateFromCriteria()
+
+        ' Write the settings in the Infobox
+        logme(7, False, format("Actual file settings:\n List separator ({0})\n Decimal separator ({1})\n You can change it under Tools/preferences.", Prefs.listSep, Prefs.decSep))
     End Sub
 
     ' Show the GUI and start direct if neccessary
@@ -182,13 +185,8 @@ Public Class F_Main
         ' Pass the async-job datum down the road.
         e.Result = asyncJob
 
-        If SetCulture Then
-            Try
-                System.Threading.Thread.CurrentThread.CurrentCulture = New System.Globalization.CultureInfo("en-US")
-            Catch ex As Exception
-                logme(9, False, "Failed to set thread culture 'en-US'! Check system decimal- and group- separators!")
-            End Try
-        End If
+        System.Threading.Thread.CurrentThread.CurrentCulture = New System.Globalization.CultureInfo("en-US")
+        System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = Prefs.decSep
 
         '##### START THE CALCULATION #####
         '#################################

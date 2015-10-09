@@ -56,26 +56,26 @@ Module output
 
             ' Filekopf
             FileOut.WriteLine("# Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-            FileOut.WriteLine("# Datafile: ", Datafile)
+            FileOut.WriteLine("# Datafile: " & Prefs.listSep & Datafile)
             FileOut.WriteLine("#")
 
             ' Write the head and units
-            FileOut.WriteLine(ErgHead("InputData") + "," + ErgHead("InputUndefData") + "," + ErgHead("CalcData"))
+            FileOut.WriteLine(ErgHead("InputData") & Prefs.listSep & ErgHead("InputUndefData") & Prefs.listSep & ErgHead("CalcData"))
 
             ' Write the data
             For i = 0 To InputData.Item(tComp.t).Count - 1
                 For Each key In ErgEntryListI
-                    If Not first Then s.Append(",")
+                    If Not first Then s.Append(Prefs.listSep)
                     s.Append(InputData(key)(i))
                     first = False
                 Next
                 For Each key In ErgEntryListIU
-                    If Not first Then s.Append(",")
+                    If Not first Then s.Append(Prefs.listSep)
                     s.Append(InputUndefData(key)(i))
                     first = False
                 Next
                 For Each key In ErgEntryListC
-                    If Not first Then s.Append(",")
+                    If Not first Then s.Append(Prefs.listSep)
                     s.Append(CalcData(key)(i))
                     first = False
                 Next
@@ -130,33 +130,33 @@ Module output
             ' Filekopf
             FileOut.WriteLine("# Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
             If calibration Then
-                FileOut.WriteLine("# Datafile: ", Job.calib_run_fpath)
+                FileOut.WriteLine("# Datafile: " & Prefs.listSep & Job.calib_run_fpath)
             Else
-                FileOut.WriteLine("# Datafile LS1: ", coasting_fpaths(0))
-                FileOut.WriteLine("# Datafile HS: ", coasting_fpaths(1))
-                FileOut.WriteLine("# Datafile LS2: ", coasting_fpaths(2))
+                FileOut.WriteLine("# Datafile HS: " & Prefs.listSep & coasting_fpaths(0))
+                FileOut.WriteLine("# Datafile LS1: " & Prefs.listSep & coasting_fpaths(1))
+                FileOut.WriteLine("# Datafile LS2: " & Prefs.listSep & coasting_fpaths(2))
             End If
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Results")
-            FileOut.WriteLine("# fv_veh:", Job.fv_veh)
-            FileOut.WriteLine("# fv_veh_opt2:", Job.fv_veh_opt2)
-            FileOut.WriteLine("# fv_pe:", Job.fv_pe)
-            FileOut.WriteLine("# beta_ame:", Job.beta_ame)
+            FileOut.WriteLine("# fv_veh:" & Prefs.listSep & Job.fv_veh)
+            FileOut.WriteLine("# fv_veh_opt2:" & Prefs.listSep & Job.fv_veh_opt2)
+            FileOut.WriteLine("# fv_pe:" & Prefs.listSep & Job.fv_pe)
+            FileOut.WriteLine("# beta_ame:" & Prefs.listSep & Job.beta_ame)
             FileOut.WriteLine("#")
 
             ' Write the head and units
-            FileOut.WriteLine(ErgHead("ErgValues") + "," + ErgHead("ErgValuesUndef"))
+            FileOut.WriteLine(ErgHead("ErgValues") & Prefs.listSep & ErgHead("ErgValuesUndef"))
 
             ' Write the data
             If calibration Then
                 For i = 0 To ErgValues.Item(tCompErg.SecID).Count - 1
                     For Each key In ErgEntryListR
-                        If Not first Then s.Append(",")
+                        If Not first Then s.Append(Prefs.listSep)
                         s.Append(ErgValues(key)(i))
                         first = False
                     Next
                     For Each key In ErgEntryListRU
-                        If Not first Then s.Append(",")
+                        If Not first Then s.Append(Prefs.listSep)
                         s.Append(ErgValuesUndef(key)(i))
                         first = False
                     Next
@@ -167,12 +167,12 @@ Module output
             Else
                 For i = 0 To ErgValuesComp.Item(tCompErg.SecID).Count - 1
                     For Each key In ErgEntryListR
-                        If Not first Then s.Append(",")
+                        If Not first Then s.Append(Prefs.listSep)
                         s.Append(ErgValuesComp(key)(i))
                         first = False
                     Next
                     For Each key In ErgEntryListRU
-                        If Not first Then s.Append(",")
+                        If Not first Then s.Append(Prefs.listSep)
                         s.Append(ErgValuesUndefComp(key)(i))
                         first = False
                     Next
@@ -223,38 +223,38 @@ Module output
 
             ' Filekopf
             FileOut.WriteLine("# Resultfile Programm " & AppName & " " & AppVers & " Comp " & AppDate)
-            FileOut.WriteLine("# Datafile LS1: ", coasting_fpaths(0))
-            FileOut.WriteLine("# Datafile HS: ", coasting_fpaths(1))
-            FileOut.WriteLine("# Datafile LS2: ", coasting_fpaths(2))
+            FileOut.WriteLine("# Datafile LS1: " & Prefs.listSep & coasting_fpaths(0))
+            FileOut.WriteLine("# Datafile HS: " & Prefs.listSep & coasting_fpaths(1))
+            FileOut.WriteLine("# Datafile LS2: " & Prefs.listSep & coasting_fpaths(2))
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Results")
-            FileOut.WriteLine("# fv_veh:", Job.fv_veh, "[-] calibration factor for vehicle speed")
-            FileOut.WriteLine("# fv_veh_opt2:", Job.fv_veh_opt2, "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
-            FileOut.WriteLine("# fv_pe:", Job.fv_pe, "[-] calibration factor for air speed (position error)")
-            FileOut.WriteLine("# fa_pe:", Job.fa_pe, "[-] position error correction factor for measured air inflow angle (beta)")
-            FileOut.WriteLine("# beta_ame:", Job.beta_ame, "[°] calibration factor for beta (misalignment)")
-            FileOut.WriteLine("# CdxA(ß):", Job.CdxAß, "[m²] average CdxA before yaw angle correction")
-            FileOut.WriteLine("# beta:", Job.beta, "[°] average absolute yaw angle from high speed tests")
-            FileOut.WriteLine("# delta_CdxA:", Job.delta_CdxA, "[m²] correction of CdxA for yaw angle")
-            FileOut.WriteLine("# CdxA(0):", Job.CdxA0, "[m²] average CdxA for zero yaw angle")
-            FileOut.WriteLine("# CdxA(0)_opt2:", Job.CdxA0_opt2, "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
+            FileOut.WriteLine("# fv_veh:" & Prefs.listSep & Job.fv_veh & Prefs.listSep & "[-] calibration factor for vehicle speed")
+            FileOut.WriteLine("# fv_veh_opt2:" & Prefs.listSep & Job.fv_veh_opt2 & Prefs.listSep + "[-] calibration factor for vehicle speed (option2, only if (D)GPS option is used)")
+            FileOut.WriteLine("# fv_pe:" & Prefs.listSep & Job.fv_pe & Prefs.listSep & "[-] calibration factor for air speed (position error)")
+            FileOut.WriteLine("# fa_pe:" & Prefs.listSep & Job.fa_pe & Prefs.listSep & "[-] position error correction factor for measured air inflow angle (beta)")
+            FileOut.WriteLine("# beta_ame:" & Prefs.listSep & Job.beta_ame & Prefs.listSep & "[°] calibration factor for beta (misalignment)")
+            FileOut.WriteLine("# CdxA(ß):" & Prefs.listSep & Job.CdxAß & Prefs.listSep & "[m²] average CdxA before yaw angle correction")
+            FileOut.WriteLine("# beta:" & Prefs.listSep & Job.beta & Prefs.listSep & "[°] average absolute yaw angle from high speed tests")
+            FileOut.WriteLine("# delta_CdxA:" & Prefs.listSep & Job.delta_CdxA & Prefs.listSep & "[m²] correction of CdxA for yaw angle")
+            FileOut.WriteLine("# CdxA(0):" & Prefs.listSep & Job.CdxA0 & Prefs.listSep & "[m²] average CdxA for zero yaw angle")
+            FileOut.WriteLine("# CdxA(0)_opt2:" & Prefs.listSep & Job.CdxA0_opt2 & Prefs.listSep & "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Validity criteria:")
             If Job.valid_RRC Then
-                FileOut.WriteLine("# RRC:", "Ok")
+                FileOut.WriteLine("# RRC:" & Prefs.listSep & "Ok")
             Else
-                FileOut.WriteLine("# RRC:", "Invalid test - maximum deviation of RRCs between low speed tests exceeded")
+                FileOut.WriteLine("# RRC:" & Prefs.listSep & "Invalid test - maximum deviation of RRCs between low speed tests exceeded")
             End If
             If Job.valid_t_amb Then
-                FileOut.WriteLine("# Ambient temp:", "Ok")
+                FileOut.WriteLine("# Ambient temp:" & Prefs.listSep & "Ok")
             Else
-                FileOut.WriteLine("# Ambient temp:", "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
+                FileOut.WriteLine("# Ambient temp:" & Prefs.listSep & "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
             End If
             If OptPar(2) Then
                 If Job.valid_t_ground Then
-                    FileOut.WriteLine("# Ground temp:", "Ok")
+                    FileOut.WriteLine("# Ground temp:" & Prefs.listSep & "Ok")
                 Else
-                    FileOut.WriteLine("# Ground temp:", "Invalid test - range of ground temperature exceeded")
+                    FileOut.WriteLine("# Ground temp:" & Prefs.listSep & "Invalid test - range of ground temperature exceeded")
                 End If
             End If
 
@@ -266,7 +266,7 @@ Module output
             ' Write the data
             For i = 0 To ErgValuesReg.Item(tCompErgReg.SecID).Count - 1
                 For Each key In ErgEntryListReg
-                    If Not first Then s.Append(",")
+                    If Not first Then s.Append(Prefs.listSep)
                     s.Append(ErgValuesReg(key)(i))
                     first = False
                 Next
@@ -291,8 +291,12 @@ Module output
 
         ' Input data
         AddToErg(tComp.t, fCompName(tComp.t), fCompUnit(tComp.t), "InputData")
-        AddToErg(tComp.lati, fCompName(tComp.lati), fCompUnit(tComp.lati), "InputData")
-        AddToErg(tComp.longi, fCompName(tComp.longi), fCompUnit(tComp.longi), "InputData")
+        If KoordSys(0) Then AddToErg(tComp.lati, fCompName(tComp.lati), fCompUnit(tComp.lati), "InputData")
+        If KoordSys(0) Then AddToErg(tComp.longi, fCompName(tComp.longi), fCompUnit(tComp.longi), "InputData")
+        If KoordSys(1) Then AddToErg(tComp.lati_D, fCompName(tComp.lati_D), fCompUnit(tComp.lati_D), "InputData")
+        If KoordSys(1) Then AddToErg(tComp.longi_D, fCompName(tComp.longi_D), fCompUnit(tComp.longi_D), "InputData")
+        If KoordSys(2) Then AddToErg(tComp.lati_S, fCompName(tComp.lati_S), fCompUnit(tComp.lati_S), "InputData")
+        If KoordSys(2) Then AddToErg(tComp.longi_S, fCompName(tComp.longi_S), fCompUnit(tComp.longi_S), "InputData")
         AddToErg(tComp.hdg, fCompName(tComp.hdg), fCompUnit(tComp.hdg), "InputData")
         AddToErg(tComp.v_veh_GPS, fCompName(tComp.v_veh_GPS), fCompUnit(tComp.v_veh_GPS), "InputData")
         AddToErg(tComp.v_veh_CAN, fCompName(tComp.v_veh_CAN), fCompUnit(tComp.v_veh_CAN), "InputData")
@@ -550,37 +554,37 @@ Module output
         First = True
         If Dic = "InputData" Then
             For Each key In ErgEntryListI
-                If Not First Then s.Append(",")
+                If Not First Then s.Append(Prefs.listSep)
                 s.Append(ErgEntriesI(key).Head + " " + ErgEntriesI(key).Unit)
                 First = False
             Next
         ElseIf Dic = "InputUndefData" Then
             For Each key In ErgEntryListIU
-                If Not First Then s.Append(",")
+                If Not First Then s.Append(Prefs.listSep)
                 s.Append(ErgEntriesIU(key).Head + " " + ErgEntriesIU(key).Unit)
                 First = False
             Next
         ElseIf Dic = "CalcData" Then
             For Each key In ErgEntryListC
-                If Not First Then s.Append(",")
+                If Not First Then s.Append(Prefs.listSep)
                 s.Append(ErgEntriesC(key).Head + " " + ErgEntriesC(key).Unit)
                 First = False
             Next
         ElseIf Dic = "ErgValues" Then
             For Each key In ErgEntryListR
-                If Not First Then s.Append(",")
+                If Not First Then s.Append(Prefs.listSep)
                 s.Append(ErgEntriesR(key).Head + " " + ErgEntriesR(key).Unit)
                 First = False
             Next
         ElseIf Dic = "ErgValuesUndef" Then
             For Each key In ErgEntryListRU
-                If Not First Then s.Append(",")
+                If Not First Then s.Append(Prefs.listSep)
                 s.Append(ErgEntriesRU(key).Head + " " + ErgEntriesRU(key).Unit)
                 First = False
             Next
         ElseIf Dic = "ErgValuesReg" Then
             For Each key In ErgEntryListReg
-                If Not First Then s.Append(",")
+                If Not First Then s.Append(Prefs.listSep)
                 s.Append(ErgEntriesReg(key).Head + " " + ErgEntriesReg(key).Unit)
                 First = False
             Next

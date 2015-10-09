@@ -362,7 +362,17 @@ Public Module main_calculation_call
         Next i
 
         Job.fv_pe = (sum_v_veh / (anz_DirID(0) + anz_DirID(1))) / (0.5 * (vair_ic(0) / anz_DirID(0) + vair_ic(1) / anz_DirID(1)))
-        If CalibRun Then Job.beta_ame = (0.5 * (beta_ic(0) / anz_DirID(0) + beta_ic(1) / anz_DirID(1))) - AmeAng
+        If CalibRun Then 'Job.beta_ame = (0.5 * (beta_ic(0) / anz_DirID(0) + beta_ic(1) / anz_DirID(1))) - AmeAng
+            If ((beta_ic(0) / anz_DirID(0)) <= 90 And (beta_ic(1) / anz_DirID(1)) >= 270) Or ((beta_ic(1) / anz_DirID(1)) <= 90 And (beta_ic(0) / anz_DirID(0)) >= 270) Then
+                If Job.beta_ame = (0.5 * (beta_ic(0) / anz_DirID(0) + beta_ic(1) / anz_DirID(1))) > 180 Then
+                    Job.beta_ame = (0.5 * (beta_ic(0) / anz_DirID(0) + beta_ic(1) / anz_DirID(1))) - 360
+                Else
+                    Job.beta_ame = (0.5 * (beta_ic(0) / anz_DirID(0) + beta_ic(1) / anz_DirID(1)))
+                End If
+            Else
+                Job.beta_ame = (0.5 * (beta_ic(0) / anz_DirID(0) + beta_ic(1) / anz_DirID(1))) - AmeAng
+            End If
+        End If
         Return True
     End Function
 
@@ -929,7 +939,7 @@ Public Module main_calculation_call
 
                 ' Look if something is true
                 If allFalse Then
-                    logme(8, False, "No used/valid section is found for calculation of fv_veh and fv_pe in HS test!")
+                    logme(9, False, "No used/valid section is found for calculation of fv_veh and fv_pe in HS test!")
                     Change = False
                 End If
         End Select

@@ -33,7 +33,7 @@ Module Signal_identification
             If JumpPoint.Count > 0 Then
                 For i = 0 To JumpPoint.Count - 1
                     If CalcData(tCompCali.SecID)(JumpPoint(i)) <> 0 Then
-                        Throw New Exception(format("The detected leap in time({0}) is not allowed to be inside a measurement section!", CalcData(tCompCali.SecID)(JumpPoint(i))))
+                        Throw New Exception(format("The detected leap in time({0}) is not allowed to be inside a measurement section!", JumpPoint(i)))
                     End If
                 Next i
             End If
@@ -53,8 +53,10 @@ Module Signal_identification
         Dim first As Boolean = True
         Dim AddSec As Boolean = False
         Dim LenDiff As Boolean = False
+        Dim HeadDiff As Boolean = False
         Dim Aae As Double
         Dim len(MSCOrg.meID.Count - 1) As Double
+        Dim Head(MSCOrg.meID.Count - 1) As Double
         Dim UTMCoordP As New cUTMCoord
         Dim UTMCoordV As New cUTMCoord
 
@@ -67,6 +69,14 @@ Module Signal_identification
             UTMCoordV = UTM(MSCOrg.latE(i) / 60, MSCOrg.longE(i) / 60)
             Aae = QuadReq(UTMCoordV.Easting - UTMCoordP.Easting, UTMCoordV.Northing - UTMCoordP.Northing)
             len(i) = Math.Sqrt(Math.Pow(UTMCoordV.Easting - UTMCoordP.Easting, 2) + Math.Pow(UTMCoordV.Northing - UTMCoordP.Northing, 2))
+                If (Math.Cos(MSCOrg.latS(i) / 60 * Math.PI / 180) * Math.Sin(len(i) / (1852 * 60) * Math.PI / 180)) > 0 Then
+                Head(i) = Math.Acos((Math.Sin(MSCOrg.latE(i) / 60 * Math.PI / 180) - Math.Sin(MSCOrg.latS(i) / 60 * Math.PI / 180) * _
+                          Math.Cos(len(i) / (1852 * 60) * Math.PI / 180)) / (Math.Cos(MSCOrg.latS(i) / 60 * Math.PI / 180) * _
+                          Math.Sin(len(i) / (1852 * 60) * Math.PI / 180))) * 180 / Math.PI
+                If MSCOrg.latE(i) < MSCOrg.latS(i) Then Head(i) = 360 - Head(i)
+                Else
+                    Head(i) = 0
+                End If
             MSCVirt.meID.Add(MSCOrg.meID(i))
             MSCVirt.dID.Add(MSCOrg.dID(i))
             MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, 0, -Crt.trigger_delta_y_max))
@@ -96,13 +106,19 @@ Module Signal_identification
         ' Controll the spezified csms length
         For i = 1 To MSCOrg.meID.Count - 1
             If Math.Abs(len(i) - MSCOrg.len(i)) > Crt.leng_crit Then
-                If Not LenDiff Then logme(9, False, "Length difference between given coordinates and spezified section length in *.csms file!")
+                If Not headDiff Then logme(9, False, "Length difference between given coordinates and spezified section length in *.csms file!")
                 logme(9, False, "SecID(" & MSCOrg.meID(i) & "), DirID(" & MSCOrg.dID(i) & "), spez. Len(" & MSCOrg.len(i) & "), coord. Len(" & Math.Round(len(i), 2) & ")")
                 LenDiff = True
+            End If
+            If Math.Abs(Head(i) - MSCOrg.head(i)) > Crt.delta_head_max Then
+                If Not HeadDiff Then logme(9, False, "Heading difference between given coordinates and spezified section heading in *.csms file!")
+                logme(9, False, "SecID(" & MSCOrg.meID(i) & "), DirID(" & MSCOrg.dID(i) & "), spez. heading(" & MSCOrg.head(i) & "), coord. Heading(" & Math.Round(Head(i), 2) & ")")
+                HeadDiff = True
             End If
         Next i
         ' Exit the programm
         If LenDiff Then Throw New Exception(format("Length difference between given coordinates and spezified section length in *.csms file! Please correct the length!"))
+        If HeadDiff Then Throw New Exception(format("Heading difference between given coordinates and spezified section heading in *.csms file! Please correct the heading!"))
 
         Return True
     End Function
@@ -364,7 +380,13 @@ Module Signal_identification
                 CalcData(tCompCali.lati_root).Add(koord(1))
 
                 ' Calculate the root distance
-                If FirstIn Or CalcData(tCompCali.SecID)(i - 1) <> CalcData(tCompCali.SecID)(i) Then
+                If i = 0 Then
+                    logme(8, False, "The first data point started in a measurement section! This is not allowed and this section is set to invalid.")
+                    BegCoordX = koord(0)
+                    BegCoordY = koord(1)
+                    CalcData(tCompCali.dist_root).Add(0)
+                    FirstIn = False
+                ElseIf FirstIn Or CalcData(tCompCali.SecID)(i - 1) <> CalcData(tCompCali.SecID)(i) Then
                     BegCoordX = koord(0)
                     BegCoordY = koord(1)
                     CalcData(tCompCali.dist_root).Add(0)
@@ -390,6 +412,7 @@ Module Signal_identification
         Dim i, j, run, anz As Integer
         Dim v_wind_1s(0), Time_1s(0), beta_1s(0) As Double
         Dim firstIn As Boolean = True
+        Dim foundSec(MSCX.meID.Count - 1) As Boolean
         Dim sKVE As New KeyValuePair(Of String, List(Of Double))
         Dim sKVC As New KeyValuePair(Of tCompCali, List(Of Double))
         Dim sKV As New KeyValuePair(Of tCompErg, List(Of Double))
@@ -400,6 +423,9 @@ Module Signal_identification
         anz = 0
         ErgValues = New Dictionary(Of tCompErg, List(Of Double))
         ErgValuesUndef = New Dictionary(Of String, List(Of Double))
+        For i = 1 To MSCX.meID.Count - 1
+            foundSec(i) = False
+        Next i
 
         ' Generate the undefined result dictionary variables
         For Each sKVE In InputUndefData
@@ -427,6 +453,7 @@ Module Signal_identification
                         If CalcData(tCompCali.SecID)(i) = MSCX.meID(j) And CalcData(tCompCali.DirID)(i) = MSCX.dID(j) Then
                             ErgValues(tCompErg.HeadID).Add(MSCX.headID(j))
                             ErgValues(tCompErg.s_MSC).Add(MSCX.len(j))
+                            foundSec(j) = True
                             Exit For
                         End If
                     Next
@@ -435,8 +462,14 @@ Module Signal_identification
                     ErgValues(tCompErg.vair_ic).Add(InputData(tComp.vair_ic)(i))
                     ErgValues(tCompErg.beta_ic).Add(InputData(tComp.beta_ic)(i))
                     ErgValues(tCompErg.user_valid).Add(InputData(tComp.user_valid)(i))
-                    ErgValues(tCompErg.valid).Add(1)
-                    ErgValues(tCompErg.used).Add(1)
+                    If i = 0 Then
+                        ' First data Point lies in a section. This is not allowed and set this section to invalid
+                        ErgValues(tCompErg.valid).Add(0)
+                        ErgValues(tCompErg.used).Add(0)
+                    Else
+                        ErgValues(tCompErg.valid).Add(1)
+                        ErgValues(tCompErg.used).Add(1)
+                    End If
                     If MSCX.tUse Then
                         ErgValues(tCompErg.v_MSC).Add(0)
                     Else
@@ -491,6 +524,7 @@ Module Signal_identification
                             If CalcData(tCompCali.SecID)(i) = MSCX.meID(j) And CalcData(tCompCali.DirID)(i) = MSCX.dID(j) Then
                                 ErgValues(tCompErg.HeadID).Add(MSCX.headID(j))
                                 ErgValues(tCompErg.s_MSC).Add(MSCX.len(j))
+                                foundSec(j) = True
                                 Exit For
                             End If
                         Next
@@ -543,6 +577,17 @@ Module Signal_identification
                 End If
             End If
         Next i
+
+        ' Display the non founded sections
+        firstIn = True
+        For i = 1 To foundSec.Count - 1
+            If Not foundSec(i) Then
+                If firstIn Then logme(8, False, "Not all defined sections in the *.csms were founded!. Please check your section definition(s)!")
+                logme(8, False, format("SecID ({0}), DID ({0})", MSCX.meID(i), MSCX.dID(i)))
+                firstIn = False
+            End If
+        Next i
+
         Return True
     End Function
 

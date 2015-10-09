@@ -83,6 +83,18 @@ Public Class cPreferences
                     "default": "notepad.exe",
                     "description": "Path (or just the filename, if in PATH) of a text editor.",
                 }, 
+                "listSep": {
+                    "title": "List seperator",
+                    "type": "string",
+                    "default": ",",
+                    "description": "List seperator that is used to read in the files",
+                }, 
+                "decSep": {
+                    "title": "Decimal seperator",
+                    "type": "string",
+                    "default": ".",
+                    "description": "Decimal seperator that is used to read in the files",
+                }, 
                 "strictBodies": {
                     "title": "Strict Bodies",
                     "type": "boolean",
@@ -188,6 +200,24 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
         End Get
         Set(ByVal value As Integer)
             Me.Body("logLevel") = value
+        End Set
+    End Property
+
+    Public Property listSep As String
+        Get
+            Return PropOrDefault(".listSep")
+        End Get
+        Set(ByVal value As String)
+            Me.Body("listSep") = value
+        End Set
+    End Property
+
+    Public Property decSep As String
+        Get
+            Return PropOrDefault(".decSep")
+        End Get
+        Set(ByVal value As String)
+            Me.Body("decSep") = value
         End Set
     End Property
 

@@ -13,12 +13,11 @@ Module declaration_public
 
     ' Description of the form
     Public Const AppName As String = "VECTO_CSE"                ' Name of the programm
-    Public Const AppVers As String = "2.0.3-beta6"              ' Version of the Programm
+    Public Const AppVers As String = "2.0.4-beta6"              ' Version of the Programm
     Public AppDate As String                                    ' Date of the compilation of the programm
 
     ' Control variables
     Public Const komment = "#"                                  ' Symbol for a comment in the input files
-    Public SetCulture As Boolean                                ' Culture information for the background worker
     Public AnzeigeMessage() As String = ({"", "", "", "         + ", "      ~ ", "   * ", " - ", "", "", ""})
 
     Public AppFormStarted = False
@@ -55,6 +54,7 @@ Module declaration_public
     Public OptPar() As Boolean = ({True, True, True, True})     ' Array to identify if optional parameters are given
     Public AT As Boolean = False                                ' Calculation of an automatic transmission (with n_card)
     Public MT_AMT As Boolean = False                            ' Calculation of an manual transmission (always when n_eng available)
+    Public KoordSys() As Boolean = {False, False, False}        ' Used Koordinate system
 
     ' Boolean for the programm control
     Public FileBlock As Boolean = False                         ' Variable if a file is blocked by an other process
