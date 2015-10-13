@@ -122,7 +122,7 @@ Public Class F_Preferences
         Try
             ' Look if List and Dec seperator are the same
             If Me.decSep.Text = Me.listSep.Text Then
-                logme(8, True, format("List and decimal seperator are the same ({0})! \n  Both are set to default", Me.decSep.Text))
+                logme(8, True, format("List and decimal separator are the same ({0})! \n  Both are set to default", Me.decSep.Text))
                 Me.decSep.Text = Prefs.PropDefault("decSep")
                 Me.listSep.Text = Prefs.PropDefault("listSep")
             End If

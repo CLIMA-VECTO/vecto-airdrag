@@ -771,7 +771,7 @@ Partial Class F_Main
         Me.GroupBox1.Size = New System.Drawing.Size(906, 79)
         Me.GroupBox1.TabIndex = 33
         Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Calibration test"
+        Me.GroupBox1.Text = "Misalignment test"
         '
         'TextBoxDataC
         '
@@ -791,7 +791,7 @@ Partial Class F_Main
         Me.ButtonDataC.Name = "ButtonDataC"
         Me.ButtonDataC.Size = New System.Drawing.Size(135, 23)
         Me.ButtonDataC.TabIndex = 34
-        Me.ButtonDataC.Text = "Calibration data"
+        Me.ButtonDataC.Text = "Misaligment data"
         Me.ButtonDataC.UseVisualStyleBackColor = True
         '
         'ButtonSelectDataC
@@ -849,7 +849,7 @@ Partial Class F_Main
         Me.GroupBox3.Size = New System.Drawing.Size(135, 46)
         Me.GroupBox3.TabIndex = 31
         Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "From calibration test"
+        Me.GroupBox3.Text = "From misalignment test"
         '
         'Label16
         '

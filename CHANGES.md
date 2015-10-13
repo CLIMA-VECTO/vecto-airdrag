@@ -1,6 +1,6 @@
 VECTO-CSE: Changes
 ===================
-#### 2015-10-06: v2.0.4-beta6 ####
+#### 2015-10-13: v2.0.4-beta6 ####
 TUG improvements:
 
   * New version number
@@ -9,7 +9,7 @@ TUG improvements:
   * Free definition for list and decimal separators in the CSV-Files
   * Variable definition of the coordinate unit (*.csms and *.csdat files)
   * Update of the excel file 
-
+  * Update error messages
   
 #### 2015-07-23: v2.0.3-beta6 ####
 TUG improvements:

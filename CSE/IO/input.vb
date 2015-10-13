@@ -37,7 +37,7 @@ Public Module input
             ' Determine the trigger status 
             Line = FileInMSCSpez.ReadLine
             If Line(0).Length <> 1 Then
-                Throw New Exception(format("The configuration file does not fit the file format. Control the seperators under Tools/preferences and in the file. Readed value can not converted ({0})", Line(0)))
+                Throw New Exception(format("The configuration file does not fit the file format. Control the separators under Tools/preferences and in the file. Read value can not be converted ({0})", Line(0)))
             Else
                 MSCX.tUse = Line(0)
             End If
@@ -45,7 +45,7 @@ Public Module input
             ' Check the headers for the coordinate unit
             Line = FileInMSCSpez.ReadLine
             If IsNumeric(Line(0)) Then
-                Throw New Exception(format("The header of the configuration file is missing. Please include it or comment it in the file ({0}).", MSCfile))
+                Throw New Exception(format("The header of the *.csms file is missing. Please include it or comment it in the file ({0}).", MSCfile))
             Else
                 CoordID = 0
                 If Line(4).ToUpper.Contains("(D)") Then
@@ -90,14 +90,14 @@ Public Module input
                 Loop
             Catch ex As Exception
                 ' Falls kein gültiger Wert eingegeben wurde
-                Throw New Exception(format("Invalid value in the trigger data file({0}) due to: {1})", fName(MSCfile, True), ex.Message, ex))
+                Throw New Exception(format("Invalid value in the *.csms data file({0}) due to: {1})", fName(MSCfile, True), ex.Message, ex))
             End Try
 
         End Using
 
         ' Minimum datacheck
         If (MSCX.meID.Count - 1) < 2 Then
-            Throw New Exception(format("Not eneough measurement sections definied in file ({0}). Minimum number of definitions are two.", fName(MSCfile, True)))
+            Throw New Exception(format("Not enough measurement sections definied in file ({0}). Minimum number of definitions are two.", fName(MSCfile, True)))
         End If
 
         ' Checks for same definition
@@ -124,7 +124,7 @@ Public Module input
                         MSCX.headID.Add(2)
                         Continue For
                     Else
-                        Throw New Exception("Measurement section with invalid headings identified (test track not parallel) at line: " & i)
+                        Throw New Exception(format("Measurement section with invalid headings identified (test track parallelism critera not met) at line: {0}", i))
                     End If
                 End If
             Next i
@@ -200,7 +200,7 @@ Public Module input
 
             ' Datacheck
             If Line.Length = 1 Then
-                Throw New Exception(format("The weather file does not fit the file format. Control the seperators under Tools/preferences and in the file. Readed value can not converted ({0})", Line(0)))
+                Throw New Exception(format("The weather file does not fit the file format. Control the separators under Tools/preferences and in the file. Read value can not be converted ({0})", Line(0)))
             End If
 
             'Check Number of Columns/Components
@@ -331,7 +331,7 @@ Public Module input
 
             ' Datacheck
             If Line.Length = 1 Then
-                Throw New Exception(format("The data file does not fit the file format. Control the seperators under Tools/preferences and in the file. Readed value can not converted ({0})", Line(0)))
+                Throw New Exception(format("The data file does not fit the file format. Control the separators under Tools/preferences and in the file. Read value can not be converted ({0})", Line(0)))
             End If
 
             'Check Number of Columns/Components
@@ -486,7 +486,7 @@ Public Module input
                             CalcData(tCompCali.trigger_c).Add(CDbl(Line(sKV.Value)))
                         ElseIf sKV.Key = tComp.beta_ic Then
                             If InputData(sKV.Key)(tDim) > 360 Or InputData(sKV.Key)(tDim) < -360 Then
-                                Throw New Exception("The beta_ic angle is higher then +-360°! This is not a possible angle. Please correct.")
+                                Throw New Exception("The beta_ic angle is higher then +-360°! This is not a valid angle. Please correct.")
                             End If
                         End If
                     Next sKV
@@ -527,7 +527,7 @@ Public Module input
                     CalcData(tCompCali.longi_UTM)(i) = UTMCoord.Easting
                 Next i
                 If Zone1CentralMeridian > 180 Then
-                    Throw New Exception("The adjustment is not possible because the data lie to far away from each other to fit into one UTM stripe")
+                    Throw New Exception("The UTM zone adjustment is not possible because the data lie to far away from each other to fit into one UTM stripe")
                 End If
             Loop
 
@@ -562,7 +562,7 @@ Public Module input
 
             ' Datacheck
             If anz = 0 Then
-                Throw New Exception(format("The GenShape file does not fit the file format. Control the seperators in the file this must be list seperator ("","") and decimal seperator (""."")"))
+                Throw New Exception(format("The GenShape file does not fit the file format. Control the separators in the file, this must be list saperator ("","") and decimal separator (""."")"))
             End If
 
             ' Initialise
@@ -577,7 +577,7 @@ Public Module input
                 If GenShape.veh_class.Contains(Line(pos)) Then
                     For j = 0 To GenShape.veh_class.Count - 1
                         If GenShape.veh_class(j) = Line(pos) And GenShape.veh_conf(j) = Line2(pos) Then
-                            Throw New ArgumentException("Invalid The vehicle-class({0}) with this configuration({0}) is already defined. Please control your generic ShapeFile({0})!")
+                            Throw New ArgumentException("The vehicle-class({0}) with this configuration({0}) is already defined. Please control your generic ShapeFile({0})!")
                         End If
                     Next
                 End If

@@ -38,7 +38,7 @@ Public Module main_calculation_call
             If BWorker.CancellationPending Then Return
 
             ' Output on the GUI
-            logme(7, False, "Calculating the calibration run...")
+            logme(7, False, "Calculating the misalignment run...")
 
             ' Identify the signal measurement sections
             fIdentifyMS(MSC, vMSC)
@@ -47,10 +47,10 @@ Public Module main_calculation_call
             If BWorker.CancellationPending Then Return
 
             ' Output on the GUI
-            logme(6, False, "Calculating the calibration run parameter")
+            logme(6, False, "Calculating the misalignment run parameter")
 
             Try
-                ' Calculate the results from the calibration test
+                ' Calculate the results from the misalignment test
                 fCalcCalib(MSC, vehicle)
 
             Finally
@@ -110,7 +110,7 @@ Public Module main_calculation_call
                 If BWorker.CancellationPending Then Return
 
                 ' Output on the GUI
-                If i = 0 Then logme(6, False, "Calculating the HS parameter")
+                If i = 0 Then logme(6, False, "Calibration of vehicle speed and anemometer position correction")
 
                 ' Calculate the run
                 fCalcRun(MSC, vehicle, i, r_dyn_ref)

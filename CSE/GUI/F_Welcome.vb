@@ -33,7 +33,7 @@ Public Class F_Welcome
         Try
             System.Diagnostics.Process.Start(release_fname)
         Catch ex As Exception
-            logme(8, False, format("Failed opening User Manual({0}) due to: {1}", release_fname, ex.Message), ex)
+            logme(8, False, format("Failed opening release notes({0}) due to: {1}", release_fname, ex.Message), ex)
         End Try
     End Sub
 
