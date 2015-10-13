@@ -117,8 +117,8 @@ Module Signal_identification
             End If
         Next i
         ' Exit the programm
-        If LenDiff Then Throw New Exception(format("Length difference between given coordinates and spezified section length in *.csms file! Please correct the length!"))
-        If HeadDiff Then Throw New Exception(format("Heading difference between given coordinates and spezified section heading in *.csms file! Please correct the heading!"))
+        If LenDiff Then Throw New Exception(format("Length difference between given coordinates and spezified section length in *.csms file! Please correct the length or coordinates!"))
+        If HeadDiff Then Throw New Exception(format("Heading difference between given coordinates and spezified section heading in *.csms file! Please correct the heading or coordinates!"))
 
         Return True
     End Function
@@ -582,7 +582,7 @@ Module Signal_identification
         firstIn = True
         For i = 1 To foundSec.Count - 1
             If Not foundSec(i) Then
-                If firstIn Then logme(8, False, "Not all defined sections in the *.csms were founded!. Please check your section definition(s)!")
+                If firstIn Then logme(8, False, "Not all defined sections in the *.csms were found! Please check your section definition(s)!")
                 logme(8, False, format("SecID ({0}), DID ({0})", MSCX.meID(i), MSCX.dID(i)))
                 firstIn = False
             End If

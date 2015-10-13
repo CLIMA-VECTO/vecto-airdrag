@@ -297,7 +297,7 @@ Public Class F_Main
             If Not System.IO.Directory.Exists(OutFolder) Then
                 If OutFolder <> Nothing Then
                     ' Generate the folder if it is desired
-                    logme(7, False, format("Output-folder({0}) doesn´t exist an is created!", OutFolder))
+                    logme(7, False, format("Output-folder({0}) doesn´t exist and is created!", OutFolder))
                     IO.Directory.CreateDirectory(OutFolder)
                 Else
                     logme(9, False, "No outputfolder is given!")
@@ -310,7 +310,7 @@ Public Class F_Main
             Me.ListBoxMSG.Items.Clear()
             fClear_VECTO_Form(False, False)
 
-            logme(7, False, format("Starting CALIBRATION: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
+            logme(7, False, format("Starting MISALIGNMENT calculation: \n\i* Job: {0}\n* Out: {1}", JobFile, OutFolder))
 
             ' Start the calculation in the backgroundworker
             Dim jobType = OpType.Calibration
@@ -381,7 +381,7 @@ Public Class F_Main
             If Not System.IO.Directory.Exists(OutFolder) Then
                 If OutFolder <> Nothing Then
                     ' Generate the folder if it is desired
-                    logme(7, False, format("Output-folder({0}) doesn´t exist an is created!", OutFolder))
+                    logme(7, False, format("Output-folder({0}) doesn´t exist and is created!", OutFolder))
                     IO.Directory.CreateDirectory(OutFolder)
                 Else
                     logme(9, False, "No outputfolder is given!")
@@ -455,7 +455,7 @@ Public Class F_Main
                 newJob = New cJob(jobFileToLoad)
             Else
                 newJob = New cJob(True)
-                logme(9, False, format("The jobfile ending is not known ({0}). Please use the correct format", JobFile))
+                logme(9, False, format("The jobfile suffix is not known ({0}). Please use the correct format", JobFile))
             End If
             newJob.Validate()
 
@@ -963,14 +963,14 @@ Public Class F_Main
         End Try
     End Sub
 
-    ' Menu open the release nodes
+    ' Menu open the release notes
     Private Sub ReleaseNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseNotesToolStripMenuItem.Click
         Dim release_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO-CSE_ReleaseNotes*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
 
         Try
             System.Diagnostics.Process.Start(release_fname)
         Catch ex As Exception
-            logme(8, False, format("Failed opening User Manual({0}) due to: {1}", release_fname, ex.Message), ex)
+            logme(8, False, format("Failed opening release notes({0}) due to: {1}", release_fname, ex.Message), ex)
         End Try
     End Sub
 
