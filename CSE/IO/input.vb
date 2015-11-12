@@ -168,7 +168,9 @@ Public Module input
         ' Declaration
         Using FileInWeather As New cFile_V3
             Dim Line() As String
-            Dim i, tdim As Integer
+            Dim i, tdim, nDay As Integer
+            Dim tWeath(1) As Double
+            Dim DayTimeSec = 24 * 60 * 60                       ' Time of the day in Seconds
             Dim DemoDataF As Boolean = False
             Dim Comp As tCompWeat
             Dim WeathCheck As New Dictionary(Of tCompWeat, Boolean)
@@ -178,6 +180,7 @@ Public Module input
 
             ' Initialise
             tdim = -1
+            nDay = 0
             InputWeatherData = New Dictionary(Of tCompWeat, List(Of Double))
 
             'Open file
@@ -238,12 +241,23 @@ Public Module input
                     Line = FileInWeather.ReadLine
 
                     For Each sKV In Spalten
-                        InputWeatherData(sKV.Key).Add(CDbl(Line(sKV.Value)))
+                        If sKV.Key = tCompWeat.t Then
+                            tWeath(1) = CDbl(Line(sKV.Value))
+                            If tdim >= 1 Then
+                                If (tWeath(1) < tWeath(0)) Then nDay += 1
+                            End If
+                            InputWeatherData(sKV.Key).Add(CDbl(Line(sKV.Value) + nDay * DayTimeSec))
+                            tWeath(0) = CDbl(Line(sKV.Value))
+                        Else
+                            InputWeatherData(sKV.Key).Add(CDbl(Line(sKV.Value)))
+                        End If
                     Next sKV
                 Loop
             Catch ex As Exception
                 Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tdim + 1, ex.Message), ex)
             End Try
+
+            ' Sort the data by time (day crossing)
 
 
             ' Change the decimal seperator back
@@ -260,7 +274,9 @@ Public Module input
         ' Declarations
         Using FileInMeasure As New cFile_V3
             Dim Line(), txt As String
-            Dim i, tDim As Integer
+            Dim i, tDim, nDay As Integer
+            Dim HzIn = 100                                      ' Hz frequency demanded for .csdat-file
+            Dim DayTimeSec = 24 * 60 * 60                       ' Time of the day in Seconds
             Dim valid_set As Boolean = False
             Dim UTMcalc As Boolean = False
             Dim ZoneChange As Boolean = False
@@ -277,6 +293,7 @@ Public Module input
 
             ' Initialise
             tDim = -1
+            nDay = 0
             InputData = New Dictionary(Of tComp, List(Of Double))
             InputUndefData = New Dictionary(Of String, List(Of Double))
             CalcData = New Dictionary(Of tCompCali, List(Of Double))
@@ -434,12 +451,13 @@ Public Module input
                     For Each sKV In Spalten
                         InputData(sKV.Key).Add(CDbl(Line(sKV.Value)))
                         If sKV.Key = tComp.t Then
-                            CalcData(tCompCali.t).Add(CDbl(Line(sKV.Value)))
                             If tDim >= 1 Then
+                                If (InputData(sKV.Key)(tDim) < InputData(sKV.Key)(tDim - 1)) Then nDay += 1
                                 If Math.Abs((InputData(sKV.Key)(tDim) - InputData(sKV.Key)(tDim - 1)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
                                     JumpPoint.Add(tDim)
                                 End If
                             End If
+                            CalcData(tCompCali.t).Add(CDbl(Line(sKV.Value) + nDay * DayTimeSec))
                         ElseIf sKV.Key = tComp.lati Or sKV.Key = tComp.lati_D Or sKV.Key = tComp.lati_S Then
                             If UTMcalc Then
                                 If MeasCheck(tComp.lati) And sKV.Key = tComp.lati Then UTMCoord = UTM(InputData(sKV.Key)(tDim) / 60, InputData(tComp.longi)(tDim) / 60)

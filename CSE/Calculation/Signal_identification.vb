@@ -457,7 +457,7 @@ Module Signal_identification
                             Exit For
                         End If
                     Next
-                    ErgValues(tCompErg.delta_t).Add(InputData(tComp.t)(i))
+                    ErgValues(tCompErg.delta_t).Add(CalcData(tCompCali.t)(i))
                     ErgValues(tCompErg.v_veh_CAN).Add(InputData(tComp.v_veh_CAN)(i))
                     ErgValues(tCompErg.vair_ic).Add(InputData(tComp.vair_ic)(i))
                     ErgValues(tCompErg.beta_ic).Add(InputData(tComp.beta_ic)(i))
@@ -504,7 +504,7 @@ Module Signal_identification
                         anz += 1
                     Else
                         ' Calculate the results from the last section
-                        ErgValues(tCompErg.delta_t)(run) = InputData(tComp.t)(i - 1) - ErgValues(tCompErg.delta_t)(run)
+                        ErgValues(tCompErg.delta_t)(run) = CalcData(tCompCali.t)(i - 1) - ErgValues(tCompErg.delta_t)(run)
                         ErgValues(tCompErg.v_veh_CAN)(run) = ErgValues(tCompErg.v_veh_CAN)(run) / anz
                         ErgValues(tCompErg.vair_ic)(run) = ErgValues(tCompErg.vair_ic)(run) / anz
                         ErgValues(tCompErg.beta_ic)(run) = ErgValues(tCompErg.beta_ic)(run) / anz
@@ -528,7 +528,7 @@ Module Signal_identification
                                 Exit For
                             End If
                         Next
-                        ErgValues(tCompErg.delta_t).Add(InputData(tComp.t)(i))
+                        ErgValues(tCompErg.delta_t).Add(CalcData(tCompCali.t)(i))
                         ErgValues(tCompErg.v_veh_CAN).Add(InputData(tComp.v_veh_CAN)(i))
                         ErgValues(tCompErg.vair_ic).Add(InputData(tComp.vair_ic)(i))
                         ErgValues(tCompErg.beta_ic).Add(InputData(tComp.beta_ic)(i))
@@ -558,7 +558,7 @@ Module Signal_identification
                 ' Finish calculation after a valid section
                 If firstIn = False Then
                     ' Calculate the results from the last section
-                    ErgValues(tCompErg.delta_t)(run) = InputData(tComp.t)(i - 1) - ErgValues(tCompErg.delta_t)(run)
+                    ErgValues(tCompErg.delta_t)(run) = CalcData(tCompCali.t)(i - 1) - ErgValues(tCompErg.delta_t)(run)
                     ErgValues(tCompErg.v_veh_CAN)(run) = ErgValues(tCompErg.v_veh_CAN)(run) / anz
                     ErgValues(tCompErg.vair_ic)(run) = ErgValues(tCompErg.vair_ic)(run) / anz
                     ErgValues(tCompErg.beta_ic)(run) = ErgValues(tCompErg.beta_ic)(run) / anz
@@ -596,6 +596,7 @@ Module Signal_identification
         ' Declaration
         Dim i, run, anz As Integer
         Dim firstIn As Boolean = True
+        Dim HzIn2 As Double
 
         ' Initialise
         run = 0
@@ -605,9 +606,10 @@ Module Signal_identification
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
             CalcData(tCompCali.v_veh_c)(i) = (InputData(tComp.v_veh_CAN)(i) * Job.fv_veh)
             If i = 0 Then
-                CalcData(tCompCali.dist)(i) = (CalcData(tCompCali.v_veh_c)(i) / 3.6) * (1 / HzIn)
+                CalcData(tCompCali.dist)(i) = 0
             Else
-                CalcData(tCompCali.dist)(i) = CalcData(tCompCali.dist)(i - 1) + (CalcData(tCompCali.v_veh_c)(i) / 3.6) * (1 / HzIn)
+                HzIn2 = 1 / (CalcData(tCompCali.t)(i) - CalcData(tCompCali.t)(i - 1))
+                CalcData(tCompCali.dist)(i) = CalcData(tCompCali.dist)(i - 1) + (CalcData(tCompCali.v_veh_c)(i) / 3.6) * (1 / HzIn2)
             End If
             If CalcData(tCompCali.SecID)(i) <> 0 Then
                 If firstIn Then
@@ -729,6 +731,7 @@ Module Signal_identification
         Dim i, j, run, anz, RunIDx As Integer
         Dim firstIn As Boolean = True
         Dim igear As Double
+        Dim HzIn2 As Double
 
         ' Initialise
         run = 0
@@ -792,29 +795,17 @@ Module Signal_identification
             ' vair_sq
             CalcData(tCompCali.vair_c_sq)(i) = CalcData(tCompCali.vair_c)(i) ^ 2
 
+            ' Find the position in the weather data
+            j = fFindPos(CalcData(tCompCali.t)(i), InputWeatherData(tCompWeat.t))
+
             ' Temprature, Pressure, Humidity
-            For j = 0 To InputWeatherData(tCompWeat.t).Count - 1
-                If j = 0 Then
-                    If CalcData(tCompCali.t)(i) < InputWeatherData(tCompWeat.t)(j) Then
-                        Throw New Exception(format("The test time({0}) is outside the range of the data from the stationary weather station({1}).", CalcData(tCompCali.t)(i), InputWeatherData(tCompWeat.t)(j)))
-                    ElseIf CalcData(tCompCali.t)(i) >= InputWeatherData(tCompWeat.t)(j) And CalcData(tCompCali.t)(i) < InputWeatherData(tCompWeat.t)(j + 1) Then
-                        CalcData(tCompCali.t_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.t)(j + 1), InputWeatherData(tCompWeat.t_amb_stat)(j), InputWeatherData(tCompWeat.t_amb_stat)(j + 1), CalcData(tCompCali.t)(i))
-                        CalcData(tCompCali.p_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.t)(j + 1), InputWeatherData(tCompWeat.p_amp_stat)(j), InputWeatherData(tCompWeat.p_amp_stat)(j + 1), CalcData(tCompCali.t)(i))
-                        CalcData(tCompCali.rh_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.t)(j + 1), InputWeatherData(tCompWeat.rh_stat)(j), InputWeatherData(tCompWeat.rh_stat)(j + 1), CalcData(tCompCali.t)(i))
-                        Exit For
-                    End If
-                Else
-                    If CalcData(tCompCali.t)(i) <= InputWeatherData(tCompWeat.t)(j) And CalcData(tCompCali.t)(i) > InputWeatherData(tCompWeat.t)(j - 1) Then
-                        CalcData(tCompCali.t_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j - 1), InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.t_amb_stat)(j - 1), InputWeatherData(tCompWeat.t_amb_stat)(j), CalcData(tCompCali.t)(i))
-                        CalcData(tCompCali.p_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j - 1), InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.p_amp_stat)(j - 1), InputWeatherData(tCompWeat.p_amp_stat)(j), CalcData(tCompCali.t)(i))
-                        CalcData(tCompCali.rh_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j - 1), InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.rh_stat)(j - 1), InputWeatherData(tCompWeat.rh_stat)(j), CalcData(tCompCali.t)(i))
-                        Exit For
-                    End If
-                End If
-                If j = InputWeatherData(tCompWeat.t).Count - 1 Then
-                    Throw New Exception(format("The test time is outside the range of the data from the stationary weather station."))
-                End If
-            Next j
+            If j = -1 Then
+                Throw New Exception(format("The test time({0}) is outside the range of the data from the stationary weather station.", InputData(tComp.t)(i)))
+            Else
+                CalcData(tCompCali.t_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j - 1), InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.t_amb_stat)(j - 1), InputWeatherData(tCompWeat.t_amb_stat)(j), CalcData(tCompCali.t)(i))
+                CalcData(tCompCali.p_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j - 1), InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.p_amp_stat)(j - 1), InputWeatherData(tCompWeat.p_amp_stat)(j), CalcData(tCompCali.t)(i))
+                CalcData(tCompCali.rh_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j - 1), InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.rh_stat)(j - 1), InputWeatherData(tCompWeat.rh_stat)(j), CalcData(tCompCali.t)(i))
+            End If
         Next i
 
         ' Calculate the moving averages
@@ -834,8 +825,9 @@ Module Signal_identification
                 CalcData(tCompCali.a_veh_avg)(i) = 0
                 CalcData(tCompCali.omega_p_wh_acc)(i) = 0
             Else
-                CalcData(tCompCali.a_veh_avg)(i) = (CalcData(tCompCali.v_veh_acc)(i + 1) - CalcData(tCompCali.v_veh_acc)(i - 1)) / (3.6 * 2) * HzIn
-                CalcData(tCompCali.omega_p_wh_acc)(i) = ((CalcData(tCompCali.omega_wh_acc)(i + 1) - CalcData(tCompCali.omega_wh_acc)(i - 1)) / 2) * Math.PI / (30 * vehicleX.axleRatio * igear)
+                HzIn2 = 1 / ((CalcData(tCompCali.t)(i + 1) - CalcData(tCompCali.t)(i - 1)) / 2)
+                CalcData(tCompCali.a_veh_avg)(i) = (CalcData(tCompCali.v_veh_acc)(i + 1) - CalcData(tCompCali.v_veh_acc)(i - 1)) / (3.6 * 2) * HzIn2
+                CalcData(tCompCali.omega_p_wh_acc)(i) = ((CalcData(tCompCali.omega_wh_acc)(i + 1) - CalcData(tCompCali.omega_wh_acc)(i - 1)) / 2) * HzIn2
             End If
 
             If Crt.gradient_correction Then

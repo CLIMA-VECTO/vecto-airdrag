@@ -40,7 +40,6 @@ Module declaration_public
 
     ' Constant Values
     Public Const LengKX = 1852                                  ' Length in meter for one minute in X (Latitude) direction
-    Public Const HzIn = 100                                     ' Hz frequency demanded for .csdat-file
     Public Const AveSec = 1                                     ' Seconds over that the moving average should be calculated
     Public Const IDLS1 = 1                                      ' Run ID for the first low test run
     Public Const IDLS2 = 2                                      ' Run ID for the second low test run

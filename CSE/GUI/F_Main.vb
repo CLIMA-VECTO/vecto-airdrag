@@ -221,7 +221,12 @@ Public Class F_Main
         ElseIf e.Cancelled Then
             logme(7, False, "Background operation aborted by user.")
         Else
-            logme(7, False, "Background operation ended OK.")
+            If ListBoxErr.Items.Count <> 0 Then
+                logme(7, False, "Background operation ended with ERROR.")
+            Else
+                logme(7, False, "Background operation ended OK.")
+            End If
+
             Dim asyncJob As cAsyncJob = e.Result
             If asyncJob.IsCalibration Then Me.ButtonEval.Enabled = True
             doSaveJob(False)

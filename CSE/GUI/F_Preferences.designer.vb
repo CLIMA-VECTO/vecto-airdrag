@@ -136,7 +136,7 @@ Partial Class F_Preferences
         Me.GroupBoxInterface.Size = New System.Drawing.Size(285, 104)
         Me.GroupBoxInterface.TabIndex = 11
         Me.GroupBoxInterface.TabStop = False
-        Me.GroupBoxInterface.Text = "Logging, Messages && Seperator"
+        Me.GroupBoxInterface.Text = "Logging, Messages && Separator"
         '
         'LabelInfo
         '
@@ -186,7 +186,7 @@ Partial Class F_Preferences
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(70, 13)
         Me.Label2.TabIndex = 18
-        Me.Label2.Text = "List seperator"
+        Me.Label2.Text = "List separator"
         '
         'listSep
         '
@@ -242,7 +242,7 @@ Partial Class F_Preferences
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(92, 13)
         Me.Label4.TabIndex = 20
-        Me.Label4.Text = "Decimal seperator"
+        Me.Label4.Text = "Decimal separator"
         '
         'decSep
         '

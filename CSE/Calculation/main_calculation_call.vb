@@ -319,6 +319,8 @@ Public Module main_calculation_call
         ' Calculate the average over all factors
         Job.fv_veh = Job.fv_veh / num
         Job.fv_veh_opt2 = Job.fv_veh_opt2 / num
+        If num = 0 Then Job.fv_veh = 0
+        If num = 0 Then Job.fv_veh_opt2 = 0
     End Sub
 
     ' Function to calculate fv_pe & beta_amn
