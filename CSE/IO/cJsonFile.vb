@@ -207,7 +207,7 @@ When False, it overrides Application's choice and is not replaced ever.",
     ''' <param name="prefs">It is there to be used when storing cPreferences themselfs.</param>
     ''' <remarks>Note that it is invoked early enough, before the new file has acquired a Body and before AppPreferences exist(!).</remarks>
     Sub UpdateHeader(Optional ByVal prefs As cPreferences = Nothing)
-        If prefs Is Nothing Then prefs = CSE.Prefs
+        If prefs Is Nothing Then prefs = AirDrag.Prefs
         Dim h As JObject = Me.Header
 
         h("ModifiedDate") = DateTime.Now.ToString(dateFrmt)
@@ -223,7 +223,7 @@ When False, it overrides Application's choice and is not replaced ever.",
         h("AppVersion") = AppVers
 
         '' Ensure StrictBody element always there.
-        
+
         If h("StrictBody") Is Nothing Then
             h("StrictBody") = Nothing
         End If
@@ -260,7 +260,7 @@ When False, it overrides Application's choice and is not replaced ever.",
     ''' <param name="strictHeader">when false, relaxes Header's schema (used on Loading to be more accepting)</param>
     ''' <param name="prefs">It is there just to be used when storing cPreferences themselfs.</param>
     Friend Sub Validate(Optional ByVal strictHeader As Boolean = False, Optional ByVal prefs As cPreferences = Nothing)
-        If prefs Is Nothing Then prefs = CSE.Prefs
+        If prefs Is Nothing Then prefs = AirDrag.Prefs
         Dim validateMsgs As IList(Of String) = New List(Of String)
 
         Dim fileSchema = JsonSchema.Parse(JSchemaStr_Header(strictHeader))

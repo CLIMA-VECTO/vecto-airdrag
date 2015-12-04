@@ -29,7 +29,7 @@ Public Class F_Welcome
 
     'Open Release Notes
     Private Sub B_Release_Click(sender As System.Object, e As System.EventArgs) Handles B_Release.Click
-        Dim release_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO-CSE_ReleaseNotes*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
+        Dim release_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO-Air Drag_ReleaseNotes*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
         Try
             System.Diagnostics.Process.Start(release_fname)
         Catch ex As Exception
@@ -39,7 +39,7 @@ Public Class F_Welcome
 
     'Open Quick Start Guide
     Private Sub B_UserM_Click(sender As System.Object, e As System.EventArgs) Handles B_UserM.Click
-        Dim manual_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO_CSE-User Manual*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
+        Dim manual_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO_Air Drag-User Manual*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
         Try
             System.Diagnostics.Process.Start(manual_fname)
         Catch ex As Exception

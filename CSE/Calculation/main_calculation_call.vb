@@ -15,6 +15,8 @@ Public Module main_calculation_call
     Sub calculation(ByVal isCalibrate As Boolean)
         ' Declaration
         Dim i As Integer
+        Dim Starttime As Long() = New Long(2) {0, 0, 0}
+        Dim Endtime As Long() = New Long(2) {0, 0, 0}
 
         ' Initialisation
         InputData = Nothing
@@ -99,6 +101,8 @@ Public Module main_calculation_call
                 ' Output on the GUI
                 logme(6, False, "Reading the data file...")
                 ReadDataFile(Job.coasting_fpaths(i), MSC, vehicle)
+                Starttime(i) = CalcData(tCompCali.t).First
+                Endtime(i) = CalcData(tCompCali.t).Last
 
                 ' Exit function if error is detected
                 If BWorker.CancellationPending Then Return
@@ -139,6 +143,11 @@ Public Module main_calculation_call
             Next i
 
             Try
+                ' Control the measurement sequence
+                If Not Endtime(1) < Starttime(0) Or Not Endtime(0) < Starttime(2) Then
+                    logme(9, False, format("The given measurement times are not in the right sequence! Ending LS1:({0}), Start HS:({1}), Ending HS:({2}), Start LS2:({3})", Endtime(1), Starttime(0), Endtime(0), Starttime(2)))
+                End If
+
                 ' Check if the LS/HS test run is valid
                 fCheckLSHS()
 
@@ -319,6 +328,8 @@ Public Module main_calculation_call
         ' Calculate the average over all factors
         Job.fv_veh = Job.fv_veh / num
         Job.fv_veh_opt2 = Job.fv_veh_opt2 / num
+        If num = 0 Then Job.fv_veh = 0
+        If num = 0 Then Job.fv_veh_opt2 = 0
     End Sub
 
     ' Function to calculate fv_pe & beta_amn

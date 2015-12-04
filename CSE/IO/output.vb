@@ -29,8 +29,8 @@ Module output
             ErgEntryListC = New List(Of tCompCali)
             GenErgOutData(calibration)
             If Crt.hz_out = 1 Then
-                If InputUndefData.Count > 0 Then ConvTo1Hz(InputData(tComp.t), InputUndefData)
-                ConvTo1Hz(InputData)
+                If InputUndefData.Count > 0 Then ConvTo1Hz(CalcData(tCompCali.t), InputUndefData)
+                ConvTo1Hz(CalcData(tCompCali.t), InputData)
                 ConvTo1Hz(CalcData)
             End If
 
@@ -216,7 +216,7 @@ Module output
             logme(5, False, "Writing result-file (*.csv)")
 
             ' Generate the file name
-            NameOutFile = OutFolder & fName(JobFile, False) & "_CSE.csv"
+            NameOutFile = OutFolder & fName(JobFile, False) & "_AirDrag.csv"
 
             ' Anlegen der Datei
             FileOut.OpenWrite(NameOutFile, , False)
@@ -785,7 +785,7 @@ Module output
     End Function
 
     ' Convert the data to 1Hz
-    Public Function ConvTo1Hz(ByRef ValuesX As Dictionary(Of tComp, List(Of Double))) As Boolean
+    Public Function ConvTo1Hz(ByVal dTime As List(Of Double), ByRef ValuesX As Dictionary(Of tComp, List(Of Double))) As Boolean
         ' Declaration
         Dim tMin As Double
         Dim tMax As Double
@@ -804,7 +804,7 @@ Module output
         ' Initialise
         Sprung = False
         tI = 0
-        fTime = ValuesX(tComp.t)
+        fTime = dTime 'ValuesX(tComp.t)
 
         'Check whether Time is not reversed
         For z = 1 To ValuesX.Item(tComp.t).Count - 1

@@ -17,7 +17,7 @@ Public Class cJob
 
     Protected Overrides Function HeaderOverlay() As JObject
         Return JObject.Parse(<json>{
-                "Title": "vecto-cse JOB",
+                "Title": "VECTO-Air Drag JOB",
                 "FileVersion":  "1.0.0",
            }</json>.Value)
     End Function
@@ -57,7 +57,7 @@ Public Class cJob
         Dim allowAdditionalProps_str As String = (Not isStrictBody).ToString.ToLower
         Dim requireFPathExts = isStrictBody
         Return <json>{
-            'title': "Schema for vecto-cse VEHICLE",
+            'title': "Schema for VECTO-Air Drag VEHICLE",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
             "required": true,
             "properties": {

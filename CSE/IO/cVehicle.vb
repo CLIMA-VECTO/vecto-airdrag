@@ -27,7 +27,7 @@ Public Class cVehicle
 
     Protected Overrides Function HeaderOverlay() As JObject
         Return JObject.Parse(<json>{
-                "Title": "vecto-cse VEHICLE",
+                "Title": "VECTO-Air Drag VEHICLE",
                 "FileVersion":  "1.0.0",
            }</json>.Value)
     End Function
@@ -54,7 +54,7 @@ Public Class cVehicle
     Public Shared Function JSchemaStr(Optional ByVal isStrictBody As Boolean = False) As String
         Dim allowAdditionalProps_str As String = (Not isStrictBody).ToString.ToLower
         Return <json>{
-            "title": "Schema for vecto-cse VEHICLE",
+            "title": "Schema for VECTO-Air Drag VEHICLE",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
             "required": true,
             "properties": {

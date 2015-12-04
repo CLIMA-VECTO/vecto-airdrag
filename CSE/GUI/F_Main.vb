@@ -221,7 +221,12 @@ Public Class F_Main
         ElseIf e.Cancelled Then
             logme(7, False, "Background operation aborted by user.")
         Else
-            logme(7, False, "Background operation ended OK.")
+            If ListBoxErr.Items.Count <> 0 Then
+                logme(7, False, "Background operation ended with ERROR.")
+            Else
+                logme(7, False, "Background operation ended OK.")
+            End If
+
             Dim asyncJob As cAsyncJob = e.Result
             If asyncJob.IsCalibration Then Me.ButtonEval.Enabled = True
             doSaveJob(False)
@@ -244,7 +249,7 @@ Public Class F_Main
     '####################################################################
     Private _CalibrationState As Boolean = False
     Private ReadOnly _CalibrationTxts = {"Calibrate", "Cancel"}
-    Private ReadOnly _CalibrationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private ReadOnly _CalibrationImgs = {My.Resources.Resources.Play, My.Resources.Resources.Stop_calc}
     Private Property CalibrationState As Boolean
         Get
             Return _CalibrationState
@@ -328,7 +333,7 @@ Public Class F_Main
     '####################################################################
     Private _EvaluationState As Boolean = False
     Private ReadOnly _EvaluationTxts = {"Evaluate", "Cancel"}
-    Private ReadOnly _EvaluationImgs = {My.Resources.Resources.Play_icon, My.Resources.Resources.Stop_icon}
+    Private ReadOnly _EvaluationImgs = {My.Resources.Resources.Play, My.Resources.Resources.Stop_calc}
     Private Property EvaluationState As Boolean
         Get
             Return _EvaluationState
@@ -954,7 +959,7 @@ Public Class F_Main
 
     ' Menu open the user manual
     Private Sub ToolStripMenuItemManu_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemManu.Click
-        Dim manual_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO_CSE-User Manual*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
+        Dim manual_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO_Air Drag-User Manual*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
 
         Try
             System.Diagnostics.Process.Start(manual_fname)
@@ -965,7 +970,7 @@ Public Class F_Main
 
     ' Menu open the release notes
     Private Sub ReleaseNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReleaseNotesToolStripMenuItem.Click
-        Dim release_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO-CSE_ReleaseNotes*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
+        Dim release_fname As String = (From fi As IO.FileInfo In (New IO.DirectoryInfo(joinPaths(MyPath, "Docs")).GetFiles("*VECTO-Air Drag_ReleaseNotes*.pdf", IO.SearchOption.TopDirectoryOnly)) Order By fi.LastAccessTime Select fi)(0).FullName
 
         Try
             System.Diagnostics.Process.Start(release_fname)

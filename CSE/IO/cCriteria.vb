@@ -17,7 +17,7 @@ Public Class cCriteria
 
     Protected Overrides Function HeaderOverlay() As JObject
         Return JObject.Parse(<json>{
-                "Title": "vecto-cse CRITERIA",
+                "Title": "VECTO-Air Drag CRITERIA",
                 "FileVersion":  "1.0.0",
            }</json>.Value)
     End Function
@@ -86,7 +86,7 @@ Public Class cCriteria
     Public Shared Function JSchemaStr(Optional ByVal isStrictBody As Boolean = False) As String
         Dim allowAdditionalProps_str As String = (Not isStrictBody).ToString.ToLower
         Return <json>{
-            "title": "Schema for vecto-cse CRITERIA",
+            "title": "Schema for VECTO-Air Drag CRITERIA",
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
             "required": true,
             "properties": {

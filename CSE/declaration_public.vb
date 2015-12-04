@@ -12,8 +12,8 @@
 Module declaration_public
 
     ' Description of the form
-    Public Const AppName As String = "VECTO_CSE"                ' Name of the programm
-    Public Const AppVers As String = "2.0.4-beta6"              ' Version of the Programm
+    Public Const AppName As String = "Air Drag"                  ' Name of the programm
+    Public Const AppVers As String = "2.0.5-beta6"              ' Version of the Programm
     Public AppDate As String                                    ' Date of the compilation of the programm
 
     ' Control variables
@@ -40,7 +40,6 @@ Module declaration_public
 
     ' Constant Values
     Public Const LengKX = 1852                                  ' Length in meter for one minute in X (Latitude) direction
-    Public Const HzIn = 100                                     ' Hz frequency demanded for .csdat-file
     Public Const AveSec = 1                                     ' Seconds over that the moving average should be calculated
     Public Const IDLS1 = 1                                      ' Run ID for the first low test run
     Public Const IDLS2 = 2                                      ' Run ID for the second low test run

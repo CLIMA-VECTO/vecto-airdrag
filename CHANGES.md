@@ -1,5 +1,15 @@
 VECTO-CSE: Changes
 ===================
+#### 2015-11-25: v2.0.5-beta6 ####
+TUG improvements:
+
+  * New version number
+  * Renaiming of VECTO-CSE into VECTO-Air Drag
+  * Bugfix dist calculation
+  * Bugfix calculation of a_veh_avg and omega_p_wh_acc
+  * Update of the ending message if an error during the calculation detected
+  * Update user manual and release notes
+  
 #### 2015-10-13: v2.0.4-beta6 ####
 TUG improvements:
 

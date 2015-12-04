@@ -8,10 +8,10 @@ Imports System.Runtime.InteropServices
 
 ' Die Werte der Assemblyattribute überprüfen
 
-<Assembly: AssemblyTitle("CSE")> 
-<Assembly: AssemblyDescription("Constant Speed Evaluation Tool for VECTO")> 
+<Assembly: AssemblyTitle("Air Drag")> 
+<Assembly: AssemblyDescription("Air Drag Tool for VECTO")> 
 <Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("CSE")> 
+<Assembly: AssemblyProduct("Air Drag")> 
 <Assembly: AssemblyCopyright("Copyright ©  2014 European Commission")> 
 <Assembly: AssemblyTrademark("")> 
 

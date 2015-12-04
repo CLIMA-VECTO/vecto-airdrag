@@ -391,6 +391,22 @@ Module Minor_routines_calculate
         End Using
     End Function
 
+    ' Function to find the position
+    Public Function fFindPos(ByVal FValue As Double, ByVal ArrayV As List(Of Double)) As Integer
+        ' Declaration
+        Dim pos As Integer
+
+        ' Find the value
+        For pos = 1 To ArrayV.Count - 1
+            If FValue <= ArrayV(pos) And FValue > ArrayV(pos - 1) Then
+                Return pos
+            End If
+        Next
+
+        ' Give false back if no value was found
+        Return -1
+    End Function
+
     ' Calculate the UTM coordinates
     Function UTM(ByVal Lat As Double, ByVal Lon As Double) As cUTMCoord
         ' Declaration
