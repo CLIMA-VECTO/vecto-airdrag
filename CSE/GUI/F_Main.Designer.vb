@@ -263,42 +263,42 @@ Partial Class F_Main
         '
         'MenuItemExit
         '
-        Me.MenuItemExit.Image = Global.CSE.My.Resources.Resources.Beenden
+        Me.MenuItemExit.Image = Global.AirDrag.My.Resources.Resources.Beenden
         Me.MenuItemExit.Name = "MenuItemExit"
         Me.MenuItemExit.Size = New System.Drawing.Size(53, 20)
         Me.MenuItemExit.Text = "Exit"
         '
         'MenuItemNewJob
         '
-        Me.MenuItemNewJob.Image = Global.CSE.My.Resources.Resources.Neu
+        Me.MenuItemNewJob.Image = Global.AirDrag.My.Resources.Resources.Neu
         Me.MenuItemNewJob.Name = "MenuItemNewJob"
         Me.MenuItemNewJob.Size = New System.Drawing.Size(80, 20)
         Me.MenuItemNewJob.Text = "New Job"
         '
         'MenuItemLoadJob
         '
-        Me.MenuItemLoadJob.Image = Global.CSE.My.Resources.Resources.Öffnen
+        Me.MenuItemLoadJob.Image = Global.AirDrag.My.Resources.Resources.Öffnen
         Me.MenuItemLoadJob.Name = "MenuItemLoadJob"
         Me.MenuItemLoadJob.Size = New System.Drawing.Size(82, 20)
         Me.MenuItemLoadJob.Text = "Load Job"
         '
         'MenuItemReloadJob
         '
-        Me.MenuItemReloadJob.Image = Global.CSE.My.Resources.Resources.Refresh_icon
+        Me.MenuItemReloadJob.Image = Global.AirDrag.My.Resources.Resources.Refresh
         Me.MenuItemReloadJob.Name = "MenuItemReloadJob"
         Me.MenuItemReloadJob.Size = New System.Drawing.Size(92, 20)
         Me.MenuItemReloadJob.Text = "Reload Job"
         '
         'MenuItemSaveJob
         '
-        Me.MenuItemSaveJob.Image = Global.CSE.My.Resources.Resources.Speichern
+        Me.MenuItemSaveJob.Image = Global.AirDrag.My.Resources.Resources.Speichern
         Me.MenuItemSaveJob.Name = "MenuItemSaveJob"
         Me.MenuItemSaveJob.Size = New System.Drawing.Size(80, 20)
         Me.MenuItemSaveJob.Text = "Save Job"
         '
         'MenuItemSaveAsJob
         '
-        Me.MenuItemSaveAsJob.Image = Global.CSE.My.Resources.Resources.Speichern_unter
+        Me.MenuItemSaveAsJob.Image = Global.AirDrag.My.Resources.Resources.Speichern_unter
         Me.MenuItemSaveAsJob.Name = "MenuItemSaveAsJob"
         Me.MenuItemSaveAsJob.Size = New System.Drawing.Size(75, 20)
         Me.MenuItemSaveAsJob.Text = "Save As"
@@ -318,7 +318,7 @@ Partial Class F_Main
         '
         'ToolStripMenuItemLog
         '
-        Me.ToolStripMenuItemLog.Image = Global.CSE.My.Resources.Resources.Log_File
+        Me.ToolStripMenuItemLog.Image = Global.AirDrag.My.Resources.Resources.Log_File
         Me.ToolStripMenuItemLog.Name = "ToolStripMenuItemLog"
         Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(186, 22)
         Me.ToolStripMenuItemLog.Text = "Open LogFile"
@@ -341,7 +341,7 @@ Partial Class F_Main
         '
         'ToolStripMenuItemOption
         '
-        Me.ToolStripMenuItemOption.Image = Global.CSE.My.Resources.Resources.Optionen
+        Me.ToolStripMenuItemOption.Image = Global.AirDrag.My.Resources.Resources.Optionen
         Me.ToolStripMenuItemOption.Name = "ToolStripMenuItemOption"
         Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(186, 22)
         Me.ToolStripMenuItemOption.Text = "Preferences"
@@ -350,7 +350,7 @@ Partial Class F_Main
         '
         Me.InfoToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.InfoToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemManu, Me.ReleaseNotesToolStripMenuItem, Me.ToolStripSeparator1, Me.ReportBugToolStripMenuItem, Me.ToolStripMenuItem1, Me.ToolStripMenuItemAbout})
-        Me.InfoToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.Help
+        Me.InfoToolStripMenuItem.Image = Global.AirDrag.My.Resources.Resources.Help
         Me.InfoToolStripMenuItem.Name = "InfoToolStripMenuItem"
         Me.InfoToolStripMenuItem.Size = New System.Drawing.Size(60, 20)
         Me.InfoToolStripMenuItem.Text = "Help"
@@ -374,7 +374,7 @@ Partial Class F_Main
         '
         'ReportBugToolStripMenuItem
         '
-        Me.ReportBugToolStripMenuItem.Image = Global.CSE.My.Resources.Resources.bug_edit_icon
+        Me.ReportBugToolStripMenuItem.Image = Global.AirDrag.My.Resources.Resources.bug_edit_icon
         Me.ReportBugToolStripMenuItem.Name = "ReportBugToolStripMenuItem"
         Me.ReportBugToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
         Me.ReportBugToolStripMenuItem.Text = "Report Bug via CITnet"
@@ -386,10 +386,10 @@ Partial Class F_Main
         '
         'ToolStripMenuItemAbout
         '
-        Me.ToolStripMenuItemAbout.Image = Global.CSE.My.Resources.Resources.Info
+        Me.ToolStripMenuItemAbout.Image = Global.AirDrag.My.Resources.Resources.Info
         Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
         Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(189, 22)
-        Me.ToolStripMenuItemAbout.Text = "About CSE"
+        Me.ToolStripMenuItemAbout.Text = "About Air Drag"
         '
         'BackgroundWorkerVECTO
         '
@@ -665,7 +665,7 @@ Partial Class F_Main
         Me.ButtonEval.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonEval.Enabled = False
         Me.ButtonEval.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonEval.Image = Global.CSE.My.Resources.Resources.Play_icon
+        Me.ButtonEval.Image = Global.AirDrag.My.Resources.Resources.Play
         Me.ButtonEval.Location = New System.Drawing.Point(838, 17)
         Me.ButtonEval.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonEval.Name = "ButtonEval"
@@ -711,7 +711,7 @@ Partial Class F_Main
         '
         'PictureBox2
         '
-        Me.PictureBox2.Image = Global.CSE.My.Resources.Resources.JRC_About
+        Me.PictureBox2.Image = Global.AirDrag.My.Resources.Resources.JRC_About
         Me.PictureBox2.Location = New System.Drawing.Point(463, 26)
         Me.PictureBox2.Margin = New System.Windows.Forms.Padding(2)
         Me.PictureBox2.Name = "PictureBox2"
@@ -726,13 +726,13 @@ Partial Class F_Main
         Me.Label1.Location = New System.Drawing.Point(156, 26)
         Me.Label1.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(287, 25)
+        Me.Label1.Size = New System.Drawing.Size(98, 25)
         Me.Label1.TabIndex = 28
-        Me.Label1.Text = "Constant Speed Evaluator"
+        Me.Label1.Text = "Air Drag"
         '
         'PictureBox1
         '
-        Me.PictureBox1.Image = Global.CSE.My.Resources.Resources.VECTO_LOGO
+        Me.PictureBox1.Image = Global.AirDrag.My.Resources.Resources.VECTO_LOGO
         Me.PictureBox1.Location = New System.Drawing.Point(8, 26)
         Me.PictureBox1.Margin = New System.Windows.Forms.Padding(2)
         Me.PictureBox1.Name = "PictureBox1"
@@ -744,7 +744,7 @@ Partial Class F_Main
         '
         Me.ButtonCalC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCalC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonCalC.Image = Global.CSE.My.Resources.Resources.Play_icon
+        Me.ButtonCalC.Image = Global.AirDrag.My.Resources.Resources.Play
         Me.ButtonCalC.Location = New System.Drawing.Point(837, 18)
         Me.ButtonCalC.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonCalC.Name = "ButtonCalC"
@@ -1312,7 +1312,7 @@ Partial Class F_Main
         '
         'ButtonCrtImport
         '
-        Me.ButtonCrtImport.Image = Global.CSE.My.Resources.Resources.Öffnen
+        Me.ButtonCrtImport.Image = Global.AirDrag.My.Resources.Resources.Öffnen
         Me.ButtonCrtImport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ButtonCrtImport.Location = New System.Drawing.Point(305, 62)
         Me.ButtonCrtImport.Name = "ButtonCrtImport"
@@ -1323,7 +1323,7 @@ Partial Class F_Main
         '
         'ButtonCrtExport
         '
-        Me.ButtonCrtExport.Image = Global.CSE.My.Resources.Resources.Speichern_unter
+        Me.ButtonCrtExport.Image = Global.AirDrag.My.Resources.Resources.Speichern_unter
         Me.ButtonCrtExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.ButtonCrtExport.Location = New System.Drawing.Point(306, 111)
         Me.ButtonCrtExport.Name = "ButtonCrtExport"
@@ -1938,7 +1938,7 @@ Partial Class F_Main
         '
         'PBInfoIconCrt
         '
-        Me.PBInfoIconCrt.Image = Global.CSE.My.Resources.Resources.Info
+        Me.PBInfoIconCrt.Image = Global.AirDrag.My.Resources.Resources.Info
         Me.PBInfoIconCrt.Location = New System.Drawing.Point(6, 363)
         Me.PBInfoIconCrt.Name = "PBInfoIconCrt"
         Me.PBInfoIconCrt.Size = New System.Drawing.Size(25, 30)
@@ -2267,13 +2267,13 @@ Partial Class F_Main
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.MenuStrip1)
-        Me.DataBindings.Add(New System.Windows.Forms.Binding("Location", Global.CSE.My.MySettings.Default, "F_Main_location", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.DataBindings.Add(New System.Windows.Forms.Binding("Location", Global.AirDrag.My.MySettings.Default, "F_Main_location", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Location = Global.CSE.My.MySettings.Default.F_Main_location
+        Me.Location = Global.AirDrag.My.MySettings.Default.F_Main_location
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MinimumSize = New System.Drawing.Size(960, 750)
         Me.Name = "F_Main"
-        Me.Text = "VECTO Constant Speed Evaluator"
+        Me.Text = "VECTO Air Drag"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.GroupBoxJob.ResumeLayout(False)

@@ -216,7 +216,7 @@ Module output
             logme(5, False, "Writing result-file (*.csv)")
 
             ' Generate the file name
-            NameOutFile = OutFolder & fName(JobFile, False) & "_CSE.csv"
+            NameOutFile = OutFolder & fName(JobFile, False) & "_AirDrag.csv"
 
             ' Anlegen der Datei
             FileOut.OpenWrite(NameOutFile, , False)

@@ -9,7 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
-Imports CSE.cCriteria
+Imports AirDrag.cCriteria
 Module Signal_identification
 
     ' Divide the signal into there directions
@@ -800,7 +800,7 @@ Module Signal_identification
 
             ' Temprature, Pressure, Humidity
             If j = -1 Then
-                Throw New Exception(format("The test time({0}) is outside the range of the data from the stationary weather station.", InputData(tComp.t)(i)))
+                Throw New Exception(format("The test time({0}) is outside the range of the data from the stationary weather station. Please check weather file and if data time is correct (day crossings correct included?)", InputData(tComp.t)(i)))
             Else
                 CalcData(tCompCali.t_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j - 1), InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.t_amb_stat)(j - 1), InputWeatherData(tCompWeat.t_amb_stat)(j), CalcData(tCompCali.t)(i))
                 CalcData(tCompCali.p_amp_stat)(i) = InterpLinear(InputWeatherData(tCompWeat.t)(j - 1), InputWeatherData(tCompWeat.t)(j), InputWeatherData(tCompWeat.p_amp_stat)(j - 1), InputWeatherData(tCompWeat.p_amp_stat)(j), CalcData(tCompCali.t)(i))

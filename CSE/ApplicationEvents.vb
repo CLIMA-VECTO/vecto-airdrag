@@ -29,7 +29,7 @@ Namespace My
             fbVEL.Close()
             fbMSC.Close()
 
-            ' Restart VECTO CSE (Only by changes on the Confic)
+            ' Restart VECTO Air Drag (Only by changes on the Confic)
             If RestartN Then
                 ' Start the *.exe
                 PSI.FileName = My.Application.Info.AssemblyName & ".exe"
@@ -72,7 +72,7 @@ Namespace My
                 Lic.AppVersion = AppVers
 
                 ' Declaration from the filebrowser optionen
-                fbVECTO = New cFileBrowser("CSE")
+                fbVECTO = New cFileBrowser("AirDrag")
                 fbVECTO.Extensions = New String() {"csjob.json", "csjob"}
 
                 fbCRT = New cFileBrowser("CRT.json")

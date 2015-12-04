@@ -354,7 +354,7 @@ Public NotInheritable Class cSemanticVersion
     ''' </item>
     ''' </list>
     ''' </returns>
-    Public Function CompareTo(ByVal other As cSemanticVersion) As Integer Implements IComparable(Of CSE.cSemanticVersion).CompareTo
+    Public Function CompareTo(ByVal other As cSemanticVersion) As Integer Implements IComparable(Of AirDrag.cSemanticVersion).CompareTo
         If (other Is Nothing) Then Throw New ArgumentNullException("other")
 
         If (other Is Me) Then Return 0
@@ -403,7 +403,7 @@ Public NotInheritable Class cSemanticVersion
     ''' <b>True</b> if the objects are equal, or false if the objects are
     ''' not equal.
     ''' </returns>
-    Public Overloads Function Equals(ByVal other As cSemanticVersion) As Boolean Implements IEquatable(Of CSE.cSemanticVersion).Equals
+    Public Overloads Function Equals(ByVal other As cSemanticVersion) As Boolean Implements IEquatable(Of AirDrag.cSemanticVersion).Equals
         If (other Is Me) Then Return True
 
         If (other Is Nothing) Then Return False

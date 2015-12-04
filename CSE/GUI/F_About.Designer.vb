@@ -129,12 +129,12 @@ Partial Class F_About
         Me.Label8.Size = New System.Drawing.Size(158, 65)
         Me.Label8.TabIndex = 3
         Me.Label8.Text = "European Commission" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "DG CLIMA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "and" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Joint Research Centre" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Sustainable Transport " & _
-            "Unit" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+    "Unit" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         '
         'PictureBoxJRC
         '
         Me.PictureBoxJRC.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxJRC.Image = Global.CSE.My.Resources.Resources.JRC_About
+        Me.PictureBoxJRC.Image = Global.AirDrag.My.Resources.Resources.JRC_About
         Me.PictureBoxJRC.Location = New System.Drawing.Point(239, 145)
         Me.PictureBoxJRC.Name = "PictureBoxJRC"
         Me.PictureBoxJRC.Size = New System.Drawing.Size(195, 40)
@@ -144,7 +144,7 @@ Partial Class F_About
         'PictureBoxTUG
         '
         Me.PictureBoxTUG.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxTUG.Image = Global.CSE.My.Resources.Resources.TUG_91x34
+        Me.PictureBoxTUG.Image = Global.AirDrag.My.Resources.Resources.TUG_91x34
         Me.PictureBoxTUG.Location = New System.Drawing.Point(363, 398)
         Me.PictureBoxTUG.Name = "PictureBoxTUG"
         Me.PictureBoxTUG.Size = New System.Drawing.Size(96, 36)
@@ -154,7 +154,7 @@ Partial Class F_About
         'PictureBoxFVT
         '
         Me.PictureBoxFVT.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxFVT.Image = Global.CSE.My.Resources.Resources.IVT_About
+        Me.PictureBoxFVT.Image = Global.AirDrag.My.Resources.Resources.IVT_About
         Me.PictureBoxFVT.Location = New System.Drawing.Point(245, 398)
         Me.PictureBoxFVT.Name = "PictureBoxFVT"
         Me.PictureBoxFVT.Size = New System.Drawing.Size(75, 36)
@@ -187,9 +187,9 @@ Partial Class F_About
         Me.Label10.Font = New System.Drawing.Font("Verdana", 20.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label10.Location = New System.Drawing.Point(12, 9)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(368, 32)
+        Me.Label10.Size = New System.Drawing.Size(128, 32)
         Me.Label10.TabIndex = 16
-        Me.Label10.Text = "Constant Speed Evaluator"
+        Me.Label10.Text = "Air Drag"
         '
         'Label14
         '
@@ -197,9 +197,9 @@ Partial Class F_About
         Me.Label14.Font = New System.Drawing.Font("Verdana", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label14.Location = New System.Drawing.Point(10, 44)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(203, 32)
+        Me.Label14.Size = New System.Drawing.Size(252, 32)
         Me.Label14.TabIndex = 17
-        Me.Label14.Text = "VECTO - CSE"
+        Me.Label14.Text = "VECTO-Air Drag"
         '
         'Label12
         '
@@ -257,7 +257,7 @@ Partial Class F_About
         '
         Me.LVersion.AutoSize = True
         Me.LVersion.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LVersion.Location = New System.Drawing.Point(207, 56)
+        Me.LVersion.Location = New System.Drawing.Point(277, 56)
         Me.LVersion.Name = "LVersion"
         Me.LVersion.Size = New System.Drawing.Size(65, 18)
         Me.LVersion.TabIndex = 22
@@ -268,7 +268,7 @@ Partial Class F_About
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(474, 567)
+        Me.ClientSize = New System.Drawing.Size(464, 557)
         Me.Controls.Add(Me.LVersion)
         Me.Controls.Add(Me.LinkLicensed)
         Me.Controls.Add(Me.Label13)
@@ -296,7 +296,7 @@ Partial Class F_About
         Me.MinimumSize = New System.Drawing.Size(480, 591)
         Me.Name = "F_About"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "About CSE"
+        Me.Text = "About Air Drag"
         CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBoxTUG, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBoxFVT, System.ComponentModel.ISupportInitialize).EndInit()

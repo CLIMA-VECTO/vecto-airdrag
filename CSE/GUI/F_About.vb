@@ -14,7 +14,7 @@ Public Class F_About
 
     'Initialisation
     Private Sub F10_AboutBox_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Me.Text = "VECTO CSE"
+        Me.Text = "VECTO-Air Drag"
         Me.LVersion.Text = format("v{0}", AppVers)
     End Sub
 

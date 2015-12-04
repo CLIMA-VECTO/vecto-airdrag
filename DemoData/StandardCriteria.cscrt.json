@@ -1,9 +1,9 @@
 {
   "Header": {
-    "Title": "vecto-cse CRITERIA",
+    "Title": "VECTO-Air Drag CRITERIA",
     "FileVersion": "1.0.0",
-    "AppVersion": "2.0.3-beta6",
-    "ModifiedDate": "2015.07.22 09:50:03 +02:00",
+    "AppVersion": "2.0.5-beta6",
+    "ModifiedDate": "2015.11.25 13:26:40 +01:00",
     "CreatedBy": "VKMTHD\\martindippold@Dippold(lic: 88070b7c-1b69-4d65-a112-10c57f86f5ad)",
     "StrictBody": null,
     "BodySchema": null
