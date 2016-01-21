@@ -1,5 +1,13 @@
 VECTO-CSE: Changes
 ===================
+#### 2016-01-21: v2.0.6-beta6 ####
+TUG improvements:
+
+  * New version number
+  * Bugfix control heading calculation in *.csms file
+  * Bugfix old functions for day changes deleted
+  * Update user manual and release notes
+  
 #### 2015-11-25: v2.0.5-beta6 ####
 TUG improvements:
 

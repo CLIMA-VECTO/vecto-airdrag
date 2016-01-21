@@ -452,7 +452,7 @@ Public Module input
                         InputData(sKV.Key).Add(CDbl(Line(sKV.Value)))
                         If sKV.Key = tComp.t Then
                             If tDim >= 1 Then
-                                If (InputData(sKV.Key)(tDim) < InputData(sKV.Key)(tDim - 1)) Then nDay += 1
+                                'If (InputData(sKV.Key)(tDim) < InputData(sKV.Key)(tDim - 1)) Then nDay += 1
                                 If Math.Abs((InputData(sKV.Key)(tDim) - InputData(sKV.Key)(tDim - 1)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
                                     JumpPoint.Add(tDim)
                                 End If

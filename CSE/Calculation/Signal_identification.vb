@@ -69,14 +69,17 @@ Module Signal_identification
             UTMCoordV = UTM(MSCOrg.latE(i) / 60, MSCOrg.longE(i) / 60)
             Aae = QuadReq(UTMCoordV.Easting - UTMCoordP.Easting, UTMCoordV.Northing - UTMCoordP.Northing)
             len(i) = Math.Sqrt(Math.Pow(UTMCoordV.Easting - UTMCoordP.Easting, 2) + Math.Pow(UTMCoordV.Northing - UTMCoordP.Northing, 2))
-                If (Math.Cos(MSCOrg.latS(i) / 60 * Math.PI / 180) * Math.Sin(len(i) / (1852 * 60) * Math.PI / 180)) > 0 Then
-                Head(i) = Math.Acos((Math.Sin(MSCOrg.latE(i) / 60 * Math.PI / 180) - Math.Sin(MSCOrg.latS(i) / 60 * Math.PI / 180) * _
-                          Math.Cos(len(i) / (1852 * 60) * Math.PI / 180)) / (Math.Cos(MSCOrg.latS(i) / 60 * Math.PI / 180) * _
-                          Math.Sin(len(i) / (1852 * 60) * Math.PI / 180))) * 180 / Math.PI
-                If MSCOrg.latE(i) < MSCOrg.latS(i) Then Head(i) = 360 - Head(i)
-                Else
-                    Head(i) = 0
-                End If
+            If (Math.Sqrt(1 - (Math.Cos((MSCOrg.longS(i) - MSCOrg.longE(i)) / 60 * Math.PI / 180) * Math.Cos(MSCOrg.latS(i) / 60 * Math.PI / 180) * _
+                Math.Cos(MSCOrg.latE(i) / 60 * Math.PI / 180) + Math.Sin(MSCOrg.latS(i) / 60 * Math.PI / 180) * Math.Sin(MSCOrg.latE(i) / 60 * Math.PI / 180)) ^ 2)) <> 0 Then
+                Head(i) = Math.Acos((Math.Cos(MSCOrg.latS(i) / 60 * Math.PI / 180) * Math.Sin(MSCOrg.latE(i) / 60 * Math.PI / 180) - _
+                           Math.Cos((MSCOrg.longE(i) - MSCOrg.longS(i)) / 60 * Math.PI / 180) * Math.Cos(MSCOrg.latE(i) / 60 * Math.PI / 180) * _
+                           Math.Sin(MSCOrg.latS(i) / 60 * Math.PI / 180)) / (Math.Sqrt(1 - (Math.Cos((MSCOrg.longS(i) - MSCOrg.longE(i)) / 60 * Math.PI / 180) * _
+                           Math.Cos(MSCOrg.latS(i) / 60 * Math.PI / 180) * Math.Cos(MSCOrg.latE(i) / 60 * Math.PI / 180) + _
+                           Math.Sin(MSCOrg.latS(i) / 60 * Math.PI / 180) * Math.Sin(MSCOrg.latE(i) / 60 * Math.PI / 180)) ^ 2))) * 180 / Math.PI
+                If (MSCOrg.longE(i) - MSCOrg.longS(i)) < 0 Then Head(i) = 360 - Head(i)
+            Else
+                Head(i) = 0
+            End If
             MSCVirt.meID.Add(MSCOrg.meID(i))
             MSCVirt.dID.Add(MSCOrg.dID(i))
             MSCVirt.KoordA.Add(KleinPkt(UTMCoordP.Easting, UTMCoordP.Northing, Aae, 0, -Crt.trigger_delta_y_max))
