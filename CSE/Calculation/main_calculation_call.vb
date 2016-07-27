@@ -68,6 +68,7 @@ Public Module main_calculation_call
             Dim MSC As New cMSC
             Dim vMSC As New cVirtMSC
             Dim r_dyn_ref As Double
+            Dim Altdata As New List(Of cAlt)
 
             ' Output on the GUI
             logme(7, False, "Calculating the speed runs...")
@@ -76,7 +77,11 @@ Public Module main_calculation_call
             logme(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
             ReadInputMSC(MSC, Job.coast_track_fpath, isCalibrate)
+            If Crt.gradient_correction Then ReadAltitudeFiles(MSC, Altdata)
             ReadWeather(Job.ambient_fpath)
+
+            ' Check altitude files
+            If Crt.gradient_correction Then fcheckAlt(MSC, Altdata)
 
             ' Calculation of the virtual MSC points
             fIdentifyMS(MSC, vMSC, , False)
@@ -117,7 +122,7 @@ Public Module main_calculation_call
                 If i = 0 Then logme(6, False, "Calibration of vehicle speed and anemometer position correction")
 
                 ' Calculate the run
-                fCalcRun(MSC, vehicle, i, r_dyn_ref)
+                fCalcRun(MSC, Altdata, vehicle, i, r_dyn_ref)
 
                 ' Exit function if error is detected
                 If BWorker.CancellationPending Then Return
@@ -236,7 +241,7 @@ Public Module main_calculation_call
     End Sub
 
     ' Calculate the speed run parameter
-    Function fCalcRun(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer, ByRef r_dyn_ref As Double) As Boolean
+    Function fCalcRun(ByVal MSCX As cMSC, ByVal Altdata As List(Of cAlt), ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer, ByRef r_dyn_ref As Double) As Boolean
         ' Declaration
         Dim run As Integer
         Dim Change As Boolean = True
@@ -279,7 +284,7 @@ Public Module main_calculation_call
             fWindBetaAirErg()
 
             ' Calculate the other speed run relevant values
-            fCalcSpeedVal(MSCX, vehicleX, coastingSeq, r_dyn_ref)
+            fCalcSpeedVal(Altdata, vehicleX, coastingSeq, r_dyn_ref)
 
             ' Evaluate the valid sections
             fCalcValidSec(MSCX, vehicleX, coastingSeq, run, r_dyn_ref, Change)
@@ -954,6 +959,70 @@ Public Module main_calculation_call
                     Change = False
                 End If
         End Select
+    End Sub
+
+    ' Check the altitude files
+    Sub fcheckAlt(ByVal MSCOrg As cMSC, ByRef Altdata As List(Of cAlt))
+        ' Declarations
+        Dim i, j As Integer
+        Dim distAlt As Double
+        Dim DiffAltDist, Diffhp, StartPIn, EndPIn As Boolean
+        Dim UTMCoordA As New cUTMCoord
+        Dim UTMCoordE As New cUTMCoord
+        Dim KoordA As Array
+        Dim KoordE As Array
+        Dim KoordP As Array
+        Dim ErgHHF As New cHHF
+
+        ' Check the altitude files
+        ' Output on the GUI
+        logme(5, False, "Check altitude files")
+
+        For i = 1 To Altdata.Count - 1
+            ' Calculation of the MS UTM-Coordinates
+            UTMCoordA = UTM(MSCOrg.latS(i) / 60, MSCOrg.longS(i) / 60)
+            UTMCoordE = UTM(MSCOrg.latE(i) / 60, MSCOrg.longE(i) / 60)
+            KoordA = ({UTMCoordA.Northing, UTMCoordA.Easting})
+            KoordE = ({UTMCoordE.Northing, UTMCoordE.Easting})
+
+            ' Check if the difference between the altitude input points is <= criterium dist_gridpoints_max
+            DiffAltDist = False
+            Diffhp = False
+            StartPIn = False
+            EndPIn = False
+            For j = 0 To Altdata(i).KoordLat.Count - 1
+                ' Generate the coordinate array
+                KoordP = ({Altdata(i).UTM(j).Northing, Altdata(i).UTM(j).Easting})
+
+                ' Calculate the Höhe-Höhenfüßpunkt values
+                ErgHHF = HHF(KoordA, KoordE, KoordP)
+
+                ' Check if Startpoint is outside the MS
+                If j = 0 And ErgHHF.p > 0 And ErgHHF.q > 0 Then StartPIn = True
+
+                ' Check if the allowed distance between MS center line and altitude grid points is <= dist_grid_ms_max
+                If ErgHHF.hp > Crt.dist_grid_ms_max Then
+                    logme(9, False, "Point " & (j + 1) & ": hp (" & ErgHHF.hp & "), allowed hp (" & Crt.dist_grid_ms_max & ")")
+                    Diffhp = True
+                End If
+
+                ' Check if the difference between the altitude input points is <= criterium dist_gridpoints_max
+                If j > 0 Then
+                    distAlt = Math.Sqrt(Math.Pow(Altdata(i).UTM(j).Easting - Altdata(i).UTM(j - 1).Easting, 2) + Math.Pow(Altdata(i).UTM(j).Northing - Altdata(i).UTM(j - 1).Northing, 2))
+                    If distAlt > Crt.dist_gridpoints_max Then
+                        logme(9, False, "Point " & (j - 1) & " - " & j & ": dist (" & distAlt & "), allowed dist (" & Crt.dist_gridpoints_max & ")")
+                        DiffAltDist = True
+                    End If
+                End If
+
+                ' Check if the last Point is outside the MS
+                If j = Altdata(i).KoordLat.Count - 1 And ErgHHF.p > 0 And ErgHHF.q > 0 Then EndPIn = True
+            Next j
+            If StartPIn Then Throw New Exception(format("Invalid altitude data file ({0}). First value lies inside the MS.", fName(MSCOrg.AltPath(i), True)))
+            If EndPIn Then Throw New Exception(format("Invalid altitude data file ({0}). Last value lies inside the MS.", fName(MSCOrg.AltPath(i), True)))
+            If DiffAltDist Then Throw New Exception(format("Invalid altitude data file ({0}). The difference between the altitude points is > {1}.", fName(MSCOrg.AltPath(i), True), Crt.dist_gridpoints_max))
+            If Diffhp Then Throw New Exception(format("Invalid altitude data file ({0}). The altitude grid points differ more then {1}m from MS center line.", fName(MSCOrg.AltPath(i), True), Crt.dist_grid_ms_max))
+        Next i
     End Sub
 
     ' Save the Dictionaries

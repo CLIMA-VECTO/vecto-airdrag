@@ -548,6 +548,10 @@ Public Class F_Main
         If RB1Hz.Checked Then Crt.hz_out = 1
         If RB100Hz.Checked Then Crt.hz_out = 100
 
+        ' Altitude
+        Crt.dist_gridpoints_max = TB_dist_gridpoints_max.Text
+        Crt.dist_grid_ms_max = TB_dist_grid_ms_max.Text
+
         'Parameter boxes
         ' General valid criteria
         Crt.delta_t_tyre_max = TB_delta_t_tyre_max.Text
@@ -663,6 +667,9 @@ Public Class F_Main
         ' Evaluation box
         CB_accel_correction.Checked = Crt.accel_correction
         CB_gradient_correction.Checked = Crt.gradient_correction
+        ' Altitude
+        TB_dist_gridpoints_max.Text = Crt.dist_gridpoints_max
+        TB_dist_grid_ms_max.Text = Crt.dist_grid_ms_max
 
         ' Output
         If Crt.hz_out = 1 Then
@@ -694,7 +701,7 @@ Public Class F_Main
             TextBoxVeh1.Clear()
             TextBoxWeather.Clear()
             CB_accel_correction.Checked = True
-            CB_gradient_correction.Checked = False
+            CB_gradient_correction.Checked = True
 
             ' Calibration fields
             TextBoxDataC.Clear()
@@ -995,7 +1002,7 @@ Public Class F_Main
         TB_t_ground_max.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
         TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_MS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
         TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_delta_n_ec_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_v_wind_1s_max_LS.KeyPress, TB_v_wind_avg_max_LS.KeyPress, TB_delta_n_ec_LS.KeyPress, _
-        TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress
+        TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress, TB_dist_gridpoints_max.KeyPress, TB_dist_grid_ms_max.KeyPress
         Select Case Asc(e.KeyChar)
             Case 48 To 57, 46 ' Zahlen zulassen (ASCII)
             Case Else ' Alles andere Unterdrücken
@@ -1026,7 +1033,7 @@ Public Class F_Main
         End If
     End Sub
 
-    ' Set all textboxes to standard
+    ' Import all criteria textboxes
     Private Sub doImportCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCrtImport.Click
         If fbCRT.OpenDialog(Prefs.workingDir) Then
             Dim fname = fbCRT.Files(0)
@@ -1087,7 +1094,9 @@ Public Class F_Main
                 Me.TB_rr_corr_factor, Me.Label2, _
                 Me.GB_hz_out, Nothing, _
                 Me.TB_acc_corr_avg, Me.LAccCorrAve, _
-                Me.TB_dist_float, Me.LDistFloat
+                Me.TB_dist_float, Me.LDistFloat, _
+                Me.TB_dist_gridpoints_max, Me.LB_dist_gridpoints_max, _
+                Me.TB_dist_grid_ms_max, Me.LB_dist_grid_ms_max _
         }
         schema = New cCriteria(True).BodySchema.SelectToken("properties.Processing")
         armControlsWithInfoBox(schema, controls, AddressOf showInfoBox_crt, AddressOf hideInfoBox_crt)
@@ -1099,7 +1108,7 @@ Public Class F_Main
             TB_delta_head_max, LContAng, _
             TB_segruns_min_CAL, LDsMinCAL, _
             TB_segruns_min_LS, LDsMinLS, _
-            TB_segruns_min_HS, Me.LDsMinHS, _
+            TB_segruns_min_HS, LDsMinHS, _
             TB_segruns_min_head_MS, LDsMinHeadMS, _
             TB_delta_Hz_max, LDeltaHzMax, _
             TB_delta_parallel_max, LDeltaParaMax, _

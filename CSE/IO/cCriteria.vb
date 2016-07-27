@@ -31,11 +31,13 @@ Public Class cCriteria
         g = New JObject()
         b.Processing = g
         g.accel_correction = True
-        g.gradient_correction = False
+        g.gradient_correction = True
         g.hz_out = 1
         g.rr_corr_factor = 1
         g.acc_corr_avg = 1
         g.dist_float = 25
+        g.dist_gridpoints_max = 50
+        g.dist_grid_ms_max = 1
 
         g = New JObject()
         b.Validation = g
@@ -114,6 +116,14 @@ Public Class cCriteria
                         },
                         "dist_float": {"type": "number", "required": true, 
                             "description": "Distance used for calculation of floatinig average signal used for stability criteria in low speeds.",
+                            "units": "m",
+                        },
+                        "dist_gridpoints_max": {"type": "number", "required": true, 
+                            "description": "Distance between grid points of altitude profile.",
+                            "units": "m",
+                        },
+                        "dist_grid_ms_max": {"type": "number", "required": true, 
+                            "description": "Maximum allowed distance between MS center line and altitude grid points.",
                             "units": "m",
                         },
                     }
@@ -305,10 +315,12 @@ Public Class cCriteria
     ' Processing params
     Public rr_corr_factor As Double
     Public accel_correction As Boolean '= True
-    Public gradient_correction As Boolean = False
+    Public gradient_correction As Boolean '= True
     Public hz_out As Integer '= 1
     Public acc_corr_avg As Single
     Public dist_float As Single
+    Public dist_gridpoints_max As Single
+    Public dist_grid_ms_max As Single
 
     ' Criteria
     Public trigger_delta_x_max As Single
@@ -357,7 +369,8 @@ Public Class cCriteria
         Me.hz_out = g("hz_out")
         Me.acc_corr_avg = g("acc_corr_avg")
         Me.dist_float = g("dist_float")
-
+        Me.dist_gridpoints_max = g("dist_gridpoints_max")
+        Me.dist_grid_ms_max = g("dist_grid_ms_max")
 
         g = p("Validation")
         Me.trigger_delta_x_max = g("trigger_delta_x_max")
@@ -416,6 +429,8 @@ Public Class cCriteria
         g.rr_corr_factor = Me.rr_corr_factor
         g.acc_corr_avg = Me.acc_corr_avg
         g.dist_float = Me.dist_float
+        g.dist_gridpoints_max = Me.dist_gridpoints_max
+        g.dist_grid_ms_max = Me.dist_grid_ms_max
 
         g = b("Validation")
         g.trigger_delta_x_max = Me.trigger_delta_x_max

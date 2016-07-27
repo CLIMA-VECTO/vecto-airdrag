@@ -10,11 +10,9 @@
   "Body": {
         "classCode":         4,
         "configuration":    "rigid",
-        "vehWidth":         2.45,
         "vehHeight":        3.5,
         "anemometerHeight":  4.55,
         "testMass":         25000.0,
-        "wheelsInertia":    90.0,
         "gearRatio_low":    2.5,
         "gearRatio_high":   1,
         "axleRatio":        3.6,

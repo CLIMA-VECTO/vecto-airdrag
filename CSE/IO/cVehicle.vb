@@ -38,11 +38,9 @@ Public Class cVehicle
         Return JObject.Parse(<json>{
                 "vehClass":         null,
                 "configuration":    null,
-                "vehWidth":         null,
                 "vehHeight":        null,
                 "anemometerHeight": null,
                 "testMass":         null,
-                "wheelsInertia":    null,
                 "gearRatio_low":    null,
                 "gearRatio_high":   null,
                 "axleRatio":        null,
@@ -70,12 +68,7 @@ The generic parameters for classes are stored in the GenShape.shp",
                     "enum": ["rigid", "tractor"],
                     "required": true,
                     "title": "Vehicle is rigid or track'n tractor?", 
-                }, 
-                "vehWidth": {
-                    "title": "Mask width [m]", 
-                    "type":"number",                     
-                    "required": true,
-                }, 
+                },  
                 "vehHeight": {
                     "title": "Vehicle height [m]", 
                     "type":"number",                     
@@ -89,11 +82,6 @@ The generic parameters for classes are stored in the GenShape.shp",
                 "testMass": {
                     "title": "Vehicle test mass [kg]", 
                     "type":"number",                   
-                    "required": true,
-                }, 
-                "wheelsInertia": {
-                    "title": "Wheels inertia [kg*m2]", 
-                    "type":"number",                  
                     "required": true,
                 }, 
                 "gearRatio_low": {
@@ -197,14 +185,6 @@ The generic parameters for classes are stored in the GenShape.shp",
             Me.Body("configuration") = value.ToString()
         End Set
     End Property
-    Public Property vehWidth As Double
-        Get
-            Return Me.Body("vehWidth")
-        End Get
-        Set(ByVal value As Double)
-            Me.Body("vehWidth") = value
-        End Set
-    End Property
     Public Property vehHeight As Double
         Get
             Return Me.Body("vehHeight")
@@ -227,14 +207,6 @@ The generic parameters for classes are stored in the GenShape.shp",
         End Get
         Set(ByVal value As Double)
             Me.Body("testMass") = value
-        End Set
-    End Property
-    Public Property wheelsInertia As Double
-        Get
-            Return Me.Body("wheelsInertia")
-        End Get
-        Set(ByVal value As Double)
-            Me.Body("wheelsInertia") = value
         End Set
     End Property
     Public Property gearRatio_low As Double

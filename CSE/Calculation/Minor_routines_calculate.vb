@@ -52,6 +52,39 @@ Module Minor_routines_calculate
         End If
     End Function
 
+    ' Höhe-Höhenfüßpunkt calculation
+    Public Function HHF(ByVal KoordA As Array, ByVal KoordE As Array, ByVal KoordP As Array) As cHHF
+        ' Declaration
+        Dim DXae, DYae, DXap, DYap, DXep, DYep, Aae, Aap, KAae As Double
+        Dim result As New cHHF
+
+        ' Calculation of the parameters
+        DXae = KoordE(0) - KoordA(0)
+        DYae = KoordE(1) - KoordA(1)
+        DXap = KoordP(0) - KoordA(0)
+        DYap = KoordP(1) - KoordA(1)
+        DXep = KoordP(0) - KoordE(0)
+        DYep = KoordP(1) - KoordE(1)
+
+        ' Calculate the angles
+        Aae = QuadReq(DXae, DYae)
+        Aap = QuadReq(DXap, DYap)
+
+        ' Calculate the angle from the direction A-E to A-P
+        KAae = Math.Abs(Aae - 360)
+        result.KAap = Aap + KAae
+        If result.KAap > 360 Then result.KAap = result.KAap - 360
+
+        ' Calculate if the Point lays in the virtual point area
+        result.p = ((DXae ^ 2 + DYae ^ 2) + (DXep ^ 2 + DYep ^ 2) - (DXap ^ 2 + DYap ^ 2)) / (2 * Math.Sqrt(DXae ^ 2 + DYae ^ 2))
+        result.q = ((DXae ^ 2 + DYae ^ 2) - (DXep ^ 2 + DYep ^ 2) + (DXap ^ 2 + DYap ^ 2)) / (2 * Math.Sqrt(DXae ^ 2 + DYae ^ 2))
+
+        ' Calculate the distance from P to line AE
+        result.hp = Math.Sqrt((DXep ^ 2 + DYep ^ 2) - result.p ^ 2)
+
+        Return result
+    End Function
+
     ' Function for the calculation of the moving average
     Public Function fMoveAve(ByVal TimeX As List(Of Double), ByVal ValuesX As List(Of Double), ByRef NewValues As List(Of Double), Optional ByVal Ave_t As Single = AveSec) As Boolean
         ' Declaration
@@ -330,13 +363,13 @@ Module Minor_routines_calculate
     End Function
 
     ' Detect the position from the right section and direction 
-    Public Function fSecPos(ByVal MSCX As cMSC, ByVal Sec As Integer, ByVal Dir As Integer) As Double
+    Public Function fSecPos(ByVal Altdata As List(Of cAlt), ByVal Sec As Integer, ByVal Dir As Integer) As Double
         ' Declaration
         Dim i As Integer
 
         ' Search after the rigt section and direction
-        For i = 1 To MSCX.meID.Count - 1
-            If MSCX.meID(i) = Sec And MSCX.dID(i) = Dir Then
+        For i = 1 To Altdata.Count - 1
+            If Altdata(i).meID = Sec And Altdata(i).dID = Dir Then
                 Return i
             End If
         Next i
@@ -345,50 +378,28 @@ Module Minor_routines_calculate
     End Function
 
     ' Calculate the altitude
-    Public Function fAltInterp(ByVal File As String, ByVal dist As Double) As Double
+    Public Function fAltInterp(ByVal Altdata As cAlt, ByVal Lati_root As Double, ByVal Longi_root As Double) As Double
         ' Declaration
-        Dim endVal As Boolean = True
-        Using FileInAlt As New cFile_V3
-            Dim vline(), Line() As String
+        Dim i As Integer
+        Dim dist, altitude As Double
 
-            ' Output on the GUI
-            logme(3, False, "Read altitude file")
+        ' Calculate the distance
+        dist = Math.Sqrt(Math.Pow(Altdata.UTM(0).Easting - Longi_root, 2) + Math.Pow(Altdata.UTM(0).Northing - Lati_root, 2))
 
-            ' Open the MSC spezification file
-            If Not FileInAlt.OpenRead(File) Then
-                ' Error if the file is not available
-                logme(9, False, "Can´t find the altitude file: " & File)
-                Return False
+        ' Error if distance is longer then altitude file (Should never happen)
+        If dist > Altdata.dist(Altdata.dist.Count - 1) Then
+            Throw New Exception(format("The actual distance ({0}) is higher than the range of the given altitude profile ({1}). Please check your altitude profile file!", dist, Altdata.dist(Altdata.dist.Count - 1)))
+        End If
+
+        ' Find the right points for interpolation
+        For i = 1 To Altdata.dist.Count - 1
+            If dist < Altdata.dist(i) And dist >= Altdata.dist(i - 1) Then
+                altitude = InterpLinear(Altdata.dist(i - 1), Altdata.dist(i), Altdata.Altitude(i - 1), Altdata.Altitude(i), dist)
+                Exit For
             End If
+        Next i
 
-            ' Read the file
-            Line = {0, 0}
-            vline = FileInAlt.ReadLine
-
-            If dist < vline(0) Then
-                Throw New Exception(format("The distance({0}) is lower then the minimum({1}) in the altitude file!", dist, vline(0)))
-            End If
-
-            Do While Not FileInAlt.EndOfFile
-                Line = FileInAlt.ReadLine
-
-                ' Find the right points
-                If dist >= vline(0) And dist < Line(0) Then
-                    endVal = False
-                    Exit Do
-                Else
-                    vline = Line
-                End If
-            Loop
-
-            ' Interpolate the value
-            If endVal Then
-                ' Set on last value if dist > max altitude dist
-                fAltInterp = Line(1)
-            Else
-                fAltInterp = InterpLinear(vline(0), Line(0), vline(1), Line(1), dist)
-            End If
-        End Using
+        Return altitude
     End Function
 
     ' Function to find the position

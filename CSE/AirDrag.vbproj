@@ -103,7 +103,9 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\cAlt.vb" />
     <Compile Include="Classes\cGenShp.vb" />
+    <Compile Include="Classes\cHHF.vb" />
     <Compile Include="Classes\cMSC.vb" />
     <Compile Include="GUI\F_JIRA.designer.vb">
       <DependentUpon>F_JIRA.vb</DependentUpon>

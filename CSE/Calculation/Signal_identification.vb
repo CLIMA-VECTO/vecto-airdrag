@@ -129,36 +129,15 @@ Module Signal_identification
     ' Function to test if a measurement point is in an measure section or if an signal was detected
     Function MSCTest(ByVal KoordA As Array, ByVal KoordE As Array, ByVal KoordP As Array, Optional ByVal ContSec As Boolean = False, Optional ByVal CCW As Boolean = False) As Boolean
         ' Declaration
-        Dim DXae, DYae, DXap, DYap, DXep, DYep, Aae, Aap, KAae, KAap, p, q, h As Double
+        Dim ErgHHF As New cHHF
 
-        ' Calculation of the parameters
-        DXae = KoordE(0) - KoordA(0)
-        DYae = KoordE(1) - KoordA(1)
-        DXap = KoordP(0) - KoordA(0)
-        DYap = KoordP(1) - KoordA(1)
-        DXep = KoordP(0) - KoordE(0)
-        DYep = KoordP(1) - KoordE(1)
-
-        ' Calculate the angles
-        Aae = QuadReq(DXae, DYae)
-        Aap = QuadReq(DXap, DYap)
-
-        ' Calculate the angle from the direction A-E to A-P
-        KAae = Math.Abs(Aae - 360)
-        KAap = Aap + KAae
-        If KAap > 360 Then KAap = KAap - 360
-
-        ' Calculate if the Point lays in the virtual point area
-        p = ((DXae ^ 2 + DYae ^ 2) + (DXep ^ 2 + DYep ^ 2) - (DXap ^ 2 + DYap ^ 2)) / (2 * Math.Sqrt(DXae ^ 2 + DYae ^ 2))
-        q = ((DXae ^ 2 + DYae ^ 2) - (DXep ^ 2 + DYep ^ 2) + (DXap ^ 2 + DYap ^ 2)) / (2 * Math.Sqrt(DXae ^ 2 + DYae ^ 2))
+        ' Calculate Höhe-Höhenpußpunkt values
+        ErgHHF = HHF(KoordA, KoordE, KoordP)
 
         ' Appropriate if the point is in the section or if it is in the detection area
         If ContSec Then
-            ' Calculate the distance from P to line AE
-            h = Math.Sqrt((DXep ^ 2 + DYep ^ 2) - p ^ 2)
-
             ' Appropriate if the point is in the detection area
-            If h <= Crt.trigger_delta_x_max And p > 0 And q > 0 Then
+            If ErgHHF.hp <= Crt.trigger_delta_x_max And ErgHHF.p > 0 And ErgHHF.q > 0 Then
                 Return True
             Else
                 Return False
@@ -166,13 +145,13 @@ Module Signal_identification
         Else
             ' Appropriate if the point is in the section
             If CCW Then
-                If KAap <= 180 And p > 0 And q > 0 Then
+                If ErgHHF.KAap <= 180 And ErgHHF.p > 0 And ErgHHF.q > 0 Then
                     Return True
                 Else
                     Return False
                 End If
             Else
-                If KAap >= 180 And p > 0 And q > 0 Then
+                If ErgHHF.KAap >= 180 And ErgHHF.p > 0 And ErgHHF.q > 0 Then
                     Return True
                 Else
                     Return False
@@ -729,7 +708,7 @@ Module Signal_identification
     End Function
 
     ' Calculate the corrected vehicle speed
-    Public Function fCalcSpeedVal(ByVal orgMSCX As cMSC, ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer, ByRef r_dyn_ref As Double) As Boolean
+    Public Function fCalcSpeedVal(ByVal Altdata As List(Of cAlt), ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer, ByRef r_dyn_ref As Double) As Boolean
         ' Declaration
         Dim i, j, run, anz, RunIDx As Integer
         Dim firstIn As Boolean = True
@@ -791,7 +770,7 @@ Module Signal_identification
             If Crt.gradient_correction Then
                 If CalcData(tCompCali.SecID)(i) <> 0 Then
                     ' Altitude
-                    CalcData(tCompCali.alt)(i) = fAltInterp(orgMSCX.AltPath(fSecPos(orgMSCX, CalcData(tCompCali.SecID)(i), CalcData(tCompCali.DirID)(i))), CalcData(tCompCali.dist_root)(i))
+                    CalcData(tCompCali.alt)(i) = fAltInterp(Altdata(fSecPos(Altdata, CalcData(tCompCali.SecID)(i), CalcData(tCompCali.DirID)(i))), CalcData(tCompCali.lati_root)(i), CalcData(tCompCali.longi_root)(i))
                 End If
             End If
 
@@ -855,7 +834,7 @@ Module Signal_identification
             End If
 
             ' Force acceleration
-            CalcData(tCompCali.F_acc)(i) = vehicleX.testMass * CalcData(tCompCali.a_veh_avg)(i) + vehicleX.wheelsInertia * CalcData(tCompCali.omega_wh_acc)(i) * CalcData(tCompCali.omega_p_wh_acc)(i) / (CalcData(tCompCali.v_veh_acc)(i) / 3.6)
+            CalcData(tCompCali.F_acc)(i) = vehicleX.testMass * CalcData(tCompCali.a_veh_avg)(i) * 1.03
 
             ' Force trajectory
             CalcData(tCompCali.F_res)(i) = CalcData(tCompCali.F_trac)(i)

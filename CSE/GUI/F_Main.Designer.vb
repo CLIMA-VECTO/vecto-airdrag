@@ -217,12 +217,19 @@ Partial Class F_Main
         Me.TB_delta_Hz_max = New System.Windows.Forms.TextBox()
         Me.LB_t_amb_max = New System.Windows.Forms.Label()
         Me.GroupBox10 = New System.Windows.Forms.GroupBox()
+        Me.LB_dist_grid_ms_max = New System.Windows.Forms.Label()
+        Me.TB_dist_grid_ms_max = New System.Windows.Forms.TextBox()
+        Me.LB_dist_gridpoints_max = New System.Windows.Forms.Label()
+        Me.TB_dist_gridpoints_max = New System.Windows.Forms.TextBox()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.TB_rr_corr_factor = New System.Windows.Forms.TextBox()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.LAccCorrAve = New System.Windows.Forms.Label()
         Me.TB_acc_corr_avg = New System.Windows.Forms.TextBox()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
@@ -250,6 +257,7 @@ Partial Class F_Main
         CType(Me.PBInfoIconCrt, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox14.SuspendLayout()
         Me.GroupBox10.SuspendLayout()
+        Me.GroupBox5.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -1097,6 +1105,7 @@ Partial Class F_Main
         '
         'TPCriteria
         '
+        Me.TPCriteria.Controls.Add(Me.GroupBox5)
         Me.TPCriteria.Controls.Add(Me.GroupBox7)
         Me.TPCriteria.Controls.Add(Me.GroupBox8)
         Me.TPCriteria.Controls.Add(Me.GroupBox9)
@@ -1218,9 +1227,9 @@ Partial Class F_Main
         Me.GroupBox8.Controls.Add(Me.TB_segruns_min_LS)
         Me.GroupBox8.Controls.Add(Me.LDsMinCAL)
         Me.GroupBox8.Controls.Add(Me.TB_segruns_min_CAL)
-        Me.GroupBox8.Location = New System.Drawing.Point(6, 180)
+        Me.GroupBox8.Location = New System.Drawing.Point(6, 221)
         Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Size = New System.Drawing.Size(219, 161)
+        Me.GroupBox8.Size = New System.Drawing.Size(219, 120)
         Me.GroupBox8.TabIndex = 43
         Me.GroupBox8.TabStop = False
         Me.GroupBox8.Text = "Requirements on number of valid datasets"
@@ -1228,7 +1237,7 @@ Partial Class F_Main
         'LDsMinHeadMS
         '
         Me.LDsMinHeadMS.AutoSize = True
-        Me.LDsMinHeadMS.Location = New System.Drawing.Point(7, 111)
+        Me.LDsMinHeadMS.Location = New System.Drawing.Point(7, 97)
         Me.LDsMinHeadMS.Name = "LDsMinHeadMS"
         Me.LDsMinHeadMS.Size = New System.Drawing.Size(118, 13)
         Me.LDsMinHeadMS.TabIndex = 51
@@ -1236,7 +1245,7 @@ Partial Class F_Main
         '
         'TB_segruns_min_head_MS
         '
-        Me.TB_segruns_min_head_MS.Location = New System.Drawing.Point(129, 108)
+        Me.TB_segruns_min_head_MS.Location = New System.Drawing.Point(129, 94)
         Me.TB_segruns_min_head_MS.Name = "TB_segruns_min_head_MS"
         Me.TB_segruns_min_head_MS.Size = New System.Drawing.Size(45, 20)
         Me.TB_segruns_min_head_MS.TabIndex = 50
@@ -1245,7 +1254,7 @@ Partial Class F_Main
         'LDsMinHS
         '
         Me.LDsMinHS.AutoSize = True
-        Me.LDsMinHS.Location = New System.Drawing.Point(7, 85)
+        Me.LDsMinHS.Location = New System.Drawing.Point(7, 71)
         Me.LDsMinHS.Name = "LDsMinHS"
         Me.LDsMinHS.Size = New System.Drawing.Size(87, 13)
         Me.LDsMinHS.TabIndex = 48
@@ -1253,7 +1262,7 @@ Partial Class F_Main
         '
         'TB_segruns_min_HS
         '
-        Me.TB_segruns_min_HS.Location = New System.Drawing.Point(129, 82)
+        Me.TB_segruns_min_HS.Location = New System.Drawing.Point(129, 68)
         Me.TB_segruns_min_HS.Name = "TB_segruns_min_HS"
         Me.TB_segruns_min_HS.Size = New System.Drawing.Size(45, 20)
         Me.TB_segruns_min_HS.TabIndex = 47
@@ -1262,7 +1271,7 @@ Partial Class F_Main
         'LDsMinLS
         '
         Me.LDsMinLS.AutoSize = True
-        Me.LDsMinLS.Location = New System.Drawing.Point(7, 59)
+        Me.LDsMinLS.Location = New System.Drawing.Point(7, 45)
         Me.LDsMinLS.Name = "LDsMinLS"
         Me.LDsMinLS.Size = New System.Drawing.Size(85, 13)
         Me.LDsMinLS.TabIndex = 45
@@ -1270,7 +1279,7 @@ Partial Class F_Main
         '
         'TB_segruns_min_LS
         '
-        Me.TB_segruns_min_LS.Location = New System.Drawing.Point(129, 56)
+        Me.TB_segruns_min_LS.Location = New System.Drawing.Point(129, 42)
         Me.TB_segruns_min_LS.Name = "TB_segruns_min_LS"
         Me.TB_segruns_min_LS.Size = New System.Drawing.Size(45, 20)
         Me.TB_segruns_min_LS.TabIndex = 44
@@ -1279,7 +1288,7 @@ Partial Class F_Main
         'LDsMinCAL
         '
         Me.LDsMinCAL.AutoSize = True
-        Me.LDsMinCAL.Location = New System.Drawing.Point(7, 33)
+        Me.LDsMinCAL.Location = New System.Drawing.Point(7, 19)
         Me.LDsMinCAL.Name = "LDsMinCAL"
         Me.LDsMinCAL.Size = New System.Drawing.Size(92, 13)
         Me.LDsMinCAL.TabIndex = 42
@@ -1287,7 +1296,7 @@ Partial Class F_Main
         '
         'TB_segruns_min_CAL
         '
-        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(129, 30)
+        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(129, 16)
         Me.TB_segruns_min_CAL.Name = "TB_segruns_min_CAL"
         Me.TB_segruns_min_CAL.Size = New System.Drawing.Size(45, 20)
         Me.TB_segruns_min_CAL.TabIndex = 41
@@ -2199,10 +2208,44 @@ Partial Class F_Main
         Me.GroupBox10.Controls.Add(Me.GB_hz_out)
         Me.GroupBox10.Location = New System.Drawing.Point(6, 6)
         Me.GroupBox10.Name = "GroupBox10"
-        Me.GroupBox10.Size = New System.Drawing.Size(219, 168)
+        Me.GroupBox10.Size = New System.Drawing.Size(219, 137)
         Me.GroupBox10.TabIndex = 0
         Me.GroupBox10.TabStop = False
         Me.GroupBox10.Text = "Processing"
+        '
+        'LB_dist_grid_ms_max
+        '
+        Me.LB_dist_grid_ms_max.AutoSize = True
+        Me.LB_dist_grid_ms_max.Location = New System.Drawing.Point(7, 48)
+        Me.LB_dist_grid_ms_max.Name = "LB_dist_grid_ms_max"
+        Me.LB_dist_grid_ms_max.Size = New System.Drawing.Size(90, 13)
+        Me.LB_dist_grid_ms_max.TabIndex = 90
+        Me.LB_dist_grid_ms_max.Text = "dist_grid_ms_max"
+        '
+        'TB_dist_grid_ms_max
+        '
+        Me.TB_dist_grid_ms_max.Location = New System.Drawing.Point(129, 45)
+        Me.TB_dist_grid_ms_max.Name = "TB_dist_grid_ms_max"
+        Me.TB_dist_grid_ms_max.Size = New System.Drawing.Size(45, 20)
+        Me.TB_dist_grid_ms_max.TabIndex = 89
+        Me.TB_dist_grid_ms_max.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'LB_dist_gridpoints_max
+        '
+        Me.LB_dist_gridpoints_max.AutoSize = True
+        Me.LB_dist_gridpoints_max.Location = New System.Drawing.Point(7, 22)
+        Me.LB_dist_gridpoints_max.Name = "LB_dist_gridpoints_max"
+        Me.LB_dist_gridpoints_max.Size = New System.Drawing.Size(99, 13)
+        Me.LB_dist_gridpoints_max.TabIndex = 88
+        Me.LB_dist_gridpoints_max.Text = "dist_gridpoints_max"
+        '
+        'TB_dist_gridpoints_max
+        '
+        Me.TB_dist_gridpoints_max.Location = New System.Drawing.Point(129, 19)
+        Me.TB_dist_gridpoints_max.Name = "TB_dist_gridpoints_max"
+        Me.TB_dist_gridpoints_max.Size = New System.Drawing.Size(45, 20)
+        Me.TB_dist_gridpoints_max.TabIndex = 87
+        Me.TB_dist_gridpoints_max.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label14
         '
@@ -2255,6 +2298,39 @@ Partial Class F_Main
         Me.TB_acc_corr_avg.Size = New System.Drawing.Size(45, 20)
         Me.TB_acc_corr_avg.TabIndex = 2
         Me.TB_acc_corr_avg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'GroupBox5
+        '
+        Me.GroupBox5.Controls.Add(Me.Label6)
+        Me.GroupBox5.Controls.Add(Me.Label4)
+        Me.GroupBox5.Controls.Add(Me.TB_dist_gridpoints_max)
+        Me.GroupBox5.Controls.Add(Me.LB_dist_grid_ms_max)
+        Me.GroupBox5.Controls.Add(Me.LB_dist_gridpoints_max)
+        Me.GroupBox5.Controls.Add(Me.TB_dist_grid_ms_max)
+        Me.GroupBox5.Location = New System.Drawing.Point(6, 144)
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.Size = New System.Drawing.Size(219, 71)
+        Me.GroupBox5.TabIndex = 91
+        Me.GroupBox5.TabStop = False
+        Me.GroupBox5.Text = "Altitude profile criteria"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(177, 22)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(21, 13)
+        Me.Label4.TabIndex = 91
+        Me.Label4.Text = "[m]"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(177, 48)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(21, 13)
+        Me.Label6.TabIndex = 92
+        Me.Label6.Text = "[m]"
         '
         'F_Main
         '
@@ -2318,6 +2394,8 @@ Partial Class F_Main
         Me.GroupBox14.PerformLayout()
         Me.GroupBox10.ResumeLayout(False)
         Me.GroupBox10.PerformLayout()
+        Me.GroupBox5.ResumeLayout(False)
+        Me.GroupBox5.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2522,5 +2600,12 @@ Partial Class F_Main
     Friend WithEvents ReleaseNotesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ReportBugToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents LB_dist_grid_ms_max As System.Windows.Forms.Label
+    Friend WithEvents TB_dist_grid_ms_max As System.Windows.Forms.TextBox
+    Friend WithEvents LB_dist_gridpoints_max As System.Windows.Forms.Label
+    Friend WithEvents TB_dist_gridpoints_max As System.Windows.Forms.TextBox
+    Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents Label4 As System.Windows.Forms.Label
 
 End Class

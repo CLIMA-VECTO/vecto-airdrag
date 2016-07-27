@@ -163,6 +163,107 @@ Public Module input
         End If
     End Sub
 
+    ' Read the altitude files
+    Sub ReadAltitudeFiles(ByVal MSCOrg As cMSC, ByRef Altdata As List(Of cAlt))
+        ' Declarations
+        Dim i As Integer
+        Dim CoordID As Integer
+        Dim DemoDataF As Boolean = False
+        Dim FirstIn As Boolean = True
+        Dim Line() As String
+
+        ' Initialisation (first element)
+        Altdata.Add(New cAlt)
+
+        ' Read the filelist with the altitude spezifications
+        ' Output on the GUI
+        logme(5, False, "Read MS altitude file")
+
+        For i = 1 To MSCOrg.AltPath.Count - 1
+            Using FileInAltSpez As New cFile_V3
+                ' Open the altitude file
+                If fPath(MSCOrg.AltPath(i)) = joinPaths(MyPath, "DemoData") Then
+                    System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = "."
+                    FileInAltSpez.OpenReadWithEx(MSCOrg.AltPath(i))
+                    DemoDataF = True
+                Else
+                    FileInAltSpez.OpenReadWithEx(MSCOrg.AltPath(i), Prefs.listSep)
+                End If
+
+                ' Check the file
+                Line = FileInAltSpez.ReadLine
+                If Line.Length <> 3 Then
+                    Throw New Exception(format("The altitude file does not fit the file format. Control the separators under Tools/preferences and in the file. Read value can not be converted ({0})", Line(0)))
+                End If
+
+                ' Check the headers for the coordinate unit
+                If IsNumeric(Line(0)) Then
+                    Throw New Exception(format("The header of the *.csalt file is missing. Please include it or comment it in the file ({0}).", MSCOrg.AltPath(i)))
+                Else
+                    CoordID = 0
+                    If Line(0).ToUpper.Contains("(D)") Then
+                        CoordID = 1
+                    ElseIf Line(0).ToUpper.Contains("(S)") Then
+                        CoordID = 2
+                    End If
+                End If
+
+                ' Input loop
+                Altdata.Add(New cAlt)
+                FirstIn = True
+                Try
+                    Do While Not FileInAltSpez.EndOfFile
+                        ' Read the dataline
+                        Line = FileInAltSpez.ReadLine
+
+                        ' Get the Sec and Dir ID
+                        If FirstIn Then
+                            Altdata(i).meID = MSCOrg.meID(i)
+                            Altdata(i).dID = MSCOrg.dID(i)
+                        End If
+
+                        ' Read the data (Save the coordinates in minutes)
+                        Select Case CoordID
+                            Case 0
+                                ' [MM.MM]
+                                Altdata(i).KoordLat.Add(Line(0))
+                                Altdata(i).KoordLong.Add(Line(1))
+                            Case 1
+                                ' [DD.DD]
+                                Altdata(i).KoordLat.Add(Line(0) * 60)
+                                Altdata(i).KoordLong.Add(Line(1) * 60)
+                            Case 2
+                                ' [SS.SS]
+                                Altdata(i).KoordLat.Add(Line(0) / 60)
+                                Altdata(i).KoordLong.Add(Line(1) / 60)
+                        End Select
+                        Altdata(i).Altitude.Add(Line(2))
+
+                        ' Calculate the UTM coordinates for each point
+                        Altdata(i).UTM.Add(UTM(Altdata(i).KoordLat(Altdata(i).KoordLat.Count - 1) / 60, Altdata(i).KoordLong(Altdata(i).KoordLong.Count - 1) / 60))
+
+                        ' Calculate the distance from the begin of the altitude profile
+                        If FirstIn Then
+                            Altdata(i).dist.Add(0)
+                            FirstIn = False
+                        Else
+                            Altdata(i).dist.Add(Math.Sqrt(Math.Pow(Altdata(i).UTM(0).Easting - Altdata(i).UTM(Altdata(i).UTM.Count - 1).Easting, 2) + Math.Pow(Altdata(i).UTM(0).Northing - Altdata(i).UTM(Altdata(i).UTM.Count - 1).Northing, 2)))
+                        End If
+                    Loop
+                Catch ex As Exception
+                    ' Falls kein gültiger Wert eingegeben wurde
+                    Throw New Exception(format("Invalid value in the *.csalt data file({0}) due to: {1})", fName(MSCOrg.AltPath(i), True), ex.Message, ex))
+                End Try
+            End Using
+        Next i
+
+        ' Change the decimal seperator back
+        If DemoDataF Then
+            System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = Prefs.decSep
+            DemoDataF = False
+        End If
+    End Sub
+
     ' Read the wather data
     Public Sub ReadWeather(ByVal Datafile As String)
         ' Declaration
@@ -256,9 +357,6 @@ Public Module input
             Catch ex As Exception
                 Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tdim + 1, ex.Message), ex)
             End Try
-
-            ' Sort the data by time (day crossing)
-
 
             ' Change the decimal seperator back
             If DemoDataF Then
