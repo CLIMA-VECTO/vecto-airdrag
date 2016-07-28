@@ -195,7 +195,6 @@ Public Module main_calculation_call
 
         ' Initialisation
         Job.fv_veh = 0
-        Job.fv_veh_opt2 = 0
         Job.fv_pe = 0
         Job.beta_ame = 0
         Change = False
@@ -207,7 +206,6 @@ Public Module main_calculation_call
         Do While Change
             ' Initialise Parameter
             Job.fv_veh = 0
-            Job.fv_veh_opt2 = 0
             Job.fv_pe = 0
             Job.beta_ame = 0
             run += 1
@@ -250,7 +248,6 @@ Public Module main_calculation_call
         If coastingSeq = 0 Then
             ' Initialisation
             Job.fv_veh = 0
-            Job.fv_veh_opt2 = 0
             Job.fv_pe = 0
             run = 0
         End If
@@ -260,7 +257,6 @@ Public Module main_calculation_call
             r_dyn_ref = 0
             If coastingSeq = 0 Then
                 Job.fv_veh = 0
-                Job.fv_veh_opt2 = 0
                 Job.fv_pe = 0
                 run += 1
             End If
@@ -308,7 +304,6 @@ Public Module main_calculation_call
 
         ' Initialise
         Job.fv_veh = 0
-        Job.fv_veh_opt2 = 0
         num = 0
 
         ' Calculate velocity correction
@@ -320,11 +315,9 @@ Public Module main_calculation_call
                 End If
                 If MSCX.tUse Then
                     Job.fv_veh += ErgValues(tCompErg.v_MSC)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
-                    Job.fv_veh_opt2 = 0
                     num += 1
                 Else
-                    Job.fv_veh += ErgValues(tCompErg.v_MSC_GPS)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
-                    Job.fv_veh_opt2 += ErgValues(tCompErg.v_MSC)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
+                    Job.fv_veh += ErgValues(tCompErg.v_MSC)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
                     num += 1
                 End If
             End If
@@ -332,9 +325,7 @@ Public Module main_calculation_call
 
         ' Calculate the average over all factors
         Job.fv_veh = Job.fv_veh / num
-        Job.fv_veh_opt2 = Job.fv_veh_opt2 / num
         If num = 0 Then Job.fv_veh = 0
-        If num = 0 Then Job.fv_veh_opt2 = 0
     End Sub
 
     ' Function to calculate fv_pe & beta_amn

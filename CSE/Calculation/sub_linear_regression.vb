@@ -236,7 +236,7 @@ Module sub_linear_regression
 
                     '***** Calculate the linear regression for LS2
                     ' Redeminisionate the arrays
-                    numT = numLS1 + numHS
+                    numT = numLS2 + numHS
                     ReDim XLR(1, numT)
                     ReDim YLR(numT)
                     ReDim WFLR(numT, numT)

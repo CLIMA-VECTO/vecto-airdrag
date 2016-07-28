@@ -816,14 +816,21 @@ Module Signal_identification
                 If CalcData(tCompCali.SecID)(i) <> 0 Then
                     ' Slope Deg
                     If i > 0 And i < CalcData(tCompCali.SecID).Count - 1 Then
-                        If CalcData(tCompCali.SecID)(i - 1) = CalcData(tCompCali.SecID)(i) And CalcData(tCompCali.SecID)(i + 1) = CalcData(tCompCali.SecID)(i) Then
+                        If CalcData(tCompCali.SecID)(i - 1) <> CalcData(tCompCali.SecID)(i) Then
+                            ' First value
+                            CalcData(tCompCali.slope_deg)(i) = (Math.Atan((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i)))) * 180 / Math.PI
+                        ElseIf CalcData(tCompCali.SecID)(i + 1) <> CalcData(tCompCali.SecID)(i) Then
+                            ' Last value
+                            CalcData(tCompCali.slope_deg)(i) = (Math.Atan((CalcData(tCompCali.alt)(i) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI
+                        ElseIf CalcData(tCompCali.SecID)(i - 1) = CalcData(tCompCali.SecID)(i) And CalcData(tCompCali.SecID)(i + 1) = CalcData(tCompCali.SecID)(i) Then
+                            ' All other values inside MS
                             If (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)) = 0 Then
                                 CalcData(tCompCali.slope_deg)(i) = 0
                                 logme(8, False, "Standstill or loss of vehicle speed signal inside MS (at line " & i & ")! Gradient set to 0")
                                 'BWorker.CancelAsync()
                                 ' XXXX: What is absolutely neccessary to run afterwards, and cannot return immediately here??
                             Else
-                                CalcData(tCompCali.slope_deg)(i) = (Math.Asin((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI
+                                CalcData(tCompCali.slope_deg)(i) = (Math.Atan((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI
                             End If
                         End If
                     End If

@@ -238,7 +238,6 @@ Public Class cJob
 
 #Region "json props"
     Public fv_veh As Double
-    Public fv_veh_opt2 As Double
     Public fa_pe As Double
     Public fv_pe As Double
     Public beta_ame As Double
