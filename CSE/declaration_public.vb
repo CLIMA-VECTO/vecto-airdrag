@@ -50,10 +50,11 @@ Module declaration_public
 
     ' Constances for the array declaration
     Public JumpPoint As List(Of Integer)                        ' Point at that a jump in the time-resolved data is detected
-    Public OptPar() As Boolean = ({True, True, True, True})     ' Array to identify if optional parameters are given
+    Public OptPar() As Boolean = ({True})                       ' Array to identify if optional parameters are given
     Public AT As Boolean = False                                ' Calculation of an automatic transmission (with n_card)
     Public MT_AMT As Boolean = False                            ' Calculation of an manual transmission (always when n_eng available)
-    Public KoordSys() As Boolean = {False, False, False}        ' Used Koordinate system
+    Public KoordSys() As Boolean = {False, False}               ' Used Koordinate system 0. (MM.MM); 1.(DD.DD)
+    Public AnzDigit() As Integer = {5, 7}                       ' Minimum ammount of digits position 0. (MM.MM); 1.(DD.DD)
 
     ' Boolean for the programm control
     Public FileBlock As Boolean = False                         ' Variable if a file is blocked by an other process

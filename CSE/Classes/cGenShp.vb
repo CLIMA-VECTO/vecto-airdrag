@@ -13,6 +13,7 @@ Public Class cGenShp
     Public veh_class As List(Of Integer)                    ' vehicle class
     Public veh_conf As List(Of Integer)                     ' vehicle configuration
     Public fa_pe As List(Of Double)                         ' Fa_pe
+    Public h_ref As List(Of Double)                         ' Reference vehicle high
     Public x_val As List(Of Array)                          ' X-Coordinates
     Public y_val As List(Of Array)                          ' Y-Coordinates
 
@@ -23,5 +24,6 @@ Public Class cGenShp
         fa_pe = New List(Of Double)
         x_val = New List(Of Array)
         y_val = New List(Of Array)
+        h_ref = New List(Of Double)
     End Sub
 End Class

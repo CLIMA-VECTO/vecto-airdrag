@@ -16,6 +16,7 @@ Public Module input
         ' Declarations
         Dim i, j As Integer
         Dim RefDID, RefID, CoordID As Integer
+        Dim Counter As Long = 0
         Dim DemoDataF As Boolean = False
         Dim RefHead As Double
         Dim Line() As String
@@ -50,8 +51,6 @@ Public Module input
                 CoordID = 0
                 If Line(4).ToUpper.Contains("(D)") Then
                     CoordID = 1
-                ElseIf Line(4).ToUpper.Contains("(S)") Then
-                    CoordID = 2
                 End If
             End If
 
@@ -79,12 +78,6 @@ Public Module input
                             MSCX.longS.Add(Line(5) * 60)
                             MSCX.latE.Add(Line(6) * 60)
                             MSCX.longE.Add(Line(7) * 60)
-                        Case 2
-                            ' [SS.SS]
-                            MSCX.latS.Add(Line(4) / 60)
-                            MSCX.longS.Add(Line(5) / 60)
-                            MSCX.latE.Add(Line(6) / 60)
-                            MSCX.longE.Add(Line(7) / 60)
                     End Select
                     If Crt.gradient_correction And Not calibration Then MSCX.AltPath.Add(Line(8))
                 Loop
@@ -99,6 +92,13 @@ Public Module input
         If (MSCX.meID.Count - 1) < 2 Then
             Throw New Exception(format("Not enough measurement sections definied in file ({0}). Minimum number of definitions are two.", fName(MSCfile, True)))
         End If
+
+        ' Length check
+        For i = 1 To MSCX.meID.Count - 1
+            If (MSCX.len(i) < Crt.length_MS_min Or MSCX.len(i) > Crt.length_MS_max) Then
+                Throw New Exception(format("The defined measurement section length ({0}) is outside the valid boundaries ({1} - {2}).", MSCX.len(i), Crt.length_MS_min, Crt.length_MS_max))
+            End If
+        Next i
 
         ' Checks for same definition
         For i = 1 To MSCX.meID.Count - 1
@@ -156,6 +156,15 @@ Public Module input
             Next i
         End If
 
+        ' Check coordinate digits after decimal seperator
+        Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), MSCX.latS, 1)
+        Counter += CheckDigits(Prefs.decSep, AnzDigit(CoordID), MSCX.latE, 1)
+        Counter += CheckDigits(Prefs.decSep, AnzDigit(CoordID), MSCX.longS, 1)
+        Counter += CheckDigits(Prefs.decSep, AnzDigit(CoordID), MSCX.longE, 1)
+        If Counter > 0 Then
+            logme(8, False, format("The csms coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({1})!", MSCfile, AnzDigit(CoordID), Counter))
+        End If
+
         ' Change the decimal seperator back
         If DemoDataF Then
             System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = Prefs.decSep
@@ -163,11 +172,30 @@ Public Module input
         End If
     End Sub
 
+    ' Check the digits
+    Private Function CheckDigits(ByVal Sep As Char, ByVal AnzDigit As Integer, ByVal Coords As List(Of Double), Optional ByVal startpos As Integer = 0) As Long
+        ' Declaration
+        Dim i As Long
+        Dim counter As Long = 0
+        Dim s As String
+
+        ' Check all the digits
+        For i = startpos To Coords.Count - 1
+            s = Coords(i).ToString
+            If s.Substring(s.IndexOf(Sep) + 1).Length < AnzDigit Then
+                counter += 1
+            End If
+        Next
+
+        Return counter
+    End Function
+
     ' Read the altitude files
     Sub ReadAltitudeFiles(ByVal MSCOrg As cMSC, ByRef Altdata As List(Of cAlt))
         ' Declarations
         Dim i As Integer
         Dim CoordID As Integer
+        Dim Counter As Long
         Dim DemoDataF As Boolean = False
         Dim FirstIn As Boolean = True
         Dim Line() As String
@@ -203,8 +231,6 @@ Public Module input
                     CoordID = 0
                     If Line(0).ToUpper.Contains("(D)") Then
                         CoordID = 1
-                    ElseIf Line(0).ToUpper.Contains("(S)") Then
-                        CoordID = 2
                     End If
                 End If
 
@@ -232,10 +258,6 @@ Public Module input
                                 ' [DD.DD]
                                 Altdata(i).KoordLat.Add(Line(0) * 60)
                                 Altdata(i).KoordLong.Add(Line(1) * 60)
-                            Case 2
-                                ' [SS.SS]
-                                Altdata(i).KoordLat.Add(Line(0) / 60)
-                                Altdata(i).KoordLong.Add(Line(1) / 60)
                         End Select
                         Altdata(i).Altitude.Add(Line(2))
 
@@ -250,6 +272,16 @@ Public Module input
                             Altdata(i).dist.Add(Math.Sqrt(Math.Pow(Altdata(i).UTM(0).Easting - Altdata(i).UTM(Altdata(i).UTM.Count - 1).Easting, 2) + Math.Pow(Altdata(i).UTM(0).Northing - Altdata(i).UTM(Altdata(i).UTM.Count - 1).Northing, 2)))
                         End If
                     Loop
+
+                    ' Check coordinate digits after decimal seperator
+                    Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), Altdata(i).KoordLat)
+                    If Counter > 0 Then
+                        logme(8, False, format("The altitude latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(CoordID), Counter))
+                    End If
+                    Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), Altdata(i).KoordLat)
+                    If Counter > 0 Then
+                        logme(8, False, format("The altitude longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(CoordID), Counter))
+                    End If
                 Catch ex As Exception
                     ' Falls kein gültiger Wert eingegeben wurde
                     Throw New Exception(format("Invalid value in the *.csalt data file({0}) due to: {1})", fName(MSCOrg.AltPath(i), True), ex.Message, ex))
@@ -372,7 +404,8 @@ Public Module input
         ' Declarations
         Using FileInMeasure As New cFile_V3
             Dim Line(), txt As String
-            Dim i, tDim, nDay As Integer
+            Dim i, tDim, nDay, CoordID As Integer
+            Dim Counter As Long
             Dim HzIn = 100                                      ' Hz frequency demanded for .csdat-file
             Dim DayTimeSec = 24 * 60 * 60                       ' Time of the day in Seconds
             Dim valid_set As Boolean = False
@@ -423,8 +456,6 @@ Public Module input
             MeasCheck.Add(tComp.longi, False)
             MeasCheck.Add(tComp.lati_D, False)
             MeasCheck.Add(tComp.longi_D, False)
-            MeasCheck.Add(tComp.lati_S, False)
-            MeasCheck.Add(tComp.longi_S, False)
             MeasCheck.Add(tComp.hdg, False)
             MeasCheck.Add(tComp.v_veh_GPS, False)
             MeasCheck.Add(tComp.v_veh_CAN, False)
@@ -436,8 +467,6 @@ Public Module input
             MeasCheck.Add(tComp.tq_r, False)
             MeasCheck.Add(tComp.t_ground, False)
             MeasCheck.Add(tComp.t_amb_veh, False)
-            MeasCheck.Add(tComp.t_tire, False)
-            MeasCheck.Add(tComp.p_tire, False)
             MeasCheck.Add(tComp.trigger, False)
             MeasCheck.Add(tComp.user_valid, False)
 
@@ -489,12 +518,6 @@ Public Module input
                                 Throw New Exception("No trigger signal detected, but trigger_used in MS config activated!")
                             End If
                             OptPar(0) = False
-                        Case tComp.p_tire
-                            OptPar(1) = False
-                        Case tComp.t_ground
-                            OptPar(2) = False
-                        Case tComp.t_tire
-                            OptPar(3) = False
                         Case tComp.user_valid
                             valid_set = True
                         Case tComp.n_card, tComp.n_eng
@@ -518,21 +541,20 @@ Public Module input
                                     Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
                                 End If
                             End If
-                        Case tComp.lati, tComp.lati_D, tComp.lati_S, tComp.longi, tComp.longi_D, tComp.longi_S, tComp.longi, tComp.longi_D, tComp.longi_S
+                        Case tComp.lati, tComp.lati_D, tComp.longi, tComp.longi_D, tComp.longi, tComp.longi_D
                             ' Latitude controlling
-                            If Not MeasCheck(tComp.lati) And Not MeasCheck(tComp.lati_D) And Not MeasCheck(tComp.lati_S) Then
+                            If Not MeasCheck(tComp.lati) And Not MeasCheck(tComp.lati_D) Then
                                 Throw New Exception("Missing coordinate signal for " & fCompName(sKVM.Key))
                             End If
                             ' Longitude controlling
-                            If Not MeasCheck(tComp.longi) And Not MeasCheck(tComp.longi_D) And Not MeasCheck(tComp.longi_S) Then
+                            If Not MeasCheck(tComp.longi) And Not MeasCheck(tComp.longi_D) Then
                                 Throw New Exception("Missing coordinate signal for " & fCompName(sKVM.Key))
                             End If
                             ' Combination controlling
                             If MeasCheck(tComp.lati) And MeasCheck(tComp.longi) Then KoordSys(0) = True
                             If MeasCheck(tComp.lati_D) And MeasCheck(tComp.longi_D) Then KoordSys(1) = True
-                            If MeasCheck(tComp.lati_S) And MeasCheck(tComp.longi_S) Then KoordSys(2) = True
-                            If Not KoordSys(0) And Not KoordSys(1) And Not KoordSys(2) Then
-                                Throw New Exception("Only same coordinate system allowed for calculation. Please give the coordinates in one system [DD.DD], [MM.MM] or [SS.SS].")
+                            If Not KoordSys(0) And Not KoordSys(1) Then
+                                Throw New Exception("Only same coordinate system allowed for calculation. Please give the coordinates in one system [DD.DD] or [MM.MM].")
                             End If
                         Case Else
                             Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
@@ -556,11 +578,10 @@ Public Module input
                                 End If
                             End If
                             CalcData(tCompCali.t).Add(CDbl(Line(sKV.Value) + nDay * DayTimeSec))
-                        ElseIf sKV.Key = tComp.lati Or sKV.Key = tComp.lati_D Or sKV.Key = tComp.lati_S Then
+                        ElseIf sKV.Key = tComp.lati Or sKV.Key = tComp.lati_D Then
                             If UTMcalc Then
                                 If MeasCheck(tComp.lati) And sKV.Key = tComp.lati Then UTMCoord = UTM(InputData(sKV.Key)(tDim) / 60, InputData(tComp.longi)(tDim) / 60)
                                 If Not MeasCheck(tComp.lati) And MeasCheck(tComp.lati_D) And sKV.Key = tComp.lati_D Then UTMCoord = UTM(InputData(sKV.Key)(tDim), InputData(tComp.longi_D)(tDim))
-                                If Not MeasCheck(tComp.lati) And Not MeasCheck(tComp.lati_D) And MeasCheck(tComp.lati_S) And sKV.Key = tComp.lati_S Then UTMCoord = UTM(InputData(sKV.Key)(tDim) / 3600, InputData(tComp.longi_S)(tDim) / 3600)
 
                                 If Not ZoneChange Then
                                     If tDim > 0 Then
@@ -577,11 +598,10 @@ Public Module input
                             Else
                                 UTMcalc = True
                             End If
-                        ElseIf sKV.Key = tComp.longi Or sKV.Key = tComp.longi_D Or sKV.Key = tComp.longi_S Then
+                        ElseIf sKV.Key = tComp.longi Or sKV.Key = tComp.longi_D Then
                             If UTMcalc Then
                                 If MeasCheck(tComp.longi) And sKV.Key = tComp.longi Then UTMCoord = UTM(InputData(tComp.lati)(tDim) / 60, InputData(sKV.Key)(tDim) / 60)
                                 If Not MeasCheck(tComp.longi) And MeasCheck(tComp.longi_D) And sKV.Key = tComp.longi_D Then UTMCoord = UTM(InputData(tComp.lati_D)(tDim), InputData(sKV.Key)(tDim))
-                                If Not MeasCheck(tComp.longi) And Not MeasCheck(tComp.longi_D) And MeasCheck(tComp.longi_S) And sKV.Key = tComp.longi_S Then UTMCoord = UTM(InputData(tComp.lati_S)(tDim) / 3600, InputData(sKV.Key)(tDim) / 3600)
 
                                 If Not ZoneChange Then
                                     If tDim > 0 Then
@@ -625,13 +645,24 @@ Public Module input
                 Throw New Exception(format("Exception while reading file({0}), line({1}) due to: {2}!: ", Datafile, tDim + 1, ex.Message), ex)
             End Try
 
+            ' Check coordinate digits
+            If KoordSys(0) Then CoordID = 0
+            If KoordSys(1) Then CoordID = 1
+            Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), InputData(tComp.lati))
+            If Counter > 0 Then
+                logme(8, False, format("The latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(CoordID), Counter))
+            End If
+            Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), InputData(tComp.longi))
+            If Counter > 0 Then
+                logme(8, False, format("The longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(CoordID), Counter))
+            End If
+
             ' Make the zone adjustment for the UTM coords
             Do While ZoneChange
                 Zone1CentralMeridian = Zone1CentralMeridian + 5
                 For i = 0 To CalcData(tCompCali.lati_UTM).Count - 1
                     If MeasCheck(tComp.lati) Then UTMCoord = UTM(InputData(tComp.lati)(i) / 60, InputData(tComp.longi)(i) / 60)
                     If Not MeasCheck(tComp.lati) And MeasCheck(tComp.lati_D) Then UTMCoord = UTM(InputData(tComp.lati_D)(i), InputData(tComp.longi_D)(i))
-                    If Not MeasCheck(tComp.lati) And Not MeasCheck(tComp.lati_D) And MeasCheck(tComp.lati_S) Then UTMCoord = UTM(InputData(tComp.lati_S)(i) / 3600, InputData(tComp.longi_S)(i) / 3600)
                     If i > 0 Then
                         If CalcData(tCompCali.zone_UTM)(i - 1) <> UTMCoord.Zone Then
                             Exit For
@@ -663,7 +694,7 @@ Public Module input
         ' Declarations
         Dim i, j, anz, pos, num As Integer
         Dim Info As String = ""
-        Dim Line(), Line2(), Line3() As String
+        Dim Line(), Line2(), Line3(), Line4() As String
         Dim XVal(,), YVal(,), XClone(), YClone() As Double
         Using FileInGenShp As New cFile_V3
 
@@ -674,6 +705,7 @@ Public Module input
             Line = FileInGenShp.ReadLine()
             Line2 = FileInGenShp.ReadLine()
             Line3 = FileInGenShp.ReadLine()
+            Line4 = FileInGenShp.ReadLine()
             anz = Int(Line.Length / 2)
 
             ' Datacheck
@@ -701,6 +733,7 @@ Public Module input
                 GenShape.veh_class.Add(Line(pos))
                 GenShape.veh_conf.Add(Line2(pos))
                 GenShape.fa_pe.Add(Line3(pos))
+                GenShape.h_ref.Add(Line4(pos))
                 pos += 2
             Next i
 

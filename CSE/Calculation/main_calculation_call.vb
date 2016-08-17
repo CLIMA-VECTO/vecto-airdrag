@@ -33,6 +33,7 @@ Public Module main_calculation_call
             ' Read the input data
             logme(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
+            fCheckVeh(3, vehicle)
             ReadInputMSC(MSC, Job.calib_track_fpath, isCalibrate)
             ReadDataFile(Job.calib_run_fpath, MSC, vehicle)
 
@@ -53,7 +54,7 @@ Public Module main_calculation_call
 
             Try
                 ' Calculate the results from the misalignment test
-                fCalcCalib(MSC, vehicle)
+                fCalcCalib(vehicle)
 
             Finally
                 ' Output on the GUI
@@ -76,6 +77,7 @@ Public Module main_calculation_call
             ' Read the input files
             logme(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
+            fCheckVeh(3, vehicle)
             ReadInputMSC(MSC, Job.coast_track_fpath, isCalibrate)
             If Crt.gradient_correction Then ReadAltitudeFiles(MSC, Altdata)
             ReadWeather(Job.ambient_fpath)
@@ -176,7 +178,7 @@ Public Module main_calculation_call
             ' Write the results on the GUI
             logme(7, False, "Results from the calculation")
             logme(6, False, "average absolute beta HS test: " & Math.Round(Job.beta, 4))
-            logme(6, False, "delta CdxA correction: " & Math.Round(Job.delta_CdxA, 4))
+            logme(6, False, "delta CdxA correction: " & Math.Round(Job.delta_CdxA_beta, 4))
             logme(6, False, "CdxA(0): " & Math.Round(Job.CdxA0, 4))
 
             ' Clear the dictionaries
@@ -188,7 +190,7 @@ Public Module main_calculation_call
     End Sub
 
     ' Calculate the calibration test parameter
-    Sub fCalcCalib(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle)
+    Sub fCalcCalib(ByVal vehicleX As cVehicle)
         ' Declaration
         Dim run As Integer
         Dim Change As Boolean
@@ -211,7 +213,7 @@ Public Module main_calculation_call
             run += 1
 
             ' Calculate fv_veh
-            ffv_veh(MSCX)
+            ffv_veh()
 
             ' Calculate the corrected vehicle speed
             fCalcCorVveh()
@@ -262,7 +264,7 @@ Public Module main_calculation_call
             End If
 
             ' Calculate fv_veh
-            If coastingSeq = 0 Then ffv_veh(MSCX)
+            If coastingSeq = 0 Then ffv_veh()
 
             ' Calculate the corrected vehicle speed
             fCalcCorVveh()
@@ -298,7 +300,7 @@ Public Module main_calculation_call
     End Function
 
     ' Function to calibrate fv_veh
-    Sub ffv_veh(ByVal MSCX As cMSC)
+    Sub ffv_veh()
         ' Declaration
         Dim i, num As Integer
 
@@ -313,13 +315,8 @@ Public Module main_calculation_call
                 If ErgValues(tCompErg.v_veh_CAN)(i) = 0 Then
                     Throw New Exception("The measured vehicle velocity (v_veh_CAN) is 0 in section: " & ErgValues(tCompErg.SecID)(i))
                 End If
-                If MSCX.tUse Then
-                    Job.fv_veh += ErgValues(tCompErg.v_MSC)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
-                    num += 1
-                Else
-                    Job.fv_veh += ErgValues(tCompErg.v_MSC)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
-                    num += 1
-                End If
+                Job.fv_veh += ErgValues(tCompErg.v_MSC)(i) / ErgValues(tCompErg.v_veh_CAN)(i)
+                num += 1
             End If
         Next i
 
@@ -674,23 +671,27 @@ Public Module main_calculation_call
                         If Not SecCount.AnzSec(i) = SecCount.AnzSec(j) Then
                             ' First section greater then second
                             If SecCount.AnzSec(i) > SecCount.AnzSec(j) Then
-                                anz = 0
+                                anz = SecCount.AnzSec(i) - SecCount.AnzSec(j)
                                 For k = 0 To ErgValuesComp(tCompErg.SecID).Count - 1
                                     If (Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = ErgValuesComp(tCompErg.SecID)(k)) And (Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), "(") + 1, InStr(SecCount.NameSec(i), ",") - (InStr(SecCount.NameSec(i), "(") + 1))) = ErgValuesComp(tCompErg.DirID)(k)) And (Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1))) = ErgValuesComp(tCompErg.RunID)(k)) Then
-                                        anz += 1
-                                        If anz > SecCount.AnzSec(j) Then
-                                            ErgValuesComp(tCompErg.used)(k) = 0
+                                        If ErgValuesComp(tCompErg.used)(k) = 1 Then
+                                            anz -= 1
+                                            If anz >= 0 Then
+                                                ErgValuesComp(tCompErg.used)(k) = 0
+                                            End If
                                         End If
                                     End If
                                 Next k
                             Else
                                 ' Second section greater then first
-                                anz = 0
+                                anz = SecCount.AnzSec(j) - SecCount.AnzSec(i)
                                 For k = 0 To ErgValuesComp(tCompErg.SecID).Count - 1
                                     If (Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) = ErgValuesComp(tCompErg.SecID)(k)) And (Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), "(") + 1, InStr(SecCount.NameSec(j), ",") - (InStr(SecCount.NameSec(j), "(") + 1))) = ErgValuesComp(tCompErg.DirID)(k)) And (Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), ",") + 1, InStr(SecCount.NameSec(j), ")") - (InStr(SecCount.NameSec(j), ",") + 1))) = ErgValuesComp(tCompErg.RunID)(k)) Then
-                                        anz += 1
-                                        If anz > SecCount.AnzSec(i) Then
-                                            ErgValuesComp(tCompErg.used)(k) = 0
+                                        If ErgValuesComp(tCompErg.used)(k) = 1 Then
+                                            anz -= 1
+                                            If anz >= 0 Then
+                                                ErgValuesComp(tCompErg.used)(k) = 0
+                                            End If
                                         End If
                                     End If
                                 Next k
@@ -840,6 +841,7 @@ Public Module main_calculation_call
     Sub fCalcValidSec(ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, ByVal coastingSeq As Integer, ByVal Run As Integer, ByVal r_dyn_ref As Double, ByRef Change As Boolean)
         ' Declaration
         Dim i As Integer
+        Dim lim_v_veh_avg_max_HS, lim_v_veh_avg_min_HS As Single
         Dim OldValid(ErgValues(tCompErg.SecID).Count - 1), OldUse(ErgValues(tCompErg.SecID).Count - 1) As Boolean
         Dim igear As Double
         Dim allFalse As Boolean
@@ -861,20 +863,21 @@ Public Module main_calculation_call
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
                     If ErgValues(tCompErg.v_veh)(i) < Crt.v_veh_avg_max_LS And _
                        ErgValues(tCompErg.v_veh)(i) > Crt.v_veh_avg_min_LS Then ErgValues(tCompErg.val_vVeh_avg)(i) = 1
-                    If ErgValues(tCompErg.v_wind_avg)(i) < Crt.v_wind_avg_max_LS Then ErgValues(tCompErg.val_vWind)(i) = 1
-                    If ErgValues(tCompErg.v_wind_1s_max)(i) < Crt.v_wind_1s_max_LS Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
                     If ErgValues(tCompErg.v_veh_float_max)(i) < (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_float_delta_LS) And _
                        ErgValues(tCompErg.v_veh_float_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_float_delta_LS) Then ErgValues(tCompErg.val_vVeh_f)(i) = 1
-                    If ErgValues(tCompErg.tq_sum_float_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + Crt.tq_sum_float_delta_LS)) And _
-                       ErgValues(tCompErg.tq_sum_float_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - Crt.tq_sum_float_delta_LS)) Then ErgValues(tCompErg.val_tq_f)(i) = 1
+                    If (ErgValues(tCompErg.tq_sum_float_max)(i) - ErgValues(tCompErg.tq_grd)(i)) < ((ErgValues(tCompErg.tq_sum)(i) - ErgValues(tCompErg.tq_grd)(i)) * (1 + Crt.tq_sum_float_delta_LS)) And _
+                       (ErgValues(tCompErg.tq_sum_float_min)(i) - ErgValues(tCompErg.tq_grd)(i)) > ((ErgValues(tCompErg.tq_sum)(i) - ErgValues(tCompErg.tq_grd)(i)) * (1 - Crt.tq_sum_float_delta_LS)) Then ErgValues(tCompErg.val_tq_f)(i) = 1
                     If ErgValues(tCompErg.n_ec_float_max)(i) < ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_float_delta_LS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 + Crt.delta_n_ec_LS) And _
                        ErgValues(tCompErg.n_ec_float_min)(i) > ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_float_delta_LS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 - Crt.delta_n_ec_LS) Then ErgValues(tCompErg.val_n_eng)(i) = 1
                     If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + Crt.leng_crit And _
                        ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - Crt.leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
+                    If ErgValues(tCompErg.t_amb_veh)(i) > Crt.t_amb_min And _
+                       ErgValues(tCompErg.t_amb_veh)(i) < Crt.t_amb_max Then ErgValues(tCompErg.val_t_amb)(i) = 1
+                    If ErgValues(tCompErg.t_ground)(i) < Crt.t_ground_max Then ErgValues(tCompErg.val_t_ground)(i) = 1
 
                     ' Check if all criterias are valid
-                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And _
-                       ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_vVeh_f)(i) = 1 And ErgValues(tCompErg.val_tq_f)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
+                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vVeh_f)(i) = 1 And _
+                        ErgValues(tCompErg.val_tq_f)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 And ErgValues(tCompErg.val_t_amb)(i) = 1 And ErgValues(tCompErg.val_t_ground)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
                         allFalse = False
@@ -884,6 +887,8 @@ Public Module main_calculation_call
                     End If
 
                     ' Set the only used in HS test criterias on valid
+                    ErgValues(tCompErg.val_vWind)(i) = 1
+                    ErgValues(tCompErg.val_vWind_1s)(i) = 1
                     ErgValues(tCompErg.val_beta)(i) = 1
                     ErgValues(tCompErg.val_vVeh_1s)(i) = 1
                     ErgValues(tCompErg.val_tq_1s)(i) = 1
@@ -901,25 +906,30 @@ Public Module main_calculation_call
                 Next i
 
                 ' Control the criterias
+                fgetSpeedLim(vehicleX, lim_v_veh_avg_max_HS, lim_v_veh_avg_min_HS)
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
-                    If ErgValues(tCompErg.v_veh)(i) > Crt.v_veh_avg_min_HS Then ErgValues(tCompErg.val_vVeh_avg)(i) = 1
+                    If ErgValues(tCompErg.v_veh)(i) < lim_v_veh_avg_max_HS And _
+                       ErgValues(tCompErg.v_veh)(i) > lim_v_veh_avg_min_HS Then ErgValues(tCompErg.val_vVeh_avg)(i) = 1
                     If ErgValues(tCompErg.v_wind_avg)(i) < Crt.v_wind_avg_max_HS Then ErgValues(tCompErg.val_vWind)(i) = 1
                     If ErgValues(tCompErg.v_wind_1s_max)(i) < Crt.v_wind_1s_max_HS Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
                     If ErgValues(tCompErg.beta_abs)(i) < Crt.beta_avg_max_HS Then ErgValues(tCompErg.val_beta)(i) = 1
                     If ErgValues(tCompErg.v_veh_1s_max)(i) < (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_1s_delta_HS) And _
                        ErgValues(tCompErg.v_veh_1s_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_HS) Then ErgValues(tCompErg.val_vVeh_1s)(i) = 1
-                    If ErgValues(tCompErg.tq_sum_1s_max)(i) < (ErgValues(tCompErg.tq_sum)(i) * (1 + Crt.tq_sum_1s_delta_HS)) And _
-                       ErgValues(tCompErg.tq_sum_1s_min)(i) > (ErgValues(tCompErg.tq_sum)(i) * (1 - Crt.tq_sum_1s_delta_HS)) Then ErgValues(tCompErg.val_tq_1s)(i) = 1
+                    If (ErgValues(tCompErg.tq_sum_1s_max)(i) - ErgValues(tCompErg.tq_grd)(i)) < ((ErgValues(tCompErg.tq_sum)(i) - ErgValues(tCompErg.tq_grd)(i)) * (1 + Crt.tq_sum_1s_delta_HS)) And _
+                       (ErgValues(tCompErg.tq_sum_1s_min)(i) - ErgValues(tCompErg.tq_grd)(i)) > ((ErgValues(tCompErg.tq_sum)(i) - ErgValues(tCompErg.tq_grd)(i)) * (1 - Crt.tq_sum_1s_delta_HS)) Then ErgValues(tCompErg.val_tq_1s)(i) = 1
                     If ErgValues(tCompErg.n_ec_1s_max)(i) < ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_1s_delta_HS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 + Crt.delta_n_ec_HS) And _
                        ErgValues(tCompErg.n_ec_1s_min)(i) > ((30 * igear * vehicleX.axleRatio * (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_HS) / 3.6) / (r_dyn_ref * Math.PI)) * (1 - Crt.delta_n_ec_HS) Then ErgValues(tCompErg.val_n_eng)(i) = 1
                     If ErgValues(tCompErg.dist)(i) < fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) + Crt.leng_crit And _
                        ErgValues(tCompErg.dist)(i) > fSecLen(MSCX, ErgValues(tCompErg.SecID)(i), ErgValues(tCompErg.DirID)(i)) - Crt.leng_crit Then ErgValues(tCompErg.val_dist)(i) = 1
+                    If ErgValues(tCompErg.t_amb_veh)(i) > Crt.t_amb_min And _
+                       ErgValues(tCompErg.t_amb_veh)(i) < Crt.t_amb_max Then ErgValues(tCompErg.val_t_amb)(i) = 1
+                    If ErgValues(tCompErg.t_ground)(i) < Crt.t_ground_max Then ErgValues(tCompErg.val_t_ground)(i) = 1
 
                     ' Check if all criterias are valid
-                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_vWind_1s)(i) = 1 And _
-                       ErgValues(tCompErg.val_beta)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And ErgValues(tCompErg.val_tq_1s)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 Then
+                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_beta)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And _
+                       ErgValues(tCompErg.val_tq_1s)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 And ErgValues(tCompErg.val_t_amb)(i) = 1 And ErgValues(tCompErg.val_t_ground)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
                         allFalse = False
@@ -952,12 +962,24 @@ Public Module main_calculation_call
         End Select
     End Sub
 
+    ' Get the maximum allowed speed limit
+    Private Function fgetSpeedLim(ByVal vehicle As cVehicle, ByRef lim_v_veh_avg_max_HS As Single, ByRef lim_v_veh_avg_min_HS As Single) As Boolean
+        ' Get the limits dependend of maximum vehicle speed
+        lim_v_veh_avg_max_HS = Math.Min(vehicle.vVehMax, Crt.v_veh_avg_max_HS)
+        If vehicle.vVehMax < (Crt.v_veh_avg_min_HS + Crt.delta_v_avg_min_HS) Then
+            lim_v_veh_avg_min_HS = vehicle.vVehMax - Crt.delta_v_avg_min_HS
+        Else
+            lim_v_veh_avg_min_HS = Crt.v_veh_avg_min_HS
+        End If
+        Return True
+    End Function
+
     ' Check the altitude files
     Sub fcheckAlt(ByVal MSCOrg As cMSC, ByRef Altdata As List(Of cAlt))
         ' Declarations
         Dim i, j As Integer
         Dim distAlt As Double
-        Dim DiffAltDist, Diffhp, StartPIn, EndPIn As Boolean
+        Dim DiffAltDist, Diffhp, StartPIn, EndPIn, SlopeOut As Boolean
         Dim UTMCoordA As New cUTMCoord
         Dim UTMCoordE As New cUTMCoord
         Dim KoordA As Array
@@ -976,11 +998,12 @@ Public Module main_calculation_call
             KoordA = ({UTMCoordA.Northing, UTMCoordA.Easting})
             KoordE = ({UTMCoordE.Northing, UTMCoordE.Easting})
 
-            ' Check if the difference between the altitude input points is <= criterium dist_gridpoints_max
+            ' Check the altitude files
             DiffAltDist = False
             Diffhp = False
             StartPIn = False
             EndPIn = False
+            SlopeOut = False
             For j = 0 To Altdata(i).KoordLat.Count - 1
                 ' Generate the coordinate array
                 KoordP = ({Altdata(i).UTM(j).Northing, Altdata(i).UTM(j).Easting})
@@ -1008,13 +1031,57 @@ Public Module main_calculation_call
 
                 ' Check if the last Point is outside the MS
                 If j = Altdata(i).KoordLat.Count - 1 And ErgHHF.p > 0 And ErgHHF.q > 0 Then EndPIn = True
+
+                ' Check if the slope is < the criterium slope_max
+                If j = Altdata(i).KoordLat.Count - 1 And Not StartPIn And Not EndPIn Then
+                    If ((Math.Abs(fAltInterp(Altdata(i), UTMCoordA.Northing, UTMCoordA.Easting) - fAltInterp(Altdata(i), UTMCoordE.Northing, UTMCoordE.Easting)) / MSCOrg.len(i)) * 100 > Crt.slope_max) Then SlopeOut = True
+                End If
             Next j
             If StartPIn Then Throw New Exception(format("Invalid altitude data file ({0}). First value lies inside the MS.", fName(MSCOrg.AltPath(i), True)))
             If EndPIn Then Throw New Exception(format("Invalid altitude data file ({0}). Last value lies inside the MS.", fName(MSCOrg.AltPath(i), True)))
             If DiffAltDist Then Throw New Exception(format("Invalid altitude data file ({0}). The difference between the altitude points is > {1}.", fName(MSCOrg.AltPath(i), True), Crt.dist_gridpoints_max))
             If Diffhp Then Throw New Exception(format("Invalid altitude data file ({0}). The altitude grid points differ more then {1}m from MS center line.", fName(MSCOrg.AltPath(i), True), Crt.dist_grid_ms_max))
+            If SlopeOut Then Throw New Exception(format("Invalid altitude data file ({0}). The maximum allowed slope {1}% is exceeded.", fName(MSCOrg.AltPath(i), True), Crt.slope_max))
         Next i
     End Sub
+
+    ' Check the vehicle file
+    Private Function fCheckVeh(ByVal AnzDigit As Integer, ByVal vehicle As cVehicle) As Boolean
+        ' Declaration
+        Dim Flag As Boolean = True
+
+        ' Check the geraRatio_high
+        If Not fCheckDigit(Prefs.decSep, AnzDigit, vehicle.gearRatio_high) Then
+            Flag = False
+            logme(8, False, format("The gearRatio_high in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+        End If
+        ' Check the geraRatio_low
+        If Not fCheckDigit(Prefs.decSep, AnzDigit, vehicle.gearRatio_low) Then
+            Flag = False
+            logme(8, False, format("The gearRatio_low in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+        End If
+        ' Check the axleRatio
+        If Not fCheckDigit(Prefs.decSep, AnzDigit, vehicle.axleRatio) Then
+            Flag = False
+            logme(8, False, format("The axleRatio in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+        End If
+
+        Return Flag
+    End Function
+
+    ' Check the digits after the seperator from an value
+    Private Function fCheckDigit(ByVal Sep As Char, ByVal AnzDigit As Integer, ByVal dvalue As Double) As Boolean
+        ' Declaration
+        Dim counter As Long = 0
+        Dim s As String
+
+        s = dvalue.ToString
+        If s.Substring(s.IndexOf(Sep) + 1).Length < AnzDigit Then
+            Return False
+        End If
+
+        Return True
+    End Function
 
     ' Save the Dictionaries
     Sub fSaveDic(ByVal coastingSeq As Integer)

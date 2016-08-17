@@ -231,29 +231,22 @@ Module output
             FileOut.WriteLine("# fv_pe:" & Prefs.listSep & Job.fv_pe & Prefs.listSep & "[-] calibration factor for air speed (position error)")
             FileOut.WriteLine("# fa_pe:" & Prefs.listSep & Job.fa_pe & Prefs.listSep & "[-] position error correction factor for measured air inflow angle (beta)")
             FileOut.WriteLine("# beta_ame:" & Prefs.listSep & Job.beta_ame & Prefs.listSep & "[°] calibration factor for beta (misalignment)")
+            FileOut.WriteLine("# t_amb_LS1:" & Prefs.listSep & Job.t_amb_LS1 & Prefs.listSep & "[°] average ambient temperature during first low speed test")
+            FileOut.WriteLine("# v_avg_LS:" & Prefs.listSep & Job.v_avg_LS & Prefs.listSep & "[km/h] average vehicle speed used datasets low speed tests")
+            FileOut.WriteLine("# v_avg_HS:" & Prefs.listSep & Job.v_avg_HS & Prefs.listSep & "[km/h] average vehicle speed used datasets high speed test")
             FileOut.WriteLine("# CdxA(ß):" & Prefs.listSep & Job.CdxAß & Prefs.listSep & "[m²] average CdxA before yaw angle correction")
             FileOut.WriteLine("# beta:" & Prefs.listSep & Job.beta & Prefs.listSep & "[°] average absolute yaw angle from high speed tests")
-            FileOut.WriteLine("# delta_CdxA:" & Prefs.listSep & Job.delta_CdxA & Prefs.listSep & "[m²] correction of CdxA for yaw angle")
+            FileOut.WriteLine("# delta_CdxA_beta:" & Prefs.listSep & Job.delta_CdxA_beta & Prefs.listSep & "[m²] correction of CdxA for yaw angle")
+            FileOut.WriteLine("# CdxA(0)meas:" & Prefs.listSep & Job.CdxA0meas & Prefs.listSep & "[m²] average measured CdxA for zero yaw angle")
+            FileOut.WriteLine("# delta_CdxA_height:" & Prefs.listSep & Job.delta_CdxA_height & Prefs.listSep & "[m²] correction of CdxA to reference vehicle height")
+            FileOut.WriteLine("# delta_CdxA_anemo:" & Prefs.listSep & Crt.delta_CdxA_anemo & Prefs.listSep & "[m²] CdxA influence from anemometer")
             FileOut.WriteLine("# CdxA(0):" & Prefs.listSep & Job.CdxA0 & Prefs.listSep & "[m²] average CdxA for zero yaw angle")
-            FileOut.WriteLine("# CdxA(0)_opt2:" & Prefs.listSep & Job.CdxA0_opt2 & Prefs.listSep & "[m²] average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections)")
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Validity criteria:")
             If Job.valid_RRC Then
                 FileOut.WriteLine("# RRC:" & Prefs.listSep & "Ok")
             Else
                 FileOut.WriteLine("# RRC:" & Prefs.listSep & "Invalid test - maximum deviation of RRCs between low speed tests exceeded")
-            End If
-            If Job.valid_t_amb Then
-                FileOut.WriteLine("# Ambient temp:" & Prefs.listSep & "Ok")
-            Else
-                FileOut.WriteLine("# Ambient temp:" & Prefs.listSep & "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
-            End If
-            If OptPar(2) Then
-                If Job.valid_t_ground Then
-                    FileOut.WriteLine("# Ground temp:" & Prefs.listSep & "Ok")
-                Else
-                    FileOut.WriteLine("# Ground temp:" & Prefs.listSep & "Invalid test - range of ground temperature exceeded")
-                End If
             End If
 
             FileOut.WriteLine("#")
@@ -293,8 +286,6 @@ Module output
         If KoordSys(0) Then AddToErg(tComp.longi, fCompName(tComp.longi), fCompUnit(tComp.longi), "InputData")
         If KoordSys(1) Then AddToErg(tComp.lati_D, fCompName(tComp.lati_D), fCompUnit(tComp.lati_D), "InputData")
         If KoordSys(1) Then AddToErg(tComp.longi_D, fCompName(tComp.longi_D), fCompUnit(tComp.longi_D), "InputData")
-        If KoordSys(2) Then AddToErg(tComp.lati_S, fCompName(tComp.lati_S), fCompUnit(tComp.lati_S), "InputData")
-        If KoordSys(2) Then AddToErg(tComp.longi_S, fCompName(tComp.longi_S), fCompUnit(tComp.longi_S), "InputData")
         AddToErg(tComp.hdg, fCompName(tComp.hdg), fCompUnit(tComp.hdg), "InputData")
         AddToErg(tComp.v_veh_GPS, fCompName(tComp.v_veh_GPS), fCompUnit(tComp.v_veh_GPS), "InputData")
         AddToErg(tComp.v_veh_CAN, fCompName(tComp.v_veh_CAN), fCompUnit(tComp.v_veh_CAN), "InputData")
@@ -308,12 +299,10 @@ Module output
         End If
         AddToErg(tComp.tq_l, fCompName(tComp.tq_l), fCompUnit(tComp.tq_l), "InputData")
         AddToErg(tComp.tq_r, fCompName(tComp.tq_r), fCompUnit(tComp.tq_r), "InputData")
-        If OptPar(2) Then AddToErg(tComp.t_ground, fCompName(tComp.t_ground), fCompUnit(tComp.t_ground), "InputData")
+        AddToErg(tComp.t_ground, fCompName(tComp.t_ground), fCompUnit(tComp.t_ground), "InputData")
         AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), fCompUnit(tComp.t_amb_veh), "InputData")
-        If OptPar(3) Then AddToErg(tComp.t_tire, fCompName(tComp.t_tire), fCompUnit(tComp.t_tire), "InputData")
         ' Write optional parameters
         If OptPar(0) Then AddToErg(tComp.trigger, fCompName(tComp.trigger), fCompUnit(tComp.trigger), "InputData")
-        If OptPar(1) Then AddToErg(tComp.p_tire, fCompName(tComp.p_tire), fCompUnit(tComp.p_tire), "InputData")
 
         ' Undefined input data
         For Each sKV In InputUndefData
@@ -343,8 +332,6 @@ Module output
 
         If Not calibration Then
             AddToErg(tCompCali.omega_wh, fCompName(tCompCali.omega_wh), fCompUnit(tCompCali.omega_wh), "CalcData")
-            AddToErg(tCompCali.omega_wh_acc, fCompName(tCompCali.omega_wh_acc), fCompUnit(tCompCali.omega_wh_acc), "CalcData")
-            AddToErg(tCompCali.omega_p_wh_acc, fCompName(tCompCali.omega_p_wh_acc), fCompUnit(tCompCali.omega_p_wh_acc), "CalcData")
             AddToErg(tCompCali.tq_sum, fCompName(tCompCali.tq_sum), fCompUnit(tCompCali.tq_sum), "CalcData")
             AddToErg(tCompCali.tq_sum_1s, fCompName(tCompCali.tq_sum_1s), fCompUnit(tCompCali.tq_sum_1s), "CalcData")
             AddToErg(tCompCali.tq_sum_float, fCompName(tCompCali.tq_sum_float), fCompUnit(tCompCali.tq_sum_float), "CalcData")
@@ -406,6 +393,8 @@ Module output
             AddToErg(tCompErg.val_beta, fCompName(tCompErg.val_beta), fCompUnit(tCompErg.val_beta), "ErgValues")
             AddToErg(tCompErg.val_n_eng, fCompName(tCompErg.val_n_eng), fCompUnit(tCompErg.val_n_eng), "ErgValues")
             AddToErg(tCompErg.val_dist, fCompName(tCompErg.val_dist), fCompUnit(tCompErg.val_dist), "ErgValues")
+            AddToErg(tCompErg.val_t_amb, fCompName(tCompErg.val_t_amb), fCompUnit(tCompErg.val_t_amb), "ErgValues")
+            AddToErg(tCompErg.val_t_ground, fCompName(tCompErg.val_t_ground), fCompUnit(tCompErg.val_t_ground), "ErgValues")
         End If
 
         AddToErg(tCompErg.vair, fCompName(tCompErg.vair), fCompUnit(tCompErg.vair), "ErgValues")
@@ -423,9 +412,6 @@ Module output
             AddToErg(tCompErg.n_ec_float_max, fCompName(tCompErg.n_ec_float_max), fCompUnit(tCompErg.n_ec_float_max), "ErgValues")
             AddToErg(tCompErg.n_ec_float_min, fCompName(tCompErg.n_ec_float_min), fCompUnit(tCompErg.n_ec_float_min), "ErgValues")
             AddToErg(tCompErg.r_dyn, fCompName(tCompErg.r_dyn), fCompUnit(tCompErg.r_dyn), "ErgValues")
-            AddToErg(tCompErg.omega_wh, fCompName(tCompErg.omega_wh), fCompUnit(tCompErg.omega_wh), "ErgValues")
-            AddToErg(tCompErg.omega_wh_acc, fCompName(tCompErg.omega_wh_acc), fCompUnit(tCompErg.omega_wh_acc), "ErgValues")
-            AddToErg(tCompErg.omega_p_wh_acc, fCompName(tCompErg.omega_p_wh_acc), fCompUnit(tCompErg.omega_p_wh_acc), "ErgValues")
             AddToErg(tCompErg.tq_sum, fCompName(tCompErg.tq_sum), fCompUnit(tCompErg.tq_sum), "ErgValues")
             AddToErg(tCompErg.tq_sum_1s, fCompName(tCompErg.tq_sum_1s), fCompUnit(tCompErg.tq_sum_1s), "ErgValues")
             AddToErg(tCompErg.tq_sum_1s_max, fCompName(tCompErg.tq_sum_1s_max), fCompUnit(tCompErg.tq_sum_1s_max), "ErgValues")
@@ -433,6 +419,7 @@ Module output
             AddToErg(tCompErg.tq_sum_float, fCompName(tCompErg.tq_sum_float), fCompUnit(tCompErg.tq_sum_float), "ErgValues")
             AddToErg(tCompErg.tq_sum_float_max, fCompName(tCompErg.tq_sum_float_max), fCompUnit(tCompErg.tq_sum_float_max), "ErgValues")
             AddToErg(tCompErg.tq_sum_float_min, fCompName(tCompErg.tq_sum_float_min), fCompUnit(tCompErg.tq_sum_float_min), "ErgValues")
+            AddToErg(tCompErg.tq_grd, fCompName(tCompErg.tq_grd), fCompUnit(tCompErg.tq_grd), "ErgValues")
             AddToErg(tCompErg.t_float, fCompName(tCompErg.t_float), fCompUnit(tCompErg.t_float), "ErgValues")
             AddToErg(tCompErg.F_trac, fCompName(tCompErg.F_trac), fCompUnit(tCompErg.F_trac), "ErgValues")
             AddToErg(tCompErg.F_acc, fCompName(tCompErg.F_acc), fCompUnit(tCompErg.F_acc), "ErgValues")
@@ -454,8 +441,6 @@ Module output
             AddToErg(tCompErg.rh_stat, fCompName(tCompErg.rh_stat), fCompUnit(tCompErg.rh_stat), "ErgValues")
             AddToErg(tCompErg.vp_H2O, fCompName(tCompErg.vp_H2O), fCompUnit(tCompErg.vp_H2O), "ErgValues")
             AddToErg(tCompErg.rho_air, fCompName(tCompErg.rho_air), fCompUnit(tCompErg.rho_air), "ErgValues")
-            AddToErg(tCompErg.t_tire, fCompName(tCompErg.t_tire), fCompUnit(tCompErg.t_tire), "ErgValues")
-            AddToErg(tCompErg.p_tire, fCompName(tCompErg.p_tire), fCompUnit(tCompErg.p_tire), "ErgValues")
             AddToErg(tCompErg.CdxAß_singleDS, fCompName(tCompErg.CdxAß_singleDS), fCompUnit(tCompErg.CdxAß_singleDS), "ErgValues")
         End If
 
@@ -487,10 +472,6 @@ Module output
         AddToErg(tCompErgReg.RRC_singleMS_LS1, fCompName(tCompErgReg.RRC_singleMS_LS1), fCompUnit(tCompErgReg.RRC_singleMS_LS1), "ErgValuesReg")
         AddToErg(tCompErgReg.RRC_singleMS_LS2, fCompName(tCompErgReg.RRC_singleMS_LS2), fCompUnit(tCompErgReg.RRC_singleMS_LS2), "ErgValuesReg")
         AddToErg(tCompErgReg.valid_RRC, fCompName(tCompErgReg.valid_RRC), fCompUnit(tCompErgReg.valid_RRC), "ErgValuesReg")
-        If OptPar(3) Then AddToErg(tCompErgReg.t_tire_ave_LS_min, fCompName(tCompErgReg.t_tire_ave_LS_min), fCompUnit(tCompErgReg.t_tire_ave_LS_min), "ErgValuesReg")
-        If OptPar(3) Then AddToErg(tCompErgReg.t_tire_ave_LS_max, fCompName(tCompErgReg.t_tire_ave_LS_max), fCompUnit(tCompErgReg.t_tire_ave_LS_max), "ErgValuesReg")
-        If OptPar(3) Then AddToErg(tCompErgReg.t_tire_ave_HS_min, fCompName(tCompErgReg.t_tire_ave_HS_min), fCompUnit(tCompErgReg.t_tire_ave_HS_min), "ErgValuesReg")
-        If OptPar(3) Then AddToErg(tCompErgReg.t_tire_ave_HS_max, fCompName(tCompErgReg.t_tire_ave_HS_max), fCompUnit(tCompErgReg.t_tire_ave_HS_max), "ErgValuesReg")
         AddToErg(tCompErgReg.F2_singleMS, fCompName(tCompErgReg.F2_singleMS), fCompUnit(tCompErgReg.F2_singleMS), "ErgValuesReg")
         AddToErg(tCompErgReg.F2_singleMS_LS1, fCompName(tCompErgReg.F2_singleMS_LS1), fCompUnit(tCompErgReg.F2_singleMS_LS1), "ErgValuesReg")
         AddToErg(tCompErgReg.F2_singleMS_LS2, fCompName(tCompErgReg.F2_singleMS_LS2), fCompUnit(tCompErgReg.F2_singleMS_LS2), "ErgValuesReg")

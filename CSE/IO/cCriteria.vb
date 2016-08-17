@@ -35,13 +35,17 @@ Public Class cCriteria
         g.hz_out = 1
         g.rr_corr_factor = 1
         g.acc_corr_avg = 1
+        g.delta_CdxA_anemo = -0.15
         g.dist_float = 25
         g.dist_gridpoints_max = 50
         g.dist_grid_ms_max = 1
+        g.slope_max = 1
+        g.length_MS_max = 253
+        g.length_MS_min = 247
 
         g = New JObject()
         b.Validation = g
-        g.trigger_delta_x_max = 10
+        g.trigger_delta_x_max = 30
         g.trigger_delta_y_max = 100
         g.delta_head_max = 10
         g.segruns_min_CAL = 5
@@ -51,34 +55,31 @@ Public Class cCriteria
         g.delta_Hz_max = 1
         g.delta_parallel_max = 20
 
-
         g.v_wind_avg_max_CAL = 5
         g.v_wind_1s_max_CAL = 8
         g.beta_avg_max_CAL = 5
 
         g.leng_crit = 3
 
-        g.v_wind_avg_max_LS = 5
-        g.v_wind_1s_max_LS = 8
-        g.v_veh_avg_min_LS = 9
-        g.v_veh_avg_max_LS = 16
+        g.v_veh_avg_min_LS = 10
+        g.v_veh_avg_max_LS = 15
         g.v_veh_float_delta_LS = 0.5
-        g.tq_sum_float_delta_LS = 0.1
+        g.tq_sum_float_delta_LS = 0.3
         g.delta_n_ec_LS = 0.02
 
         g.v_wind_avg_max_HS = 5
         g.v_wind_1s_max_HS = 8
         g.beta_avg_max_HS = 3
-        g.v_veh_avg_min_HS = 80
-        g.v_veh_1s_delta_HS = 0.3
-        g.tq_sum_1s_delta_HS = 0.1
+        g.v_veh_avg_min_HS = 85
+        g.v_veh_avg_max_HS = 95
+        g.tq_sum_1s_delta_HS = 0.2
         g.delta_n_ec_HS = 0.02
+        g.v_veh_1s_delta_HS = 0.3
+        g.delta_v_avg_min_HS = 3
 
-        g.delta_t_tyre_max = 5
-        g.delta_rr_corr_max = 0.3
+        g.delta_rr_corr_max = 0.4
         g.t_amb_min = 0
         g.t_amb_max = 25
-        g.t_amb_var = 3
         g.t_ground_max = 40
 
         Return b
@@ -114,6 +115,10 @@ Public Class cCriteria
                             "description": "Averaging of vehicle speed for correction of acceleration forces.",
                             "units": "s",
                         },
+                        "delta_CdxA_anemo": {"type": "number", "required": true, 
+                            "description": "Influence of anemometer and pole on measured CdxA",
+                            "units": "m²",
+                        },
                         "dist_float": {"type": "number", "required": true, 
                             "description": "Distance used for calculation of floatinig average signal used for stability criteria in low speeds.",
                             "units": "m",
@@ -124,6 +129,18 @@ Public Class cCriteria
                         },
                         "dist_grid_ms_max": {"type": "number", "required": true, 
                             "description": "Maximum allowed distance between MS center line and altitude grid points.",
+                            "units": "m",
+                        },
+                        "slope_max": {"type": "number", "required": true, 
+                            "description": "Maximum +/- gradient over measurement section.",
+                            "units": "%",
+                        },
+                        "length_MS_max": {"type": "number", "required": true, 
+                            "description": "Maximum length of measurement section as specified in *.csms-file.",
+                            "units": "m",
+                        },
+                        "length_MS_min": {"type": "number", "required": true, 
+                            "description": "Minimum length of measurement section as specified in *.csms-file.",
                             "units": "m",
                         },
                     }
@@ -180,18 +197,10 @@ Public Class cCriteria
                         },
 
                         "leng_crit": {"type": "number", "required": true, 
-                            "description": "Maximum absolute difference of distance driven with lenght of section as specified in configuration", 
-                            "units": "M", 
+                            "description": "Maximum absolute difference of distance driven with length of section as specified in configuration", 
+                            "units": "m", 
                         },
 
-                        "v_wind_avg_max_LS": {"type": "number", "required": true, 
-                            "description": "Maximum average wind speed during (low speed).", 
-                            "units": "m/s", 
-                        },
-                        "v_wind_1s_max_LS": {"type": "number", "required": true, 
-                            "description": "Maximum gust wind speed (low speed).", 
-                            "units": "m/s", 
-                        },
                         "v_veh_avg_min_LS": {"type": "number", "required": true, 
                             "description": "Minimum average vehicle speed (low speed).", 
                             "units": "km/h", 
@@ -210,7 +219,6 @@ Public Class cCriteria
                         "delta_n_ec_LS": {"type": "number", "required": true, 
                             "description": "+/- maximum relative deviation of variance of engine/card speed compared to variance in vehicle speed (used as plausibility check for engine speed signal) (low speed test)", 
                         },
-
                         "v_wind_avg_max_HS": {"type": "number", "required": true, 
                             "description": "Maximum average wind speed (high speed).", 
                             "units": "m/s", 
@@ -219,12 +227,12 @@ Public Class cCriteria
                             "description": "Maximum gust wind speed (high speed).", 
                             "units": "m/s", 
                         },
-                        "beta_avg_max_HS": {"type": "number", "required": true, 
-                            "description": "Maximum average beta during (high speed).", 
-                            "units": "°", 
-                        },
                         "v_veh_avg_min_HS": {"type": "number", "required": true, 
                             "description": "Minimum average vehicle speed (high speed).", 
+                            "units": "km/h", 
+                        },
+                        "v_veh_avg_max_HS": {"type": "number", "required": true, 
+                            "description": "Maximum average vehicle speed (high speed).", 
                             "units": "km/h", 
                         },
                         "v_veh_1s_delta_HS": {"type": "number", "required": true, 
@@ -237,11 +245,15 @@ Public Class cCriteria
                         "delta_n_ec_HS": {"type": "number", "required": true, 
                             "description": "+/- maximum relative deviation of variance of engine/card speed compared to variance in vehicle speed (used as plausibility check for engine/card speed signal) (high speed test).", 
                         },
-
-                        "delta_t_tyre_max": {"type": "number", "required": true, 
-                            "description": "Maximum variation of tyre temperature between high speeds and low speeds.", 
-                            "units": "°C", 
+                        "beta_avg_max_HS": {"type": "number", "required": true, 
+                            "description": "Maximum average beta during (high speed).", 
+                            "units": "°", 
                         },
+                        "delta_v_avg_min_HS": {"type": "number", "required": true, 
+                            "description": "Minimum range for average vehicle speed (high speed, overrules v_veh_ave_min_HS).", 
+                            "units": "km/h", 
+                        },
+
                         "delta_rr_corr_max": {"type": "number", "required": true, 
                             "description": "Maximum difference of RRC from the two low speed runs.", 
                             "units": "kg/t", 
@@ -252,10 +264,6 @@ Public Class cCriteria
                         },
                         "t_amb_max": {"type": "number", "required": true, 
                             "description": "Maximum ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only) .", 
-                            "units": "°C", 
-                        },
-                        "t_amb_var": {"type": "number", "required": true, 
-                            "description": "Maximum variation of ambient temperature (measured at the vehicle) during the tests (evaluated based on the used datasets only).", 
                             "units": "°C", 
                         },
                         "t_ground_max": {"type": "number", "required": true, 
@@ -318,9 +326,13 @@ Public Class cCriteria
     Public gradient_correction As Boolean '= True
     Public hz_out As Integer '= 1
     Public acc_corr_avg As Single
+    Public delta_CdxA_anemo As Single
     Public dist_float As Single
     Public dist_gridpoints_max As Single
     Public dist_grid_ms_max As Single
+    Public slope_max As Single
+    Public length_MS_max As Single
+    Public length_MS_min As Single
 
     ' Criteria
     Public trigger_delta_x_max As Single
@@ -336,8 +348,6 @@ Public Class cCriteria
     Public v_wind_avg_max_CAL As Single
     Public v_wind_1s_max_CAL As Single
     Public beta_avg_max_CAL As Single
-    Public v_wind_avg_max_LS As Single
-    Public v_wind_1s_max_LS As Single
     Public v_veh_avg_max_LS As Single
     Public v_veh_avg_min_LS As Single
     Public v_veh_float_delta_LS As Single
@@ -346,15 +356,15 @@ Public Class cCriteria
     Public v_wind_avg_max_HS As Single
     Public v_wind_1s_max_HS As Single
     Public v_veh_avg_min_HS As Single
-    Public beta_avg_max_HS As Single
+    Public v_veh_avg_max_HS As Single
     Public v_veh_1s_delta_HS As Single
     Public tq_sum_1s_delta_HS As Single
     Public delta_n_ec_HS As Single
-    Public delta_t_tyre_max As Single
+    Public beta_avg_max_HS As Single
+    Public delta_v_avg_min_HS As Single
     Public delta_rr_corr_max As Single
     Public t_amb_min As Single
     Public t_amb_max As Single
-    Public t_amb_var As Single
     Public t_ground_max As Single
 
 
@@ -368,9 +378,13 @@ Public Class cCriteria
         Me.gradient_correction = g("gradient_correction")
         Me.hz_out = g("hz_out")
         Me.acc_corr_avg = g("acc_corr_avg")
+        Me.delta_CdxA_anemo = g("delta_CdxA_anemo")
         Me.dist_float = g("dist_float")
         Me.dist_gridpoints_max = g("dist_gridpoints_max")
         Me.dist_grid_ms_max = g("dist_grid_ms_max")
+        Me.slope_max = g("slope_max")
+        Me.length_MS_max = g("length_MS_max")
+        Me.length_MS_min = g("length_MS_min")
 
         g = p("Validation")
         Me.trigger_delta_x_max = g("trigger_delta_x_max")
@@ -389,8 +403,6 @@ Public Class cCriteria
         Me.v_wind_1s_max_CAL = g("v_wind_1s_max_CAL")
         Me.beta_avg_max_CAL = g("beta_avg_max_CAL")
 
-        Me.v_wind_avg_max_LS = g("v_wind_avg_max_LS")
-        Me.v_wind_1s_max_LS = g("v_wind_1s_max_LS")
         Me.v_veh_avg_max_LS = g("v_veh_avg_max_LS")
         Me.v_veh_avg_min_LS = g("v_veh_avg_min_LS")
         Me.v_veh_float_delta_LS = g("v_veh_float_delta_LS")
@@ -399,15 +411,15 @@ Public Class cCriteria
 
         Me.v_wind_avg_max_HS = g("v_wind_avg_max_HS")
         Me.v_veh_avg_min_HS = g("v_veh_avg_min_HS")
+        Me.v_veh_avg_max_HS = g("v_veh_avg_max_HS")
         Me.v_wind_1s_max_HS = g("v_wind_1s_max_HS")
         Me.beta_avg_max_HS = g("beta_avg_max_HS")
         Me.v_veh_1s_delta_HS = g("v_veh_1s_delta_HS")
         Me.tq_sum_1s_delta_HS = g("tq_sum_1s_delta_HS")
         Me.delta_n_ec_HS = g("delta_n_ec_HS")
+        Me.delta_v_avg_min_HS = g("delta_v_avg_min_HS")
 
-        Me.delta_t_tyre_max = g("delta_t_tyre_max")
         Me.delta_rr_corr_max = g("delta_rr_corr_max")
-        Me.t_amb_var = g("t_amb_var")
         Me.t_ground_max = g("t_ground_max")
         Me.t_amb_max = g("t_amb_max")
         Me.t_amb_min = g("t_amb_min")
@@ -428,9 +440,13 @@ Public Class cCriteria
         g.hz_out = Me.hz_out
         g.rr_corr_factor = Me.rr_corr_factor
         g.acc_corr_avg = Me.acc_corr_avg
+        g.delta_CdxA_anemo = Me.delta_CdxA_anemo
         g.dist_float = Me.dist_float
         g.dist_gridpoints_max = Me.dist_gridpoints_max
         g.dist_grid_ms_max = Me.dist_grid_ms_max
+        g.slope_max = Me.slope_max
+        g.length_MS_max = Me.length_MS_max
+        g.length_MS_min = Me.length_MS_min
 
         g = b("Validation")
         g.trigger_delta_x_max = Me.trigger_delta_x_max
@@ -449,8 +465,6 @@ Public Class cCriteria
 
         g.leng_crit = Me.leng_crit
 
-        g.v_wind_avg_max_LS = Me.v_wind_avg_max_LS
-        g.v_wind_1s_max_LS = Me.v_wind_1s_max_LS
         g.v_veh_avg_min_LS = Me.v_veh_avg_min_LS
         g.v_veh_avg_max_LS = Me.v_veh_avg_max_LS
         g.v_veh_float_delta_LS = Me.v_veh_float_delta_LS
@@ -461,13 +475,13 @@ Public Class cCriteria
         g.v_wind_1s_max_HS = Me.v_wind_1s_max_HS
         g.beta_avg_max_HS = Me.beta_avg_max_HS
         g.v_veh_avg_min_HS = Me.v_veh_avg_min_HS
+        g.v_veh_avg_max_HS = Me.v_veh_avg_max_HS
         g.v_veh_1s_delta_HS = Me.v_veh_1s_delta_HS
         g.tq_sum_1s_delta_HS = Me.tq_sum_1s_delta_HS
         g.delta_n_ec_HS = Me.delta_n_ec_HS
+        g.delta_v_avg_min_HS = Me.delta_v_avg_min_HS
 
-        g.delta_t_tyre_max = Me.delta_t_tyre_max
         g.delta_rr_corr_max = Me.delta_rr_corr_max
-        g.t_amb_var = Me.t_amb_var
         g.t_ground_max = Me.t_ground_max
         g.t_amb_max = Me.t_amb_max
         g.t_amb_min = Me.t_amb_min

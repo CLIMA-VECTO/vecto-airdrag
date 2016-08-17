@@ -40,13 +40,15 @@ Public Class cJob
         b.fa_pe = 1
         b.fv_pe = 0
         b.beta_ame = 0
+        b.t_amb_LS1 = 0
+        b.v_avg_LS = 0
+        b.v_avg_HS = 0
         b.CdxAß = 0
         b.beta = 0
-        b.delta_CdxA = 0
+        b.delta_CdxA_beta = 0
+        b.CdxA0meas = 0
+        b.delta_CdxA_height = 0
         b.CdxA0 = 0
-        b.CdxA0_opt2 = 0
-        b.valid_t_amb = True
-        b.valid_t_ground = True
         b.valid_RRC = True
         Return b
     End Function
@@ -122,45 +124,59 @@ Public Class cJob
                     'default': 0,
                     "units": "°",
                 },
+                "t_amb_LS1": {
+                    "type": "number", 
+                    "description": "Average ambient temperature during first low speed test", 
+                    'default': 0,
+                    "units": "°",
+                },
+                "v_avg_LS": {
+                    "type": "number", 
+                    "description": "average vehicle speed used datasets low speed tests", 
+                    'default': 0,
+                    "units": "km/h",
+                },
+                "v_avg_HS": {
+                    "type": "number", 
+                    "description": "average vehicle speed used datasets high speed test", 
+                    'default': 0,
+                    "units": "km/h",
+                },
                 "CdxAß": {
                     "type": "number", 
                     "description": "Average CdxA before yaw angle correction", 
                     'default': 0,
-                    "units": "m^2",
+                    "units": "m²",
                 },
                 "beta": {
                     "type": "number", 
                     "description": "Average absolute yaw angle from high speed tests.", 
                     'default': 0,
-                    "units": "m^2",
+                    "units": "m²",
                 },
-                "delta_CdxA": {
+                "delta_CdxA_beta": {
                     "type": "number", 
                     "description": "Correction of CdxA for yaw angle.", 
                     'default': 0,
-                    "units": "m^2",
+                    "units": "m²",
+                },
+                "CdxA0meas": {
+                    "type": "number", 
+                    "description": "Correction of measured CdxA for zero yaw angle.", 
+                    'default': 0,
+                    "units": "m²",
+                },
+                "delta_CdxA_height": {
+                    "type": "number", 
+                    "description": "Correction of CdxA to reference vehicle height.", 
+                    'default': 0,
+                    "units": "m²",
                 },
                 "CdxA0": {
                     "type": "number", 
                     "description": "Correction of CdxA for zero yaw angle.", 
                     'default': 0,
-                    "units": "m^2",
-                },
-                "CdxA0_opt2": {
-                    "type": "number", 
-                    "description": "Average CdxA for zero yaw angle (yaw angle correction performed before averaging of measurement sections).", 
-                    'default': 0,
-                    "units": "m^2",
-                },
-                "valid_t_amb": {
-                    "type": "boolean", 
-                    "description": "Invalid if the ambient temperature fallen below minimum.", 
-                    'default': true,
-                },
-                "valid_t_ground": {
-                    "type": "boolean", 
-                    "description": "Invalid if the ground temperature is higher than allowed.", 
-                    'default': true,
+                    "units": "m²",
                 },
                 "valid_RRC": {
                     "type": "boolean", 
@@ -198,13 +214,15 @@ Public Class cJob
 
         Job.fv_veh = 0
         Job.fv_pe = 0
+        Job.t_amb_LS1 = 0
+        Job.v_avg_LS = 0
+        Job.v_avg_HS = 0
         Job.CdxAß = 0
         Job.beta = 0
-        Job.delta_CdxA = 0
+        Job.delta_CdxA_beta = 0
+        Job.CdxA0meas = 0
+        Job.delta_CdxA_height = 0
         Job.CdxA0 = 0
-        Job.CdxA0_opt2 = 0
-        Job.valid_t_amb = True
-        Job.valid_t_ground = True
         Job.valid_RRC = True
     End Sub
 
@@ -241,13 +259,15 @@ Public Class cJob
     Public fa_pe As Double
     Public fv_pe As Double
     Public beta_ame As Double
+    Public t_amb_LS1 As Double
+    Public v_avg_LS As Double
+    Public v_avg_HS As Double
     Public CdxAß As Double
     Public beta As Double
-    Public delta_CdxA As Double
+    Public delta_CdxA_beta As Double
+    Public CdxA0meas As Double
+    Public delta_CdxA_height As Double
     Public CdxA0 As Double
-    Public CdxA0_opt2 As Double
-    Public valid_t_amb As Boolean
-    Public valid_t_ground As Boolean
     Public valid_RRC As Boolean
 
     ''' <summary>Override it to set custome fields</summary>
@@ -258,13 +278,15 @@ Public Class cJob
         b.fa_pe = Math.Round(fa_pe, 3)
         b.fv_pe = Math.Round(fv_pe, 3)
         b.beta_ame = Math.Round(beta_ame, 2)
+        b.t_amb_LS1 = Math.Round(t_amb_LS1, 3)
+        b.v_avg_LS = Math.Round(v_avg_LS, 3)
+        b.v_avg_HS = Math.Round(v_avg_HS, 3)
         b.CdxAß = Math.Round(CdxAß, 5)
         b.beta = Math.Round(beta, 5)
-        b.delta_CdxA = Math.Round(delta_CdxA, 5)
+        b.delta_CdxA_beta = Math.Round(delta_CdxA_beta, 5)
+        b.CdxA0meas = Math.Round(CdxA0meas, 5)
+        b.delta_CdxA_height = Math.Round(delta_CdxA_height, 5)
         b.CdxA0 = Math.Round(CdxA0, 5)
-        b.CdxA0_opt2 = Math.Round(CdxA0_opt2, 5)
-        b.valid_t_amb = valid_t_amb
-        b.valid_t_ground = valid_t_ground
         b.valid_RRC = valid_RRC
 
         Crt.OnBeforeContentStored_hack()

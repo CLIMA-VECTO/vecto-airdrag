@@ -14,10 +14,9 @@ Module sub_linear_regression
     ' Main function for the calculate the regression
     Public Function fCalcReg(ByVal vehicle As cVehicle) As Boolean
         ' Declaration
-        Dim i, j, numLS1, numLS2, numHS, numHSg, numT, PosHS(), PosHSg(), lauf, t_amb_num As Integer
+        Dim i, j, numLS1, numLS2, numHS, numHSg, numT, PosHS(), PosHSg(), lauf, anzLS1, anzLS2, anzHS As Integer
         Dim XLS1_Array(,), XLS2_Array(,), XHS_Array(,), XHSg_Array(,), XHS_S(1, 1), YLS1_Array(), YLS2_Array(), YHS_Array(), YHSg_Array(), YHS_S(1) As Double
-        Dim XLR(,), YLR(), WFLR(,), F0, F2, F095, F295, R2, Rho_air_LS1, Rho_air_LS2, t_amb_f, t_amb_max_f, t_amb_min_f, t_ground_max_f As Double
-        Dim FirstInLS1, FirstInLS2, FirstInHS, FirstInGes As Boolean
+        Dim XLR(,), YLR(), WFLR(,), F0, F2, F095, F295, R2, Rho_air_LS1, Rho_air_LS2 As Double
         Dim EnumStr As tCompErgReg
 
         ' Output on the GUI
@@ -25,20 +24,19 @@ Module sub_linear_regression
 
         ' Initialisation
         lauf = -1
-        t_amb_f = 0
-        t_amb_max_f = 0
-        t_amb_min_f = 0
-        t_ground_max_f = 0
-        t_amb_num = 0
-        FirstInGes = True
+        anzLS1 = 0
+        anzLS2 = 0
+        anzHS = 0
         ErgValuesReg = New Dictionary(Of tCompErgReg, List(Of Double))
         Job.CdxAß = 0
+        Job.CdxA0meas = 0
         Job.CdxA0 = 0
-        Job.CdxA0_opt2 = 0
-        Job.delta_CdxA = 0
+        Job.delta_CdxA_beta = 0
+        Job.delta_CdxA_height = 0
         Job.beta = 0
-        Job.valid_t_amb = True
-        Job.valid_t_ground = True
+        Job.t_amb_LS1 = 0
+        Job.v_avg_LS = 0
+        Job.v_avg_HS = 0
         Job.valid_RRC = True
 
         ' Generate the result dictionary variables
@@ -57,9 +55,6 @@ Module sub_linear_regression
                 lauf += 1
                 Rho_air_LS1 = 0
                 Rho_air_LS2 = 0
-                FirstInLS1 = True
-                FirstInLS2 = True
-                FirstInHS = True
                 ReDim XLS1_Array(1, 0)
                 ReDim XLS2_Array(1, 0)
                 ReDim XHS_Array(1, 0)
@@ -98,18 +93,11 @@ Module sub_linear_regression
                                     XLS1_Array(1, UBound(XLS1_Array, 2)) = ErgValuesComp(tCompErg.v_air_sq)(j)
                                     YLS1_Array(UBound(YLS1_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
 
-                                    ' Add values for t_tire_min/max and rho_air into the result dictionary
-                                    If OptPar(3) Then
-                                        If FirstInLS1 Then
-                                            ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                            ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                            FirstInLS1 = False
-                                        Else
-                                            If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                            If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                        End If
-                                    End If
+                                    ' Add values for v, t and rho_air into the result dictionary
                                     Rho_air_LS1 += ErgValuesComp(tCompErg.rho_air)(j)
+                                    Job.v_avg_LS += ErgValuesComp(tCompErg.v_veh)(j)
+                                    Job.t_amb_LS1 += ErgValuesComp(tCompErg.t_amb_veh)(j)
+                                    anzLS1 += 1
                                 Case IDLS2
                                     ' Initialise
                                     ReDim Preserve XLS2_Array(1, UBound(XLS2_Array, 2) + 1)
@@ -121,18 +109,10 @@ Module sub_linear_regression
                                     XLS2_Array(1, UBound(XLS2_Array, 2)) = ErgValuesComp(tCompErg.v_air_sq)(j)
                                     YLS2_Array(UBound(YLS2_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
 
-                                    ' Add values for t_tire_min/max and rho_air into the result dictionary
-                                    If OptPar(3) Then
-                                        If FirstInLS2 Then
-                                            ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                            ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                            FirstInLS2 = False
-                                        Else
-                                            If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                            If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                        End If
-                                    End If
+                                    ' Add values for v, t and rho_air into the result dictionary
                                     Rho_air_LS2 += ErgValuesComp(tCompErg.rho_air)(j)
+                                    Job.v_avg_LS += ErgValuesComp(tCompErg.v_veh)(j)
+                                    anzLS2 += 1
                                 Case IDHS
                                     ' Initialise
                                     ReDim Preserve XHS_Array(1, UBound(XHS_Array, 2) + 1)
@@ -146,33 +126,11 @@ Module sub_linear_regression
                                     XHS_Array(1, UBound(XHS_Array, 2)) = ErgValuesComp(tCompErg.v_air_sq)(j)
                                     YHS_Array(UBound(YHS_Array)) = ErgValuesComp(tCompErg.F_res_ref)(j)
 
-                                    ' Add values for t_tire_min/max and beta_HS into the result dictionary
-                                    If OptPar(3) Then
-                                        If FirstInHS Then
-                                            ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                            ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).Add(ErgValuesComp(tCompErg.t_tire)(j))
-                                            FirstInHS = False
-                                        Else
-                                            If ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) < ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                            If ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) > ErgValuesComp(tCompErg.t_tire)(j) Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) = ErgValuesComp(tCompErg.t_tire)(j)
-                                        End If
-                                    End If
+                                    ' Add values for v, t and beta_HS into the result dictionary
                                     ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) += ErgValuesComp(tCompErg.beta_abs)(j)
+                                    Job.v_avg_HS += ErgValuesComp(tCompErg.v_veh)(j)
+                                    anzHS += 1
                             End Select
-
-                            ' Add values for tempreture into the result dictionary
-                            t_amb_f += ErgValuesComp(tCompErg.t_amb_veh)(j)
-                            t_amb_num += 1
-                            If FirstInGes Then
-                                t_amb_max_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
-                                t_amb_min_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
-                                If OptPar(2) Then t_ground_max_f = ErgValuesComp(tCompErg.t_ground)(j)
-                                FirstInGes = False
-                            Else
-                                If t_amb_max_f < ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_max_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
-                                If t_amb_min_f > ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_min_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
-                                If OptPar(2) Then If t_ground_max_f < ErgValuesComp(tCompErg.t_ground)(j) Then t_ground_max_f = ErgValuesComp(tCompErg.t_ground)(j)
-                            End If
                         End If
 
                         ' Extra calculation with not used values
@@ -194,28 +152,6 @@ Module sub_linear_regression
 
                 ' Check if the section is measured in every test run (LS1/2 and HS)
                 If numLS1 >= 1 And numLS2 >= 1 And numHS >= 2 Then
-                    ' Add values for tempreture into the result dictionary from the valid tests
-                    For j = i To ErgValuesComp(tCompErg.SecID).Count - 1
-                        ' Find all with the same SecID and DirID 
-                        If ErgValuesComp(tCompErg.SecID)(i) = ErgValuesComp(tCompErg.SecID)(j) And ErgValuesComp(tCompErg.DirID)(i) = ErgValuesComp(tCompErg.DirID)(j) Then
-                            ' If the measurement is true add it
-                            If ErgValuesComp(tCompErg.used)(j) = 1 Then
-                                t_amb_f += ErgValuesComp(tCompErg.t_amb_veh)(j)
-                                t_amb_num += 1
-                                If FirstInGes Then
-                                    t_amb_max_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
-                                    t_amb_min_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
-                                    If OptPar(2) Then t_ground_max_f = ErgValuesComp(tCompErg.t_ground)(j)
-                                    FirstInGes = False
-                                Else
-                                    If t_amb_max_f < ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_max_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
-                                    If t_amb_min_f > ErgValuesComp(tCompErg.t_amb_veh)(j) Then t_amb_min_f = ErgValuesComp(tCompErg.t_amb_veh)(j)
-                                    If OptPar(2) Then If t_ground_max_f < ErgValuesComp(tCompErg.t_ground)(j) Then t_ground_max_f = ErgValuesComp(tCompErg.t_ground)(j)
-                                End If
-                            End If
-                        End If
-                    Next j
-
                     '***** Calculate the linear regression for LS1
                     ' Redeminisionate the arrays
                     numT = numLS1 + numHS
@@ -294,27 +230,14 @@ Module sub_linear_regression
                     ErgValuesReg(tCompErgReg.delta_CdxA_singleMS).Add(fCalcGenShp(ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf), vehicle))
                     ErgValuesReg(tCompErgReg.CdxA0_singleMS).Add(ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) - ErgValuesReg(tCompErgReg.delta_CdxA_singleMS)(lauf))
 
-                    'If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) - Crt.delta_t_tyre_max) Or _
-                    '   ErgValuesReg(tCompErgReg.t_tire_ave_LS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_LS_max)(lauf) - Crt.delta_t_tyre_max) Or _
-                    '   ErgValuesReg(tCompErgReg.t_tire_ave_HS_min)(lauf) < (ErgValuesReg(tCompErgReg.t_tire_ave_HS_max)(lauf) - Crt.delta_t_tyre_max) Then
-                    '    ErgValuesReg(tCompErgReg.valid_t_tire).Add(0)
-                    'Else
-                    '    ErgValuesReg(tCompErgReg.valid_t_tire).Add(1)
-                    'End If
-
                     ' Summerise for the endresults
                     Job.CdxAß += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf)
                     Job.beta += ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf)
-                    Job.CdxA0_opt2 += ErgValuesReg(tCompErgReg.CdxA0_singleMS)(lauf)
                 Else
                     ' Clear the data in the result dictionary
                     If ErgValuesReg(tCompErgReg.SecID).Count > 0 Then ErgValuesReg(tCompErgReg.SecID).RemoveAt(lauf)
                     If ErgValuesReg(tCompErgReg.DirID).Count > 0 Then ErgValuesReg(tCompErgReg.DirID).RemoveAt(lauf)
                     If ErgValuesReg(tCompErgReg.beta_ave_singleMS).Count > 0 Then ErgValuesReg(tCompErgReg.beta_ave_singleMS).RemoveAt(lauf)
-                    If ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).Count > 0 Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_max).RemoveAt(lauf)
-                    If ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).Count > 0 Then ErgValuesReg(tCompErgReg.t_tire_ave_HS_min).RemoveAt(lauf)
-                    If ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).Count > 0 Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_max).RemoveAt(lauf)
-                    If ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).Count > 0 Then ErgValuesReg(tCompErgReg.t_tire_ave_LS_min).RemoveAt(lauf)
                     lauf -= 1
                 End If
             End If
@@ -323,26 +246,14 @@ Module sub_linear_regression
         ' Calculate the Endresults
         Job.CdxAß = Job.CdxAß / (lauf + 1)
         Job.beta = Job.beta / (lauf + 1)
-        Job.delta_CdxA = fCalcGenShp(Job.beta, vehicle)
-        Job.CdxA0_opt2 = Job.CdxA0_opt2 / (lauf + 1)
-        Job.CdxA0 = Job.CdxAß - Job.delta_CdxA
+        Job.delta_CdxA_beta = fCalcGenShp(Job.beta, vehicle) * (-1)
+        Job.CdxA0meas = Job.CdxAß + Job.delta_CdxA_beta
+        Job.delta_CdxA_height = (Job.CdxA0meas * (GenShape.h_ref(fFindGenShp(vehicle)) / vehicle.vehHeight)) - Job.CdxA0meas
+        Job.CdxA0 = Job.CdxA0meas + Job.delta_CdxA_height + Crt.delta_CdxA_anemo
+        Job.t_amb_LS1 = Job.t_amb_LS1 / anzLS1
+        Job.v_avg_LS = Job.v_avg_LS / (anzLS1 + anzLS2)
+        Job.v_avg_HS = Job.v_avg_HS / (anzHS)
 
-        ' Test validation
-        t_amb_f = t_amb_f / t_amb_num
-        If (t_amb_f - t_amb_min_f) > Crt.t_amb_var Or (t_amb_max_f - t_amb_f) > Crt.t_amb_var Then
-            logme(9, False, "Invalid test - variation of ambient temperature (at the vehicle) outside boundaries")
-            Job.valid_t_amb = False
-        End If
-
-        If t_amb_max_f > Crt.t_amb_max Then
-            logme(9, False, "Invalid test - maximum ambient temperature exceeded")
-        ElseIf t_amb_min_f < Crt.t_amb_min Then
-            logme(9, False, "Invalid test - fallen below minimum ambient temperature")
-        End If
-        If OptPar(2) And t_ground_max_f > Crt.t_ground_max Then
-            logme(9, False, "Invalid test - range of ground temperature exceeded")
-            Job.valid_t_ground = False
-        End If
         Return True
     End Function
 
@@ -431,6 +342,23 @@ Module sub_linear_regression
         Next i
 
         Return ValueX
+    End Function
+
+    ' Function to generic shape curve
+    Private Function fFindGenShp(ByVal vehicleX As cVehicle) As Integer
+        ' Declaration
+        Dim i, pos As Integer
+
+        ' Find the correct curve
+        pos = 0
+        For i = 0 To GenShape.veh_class.Count - 1
+            If GenShape.veh_class(i) = vehicleX.classCode And GenShape.veh_conf(i) = vehicleX.configuration Then
+                pos = i
+                Exit For
+            End If
+        Next i
+
+        Return pos
     End Function
 
     ' Calculate the linear regression

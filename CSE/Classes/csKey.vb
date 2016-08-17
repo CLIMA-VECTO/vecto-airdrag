@@ -27,8 +27,6 @@ Public Class csKeyMeas
     Public longi As String = "<LONG>"
     Public lati_D As String = "<LAT_D>"
     Public longi_D As String = "<LONG_D>"
-    Public lati_S As String = "<LAT_S>"
-    Public longi_S As String = "<LONG_S>"
     Public hdg As String = "<HDG>"
     Public v_veh_GPS As String = "<V_VEH_GPS>"
     Public v_veh_CAN As String = "<V_VEH_CAN>"
@@ -40,8 +38,6 @@ Public Class csKeyMeas
     Public tq_r As String = "<TQ_R>"
     Public t_ground As String = "<T_GROUND>"
     Public t_amb_veh As String = "<T_AMB_VEH>"
-    Public t_tire As String = "<T_TIRE>"
-    Public p_tire As String = "<P_TIRE>"
     Public trigger As String = "<TRIGGER>"
     Public valid As String = "<VALID>"
 End Class

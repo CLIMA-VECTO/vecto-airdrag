@@ -546,15 +546,17 @@ Public Class F_Main
         If RB1Hz.Checked Then Crt.hz_out = 1
         If RB100Hz.Checked Then Crt.hz_out = 100
 
+        ' Anemometer correction
+        Crt.delta_CdxA_anemo = TB_delta_CdxA_anemo.Text
+
         ' Altitude
         Crt.dist_gridpoints_max = TB_dist_gridpoints_max.Text
         Crt.dist_grid_ms_max = TB_dist_grid_ms_max.Text
+        Crt.slope_max = TB_slope_max.Text
 
         'Parameter boxes
         ' General valid criteria
-        Crt.delta_t_tyre_max = TB_delta_t_tyre_max.Text
         Crt.delta_rr_corr_max = TB_delta_rr_corr_max.Text
-        Crt.t_amb_var = TB_t_amb_var.Text
         Crt.t_ground_max = TB_t_ground_max.Text
         Crt.t_amb_max = TB_t_amb_max.Text
         Crt.t_amb_min = TB_t_amb_min.Text
@@ -567,6 +569,8 @@ Public Class F_Main
         Crt.trigger_delta_x_max = TB_trigger_delta_x_max.Text
         Crt.trigger_delta_y_max = TB_trigger_delta_y_max.Text
         Crt.delta_head_max = TB_delta_head_max.Text
+        Crt.length_MS_max = TB_length_MS_max.Text
+        Crt.length_MS_min = TB_length_MS_min.Text
         ' Requirements on number of valid datasets
         Crt.segruns_min_CAL = TB_segruns_min_CAL.Text
         Crt.segruns_min_LS = TB_segruns_min_LS.Text
@@ -581,8 +585,6 @@ Public Class F_Main
         ' Low and high speed test
         Crt.leng_crit = TB_leng_crit.Text
         ' Low speed test
-        Crt.v_wind_avg_max_LS = TB_v_wind_avg_max_LS.Text
-        Crt.v_wind_1s_max_LS = TB_v_wind_1s_max_LS.Text
         Crt.v_veh_avg_max_LS = TB_v_veh_avg_max_LS.Text
         Crt.v_veh_avg_min_LS = TB_v_veh_avg_min_LS.Text
         Crt.v_veh_float_delta_LS = TB_v_veh_float_delta_LS.Text
@@ -592,10 +594,12 @@ Public Class F_Main
         Crt.v_wind_avg_max_HS = TB_v_wind_avg_max_HS.Text
         Crt.v_wind_1s_max_HS = TB_v_wind_1s_max_HS.Text
         Crt.v_veh_avg_min_HS = TB_v_veh_avg_min_HS.Text
-        Crt.beta_avg_max_HS = TB_beta_avg_max_HS.Text
+        Crt.v_veh_avg_max_HS = TB_v_veh_avg_max_HS.Text
         Crt.v_veh_1s_delta_HS = TB_v_veh_1s_delta_HS.Text
         Crt.tq_sum_1s_delta_HS = TB_tq_sum_1s_delta_HS.Text
         Crt.delta_n_ec_HS = TB_delta_n_ec_HS.Text
+        Crt.beta_avg_max_HS = TB_beta_avg_max_HS.Text
+        Crt.delta_v_avg_min_HS = TB_delta_v_avg_min_HS.Text
     End Sub
 
     Sub UI_PopulateFromJob()
@@ -618,9 +622,7 @@ Public Class F_Main
     Sub UI_PopulateFromCriteria()
         ' Write the Standard values in the textboxes
         ' General valid criteria
-        TB_delta_t_tyre_max.Text = Crt.delta_t_tyre_max
         TB_delta_rr_corr_max.Text = Crt.delta_rr_corr_max
-        TB_t_amb_var.Text = Crt.t_amb_var
         TB_t_ground_max.Text = Crt.t_ground_max
         TB_t_amb_max.Text = Crt.t_amb_max
         TB_t_amb_min.Text = Crt.t_amb_min
@@ -633,6 +635,8 @@ Public Class F_Main
         TB_trigger_delta_x_max.Text = Crt.trigger_delta_x_max
         TB_trigger_delta_y_max.Text = Crt.trigger_delta_y_max
         TB_delta_head_max.Text = Crt.delta_head_max
+        TB_length_MS_max.Text = Crt.length_MS_max
+        TB_length_MS_min.Text = Crt.length_MS_min
         ' Requirements on number of valid datasets
         TB_segruns_min_CAL.Text = Crt.segruns_min_CAL
         TB_segruns_min_LS.Text = Crt.segruns_min_LS
@@ -647,8 +651,6 @@ Public Class F_Main
         ' Low and high speed test
         TB_leng_crit.Text = Crt.leng_crit
         ' Low speed test
-        TB_v_wind_avg_max_LS.Text = Crt.v_wind_avg_max_LS
-        TB_v_wind_1s_max_LS.Text = Crt.v_wind_1s_max_LS
         TB_v_veh_avg_min_LS.Text = Crt.v_veh_avg_min_LS
         TB_v_veh_avg_max_LS.Text = Crt.v_veh_avg_max_LS
         TB_v_veh_float_delta_LS.Text = Crt.v_veh_float_delta_LS
@@ -658,16 +660,21 @@ Public Class F_Main
         TB_v_wind_avg_max_HS.Text = Crt.v_wind_avg_max_HS
         TB_v_wind_1s_max_HS.Text = Crt.v_wind_1s_max_HS
         TB_v_veh_avg_min_HS.Text = Crt.v_veh_avg_min_HS
-        TB_beta_avg_max_HS.Text = Crt.beta_avg_max_HS
+        TB_v_veh_avg_max_HS.Text = Crt.v_veh_avg_max_HS
         TB_v_veh_1s_delta_HS.Text = Crt.v_veh_1s_delta_HS
         TB_tq_sum_1s_delta_HS.Text = Crt.tq_sum_1s_delta_HS
         TB_delta_n_ec_HS.Text = Crt.delta_n_ec_HS
+        TB_beta_avg_max_HS.Text = Crt.beta_avg_max_HS
+        TB_delta_v_avg_min_HS.Text = Crt.delta_v_avg_min_HS
         ' Evaluation box
         CB_accel_correction.Checked = Crt.accel_correction
         CB_gradient_correction.Checked = Crt.gradient_correction
         ' Altitude
         TB_dist_gridpoints_max.Text = Crt.dist_gridpoints_max
         TB_dist_grid_ms_max.Text = Crt.dist_grid_ms_max
+        TB_slope_max.Text = Crt.slope_max
+        ' Anemometer correction
+        TB_delta_CdxA_anemo.Text = Crt.delta_CdxA_anemo
 
         ' Output
         If Crt.hz_out = 1 Then
@@ -996,13 +1003,13 @@ Public Class F_Main
 #Region "Options tab"
 
     ' Check if the input is a number
-    Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_delta_t_tyre_max.KeyPress, TB_delta_rr_corr_max.KeyPress, TB_t_amb_var.KeyPress, _
+    Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_length_MS_max.KeyPress, TB_delta_rr_corr_max.KeyPress, _
         TB_t_ground_max.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
         TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_MS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
-        TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_delta_n_ec_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_v_wind_1s_max_LS.KeyPress, TB_v_wind_avg_max_LS.KeyPress, TB_delta_n_ec_LS.KeyPress, _
-        TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress, TB_dist_gridpoints_max.KeyPress, TB_dist_grid_ms_max.KeyPress
+        TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_delta_n_ec_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_slope_max.KeyPress, TB_length_MS_min.KeyPress, TB_delta_n_ec_LS.KeyPress, _
+        TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress, TB_dist_gridpoints_max.KeyPress, TB_dist_grid_ms_max.KeyPress, TB_v_veh_avg_max_HS.KeyPress, TB_delta_v_avg_min_HS.KeyPress, TB_delta_CdxA_anemo.KeyPress
         Select Case Asc(e.KeyChar)
-            Case 48 To 57, 46 ' Zahlen zulassen (ASCII)
+            Case 8, 45 To 46, 48 To 57 ' Backspace, Minus, Punkt und Zahlen zulassen (ASCII)
             Case Else ' Alles andere Unterdrücken
                 e.Handled = True
         End Select
@@ -1089,12 +1096,16 @@ Public Class F_Main
         controls = New Control() {
                 Me.CB_accel_correction, Nothing, _
                 Me.CB_gradient_correction, Nothing, _
-                Me.TB_rr_corr_factor, Me.Label2, _
+                Me.TB_rr_corr_factor, Me.LArr_corr_factor, _
                 Me.GB_hz_out, Nothing, _
                 Me.TB_acc_corr_avg, Me.LAccCorrAve, _
+                Me.TB_delta_CdxA_anemo, Me.LB_delta_CdxA_anemo, _
                 Me.TB_dist_float, Me.LDistFloat, _
                 Me.TB_dist_gridpoints_max, Me.LB_dist_gridpoints_max, _
-                Me.TB_dist_grid_ms_max, Me.LB_dist_grid_ms_max _
+                Me.TB_dist_grid_ms_max, Me.LB_dist_grid_ms_max, _
+                Me.TB_slope_max, LB_slope_max, _
+                Me.TB_length_MS_max, LB_length_MS_max, _
+                Me.TB_length_MS_min, LB_length_MS_min _
         }
         schema = New cCriteria(True).BodySchema.SelectToken("properties.Processing")
         armControlsWithInfoBox(schema, controls, AddressOf showInfoBox_crt, AddressOf hideInfoBox_crt)
@@ -1114,8 +1125,6 @@ Public Class F_Main
             TB_v_wind_1s_max_CAL, LvWind1sCALMax, _
             TB_beta_avg_max_CAL, LBetaAveCALMax, _
             TB_leng_crit, LLengCrit, _
-            TB_v_wind_avg_max_LS, LvWindAveLSMax, _
-            TB_v_wind_1s_max_LS, LvWind1sLSMax, _
             TB_v_veh_avg_min_LS, LB_v_veh_avg_min_LS, _
             TB_v_veh_avg_max_LS, LB_v_veh_avg_max_LS, _
             TB_v_veh_float_delta_LS, LB_v_veh_float_delta_LS, _
@@ -1125,14 +1134,14 @@ Public Class F_Main
             TB_v_wind_1s_max_HS, LB_v_wind_1s_max_HS, _
             TB_beta_avg_max_HS, LB_beta_avg_max_HS, _
             TB_v_veh_avg_min_HS, LB_v_veh_avg_min_HS, _
+            TB_v_veh_avg_max_HS, LB_v_veh_avg_max_HS, _
             TB_v_veh_1s_delta_HS, LB_v_veh_1s_delta_HS, _
             TB_tq_sum_1s_delta_HS, LB_tq_sum_1s_delta_HS, _
             TB_delta_n_ec_HS, LB_delta_n_ec_HS, _
-            TB_delta_t_tyre_max, LB_delta_t_tyre_max, _
+            TB_delta_v_avg_min_HS, LB_delta_v_avg_min_HS, _
             TB_delta_rr_corr_max, LB_delta_rr_corr_max, _
             TB_t_amb_min, LB_t_amb_min, _
             TB_t_amb_max, LB_t_amb_max, _
-            TB_t_amb_var, LB_t_amb_var, _
             TB_t_ground_max, LB_t_amb_tarmac _
         }
         schema = New cCriteria(True).BodySchema.SelectToken("properties.Validation")

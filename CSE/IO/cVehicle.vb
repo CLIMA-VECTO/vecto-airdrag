@@ -38,6 +38,7 @@ Public Class cVehicle
         Return JObject.Parse(<json>{
                 "vehClass":         null,
                 "configuration":    null,
+                "vVehMax":          null,
                 "vehHeight":        null,
                 "anemometerHeight": null,
                 "testMass":         null,
@@ -68,7 +69,12 @@ The generic parameters for classes are stored in the GenShape.shp",
                     "enum": ["rigid", "tractor"],
                     "required": true,
                     "title": "Vehicle is rigid or track'n tractor?", 
-                },  
+                }, 
+                "vVehMax": {
+                    "title": "Vehicle maximum design speed [km/h]", 
+                    "type":"number",                     
+                    "required": true,
+                }, 
                 "vehHeight": {
                     "title": "Vehicle height [m]", 
                     "type":"number",                     
@@ -183,6 +189,14 @@ The generic parameters for classes are stored in the GenShape.shp",
         End Get
         Set(ByVal value As VehicleConfig)
             Me.Body("configuration") = value.ToString()
+        End Set
+    End Property
+    Public Property vVehMax As Double
+        Get
+            Return Me.Body("vVehMax")
+        End Get
+        Set(ByVal value As Double)
+            Me.Body("vVehMax") = value
         End Set
     End Property
     Public Property vehHeight As Double

@@ -13,10 +13,8 @@ Module AirDrag_Globals
         t
         lati
         lati_D
-        lati_S
         longi
         longi_D
-        longi_S
         hdg
         v_veh_GPS
         v_veh_CAN
@@ -28,8 +26,6 @@ Module AirDrag_Globals
         tq_r
         t_ground
         t_amb_veh
-        t_tire
-        p_tire
         trigger
         user_valid
         Undefined
@@ -67,8 +63,6 @@ Module AirDrag_Globals
         alt
         slope_deg
         omega_wh
-        omega_wh_acc
-        omega_p_wh_acc
         tq_sum
         tq_sum_1s
         t_float
@@ -121,9 +115,6 @@ Module AirDrag_Globals
         v_wind_1s_max
         beta_avg
         dist
-        omega_wh
-        omega_wh_acc
-        omega_p_wh_acc
         tq_sum_1s
         t_float
         tq_sum_float
@@ -154,8 +145,6 @@ Module AirDrag_Globals
         tq_sum_float_min
         vp_H2O
         rho_air
-        t_tire
-        p_tire
         val_User
         val_vVeh_avg
         val_vVeh_1s
@@ -167,8 +156,11 @@ Module AirDrag_Globals
         val_beta
         val_dist
         val_n_eng
+        val_t_amb
+        val_t_ground
         CdxAß_singleDS
         r_dyn
+        tq_grd
     End Enum
 
     Public Enum tCompErgReg
@@ -191,10 +183,6 @@ Module AirDrag_Globals
         CdxAß_ave_singleMS
         delta_CdxA_singleMS
         CdxA0_singleMS
-        t_tire_ave_LS_min
-        t_tire_ave_LS_max
-        t_tire_ave_HS_min
-        t_tire_ave_HS_max
     End Enum
 
 
@@ -207,14 +195,10 @@ Module AirDrag_Globals
                 Return tComp.lati
             Case sKey.Meas.lati_D
                 Return tComp.lati_D
-            Case sKey.Meas.lati_S
-                Return tComp.lati_S
             Case sKey.Meas.longi
                 Return tComp.longi
             Case sKey.Meas.longi_D
                 Return tComp.longi_D
-            Case sKey.Meas.longi_S
-                Return tComp.longi_S
             Case sKey.Meas.hdg
                 Return tComp.hdg
             Case sKey.Meas.v_veh_GPS
@@ -237,10 +221,6 @@ Module AirDrag_Globals
                 Return tComp.t_ground
             Case sKey.Meas.t_amb_veh
                 Return tComp.t_amb_veh
-            Case sKey.Meas.t_tire
-                Return tComp.t_tire
-            Case sKey.Meas.p_tire
-                Return tComp.p_tire
             Case sKey.Meas.trigger
                 Return tComp.trigger
             Case sKey.Meas.valid
@@ -294,10 +274,6 @@ Module AirDrag_Globals
                 Return "Lat_D"
             Case tComp.longi_D
                 Return "Long_D"
-            Case tComp.lati_S
-                Return "Lat_S"
-            Case tComp.longi_S
-                Return "Long_S"
             Case tComp.hdg
                 Return "Heading"
             Case tComp.v_veh_GPS
@@ -320,10 +296,6 @@ Module AirDrag_Globals
                 Return "t_ground"
             Case tComp.t_amb_veh
                 Return "t_amb_veh"
-            Case tComp.t_tire
-                Return "t_tire"
-            Case tComp.p_tire
-                Return "p_tire"
             Case tComp.trigger
                 Return "trigger"
             Case tComp.user_valid
@@ -347,10 +319,6 @@ Module AirDrag_Globals
                 Return "[dd.dd]"
             Case tComp.longi_D
                 Return "[dd.dd]"
-            Case tComp.lati_S
-                Return "[ss.ss]"
-            Case tComp.longi_S
-                Return "[ss.ss]"
             Case tComp.hdg
                 Return "[°]"
             Case tComp.v_veh_GPS
@@ -373,10 +341,6 @@ Module AirDrag_Globals
                 Return "[°C]"
             Case tComp.t_amb_veh
                 Return "[°C]"
-            Case tComp.t_tire
-                Return "[°C]"
-            Case tComp.p_tire
-                Return "[bar]"
             Case tComp.trigger
                 Return "[-]"
             Case tComp.user_valid
@@ -451,10 +415,6 @@ Module AirDrag_Globals
                 Return "slope_deg"
             Case tCompCali.omega_wh
                 Return "omega_wh"
-            Case tCompCali.omega_wh_acc
-                Return "omega_wh_acc"
-            Case tCompCali.omega_p_wh_acc
-                Return "omega_p_wh_acc"
             Case tCompCali.tq_sum
                 Return "tq_sum"
             Case tCompCali.tq_sum_1s
@@ -558,10 +518,6 @@ Module AirDrag_Globals
                 Return "[°]"
             Case tCompCali.omega_wh
                 Return "[rad/s]"
-            Case tCompCali.omega_wh_acc
-                Return "[rad/s]"
-            Case tCompCali.omega_p_wh_acc
-                Return "[rad/s2]"
             Case tCompCali.tq_sum
                 Return "[Nm]"
             Case tCompCali.tq_sum_1s
@@ -709,12 +665,6 @@ Module AirDrag_Globals
                 Return "beta_avg"
             Case tCompErg.dist
                 Return "delta s"
-            Case tCompErg.omega_wh
-                Return "omega_wh"
-            Case tCompErg.omega_wh_acc
-                Return "omega_wh_acc"
-            Case tCompErg.omega_p_wh_acc
-                Return "omega_p_wh_acc"
             Case tCompErg.tq_sum_1s
                 Return "tq_sum_1s"
             Case tCompErg.t_float
@@ -775,10 +725,6 @@ Module AirDrag_Globals
                 Return "vp_H2O"
             Case tCompErg.rho_air
                 Return "rho_air"
-            Case tCompErg.t_tire
-                Return "t_tire"
-            Case tCompErg.p_tire
-                Return "p_tire"
             Case tCompErg.val_User
                 Return "val_User"
             Case tCompErg.val_vVeh_avg
@@ -807,10 +753,16 @@ Module AirDrag_Globals
                 Else
                     Return "ERROR"
                 End If
+            Case tCompErg.val_t_amb
+                Return "val_t_amb"
+            Case tCompErg.val_t_ground
+                Return "val_t_ground"
             Case tCompErg.CdxAß_singleDS
                 Return "CdxA(ß)_singleDS"
             Case tCompErg.r_dyn
                 Return "r_dyn"
+            Case tCompErg.tq_grd
+                Return "tq_grd"
             Case Else
                 Return "ERROR"
         End Select
@@ -880,12 +832,6 @@ Module AirDrag_Globals
                 Return "[°]"
             Case tCompErg.dist
                 Return "[m]"
-            Case tCompErg.omega_wh
-                Return "[rad/s]"
-            Case tCompErg.omega_wh_acc
-                Return "[rad/s]"
-            Case tCompErg.omega_p_wh_acc
-                Return "[rad/s2]"
             Case tCompErg.tq_sum_1s
                 Return "[Nm]"
             Case tCompErg.t_float
@@ -946,10 +892,6 @@ Module AirDrag_Globals
                 Return "[Pa]"
             Case tCompErg.rho_air
                 Return "[kg/m3]"
-            Case tCompErg.t_tire
-                Return "[°C]"
-            Case tCompErg.p_tire
-                Return "[bar]"
             Case tCompErg.val_User
                 Return "[-]"
             Case tCompErg.val_vVeh_avg
@@ -972,10 +914,16 @@ Module AirDrag_Globals
                 Return "[-]"
             Case tCompErg.val_n_eng
                 Return "[-]"
+            Case tCompErg.val_t_amb
+                Return "[-]"
+            Case tCompErg.val_t_ground
+                Return "[-]"
             Case tCompErg.CdxAß_singleDS
                 Return "[m2]"
             Case tCompErg.r_dyn
                 Return "[m]"
+            Case tCompErg.tq_grd
+                Return "[Nm]"
             Case Else
                 Return "ERROR"
         End Select
@@ -1021,14 +969,6 @@ Module AirDrag_Globals
                 Return "delta_CdxA_singleMS"
             Case tCompErgReg.beta_ave_singleMS
                 Return "beta_ave_singleMS"
-            Case tCompErgReg.t_tire_ave_LS_max
-                Return "t_tire_ave_LS_max"
-            Case tCompErgReg.t_tire_ave_LS_min
-                Return "t_tire_ave_LS_min"
-            Case tCompErgReg.t_tire_ave_HS_max
-                Return "t_tire_ave_HS_max"
-            Case tCompErgReg.t_tire_ave_HS_min
-                Return "t_tire_ave_HS_min"
             Case Else
                 Return "ERROR"
         End Select
@@ -1073,14 +1013,6 @@ Module AirDrag_Globals
             Case tCompErgReg.delta_CdxA_singleMS
                 Return "[m2]"
             Case tCompErgReg.beta_ave_singleMS
-                Return "[°]"
-            Case tCompErgReg.t_tire_ave_LS_max
-                Return "[°]"
-            Case tCompErgReg.t_tire_ave_LS_min
-                Return "[°]"
-            Case tCompErgReg.t_tire_ave_HS_max
-                Return "[°]"
-            Case tCompErgReg.t_tire_ave_HS_min
                 Return "[°]"
             Case Else
                 Return "ERROR"

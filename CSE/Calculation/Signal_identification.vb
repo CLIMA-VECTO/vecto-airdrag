@@ -798,18 +798,15 @@ Module Signal_identification
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.v_veh_c), CalcData(tCompCali.v_veh_float), CalcData(tCompCali.t_float))
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.n_ec), CalcData(tCompCali.n_ec_1s))
         fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.n_ec), CalcData(tCompCali.n_ec_float), CalcData(tCompCali.t_float))
-        fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.omega_wh), CalcData(tCompCali.omega_wh_acc))
 
         ' Calculate the remaining values
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
             ' Acceleration and omega_p
             If i = 0 Or i = CalcData(tCompCali.SecID).Count - 1 Then
                 CalcData(tCompCali.a_veh_avg)(i) = 0
-                CalcData(tCompCali.omega_p_wh_acc)(i) = 0
             Else
                 HzIn2 = 1 / ((CalcData(tCompCali.t)(i + 1) - CalcData(tCompCali.t)(i - 1)) / 2)
                 CalcData(tCompCali.a_veh_avg)(i) = (CalcData(tCompCali.v_veh_acc)(i + 1) - CalcData(tCompCali.v_veh_acc)(i - 1)) / (3.6 * 2) * HzIn2
-                CalcData(tCompCali.omega_p_wh_acc)(i) = ((CalcData(tCompCali.omega_wh_acc)(i + 1) - CalcData(tCompCali.omega_wh_acc)(i - 1)) / 2) * HzIn2
             End If
 
             If Crt.gradient_correction Then
@@ -856,9 +853,6 @@ Module Signal_identification
                 If firstIn Then
                     ErgValues(tCompErg.RunID)(run) = RunIDx
                     ErgValues(tCompErg.n_ec)(run) = (CalcData(tCompCali.n_ec)(i))
-                    ErgValues(tCompErg.omega_wh)(run) = (CalcData(tCompCali.omega_wh)(i))
-                    ErgValues(tCompErg.omega_wh_acc)(run) = (CalcData(tCompCali.omega_wh_acc)(i))
-                    ErgValues(tCompErg.omega_p_wh_acc)(run) = (CalcData(tCompCali.omega_p_wh_acc)(i))
                     ErgValues(tCompErg.tq_sum)(run) = (CalcData(tCompCali.tq_sum)(i))
                     ErgValues(tCompErg.tq_sum_1s)(run) = (CalcData(tCompCali.tq_sum_1s)(i))
                     ErgValues(tCompErg.tq_sum_float)(run) = (CalcData(tCompCali.tq_sum_float)(i))
@@ -888,9 +882,7 @@ Module Signal_identification
                     ErgValues(tCompErg.n_ec_1s_min)(run) = (CalcData(tCompCali.n_ec_1s)(i))
                     ErgValues(tCompErg.n_ec_float_max)(run) = (CalcData(tCompCali.n_ec_float)(i))
                     ErgValues(tCompErg.n_ec_float_min)(run) = (CalcData(tCompCali.n_ec_float)(i))
-                    If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) = (InputData(tComp.t_tire)(i))
-                    If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = (InputData(tComp.p_tire)(i))
-                    If OptPar(2) Then ErgValues(tCompErg.t_ground)(run) = (InputData(tComp.t_ground)(i))
+                    ErgValues(tCompErg.t_ground)(run) = (InputData(tComp.t_ground)(i))
 
                     firstIn = False
                     anz += 1
@@ -898,9 +890,6 @@ Module Signal_identification
                     If (CalcData(tCompCali.SecID)(i) = CalcData(tCompCali.SecID)(i - 1)) And (CalcData(tCompCali.DirID)(i) = CalcData(tCompCali.DirID)(i - 1)) Then
                         ' Build the sum
                         ErgValues(tCompErg.n_ec)(run) += (CalcData(tCompCali.n_ec)(i))
-                        ErgValues(tCompErg.omega_wh)(run) += (CalcData(tCompCali.omega_wh)(i))
-                        ErgValues(tCompErg.omega_wh_acc)(run) += (CalcData(tCompCali.omega_wh_acc)(i))
-                        ErgValues(tCompErg.omega_p_wh_acc)(run) += (CalcData(tCompCali.omega_p_wh_acc)(i))
                         ErgValues(tCompErg.tq_sum)(run) += (CalcData(tCompCali.tq_sum)(i))
                         ErgValues(tCompErg.tq_sum_1s)(run) += (CalcData(tCompCali.tq_sum_1s)(i))
                         ErgValues(tCompErg.tq_sum_float)(run) += (CalcData(tCompCali.tq_sum_float)(i))
@@ -930,16 +919,11 @@ Module Signal_identification
                         If ErgValues(tCompErg.n_ec_1s_min)(run) > CalcData(tCompCali.n_ec_1s)(i) Then ErgValues(tCompErg.n_ec_1s_min)(run) = CalcData(tCompCali.n_ec_1s)(i)
                         If ErgValues(tCompErg.n_ec_float_max)(run) < CalcData(tCompCali.n_ec_float)(i) Then ErgValues(tCompErg.n_ec_float_max)(run) = CalcData(tCompCali.n_ec_float)(i)
                         If ErgValues(tCompErg.n_ec_float_min)(run) > CalcData(tCompCali.n_ec_float)(i) Then ErgValues(tCompErg.n_ec_float_min)(run) = CalcData(tCompCali.n_ec_float)(i)
-                        If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) += (InputData(tComp.t_tire)(i))
-                        If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) += (InputData(tComp.p_tire)(i))
-                        If OptPar(2) Then ErgValues(tCompErg.t_ground)(run) += (InputData(tComp.t_ground)(i))
+                        ErgValues(tCompErg.t_ground)(run) += (InputData(tComp.t_ground)(i))
                         anz += 1
                     Else
                         ' Calculate the results from the last section
                         ErgValues(tCompErg.n_ec)(run) = ErgValues(tCompErg.n_ec)(run) / anz
-                        ErgValues(tCompErg.omega_wh)(run) = ErgValues(tCompErg.omega_wh)(run) / anz
-                        ErgValues(tCompErg.omega_wh_acc)(run) = ErgValues(tCompErg.omega_wh_acc)(run) / anz
-                        ErgValues(tCompErg.omega_p_wh_acc)(run) = ErgValues(tCompErg.omega_p_wh_acc)(run) / anz
                         ErgValues(tCompErg.tq_sum)(run) = ErgValues(tCompErg.tq_sum)(run) / anz
                         ErgValues(tCompErg.tq_sum_1s)(run) = ErgValues(tCompErg.tq_sum_1s)(run) / anz
                         ErgValues(tCompErg.tq_sum_float)(run) = ErgValues(tCompErg.tq_sum_float)(run) / anz
@@ -965,19 +949,15 @@ Module Signal_identification
                         Else
                             ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor
                         End If
-                        If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
-                        If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz
-                        If OptPar(2) Then ErgValues(tCompErg.t_ground)(run) = ErgValues(tCompErg.t_ground)(run) / anz
+                        ErgValues(tCompErg.t_ground)(run) = ErgValues(tCompErg.t_ground)(run) / anz
                         ErgValues(tCompErg.r_dyn)(run) = (30 * igear * vehicleX.axleRatio * ErgValues(tCompErg.v_veh)(run) / 3.6) / (ErgValues(tCompErg.n_ec)(run) * Math.PI)
+                        ErgValues(tCompErg.tq_grd)(run) = ErgValues(tCompErg.F_grd)(run) * ErgValues(tCompErg.r_dyn)(run)
 
                         ' Add a new Section to the resultfile
                         run += 1
                         anz = 1
                         ErgValues(tCompErg.RunID)(run) = RunIDx
                         ErgValues(tCompErg.n_ec)(run) = (CalcData(tCompCali.n_ec)(i))
-                        ErgValues(tCompErg.omega_wh)(run) = (CalcData(tCompCali.omega_wh)(i))
-                        ErgValues(tCompErg.omega_wh_acc)(run) = (CalcData(tCompCali.omega_wh_acc)(i))
-                        ErgValues(tCompErg.omega_p_wh_acc)(run) = (CalcData(tCompCali.omega_p_wh_acc)(i))
                         ErgValues(tCompErg.tq_sum)(run) = (CalcData(tCompCali.tq_sum)(i))
                         ErgValues(tCompErg.tq_sum_1s)(run) = (CalcData(tCompCali.tq_sum_1s)(i))
                         ErgValues(tCompErg.tq_sum_float)(run) = (CalcData(tCompCali.tq_sum_float)(i))
@@ -1007,9 +987,7 @@ Module Signal_identification
                         ErgValues(tCompErg.n_ec_1s_min)(run) = (CalcData(tCompCali.n_ec_1s)(i))
                         ErgValues(tCompErg.n_ec_float_max)(run) = (CalcData(tCompCali.n_ec_float)(i))
                         ErgValues(tCompErg.n_ec_float_min)(run) = (CalcData(tCompCali.n_ec_float)(i))
-                        If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) = (InputData(tComp.t_tire)(i))
-                        If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = (InputData(tComp.p_tire)(i))
-                        If OptPar(2) Then ErgValues(tCompErg.t_ground)(run) = (InputData(tComp.t_ground)(i))
+                        ErgValues(tCompErg.t_ground)(run) = (InputData(tComp.t_ground)(i))
                     End If
                 End If
             Else
@@ -1017,9 +995,6 @@ Module Signal_identification
                 If run > 0 And firstIn = False Then
                     ' Calculate the results from the last section
                     ErgValues(tCompErg.n_ec)(run) = ErgValues(tCompErg.n_ec)(run) / anz
-                    ErgValues(tCompErg.omega_wh)(run) = ErgValues(tCompErg.omega_wh)(run) / anz
-                    ErgValues(tCompErg.omega_wh_acc)(run) = ErgValues(tCompErg.omega_wh_acc)(run) / anz
-                    ErgValues(tCompErg.omega_p_wh_acc)(run) = ErgValues(tCompErg.omega_p_wh_acc)(run) / anz
                     ErgValues(tCompErg.tq_sum)(run) = ErgValues(tCompErg.tq_sum)(run) / anz
                     ErgValues(tCompErg.tq_sum_1s)(run) = ErgValues(tCompErg.tq_sum_1s)(run) / anz
                     ErgValues(tCompErg.tq_sum_float)(run) = ErgValues(tCompErg.tq_sum_float)(run) / anz
@@ -1045,10 +1020,9 @@ Module Signal_identification
                     Else
                         ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor
                     End If
-                    If OptPar(3) Then ErgValues(tCompErg.t_tire)(run) = ErgValues(tCompErg.t_tire)(run) / anz
-                    If OptPar(1) Then ErgValues(tCompErg.p_tire)(run) = ErgValues(tCompErg.p_tire)(run) / anz
-                    If OptPar(2) Then ErgValues(tCompErg.t_ground)(run) = ErgValues(tCompErg.t_ground)(run) / anz
+                    ErgValues(tCompErg.t_ground)(run) = ErgValues(tCompErg.t_ground)(run) / anz
                     ErgValues(tCompErg.r_dyn)(run) = (30 * igear * vehicleX.axleRatio * ErgValues(tCompErg.v_veh)(run) / 3.6) / (ErgValues(tCompErg.n_ec)(run) * Math.PI)
+                    ErgValues(tCompErg.tq_grd)(run) = ErgValues(tCompErg.F_grd)(run) * ErgValues(tCompErg.r_dyn)(run)
 
                     anz = 0
                     run += 1
