@@ -46,6 +46,7 @@ Public Class cVehicle
                 "gearRatio_high":   null,
                 "axleRatio":        null,
                 "gearBox_type":     null,
+                "gearRatio_low_s":    null,
             }</json>.Value)
     End Function
 
@@ -92,17 +93,17 @@ The generic parameters for classes are stored in the GenShape.shp",
                 }, 
                 "gearRatio_low": {
                     "title": "Gear ratio low speed", 
-                    "type":"number",                     
+                    "type":"string",                     
                     "required": true,
                 }, 
                 "gearRatio_high": {
                     "title": "Gear ratio high speed", 
-                    "type":"number",                    
+                    "type":"string",                    
                     "required": true,
                 }, 
                 "axleRatio": {
                     "title": "Axle ratio", 
-                    "type":"number",                    
+                    "type":"string",                    
                     "required": true,
                 }, 
                 "gearBox_type": {
@@ -223,27 +224,27 @@ The generic parameters for classes are stored in the GenShape.shp",
             Me.Body("testMass") = value
         End Set
     End Property
-    Public Property gearRatio_low As Double
+    Public Property gearRatio_low As String
         Get
             Return Me.Body("gearRatio_low")
         End Get
-        Set(ByVal value As Double)
+        Set(ByVal value As String)
             Me.Body("gearRatio_low") = value
         End Set
     End Property
-    Public Property gearRatio_high As Double
+    Public Property gearRatio_high As String
         Get
             Return Me.Body("gearRatio_high")
         End Get
-        Set(ByVal value As Double)
+        Set(ByVal value As String)
             Me.Body("gearRatio_high") = value
         End Set
     End Property
-    Public Property axleRatio As Double
+    Public Property axleRatio As String
         Get
             Return Me.Body("axleRatio")
         End Get
-        Set(ByVal value As Double)
+        Set(ByVal value As String)
             Me.Body("axleRatio") = value
         End Set
     End Property

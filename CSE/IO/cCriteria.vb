@@ -22,7 +22,6 @@ Public Class cCriteria
            }</json>.Value)
     End Function
 
-
     '' Default values are Decleration
     Private Shared Function BuildBody() As JObject
         Dim b, g As Object
@@ -33,7 +32,7 @@ Public Class cCriteria
         g.accel_correction = True
         g.gradient_correction = True
         g.hz_out = 1
-        g.rr_corr_factor = 1
+        g.rr_corr_factor = 1.143
         g.acc_corr_avg = 1
         g.delta_CdxA_anemo = -0.15
         g.dist_float = 25
@@ -51,7 +50,7 @@ Public Class cCriteria
         g.segruns_min_CAL = 5
         g.segruns_min_LS = 1
         g.segruns_min_HS = 2
-        g.segruns_min_head_MS = 10
+        g.segruns_min_head_HS = 10
         g.delta_Hz_max = 1
         g.delta_parallel_max = 20
 
@@ -77,7 +76,7 @@ Public Class cCriteria
         g.v_veh_1s_delta_HS = 0.3
         g.delta_v_avg_min_HS = 3
 
-        g.delta_rr_corr_max = 0.4
+        g.delta_rr_max = 0.4
         g.t_amb_min = 0
         g.t_amb_max = 25
         g.t_ground_max = 40
@@ -171,7 +170,7 @@ Public Class cCriteria
                         "segruns_min_HS": {"type": "integer", "required": true, 
                             "description": "Minimum number of valid datasets required for the high speed (per combination of MS ID and DIR ID).", 
                         },
-                        "segruns_min_head_MS": {"type": "integer", "required": true, 
+                        "segruns_min_head_HS": {"type": "integer", "required": true, 
                             "description": "Minimum TOTAL number of valid datasets required for the high speed per heading.", 
                         },
                         "delta_Hz_max": {"type": "number", "required": true, 
@@ -254,7 +253,7 @@ Public Class cCriteria
                             "units": "km/h", 
                         },
 
-                        "delta_rr_corr_max": {"type": "number", "required": true, 
+                        "delta_rr_max": {"type": "number", "required": true, 
                             "description": "Maximum difference of RRC from the two low speed runs.", 
                             "units": "kg/t", 
                         },
@@ -341,7 +340,7 @@ Public Class cCriteria
     Public segruns_min_CAL As Integer
     Public segruns_min_LS As Integer
     Public segruns_min_HS As Integer
-    Public segruns_min_head_MS As Integer
+    Public segruns_min_head_HS As Integer
     Public delta_Hz_max As Single
     Public delta_parallel_max As Single
     Public leng_crit As Single
@@ -362,7 +361,7 @@ Public Class cCriteria
     Public delta_n_ec_HS As Single
     Public beta_avg_max_HS As Single
     Public delta_v_avg_min_HS As Single
-    Public delta_rr_corr_max As Single
+    Public delta_rr_max As Single
     Public t_amb_min As Single
     Public t_amb_max As Single
     Public t_ground_max As Single
@@ -393,7 +392,7 @@ Public Class cCriteria
         Me.segruns_min_CAL = g("segruns_min_CAL")
         Me.segruns_min_LS = g("segruns_min_LS")
         Me.segruns_min_HS = g("segruns_min_HS")
-        Me.segruns_min_head_MS = g("segruns_min_head_MS")
+        Me.segruns_min_head_HS = g("segruns_min_head_HS")
         Me.delta_Hz_max = g("delta_Hz_max")
         Me.delta_parallel_max = g("delta_parallel_max")
 
@@ -419,7 +418,7 @@ Public Class cCriteria
         Me.delta_n_ec_HS = g("delta_n_ec_HS")
         Me.delta_v_avg_min_HS = g("delta_v_avg_min_HS")
 
-        Me.delta_rr_corr_max = g("delta_rr_corr_max")
+        Me.delta_rr_max = g("delta_rr_max")
         Me.t_ground_max = g("t_ground_max")
         Me.t_amb_max = g("t_amb_max")
         Me.t_amb_min = g("t_amb_min")
@@ -455,7 +454,7 @@ Public Class cCriteria
         g.segruns_min_CAL = Me.segruns_min_CAL
         g.segruns_min_LS = Me.segruns_min_LS
         g.segruns_min_HS = Me.segruns_min_HS
-        g.segruns_min_head_MS = Me.segruns_min_head_MS
+        g.segruns_min_head_HS = Me.segruns_min_head_HS
         g.delta_Hz_max = Me.delta_Hz_max
         g.delta_parallel_max = Me.delta_parallel_max
 
@@ -481,7 +480,7 @@ Public Class cCriteria
         g.delta_n_ec_HS = Me.delta_n_ec_HS
         g.delta_v_avg_min_HS = Me.delta_v_avg_min_HS
 
-        g.delta_rr_corr_max = Me.delta_rr_corr_max
+        g.delta_rr_max = Me.delta_rr_max
         g.t_ground_max = Me.t_ground_max
         g.t_amb_max = Me.t_amb_max
         g.t_amb_min = Me.t_amb_min

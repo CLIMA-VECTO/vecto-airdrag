@@ -26,6 +26,7 @@ Public Class cJob
     ' Defaults specified here.
     Protected Shared Function BuildBody() As JObject
         Dim b As Object = New JObject()
+        b.mode = 0
         b.vehicle_fpath = ""
         b.ambient_fpath = ""
         b.calib_track_fpath = ""
@@ -63,6 +64,11 @@ Public Class cJob
             "type": "object", "additionalProperties": <%= allowAdditionalProps_str %>, 
             "required": true,
             "properties": {
+                "mode": {
+                    "type": "number",
+                    "description": "Selected calculation mode (Engeneering = 0, Declaration = 1).",
+                    'default': 0,
+                }, 
                 "vehicle_fpath": {
                     "type": ["null", "string"], 
                     <%= IIf(requireFPathExts, "'pattern': '^\\s*$|\\.csveh(\\.json)?$', ", "") %>
@@ -293,6 +299,14 @@ Public Class cJob
         Me.Criteria = Crt
     End Sub
 
+    Public Property mode As Integer
+        Get
+            Return Me.Body("mode")
+        End Get
+        Set(ByVal value As Integer)
+            Me.Body("mode") = value
+        End Set
+    End Property
     Public Property vehicle_fpath As String
         Get
             Return getRootedPath(Me.Body("vehicle_fpath"), Prefs.workingDir)

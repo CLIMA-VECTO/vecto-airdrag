@@ -33,7 +33,7 @@ Public Module main_calculation_call
             ' Read the input data
             logme(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
-            fCheckVeh(3, vehicle)
+            If Not fCheckVeh(3, vehicle) And Job.mode = 1 Then Throw New Exception("Vehicle file for calculation incorrect!")
             ReadInputMSC(MSC, Job.calib_track_fpath, isCalibrate)
             ReadDataFile(Job.calib_run_fpath, MSC, vehicle)
 
@@ -77,7 +77,7 @@ Public Module main_calculation_call
             ' Read the input files
             logme(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
-            fCheckVeh(3, vehicle)
+            If Not fCheckVeh(3, vehicle) And Job.mode = 1 Then Throw New Exception("Accuraty of vehicle parameters not ensured!")
             ReadInputMSC(MSC, Job.coast_track_fpath, isCalibrate)
             If Crt.gradient_correction Then ReadAltitudeFiles(MSC, Altdata)
             ReadWeather(Job.ambient_fpath)
@@ -161,7 +161,6 @@ Public Module main_calculation_call
                 ' Calculate the regressions
                 fCalcReg(vehicle)
             Finally
-
                 ' Write the summerised output file
                 logme(7, False, "Writing the summarised output file...")
                 fOutCalcRes(isCalibrate)
@@ -169,8 +168,12 @@ Public Module main_calculation_call
 
             ' Check if all is valid
             For i = 0 To ErgValuesReg(tCompErgReg.SecID).Count - 1
-                If ErgValuesReg(tCompErgReg.valid_RRC)(i) = 0 Then Job.valid_RRC = False
+                If ErgValuesReg(tCompErgReg.valid_RRC)(i) = 0 Then
+                    Job.valid_RRC = False
+                    If Job.mode = 1 Then Throw New Exception("Invalid test - maximum deviation of RRCs between low speed tests exceeded")
+                End If
             Next i
+
 
             ' Output of the final data
             fOutCalcResReg()
@@ -798,7 +801,7 @@ Public Module main_calculation_call
         Next i
 
         ' Ceck if enough sections are detected
-        If anzHS1 < Crt.segruns_min_head_MS Or anzHS2 < Crt.segruns_min_head_MS Then
+        If anzHS1 < Crt.segruns_min_head_HS Or anzHS2 < Crt.segruns_min_head_HS Then
             Throw New Exception(format("Number of valid high speed datasets({0}) too low!", anzHS1))
         End If
 
@@ -1050,33 +1053,58 @@ Public Module main_calculation_call
         ' Declaration
         Dim Flag As Boolean = True
 
+        ' Check the vehicle class
+        Select Case vehicle.classCode
+            Case 1, 2, 3, 4, 5, 9, 10
+                ' Check the hight of the vehicle
+                If vehicle.vehHeight > GenShape.h_ref(vehicle.classCode) Then
+                    Flag = False
+                    logme(9, False, format("Vehicle height grater then allowed vehicle height (vehicle: {0} > reference: {1})!", vehicle.vehHeight, GenShape.h_ref(vehicle.classCode)))
+                End If
+            Case Else
+                If Job.mode = 1 Then
+                    Flag = False
+                    logme(9, False, format("Vehicle class not supported by Declaration Mode ({0})! Supported classes are: 1 - 5, 9, 10.", vehicle.classCode))
+                End If
+        End Select
+
         ' Check the geraRatio_high
-        If Not fCheckDigit(Prefs.decSep, AnzDigit, vehicle.gearRatio_high) Then
+        If Not fCheckDigits(Prefs.decSep, AnzDigit, vehicle.gearRatio_high) Then
             Flag = False
-            logme(8, False, format("The gearRatio_high in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+            If Job.mode = 1 Then
+                logme(9, False, format("The gearRatio_high in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+            Else
+                logme(8, False, format("The gearRatio_high in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+            End If
         End If
         ' Check the geraRatio_low
-        If Not fCheckDigit(Prefs.decSep, AnzDigit, vehicle.gearRatio_low) Then
+        If Not fCheckDigits(Prefs.decSep, AnzDigit, vehicle.gearRatio_low) Then
             Flag = False
-            logme(8, False, format("The gearRatio_low in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+            If Job.mode = 1 Then
+                logme(9, False, format("The gearRatio_low in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+            Else
+                logme(8, False, format("The gearRatio_low in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+            End If
         End If
         ' Check the axleRatio
-        If Not fCheckDigit(Prefs.decSep, AnzDigit, vehicle.axleRatio) Then
+        If Not fCheckDigits(Prefs.decSep, AnzDigit, vehicle.axleRatio) Then
             Flag = False
-            logme(8, False, format("The axleRatio in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+            If Job.mode = 1 Then
+                logme(9, False, format("The axleRatio in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+            Else
+                logme(8, False, format("The axleRatio in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+            End If
         End If
 
         Return Flag
     End Function
 
     ' Check the digits after the seperator from an value
-    Private Function fCheckDigit(ByVal Sep As Char, ByVal AnzDigit As Integer, ByVal dvalue As Double) As Boolean
+    Private Function fCheckDigits(ByVal Sep As Char, ByVal AnzDigit As Integer, ByVal dvalue As String) As Boolean
         ' Declaration
         Dim counter As Long = 0
-        Dim s As String
 
-        s = dvalue.ToString
-        If s.Substring(s.IndexOf(Sep) + 1).Length < AnzDigit Then
+        If dvalue.Substring(dvalue.IndexOf(Sep) + 1).Length < AnzDigit Then
             Return False
         End If
 

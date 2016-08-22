@@ -325,6 +325,7 @@
   <ItemGroup>
     <None Include="Resources\bug-edit-icon.png" />
     <None Include="Resources\AirDrag.ico" />
+    <None Include="Resources\Speichern_unter_klein.png" />
     <Content Include="Resources\Stop-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

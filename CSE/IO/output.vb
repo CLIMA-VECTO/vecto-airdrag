@@ -226,6 +226,10 @@ Module output
             FileOut.WriteLine("# Datafile HS: " & Prefs.listSep & coasting_fpaths(1))
             FileOut.WriteLine("# Datafile LS2: " & Prefs.listSep & coasting_fpaths(2))
             FileOut.WriteLine("#")
+            If Job.mode = 1 Then
+                FileOut.WriteLine("RESULTS CALCULATED IN DECLARATION MODE")
+                FileOut.WriteLine("#")
+            End If
             FileOut.WriteLine("# Results")
             FileOut.WriteLine("# fv_veh:" & Prefs.listSep & Job.fv_veh & Prefs.listSep & "[-] calibration factor for vehicle speed")
             FileOut.WriteLine("# fv_pe:" & Prefs.listSep & Job.fv_pe & Prefs.listSep & "[-] calibration factor for air speed (position error)")

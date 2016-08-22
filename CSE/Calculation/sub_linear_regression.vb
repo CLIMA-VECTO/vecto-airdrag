@@ -188,7 +188,7 @@ Module sub_linear_regression
                     ErgValuesReg(tCompErgReg.F2_singleMS_LS2).Add(F2)
                     ErgValuesReg(tCompErgReg.RRC_singleMS_LS2).Add((ErgValuesReg(tCompErgReg.F0_singleMS_LS2)(lauf) / (vehicle.testMass * 9.81)) * 1000)
 
-                    If Math.Abs(ErgValuesReg(tCompErgReg.RRC_singleMS_LS1)(lauf) - ErgValuesReg(tCompErgReg.RRC_singleMS_LS2)(lauf)) > Crt.delta_rr_corr_max Then
+                    If Math.Abs(ErgValuesReg(tCompErgReg.RRC_singleMS_LS1)(lauf) - ErgValuesReg(tCompErgReg.RRC_singleMS_LS2)(lauf)) > Crt.delta_rr_max Then
                         ErgValuesReg(tCompErgReg.valid_RRC).Add(0)
                     Else
                         ErgValuesReg(tCompErgReg.valid_RRC).Add(1)
@@ -244,15 +244,27 @@ Module sub_linear_regression
         Next i
 
         ' Calculate the Endresults
-        Job.CdxAß = Job.CdxAß / (lauf + 1)
-        Job.beta = Job.beta / (lauf + 1)
-        Job.delta_CdxA_beta = fCalcGenShp(Job.beta, vehicle) * (-1)
-        Job.CdxA0meas = Job.CdxAß + Job.delta_CdxA_beta
-        Job.delta_CdxA_height = (Job.CdxA0meas * (GenShape.h_ref(fFindGenShp(vehicle)) / vehicle.vehHeight)) - Job.CdxA0meas
-        Job.CdxA0 = Job.CdxA0meas + Job.delta_CdxA_height + Crt.delta_CdxA_anemo
-        Job.t_amb_LS1 = Job.t_amb_LS1 / anzLS1
-        Job.v_avg_LS = Job.v_avg_LS / (anzLS1 + anzLS2)
-        Job.v_avg_HS = Job.v_avg_HS / (anzHS)
+        If lauf <> -1 Then
+            Job.CdxAß = Job.CdxAß / (lauf + 1)
+            Job.beta = Job.beta / (lauf + 1)
+            Job.delta_CdxA_beta = fCalcGenShp(Job.beta, vehicle) * (-1)
+            Job.CdxA0meas = Job.CdxAß + Job.delta_CdxA_beta
+            Job.delta_CdxA_height = (Job.CdxA0meas * (GenShape.h_ref(fFindGenShp(vehicle)) / vehicle.vehHeight)) - Job.CdxA0meas
+            Job.CdxA0 = Job.CdxA0meas + Job.delta_CdxA_height + Crt.delta_CdxA_anemo
+            Job.t_amb_LS1 = Job.t_amb_LS1 / anzLS1
+            Job.v_avg_LS = Job.v_avg_LS / (anzLS1 + anzLS2)
+            Job.v_avg_HS = Job.v_avg_HS / (anzHS)
+        Else
+            Job.CdxAß = 0
+            Job.beta = 0
+            Job.delta_CdxA_beta = 0
+            Job.CdxA0meas = 0
+            Job.delta_CdxA_height = 0
+            Job.CdxA0 = 0
+            Job.t_amb_LS1 = 0
+            Job.v_avg_LS = 0
+            Job.v_avg_HS = 0
+        End If
 
         Return True
     End Function
@@ -327,7 +339,7 @@ Module sub_linear_regression
         Next i
 
         ' Interpolate the value
-        For i = 0 To GenShape.x_val(pos).Length - 1
+        For i = 0 To GenShape.x_val(pos).Length - 2
             If beta > GenShape.x_val(pos)(i) And beta < GenShape.x_val(pos)(i + 1) Then
                 ValueX = InterpLinear(GenShape.x_val(pos)(i), GenShape.x_val(pos)(i + 1), GenShape.y_val(pos)(i), GenShape.y_val(pos)(i + 1), beta)
                 Exit For

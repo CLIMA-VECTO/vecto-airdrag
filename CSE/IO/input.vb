@@ -80,6 +80,10 @@ Public Module input
                             MSCX.longE.Add(Line(7) * 60)
                     End Select
                     If Crt.gradient_correction And Not calibration Then MSCX.AltPath.Add(Line(8))
+                    If Line(4).Substring(Line(4).IndexOf(Prefs.decSep) + 1).Length < AnzDigit(CoordID) Then Counter += 1
+                    If Line(5).Substring(Line(5).IndexOf(Prefs.decSep) + 1).Length < AnzDigit(CoordID) Then Counter += 1
+                    If Line(6).Substring(Line(6).IndexOf(Prefs.decSep) + 1).Length < AnzDigit(CoordID) Then Counter += 1
+                    If Line(7).Substring(Line(7).IndexOf(Prefs.decSep) + 1).Length < AnzDigit(CoordID) Then Counter += 1
                 Loop
             Catch ex As Exception
                 ' Falls kein gültiger Wert eingegeben wurde
@@ -157,12 +161,12 @@ Public Module input
         End If
 
         ' Check coordinate digits after decimal seperator
-        Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), MSCX.latS, 1)
-        Counter += CheckDigits(Prefs.decSep, AnzDigit(CoordID), MSCX.latE, 1)
-        Counter += CheckDigits(Prefs.decSep, AnzDigit(CoordID), MSCX.longS, 1)
-        Counter += CheckDigits(Prefs.decSep, AnzDigit(CoordID), MSCX.longE, 1)
         If Counter > 0 Then
-            logme(8, False, format("The csms coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({1})!", MSCfile, AnzDigit(CoordID), Counter))
+            If Job.mode = 1 Then
+                Throw New Exception(format("The csms coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({1})!", MSCfile, AnzDigit(CoordID), Counter))
+            Else
+                logme(8, False, format("The csms coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({1})!", MSCfile, AnzDigit(CoordID), Counter))
+            End If
         End If
 
         ' Change the decimal seperator back
@@ -172,30 +176,12 @@ Public Module input
         End If
     End Sub
 
-    ' Check the digits
-    Private Function CheckDigits(ByVal Sep As Char, ByVal AnzDigit As Integer, ByVal Coords As List(Of Double), Optional ByVal startpos As Integer = 0) As Long
-        ' Declaration
-        Dim i As Long
-        Dim counter As Long = 0
-        Dim s As String
-
-        ' Check all the digits
-        For i = startpos To Coords.Count - 1
-            s = Coords(i).ToString
-            If s.Substring(s.IndexOf(Sep) + 1).Length < AnzDigit Then
-                counter += 1
-            End If
-        Next
-
-        Return counter
-    End Function
-
     ' Read the altitude files
     Sub ReadAltitudeFiles(ByVal MSCOrg As cMSC, ByRef Altdata As List(Of cAlt))
         ' Declarations
         Dim i As Integer
         Dim CoordID As Integer
-        Dim Counter As Long
+        Dim CounterLat, CounterLong, CounterAlt As Long
         Dim DemoDataF As Boolean = False
         Dim FirstIn As Boolean = True
         Dim Line() As String
@@ -235,6 +221,9 @@ Public Module input
                 End If
 
                 ' Input loop
+                CounterLat = 0
+                CounterLong = 0
+                CounterAlt = 0
                 Altdata.Add(New cAlt)
                 FirstIn = True
                 Try
@@ -261,6 +250,10 @@ Public Module input
                         End Select
                         Altdata(i).Altitude.Add(Line(2))
 
+                        If Line(0).Substring(Line(0).IndexOf(Prefs.decSep) + 1).Length < AnzDigit(CoordID) Then CounterLat += 1
+                        If Line(1).Substring(Line(1).IndexOf(Prefs.decSep) + 1).Length < AnzDigit(CoordID) Then CounterLong += 1
+                        If Line(2).Substring(Line(2).IndexOf(Prefs.decSep) + 1).Length < 2 Then CounterAlt += 1
+
                         ' Calculate the UTM coordinates for each point
                         Altdata(i).UTM.Add(UTM(Altdata(i).KoordLat(Altdata(i).KoordLat.Count - 1) / 60, Altdata(i).KoordLong(Altdata(i).KoordLong.Count - 1) / 60))
 
@@ -274,13 +267,26 @@ Public Module input
                     Loop
 
                     ' Check coordinate digits after decimal seperator
-                    Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), Altdata(i).KoordLat)
-                    If Counter > 0 Then
-                        logme(8, False, format("The altitude latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(CoordID), Counter))
+                    If CounterLat > 0 Then
+                        If Job.mode = 1 Then
+                            Throw New Exception(format("The altitude latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(CoordID), CounterLat))
+                        Else
+                            logme(8, False, format("The altitude latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(CoordID), CounterLat))
+                        End If
                     End If
-                    Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), Altdata(i).KoordLat)
-                    If Counter > 0 Then
-                        logme(8, False, format("The altitude longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(CoordID), Counter))
+                    If CounterLong > 0 Then
+                        If Job.mode = 1 Then
+                            Throw New Exception(format("The altitude longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(CoordID), CounterLong))
+                        Else
+                            logme(8, False, format("The altitude longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(CoordID), CounterLong))
+                        End If
+                    End If
+                    If CounterAlt > 0 Then
+                        If Job.mode = 1 Then
+                            Throw New Exception(format("The altitude in the altitude file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), 2, CounterAlt))
+                        Else
+                            logme(8, False, format("The altitude in the altitude file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), 2, CounterAlt))
+                        End If
                     End If
                 Catch ex As Exception
                     ' Falls kein gültiger Wert eingegeben wurde
@@ -405,7 +411,7 @@ Public Module input
         Using FileInMeasure As New cFile_V3
             Dim Line(), txt As String
             Dim i, tDim, nDay, CoordID As Integer
-            Dim Counter As Long
+            Dim CounterLat, CounterLong As Long
             Dim HzIn = 100                                      ' Hz frequency demanded for .csdat-file
             Dim DayTimeSec = 24 * 60 * 60                       ' Time of the day in Seconds
             Dim valid_set As Boolean = False
@@ -563,6 +569,8 @@ Public Module input
             Next
 
             ' Read the date from the file
+            If KoordSys(0) Then CoordID = 0
+            If KoordSys(1) Then CoordID = 1
             Try
                 Do While Not FileInMeasure.EndOfFile
                     tDim += 1
@@ -572,13 +580,13 @@ Public Module input
                         InputData(sKV.Key).Add(CDbl(Line(sKV.Value)))
                         If sKV.Key = tComp.t Then
                             If tDim >= 1 Then
-                                'If (InputData(sKV.Key)(tDim) < InputData(sKV.Key)(tDim - 1)) Then nDay += 1
                                 If Math.Abs((InputData(sKV.Key)(tDim) - InputData(sKV.Key)(tDim - 1)) / (1 / HzIn) - 1) * 100 > Crt.delta_Hz_max Then
                                     JumpPoint.Add(tDim)
                                 End If
                             End If
                             CalcData(tCompCali.t).Add(CDbl(Line(sKV.Value) + nDay * DayTimeSec))
                         ElseIf sKV.Key = tComp.lati Or sKV.Key = tComp.lati_D Then
+                            If Line(sKV.Value).Substring(Line(sKV.Value).IndexOf(Prefs.decSep) + 1).Length < AnzDigit(CoordID) Then CounterLat += 1
                             If UTMcalc Then
                                 If MeasCheck(tComp.lati) And sKV.Key = tComp.lati Then UTMCoord = UTM(InputData(sKV.Key)(tDim) / 60, InputData(tComp.longi)(tDim) / 60)
                                 If Not MeasCheck(tComp.lati) And MeasCheck(tComp.lati_D) And sKV.Key = tComp.lati_D Then UTMCoord = UTM(InputData(sKV.Key)(tDim), InputData(tComp.longi_D)(tDim))
@@ -599,6 +607,7 @@ Public Module input
                                 UTMcalc = True
                             End If
                         ElseIf sKV.Key = tComp.longi Or sKV.Key = tComp.longi_D Then
+                            If Line(sKV.Value).Substring(Line(sKV.Value).IndexOf(Prefs.decSep) + 1).Length < AnzDigit(CoordID) Then CounterLong += 1
                             If UTMcalc Then
                                 If MeasCheck(tComp.longi) And sKV.Key = tComp.longi Then UTMCoord = UTM(InputData(tComp.lati)(tDim) / 60, InputData(sKV.Key)(tDim) / 60)
                                 If Not MeasCheck(tComp.longi) And MeasCheck(tComp.longi_D) And sKV.Key = tComp.longi_D Then UTMCoord = UTM(InputData(tComp.lati_D)(tDim), InputData(sKV.Key)(tDim))
@@ -646,15 +655,19 @@ Public Module input
             End Try
 
             ' Check coordinate digits
-            If KoordSys(0) Then CoordID = 0
-            If KoordSys(1) Then CoordID = 1
-            Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), InputData(tComp.lati))
-            If Counter > 0 Then
-                logme(8, False, format("The latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(CoordID), Counter))
+            If CounterLat > 0 Then
+                If Job.mode = 1 Then
+                    Throw New Exception(format("The latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(CoordID), CounterLat))
+                Else
+                    logme(8, False, format("The latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(CoordID), CounterLat))
+                End If
             End If
-            Counter = CheckDigits(Prefs.decSep, AnzDigit(CoordID), InputData(tComp.longi))
-            If Counter > 0 Then
-                logme(8, False, format("The longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(CoordID), Counter))
+            If CounterLong > 0 Then
+                If Job.mode = 1 Then
+                    Throw New Exception(format("The longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(CoordID), CounterLong))
+                Else
+                    logme(8, False, format("The longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(CoordID), CounterLong))
+                End If
             End If
 
             ' Make the zone adjustment for the UTM coords

@@ -17,6 +17,7 @@ Public Class F_Main
     Private ToolstripSave As Boolean = False
     Private firstrun As Boolean = False
     Private Formname As String = "Job configurations"
+    Private SelMode As Integer = 0
 
     ' Load the GUI
     Private Sub FormLoadHandler(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -62,8 +63,7 @@ Public Class F_Main
             Me.Close()
         End Try
 
-        '' Create working dir if not exists.
-        ''
+        ' Create working dir if not exists.
         If Not IO.Directory.Exists(Prefs.workingDir) Then
             IO.Directory.CreateDirectory(Prefs.workingDir)
         End If
@@ -75,8 +75,7 @@ Public Class F_Main
             Me.Close()
         End If
 
-        '' Write a defult config file if failed to read one.
-        ''
+        ' Write a defult config file if failed to read one.
         If Not configL Then
             Try
                 Prefs.Store(PrefsPath)
@@ -88,6 +87,10 @@ Public Class F_Main
 
         ' Load the default settings into criteria tab
         UI_PopulateFromCriteria()
+
+        ' Set the mode to standard value
+        SelMode = Job.mode
+        ModeSwitch(True)
 
         ' Write the settings in the Infobox
         logme(7, False, format("Actual file settings:\n List separator ({0})\n Decimal separator ({1})\n You can change it under Tools/preferences.", Prefs.listSep, Prefs.decSep))
@@ -466,6 +469,7 @@ Public Class F_Main
             installJob(newJob)
             UI_PopulateFromJob()
             UI_PopulateFromCriteria()
+            ModeSwitch(True)
         Catch ex As Exception
             logme(9, False, format("Failed reading Job-file({0}) due to: {1}", JobFile, ex.Message), ex)
         End Try
@@ -515,6 +519,9 @@ Public Class F_Main
 
     ' Function to get all parameter from the GUI
     Function UI_PopulateToJob(Optional ByVal validate As Boolean = False) As Boolean
+        ' Get the mode
+        Job.mode = SelMode
+
         ' Read the data from the textboxes (General)
         Job.vehicle_fpath = TextBoxVeh1.Text
         Job.ambient_fpath = TextBoxWeather.Text
@@ -556,7 +563,7 @@ Public Class F_Main
 
         'Parameter boxes
         ' General valid criteria
-        Crt.delta_rr_corr_max = TB_delta_rr_corr_max.Text
+        Crt.delta_rr_max = TB_delta_rr_max.Text
         Crt.t_ground_max = TB_t_ground_max.Text
         Crt.t_amb_max = TB_t_amb_max.Text
         Crt.t_amb_min = TB_t_amb_min.Text
@@ -575,7 +582,7 @@ Public Class F_Main
         Crt.segruns_min_CAL = TB_segruns_min_CAL.Text
         Crt.segruns_min_LS = TB_segruns_min_LS.Text
         Crt.segruns_min_HS = TB_segruns_min_HS.Text
-        Crt.segruns_min_head_MS = TB_segruns_min_head_MS.Text
+        Crt.segruns_min_head_HS = TB_segruns_min_head_HS.Text
         ' DataSet validity criteria
         Crt.dist_float = TB_dist_float.Text
         ' Calibration
@@ -604,6 +611,7 @@ Public Class F_Main
 
     Sub UI_PopulateFromJob()
         ' Transfer the data to the GUI
+        SelMode = Job.mode
         ' General
         TextBoxVeh1.Text = Job.vehicle_fpath
         TextBoxWeather.Text = Job.ambient_fpath
@@ -618,11 +626,11 @@ Public Class F_Main
 
     End Sub
 
-    ' Function to set the parameters to standard
+    ' Function to get the parameters from saved values
     Sub UI_PopulateFromCriteria()
         ' Write the Standard values in the textboxes
         ' General valid criteria
-        TB_delta_rr_corr_max.Text = Crt.delta_rr_corr_max
+        TB_delta_rr_max.Text = Crt.delta_rr_max
         TB_t_ground_max.Text = Crt.t_ground_max
         TB_t_amb_max.Text = Crt.t_amb_max
         TB_t_amb_min.Text = Crt.t_amb_min
@@ -641,7 +649,7 @@ Public Class F_Main
         TB_segruns_min_CAL.Text = Crt.segruns_min_CAL
         TB_segruns_min_LS.Text = Crt.segruns_min_LS
         TB_segruns_min_HS.Text = Crt.segruns_min_HS
-        TB_segruns_min_head_MS.Text = Crt.segruns_min_head_MS
+        TB_segruns_min_head_HS.Text = Crt.segruns_min_head_HS
         ' DataSet validity criteria
         TB_dist_float.Text = Crt.dist_float
         ' Calibration
@@ -721,11 +729,11 @@ Public Class F_Main
             ButtonEval.Enabled = False
             EvaluationState = False
 
-
             ' Option parameters to standard
             installJob(New cJob)
             UI_PopulateFromJob()
             UI_PopulateFromCriteria()
+            ModeSwitch(True)
         End If
 
         ' Clear the text in the WarnigBox and ErrorBox and activate the MessageBox
@@ -738,7 +746,66 @@ Public Class F_Main
         Return True
     End Function
 
+    ' Disable/Enable all criteria
+    Sub UI_SetCriteriaStatus(Optional ByVal SetState As Boolean = True)
+        ' General valid criteria
+        TB_delta_rr_max.Enabled = SetState
+        TB_t_ground_max.Enabled = SetState
+        TB_t_amb_max.Enabled = SetState
+        TB_t_amb_min.Enabled = SetState
+        ' General
+        TB_delta_Hz_max.Enabled = SetState
+        TB_acc_corr_avg.Enabled = SetState
+        TB_rr_corr_factor.Enabled = SetState
+        TB_delta_parallel_max.Enabled = SetState
+        ' Identification of measurement section
+        TB_trigger_delta_x_max.Enabled = SetState
+        TB_trigger_delta_y_max.Enabled = SetState
+        TB_delta_head_max.Enabled = SetState
+        TB_length_MS_max.Enabled = SetState
+        TB_length_MS_min.Enabled = SetState
+        ' Requirements on number of valid datasets
+        TB_segruns_min_CAL.Enabled = SetState
+        TB_segruns_min_LS.Enabled = SetState
+        TB_segruns_min_HS.Enabled = SetState
+        TB_segruns_min_head_HS.Enabled = SetState
+        ' DataSet validity criteria
+        TB_dist_float.Enabled = SetState
+        ' Calibration
+        TB_v_wind_avg_max_CAL.Enabled = SetState
+        TB_v_wind_1s_max_CAL.Enabled = SetState
+        TB_beta_avg_max_CAL.Enabled = SetState
+        ' Low and high speed test
+        TB_leng_crit.Enabled = SetState
+        ' Low speed test
+        TB_v_veh_avg_min_LS.Enabled = SetState
+        TB_v_veh_avg_max_LS.Enabled = SetState
+        TB_v_veh_float_delta_LS.Enabled = SetState
+        TB_tq_sum_float_delta_LS.Enabled = SetState
+        TB_delta_n_ec_LS.Enabled = SetState
+        ' High speed test
+        TB_v_wind_avg_max_HS.Enabled = SetState
+        TB_v_wind_1s_max_HS.Enabled = SetState
+        TB_v_veh_avg_min_HS.Enabled = SetState
+        TB_v_veh_avg_max_HS.Enabled = SetState
+        TB_v_veh_1s_delta_HS.Enabled = SetState
+        TB_tq_sum_1s_delta_HS.Enabled = SetState
+        TB_delta_n_ec_HS.Enabled = SetState
+        TB_beta_avg_max_HS.Enabled = SetState
+        TB_delta_v_avg_min_HS.Enabled = SetState
+        ' Evaluation box
+        CB_accel_correction.Enabled = SetState
+        CB_gradient_correction.Enabled = SetState
+        ' Altitude
+        TB_dist_gridpoints_max.Enabled = SetState
+        TB_dist_grid_ms_max.Enabled = SetState
+        TB_slope_max.Enabled = SetState
+        ' Anemometer correction
+        TB_delta_CdxA_anemo.Enabled = SetState
 
+        ' Import Button
+        ButtonCrtImport.Enabled = SetState
+    End Sub
 #End Region ' UI populate
 
 #End Region ' Job IO
@@ -1003,9 +1070,9 @@ Public Class F_Main
 #Region "Options tab"
 
     ' Check if the input is a number
-    Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_length_MS_max.KeyPress, TB_delta_rr_corr_max.KeyPress, _
+    Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_length_MS_max.KeyPress, TB_delta_rr_max.KeyPress, _
         TB_t_ground_max.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
-        TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_MS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
+        TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_HS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
         TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_delta_n_ec_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_slope_max.KeyPress, TB_length_MS_min.KeyPress, TB_delta_n_ec_LS.KeyPress, _
         TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress, TB_dist_gridpoints_max.KeyPress, TB_dist_grid_ms_max.KeyPress, TB_v_veh_avg_max_HS.KeyPress, TB_delta_v_avg_min_HS.KeyPress, TB_delta_CdxA_anemo.KeyPress
         Select Case Asc(e.KeyChar)
@@ -1015,19 +1082,59 @@ Public Class F_Main
         End Select
     End Sub
 
-    ' Set all textboxes to standard
-    Private Sub doResetCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCrtReset.Click
-        ' Set the parameter to standard
-
-        If Not IsNothing(JobFile) Then
-            logme(8, False, format("The Job-file({0}) has changed because of criteria update", JobFile))
-        End If
-        'Crt.accel_correction = True
-        'Crt.hz_out = 1
-        UI_PopulateFromCriteria()
+    ' Mode change buttons
+    Private Sub ButtonMode_Click(sender As Object, e As EventArgs) Handles ButtonModeEng.Click, ButtonModeDec.Click, LB_SelMode.Click
+        If SelMode = 0 And sender.text = "Engineering" Then Exit Sub
+        If SelMode = 1 And sender.text = "Declaration" Then Exit Sub
+        ' Switch after selected mode
+        ModeSwitch()
     End Sub
 
-    ' Set all textboxes to standard
+    ' Switch after selected mode
+    Private Function ModeSwitch(Optional ByVal setVal As Boolean = False) As Boolean
+        ' Turn the mode to set the right one (turn is afterwards turned again)
+        If setVal Then
+            Select Case SelMode
+                Case 0
+                    SelMode = 1
+                Case 1
+                    SelMode = 0
+            End Select
+        End If
+
+        ' Set the right mode on criteria tab
+        Select Case SelMode
+            Case 0 ' Set the programm to declaration mode
+                SelMode = 1
+                ' Set names and colors
+                LB_SelMode.Text = "Declaration mode"
+                LB_SelMode.ForeColor = Color.Blue
+                ButtonModeEng.Font = New Font("Microsoft Sans Serif", 8.25, FontStyle.Regular)
+                ButtonModeEng.ForeColor = Color.Black
+                ButtonModeDec.Font = New Font("Microsoft Sans Serif", 8.25, FontStyle.Bold)
+                ButtonModeDec.ForeColor = Color.Blue
+                ' Set all values to default
+                Crt = New cCriteria
+                UI_PopulateFromCriteria()
+                ' Disable all criteria values
+                UI_SetCriteriaStatus(False)
+            Case 1 ' Set the programm to engeneering mode
+                SelMode = 0
+                ' Set names and colors
+                LB_SelMode.Text = "Engineering mode"
+                LB_SelMode.ForeColor = Color.Red
+                ButtonModeEng.Font = New Font("Microsoft Sans Serif", 8.25, FontStyle.Bold)
+                ButtonModeEng.ForeColor = Color.Red
+                ButtonModeDec.Font = New Font("Microsoft Sans Serif", 8.25, FontStyle.Regular)
+                ButtonModeDec.ForeColor = Color.Black
+                ' Enable all criteria values
+                UI_SetCriteriaStatus()
+        End Select
+
+        Return True
+    End Function
+
+    ' Export all textboxes to file
     Private Sub doExportCriteria(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCrtExport.Click
         UI_PopulateToJob(False)
         UI_PopulateToCriteria()
@@ -1118,7 +1225,7 @@ Public Class F_Main
             TB_segruns_min_CAL, LDsMinCAL, _
             TB_segruns_min_LS, LDsMinLS, _
             TB_segruns_min_HS, LDsMinHS, _
-            TB_segruns_min_head_MS, LDsMinHeadMS, _
+            TB_segruns_min_head_HS, LDsMinHeadHS, _
             TB_delta_Hz_max, LDeltaHzMax, _
             TB_delta_parallel_max, LDeltaParaMax, _
             TB_v_wind_avg_max_CAL, LvWindAveCALMax, _
@@ -1139,7 +1246,7 @@ Public Class F_Main
             TB_tq_sum_1s_delta_HS, LB_tq_sum_1s_delta_HS, _
             TB_delta_n_ec_HS, LB_delta_n_ec_HS, _
             TB_delta_v_avg_min_HS, LB_delta_v_avg_min_HS, _
-            TB_delta_rr_corr_max, LB_delta_rr_corr_max, _
+            TB_delta_rr_max, LB_delta_rr_max, _
             TB_t_amb_min, LB_t_amb_min, _
             TB_t_amb_max, LB_t_amb_max, _
             TB_t_ground_max, LB_t_amb_tarmac _

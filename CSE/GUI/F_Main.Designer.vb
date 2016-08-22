@@ -27,9 +27,9 @@ Partial Class F_Main
         Me.MenuItemExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemNewJob = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemLoadJob = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuItemSaveAsJob = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemReloadJob = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemSaveJob = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuItemSaveAsJob = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuItemClearLog = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemLog = New System.Windows.Forms.ToolStripMenuItem()
@@ -105,6 +105,13 @@ Partial Class F_Main
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.TPCriteria = New System.Windows.Forms.TabPage()
+        Me.GroupBox16 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.ButtonModeDec = New System.Windows.Forms.Button()
+        Me.ButtonModeEng = New System.Windows.Forms.Button()
+        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.ButtonCrtExport = New System.Windows.Forms.Button()
+        Me.ButtonCrtImport = New System.Windows.Forms.Button()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -131,31 +138,21 @@ Partial Class F_Main
         Me.TB_length_MS_max = New System.Windows.Forms.TextBox()
         Me.Label65 = New System.Windows.Forms.Label()
         Me.Label54 = New System.Windows.Forms.Label()
-        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
-        Me.LDsMinHeadMS = New System.Windows.Forms.Label()
-        Me.TB_segruns_min_head_MS = New System.Windows.Forms.TextBox()
-        Me.LDsMinHS = New System.Windows.Forms.Label()
-        Me.TB_segruns_min_HS = New System.Windows.Forms.TextBox()
-        Me.LDsMinLS = New System.Windows.Forms.Label()
-        Me.TB_segruns_min_LS = New System.Windows.Forms.TextBox()
-        Me.LDsMinCAL = New System.Windows.Forms.Label()
-        Me.TB_segruns_min_CAL = New System.Windows.Forms.TextBox()
         Me.GroupBox9 = New System.Windows.Forms.GroupBox()
-        Me.ButtonCrtImport = New System.Windows.Forms.Button()
-        Me.ButtonCrtExport = New System.Windows.Forms.Button()
-        Me.ButtonCrtReset = New System.Windows.Forms.Button()
-        Me.LDistFloat = New System.Windows.Forms.Label()
-        Me.TB_dist_float = New System.Windows.Forms.TextBox()
-        Me.Label81 = New System.Windows.Forms.Label()
         Me.GroupBox15 = New System.Windows.Forms.GroupBox()
         Me.LLengCrit = New System.Windows.Forms.Label()
         Me.TB_leng_crit = New System.Windows.Forms.TextBox()
-        Me.Label79 = New System.Windows.Forms.Label()
         Me.GroupBox12 = New System.Windows.Forms.GroupBox()
+        Me.Label21 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
         Me.TB_delta_v_avg_min_HS = New System.Windows.Forms.TextBox()
+        Me.LDsMinHeadHS = New System.Windows.Forms.Label()
         Me.LB_delta_v_avg_min_HS = New System.Windows.Forms.Label()
+        Me.TB_segruns_min_head_HS = New System.Windows.Forms.TextBox()
         Me.Label10 = New System.Windows.Forms.Label()
+        Me.LDsMinHS = New System.Windows.Forms.Label()
+        Me.TB_segruns_min_HS = New System.Windows.Forms.TextBox()
         Me.TB_v_veh_avg_max_HS = New System.Windows.Forms.TextBox()
         Me.LB_v_veh_avg_max_HS = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -180,10 +177,16 @@ Partial Class F_Main
         Me.LB_v_veh_avg_min_HS = New System.Windows.Forms.Label()
         Me.Label61 = New System.Windows.Forms.Label()
         Me.GroupBox11 = New System.Windows.Forms.GroupBox()
+        Me.Label13 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TB_delta_n_ec_LS = New System.Windows.Forms.TextBox()
         Me.LB_delta_n_ec_LS = New System.Windows.Forms.Label()
+        Me.LDistFloat = New System.Windows.Forms.Label()
+        Me.LDsMinLS = New System.Windows.Forms.Label()
+        Me.TB_segruns_min_LS = New System.Windows.Forms.TextBox()
+        Me.TB_dist_float = New System.Windows.Forms.TextBox()
         Me.Label72 = New System.Windows.Forms.Label()
+        Me.Label81 = New System.Windows.Forms.Label()
         Me.TB_tq_sum_float_delta_LS = New System.Windows.Forms.TextBox()
         Me.LB_tq_sum_float_delta_LS = New System.Windows.Forms.Label()
         Me.Label46 = New System.Windows.Forms.Label()
@@ -195,11 +198,15 @@ Partial Class F_Main
         Me.Label50 = New System.Windows.Forms.Label()
         Me.LB_v_veh_avg_max_LS = New System.Windows.Forms.Label()
         Me.TB_v_veh_avg_min_LS = New System.Windows.Forms.TextBox()
+        Me.Label79 = New System.Windows.Forms.Label()
         Me.GroupBox13 = New System.Windows.Forms.GroupBox()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.TB_v_wind_avg_max_CAL = New System.Windows.Forms.TextBox()
         Me.LvWind1sCALMax = New System.Windows.Forms.Label()
         Me.LvWindAveCALMax = New System.Windows.Forms.Label()
+        Me.LDsMinCAL = New System.Windows.Forms.Label()
+        Me.TB_segruns_min_CAL = New System.Windows.Forms.TextBox()
         Me.TB_beta_avg_max_CAL = New System.Windows.Forms.TextBox()
         Me.Label44 = New System.Windows.Forms.Label()
         Me.Label42 = New System.Windows.Forms.Label()
@@ -218,8 +225,8 @@ Partial Class F_Main
         Me.LDeltaParaMax = New System.Windows.Forms.Label()
         Me.TB_delta_parallel_max = New System.Windows.Forms.TextBox()
         Me.Label66 = New System.Windows.Forms.Label()
-        Me.TB_delta_rr_corr_max = New System.Windows.Forms.TextBox()
-        Me.LB_delta_rr_corr_max = New System.Windows.Forms.Label()
+        Me.TB_delta_rr_max = New System.Windows.Forms.TextBox()
+        Me.LB_delta_rr_max = New System.Windows.Forms.Label()
         Me.TB_t_amb_max = New System.Windows.Forms.TextBox()
         Me.Label69 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
@@ -236,6 +243,7 @@ Partial Class F_Main
         Me.Label22 = New System.Windows.Forms.Label()
         Me.LAccCorrAve = New System.Windows.Forms.Label()
         Me.TB_acc_corr_avg = New System.Windows.Forms.TextBox()
+        Me.LB_SelMode = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBoxJob.SuspendLayout()
         Me.GB_hz_out.SuspendLayout()
@@ -253,9 +261,11 @@ Partial Class F_Main
         Me.GroupBox4.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.TPCriteria.SuspendLayout()
+        Me.GroupBox16.SuspendLayout()
+        Me.GroupBox6.SuspendLayout()
+        Me.GroupBox8.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
-        Me.GroupBox8.SuspendLayout()
         Me.GroupBox9.SuspendLayout()
         Me.GroupBox15.SuspendLayout()
         Me.GroupBox12.SuspendLayout()
@@ -268,10 +278,10 @@ Partial Class F_Main
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuItemExit, Me.MenuItemNewJob, Me.MenuItemLoadJob, Me.MenuItemReloadJob, Me.MenuItemSaveJob, Me.MenuItemSaveAsJob, Me.ToolsToolStripMenuItem, Me.InfoToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuItemExit, Me.MenuItemNewJob, Me.MenuItemLoadJob, Me.MenuItemSaveAsJob, Me.MenuItemReloadJob, Me.MenuItemSaveJob, Me.ToolsToolStripMenuItem, Me.InfoToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(944, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(932, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -296,6 +306,13 @@ Partial Class F_Main
         Me.MenuItemLoadJob.Size = New System.Drawing.Size(82, 20)
         Me.MenuItemLoadJob.Text = "Load Job"
         '
+        'MenuItemSaveAsJob
+        '
+        Me.MenuItemSaveAsJob.Image = Global.AirDrag.My.Resources.Resources.Speichern_unter
+        Me.MenuItemSaveAsJob.Name = "MenuItemSaveAsJob"
+        Me.MenuItemSaveAsJob.Size = New System.Drawing.Size(75, 20)
+        Me.MenuItemSaveAsJob.Text = "Save As"
+        '
         'MenuItemReloadJob
         '
         Me.MenuItemReloadJob.Image = Global.AirDrag.My.Resources.Resources.Refresh
@@ -309,13 +326,6 @@ Partial Class F_Main
         Me.MenuItemSaveJob.Name = "MenuItemSaveJob"
         Me.MenuItemSaveJob.Size = New System.Drawing.Size(80, 20)
         Me.MenuItemSaveJob.Text = "Save Job"
-        '
-        'MenuItemSaveAsJob
-        '
-        Me.MenuItemSaveAsJob.Image = Global.AirDrag.My.Resources.Resources.Speichern_unter
-        Me.MenuItemSaveAsJob.Name = "MenuItemSaveAsJob"
-        Me.MenuItemSaveAsJob.Size = New System.Drawing.Size(75, 20)
-        Me.MenuItemSaveAsJob.Text = "Save As"
         '
         'ToolsToolStripMenuItem
         '
@@ -424,7 +434,7 @@ Partial Class F_Main
         Me.GroupBoxJob.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBoxJob.Name = "GroupBoxJob"
         Me.GroupBoxJob.Padding = New System.Windows.Forms.Padding(2)
-        Me.GroupBoxJob.Size = New System.Drawing.Size(906, 71)
+        Me.GroupBoxJob.Size = New System.Drawing.Size(894, 71)
         Me.GroupBoxJob.TabIndex = 21
         Me.GroupBoxJob.TabStop = False
         Me.GroupBoxJob.Text = "General"
@@ -436,7 +446,7 @@ Partial Class F_Main
         Me.TextBoxWeather.Location = New System.Drawing.Point(144, 42)
         Me.TextBoxWeather.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxWeather.Name = "TextBoxWeather"
-        Me.TextBoxWeather.Size = New System.Drawing.Size(719, 20)
+        Me.TextBoxWeather.Size = New System.Drawing.Size(707, 20)
         Me.TextBoxWeather.TabIndex = 2
         '
         'ButtonWeather
@@ -454,7 +464,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectWeather.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectWeather.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectWeather.Location = New System.Drawing.Point(867, 42)
+        Me.ButtonSelectWeather.Location = New System.Drawing.Point(855, 42)
         Me.ButtonSelectWeather.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectWeather.Name = "ButtonSelectWeather"
         Me.ButtonSelectWeather.Size = New System.Drawing.Size(31, 23)
@@ -469,7 +479,7 @@ Partial Class F_Main
         Me.TextBoxVeh1.Location = New System.Drawing.Point(145, 15)
         Me.TextBoxVeh1.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxVeh1.Name = "TextBoxVeh1"
-        Me.TextBoxVeh1.Size = New System.Drawing.Size(718, 20)
+        Me.TextBoxVeh1.Size = New System.Drawing.Size(706, 20)
         Me.TextBoxVeh1.TabIndex = 0
         '
         'ButtonVeh
@@ -487,7 +497,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectVeh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectVeh.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectVeh.Location = New System.Drawing.Point(867, 12)
+        Me.ButtonSelectVeh.Location = New System.Drawing.Point(855, 12)
         Me.ButtonSelectVeh.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectVeh.Name = "ButtonSelectVeh"
         Me.ButtonSelectVeh.Size = New System.Drawing.Size(31, 23)
@@ -499,7 +509,7 @@ Partial Class F_Main
         '
         Me.GB_hz_out.Controls.Add(Me.RB100Hz)
         Me.GB_hz_out.Controls.Add(Me.RB1Hz)
-        Me.GB_hz_out.Location = New System.Drawing.Point(231, 180)
+        Me.GB_hz_out.Location = New System.Drawing.Point(6, 140)
         Me.GB_hz_out.Name = "GB_hz_out"
         Me.GB_hz_out.Size = New System.Drawing.Size(219, 38)
         Me.GB_hz_out.TabIndex = 6
@@ -570,7 +580,7 @@ Partial Class F_Main
         Me.GroupBoxInput.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBoxInput.Name = "GroupBoxInput"
         Me.GroupBoxInput.Padding = New System.Windows.Forms.Padding(2)
-        Me.GroupBoxInput.Size = New System.Drawing.Size(907, 141)
+        Me.GroupBoxInput.Size = New System.Drawing.Size(895, 141)
         Me.GroupBoxInput.TabIndex = 23
         Me.GroupBoxInput.TabStop = False
         Me.GroupBoxInput.Text = "Constant speed test"
@@ -593,14 +603,14 @@ Partial Class F_Main
         Me.TextBoxDataLS2.Location = New System.Drawing.Point(145, 110)
         Me.TextBoxDataLS2.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataLS2.Name = "TextBoxDataLS2"
-        Me.TextBoxDataLS2.Size = New System.Drawing.Size(654, 20)
+        Me.TextBoxDataLS2.Size = New System.Drawing.Size(642, 20)
         Me.TextBoxDataLS2.TabIndex = 19
         '
         'ButtonSelectDataLS1
         '
         Me.ButtonSelectDataLS1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectDataLS1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectDataLS1.Location = New System.Drawing.Point(803, 53)
+        Me.ButtonSelectDataLS1.Location = New System.Drawing.Point(791, 53)
         Me.ButtonSelectDataLS1.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectDataLS1.Name = "ButtonSelectDataLS1"
         Me.ButtonSelectDataLS1.Size = New System.Drawing.Size(31, 23)
@@ -626,14 +636,14 @@ Partial Class F_Main
         Me.TextBoxDataLS1.Location = New System.Drawing.Point(145, 56)
         Me.TextBoxDataLS1.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataLS1.Name = "TextBoxDataLS1"
-        Me.TextBoxDataLS1.Size = New System.Drawing.Size(654, 20)
+        Me.TextBoxDataLS1.Size = New System.Drawing.Size(642, 20)
         Me.TextBoxDataLS1.TabIndex = 15
         '
         'ButtonSelectDataLS2
         '
         Me.ButtonSelectDataLS2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectDataLS2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectDataLS2.Location = New System.Drawing.Point(803, 107)
+        Me.ButtonSelectDataLS2.Location = New System.Drawing.Point(791, 107)
         Me.ButtonSelectDataLS2.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectDataLS2.Name = "ButtonSelectDataLS2"
         Me.ButtonSelectDataLS2.Size = New System.Drawing.Size(31, 23)
@@ -645,7 +655,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectDataHS.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectDataHS.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectDataHS.Location = New System.Drawing.Point(803, 80)
+        Me.ButtonSelectDataHS.Location = New System.Drawing.Point(791, 80)
         Me.ButtonSelectDataHS.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectDataHS.Name = "ButtonSelectDataHS"
         Me.ButtonSelectDataHS.Size = New System.Drawing.Size(31, 23)
@@ -660,7 +670,7 @@ Partial Class F_Main
         Me.TextBoxDataHS.Location = New System.Drawing.Point(144, 83)
         Me.TextBoxDataHS.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataHS.Name = "TextBoxDataHS"
-        Me.TextBoxDataHS.Size = New System.Drawing.Size(655, 20)
+        Me.TextBoxDataHS.Size = New System.Drawing.Size(643, 20)
         Me.TextBoxDataHS.TabIndex = 17
         '
         'ButtonDataHS
@@ -680,7 +690,7 @@ Partial Class F_Main
         Me.ButtonEval.Enabled = False
         Me.ButtonEval.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ButtonEval.Image = Global.AirDrag.My.Resources.Resources.Play
-        Me.ButtonEval.Location = New System.Drawing.Point(838, 17)
+        Me.ButtonEval.Location = New System.Drawing.Point(826, 17)
         Me.ButtonEval.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonEval.Name = "ButtonEval"
         Me.ButtonEval.Size = New System.Drawing.Size(60, 113)
@@ -697,7 +707,7 @@ Partial Class F_Main
         Me.TextBoxMSCT.Location = New System.Drawing.Point(144, 19)
         Me.TextBoxMSCT.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxMSCT.Name = "TextBoxMSCT"
-        Me.TextBoxMSCT.Size = New System.Drawing.Size(655, 20)
+        Me.TextBoxMSCT.Size = New System.Drawing.Size(643, 20)
         Me.TextBoxMSCT.TabIndex = 13
         '
         'ButtonMSCT
@@ -715,7 +725,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectMSCT.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectMSCT.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectMSCT.Location = New System.Drawing.Point(803, 17)
+        Me.ButtonSelectMSCT.Location = New System.Drawing.Point(791, 17)
         Me.ButtonSelectMSCT.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectMSCT.Name = "ButtonSelectMSCT"
         Me.ButtonSelectMSCT.Size = New System.Drawing.Size(31, 23)
@@ -759,7 +769,7 @@ Partial Class F_Main
         Me.ButtonCalC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCalC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ButtonCalC.Image = Global.AirDrag.My.Resources.Resources.Play
-        Me.ButtonCalC.Location = New System.Drawing.Point(837, 18)
+        Me.ButtonCalC.Location = New System.Drawing.Point(825, 18)
         Me.ButtonCalC.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonCalC.Name = "ButtonCalC"
         Me.ButtonCalC.Size = New System.Drawing.Size(60, 50)
@@ -782,7 +792,7 @@ Partial Class F_Main
         Me.GroupBox1.Controls.Add(Me.ButtonCalC)
         Me.GroupBox1.Location = New System.Drawing.Point(6, 81)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(906, 79)
+        Me.GroupBox1.Size = New System.Drawing.Size(894, 79)
         Me.GroupBox1.TabIndex = 33
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Misalignment test"
@@ -794,7 +804,7 @@ Partial Class F_Main
         Me.TextBoxDataC.Location = New System.Drawing.Point(144, 47)
         Me.TextBoxDataC.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataC.Name = "TextBoxDataC"
-        Me.TextBoxDataC.Size = New System.Drawing.Size(654, 20)
+        Me.TextBoxDataC.Size = New System.Drawing.Size(642, 20)
         Me.TextBoxDataC.TabIndex = 6
         '
         'ButtonDataC
@@ -812,7 +822,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectDataC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectDataC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectDataC.Location = New System.Drawing.Point(802, 45)
+        Me.ButtonSelectDataC.Location = New System.Drawing.Point(790, 45)
         Me.ButtonSelectDataC.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectDataC.Name = "ButtonSelectDataC"
         Me.ButtonSelectDataC.Size = New System.Drawing.Size(31, 23)
@@ -827,7 +837,7 @@ Partial Class F_Main
         Me.TextBoxMSCC.Location = New System.Drawing.Point(144, 20)
         Me.TextBoxMSCC.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxMSCC.Name = "TextBoxMSCC"
-        Me.TextBoxMSCC.Size = New System.Drawing.Size(654, 20)
+        Me.TextBoxMSCC.Size = New System.Drawing.Size(642, 20)
         Me.TextBoxMSCC.TabIndex = 4
         '
         'ButtonMSCC
@@ -845,7 +855,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectMSCC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectMSCC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectMSCC.Location = New System.Drawing.Point(802, 18)
+        Me.ButtonSelectMSCC.Location = New System.Drawing.Point(790, 18)
         Me.ButtonSelectMSCC.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectMSCC.Name = "ButtonSelectMSCC"
         Me.ButtonSelectMSCC.Size = New System.Drawing.Size(31, 23)
@@ -952,18 +962,18 @@ Partial Class F_Main
         'TabControlOutMsg
         '
         Me.TabControlOutMsg.Alignment = System.Windows.Forms.TabAlignment.Bottom
-        Me.TabControlOutMsg.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.TabControlOutMsg.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageMSG)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageWar)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageErr)
         Me.TabControlOutMsg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabControlOutMsg.Location = New System.Drawing.Point(8, 565)
+        Me.TabControlOutMsg.Location = New System.Drawing.Point(8, 567)
         Me.TabControlOutMsg.Margin = New System.Windows.Forms.Padding(2)
+        Me.TabControlOutMsg.Multiline = True
         Me.TabControlOutMsg.Name = "TabControlOutMsg"
         Me.TabControlOutMsg.SelectedIndex = 0
-        Me.TabControlOutMsg.Size = New System.Drawing.Size(925, 156)
+        Me.TabControlOutMsg.Size = New System.Drawing.Size(913, 156)
         Me.TabControlOutMsg.TabIndex = 34
         '
         'TabPageMSG
@@ -974,7 +984,7 @@ Partial Class F_Main
         Me.TabPageMSG.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageMSG.Name = "TabPageMSG"
         Me.TabPageMSG.Padding = New System.Windows.Forms.Padding(2)
-        Me.TabPageMSG.Size = New System.Drawing.Size(917, 130)
+        Me.TabPageMSG.Size = New System.Drawing.Size(905, 130)
         Me.TabPageMSG.TabIndex = 0
         Me.TabPageMSG.Text = "Messages(0)"
         Me.TabPageMSG.UseVisualStyleBackColor = True
@@ -991,7 +1001,7 @@ Partial Class F_Main
         Me.ListBoxMSG.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxMSG.Name = "ListBoxMSG"
         Me.ListBoxMSG.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
-        Me.ListBoxMSG.Size = New System.Drawing.Size(913, 121)
+        Me.ListBoxMSG.Size = New System.Drawing.Size(901, 121)
         Me.ListBoxMSG.TabIndex = 23
         '
         'TabPageWar
@@ -1001,7 +1011,7 @@ Partial Class F_Main
         Me.TabPageWar.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageWar.Name = "TabPageWar"
         Me.TabPageWar.Padding = New System.Windows.Forms.Padding(2)
-        Me.TabPageWar.Size = New System.Drawing.Size(917, 130)
+        Me.TabPageWar.Size = New System.Drawing.Size(905, 130)
         Me.TabPageWar.TabIndex = 1
         Me.TabPageWar.Text = "Warnings (0)"
         Me.TabPageWar.UseVisualStyleBackColor = True
@@ -1018,7 +1028,7 @@ Partial Class F_Main
         Me.ListBoxWar.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxWar.Name = "ListBoxWar"
         Me.ListBoxWar.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
-        Me.ListBoxWar.Size = New System.Drawing.Size(915, 121)
+        Me.ListBoxWar.Size = New System.Drawing.Size(901, 121)
         Me.ListBoxWar.TabIndex = 26
         '
         'TabPageErr
@@ -1027,7 +1037,7 @@ Partial Class F_Main
         Me.TabPageErr.Location = New System.Drawing.Point(4, 4)
         Me.TabPageErr.Margin = New System.Windows.Forms.Padding(2)
         Me.TabPageErr.Name = "TabPageErr"
-        Me.TabPageErr.Size = New System.Drawing.Size(917, 130)
+        Me.TabPageErr.Size = New System.Drawing.Size(905, 130)
         Me.TabPageErr.TabIndex = 2
         Me.TabPageErr.Text = "Errors (0)"
         Me.TabPageErr.UseVisualStyleBackColor = True
@@ -1044,7 +1054,7 @@ Partial Class F_Main
         Me.ListBoxErr.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxErr.Name = "ListBoxErr"
         Me.ListBoxErr.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple
-        Me.ListBoxErr.Size = New System.Drawing.Size(913, 121)
+        Me.ListBoxErr.Size = New System.Drawing.Size(901, 121)
         Me.ListBoxErr.TabIndex = 27
         '
         'TextBoxVeh
@@ -1066,7 +1076,7 @@ Partial Class F_Main
         Me.TabControl1.Location = New System.Drawing.Point(8, 72)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(925, 488)
+        Me.TabControl1.Size = New System.Drawing.Size(913, 488)
         Me.TabControl1.TabIndex = 35
         '
         'TPMain
@@ -1078,7 +1088,7 @@ Partial Class F_Main
         Me.TPMain.Location = New System.Drawing.Point(4, 22)
         Me.TPMain.Name = "TPMain"
         Me.TPMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.TPMain.Size = New System.Drawing.Size(917, 462)
+        Me.TPMain.Size = New System.Drawing.Size(905, 462)
         Me.TPMain.TabIndex = 0
         Me.TPMain.Text = "Main"
         Me.TPMain.UseVisualStyleBackColor = True
@@ -1111,22 +1121,94 @@ Partial Class F_Main
         '
         'TPCriteria
         '
+        Me.TPCriteria.Controls.Add(Me.GroupBox16)
         Me.TPCriteria.Controls.Add(Me.GroupBox5)
         Me.TPCriteria.Controls.Add(Me.GroupBox7)
-        Me.TPCriteria.Controls.Add(Me.GroupBox8)
+        Me.TPCriteria.Controls.Add(Me.GB_hz_out)
         Me.TPCriteria.Controls.Add(Me.GroupBox9)
-        Me.TPCriteria.Controls.Add(Me.TBInfoCrt)
-        Me.TPCriteria.Controls.Add(Me.PBInfoIconCrt)
         Me.TPCriteria.Controls.Add(Me.GroupBox14)
         Me.TPCriteria.Controls.Add(Me.GroupBox10)
-        Me.TPCriteria.Controls.Add(Me.GB_hz_out)
         Me.TPCriteria.Location = New System.Drawing.Point(4, 22)
         Me.TPCriteria.Name = "TPCriteria"
         Me.TPCriteria.Padding = New System.Windows.Forms.Padding(3)
-        Me.TPCriteria.Size = New System.Drawing.Size(917, 462)
+        Me.TPCriteria.Size = New System.Drawing.Size(905, 462)
         Me.TPCriteria.TabIndex = 1
         Me.TPCriteria.Text = "Criteria"
         Me.TPCriteria.UseVisualStyleBackColor = True
+        '
+        'GroupBox16
+        '
+        Me.GroupBox16.Controls.Add(Me.GroupBox6)
+        Me.GroupBox16.Controls.Add(Me.GroupBox8)
+        Me.GroupBox16.Location = New System.Drawing.Point(681, 107)
+        Me.GroupBox16.Name = "GroupBox16"
+        Me.GroupBox16.Size = New System.Drawing.Size(219, 86)
+        Me.GroupBox16.TabIndex = 97
+        Me.GroupBox16.TabStop = False
+        '
+        'GroupBox6
+        '
+        Me.GroupBox6.Controls.Add(Me.ButtonModeDec)
+        Me.GroupBox6.Controls.Add(Me.ButtonModeEng)
+        Me.GroupBox6.Location = New System.Drawing.Point(6, 6)
+        Me.GroupBox6.Name = "GroupBox6"
+        Me.GroupBox6.Size = New System.Drawing.Size(97, 77)
+        Me.GroupBox6.TabIndex = 95
+        Me.GroupBox6.TabStop = False
+        Me.GroupBox6.Text = "Mode selection"
+        '
+        'ButtonModeDec
+        '
+        Me.ButtonModeDec.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ButtonModeDec.Location = New System.Drawing.Point(6, 45)
+        Me.ButtonModeDec.Name = "ButtonModeDec"
+        Me.ButtonModeDec.Size = New System.Drawing.Size(86, 27)
+        Me.ButtonModeDec.TabIndex = 93
+        Me.ButtonModeDec.Text = "Declaration"
+        Me.ButtonModeDec.UseVisualStyleBackColor = True
+        '
+        'ButtonModeEng
+        '
+        Me.ButtonModeEng.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ButtonModeEng.Location = New System.Drawing.Point(6, 19)
+        Me.ButtonModeEng.Name = "ButtonModeEng"
+        Me.ButtonModeEng.Size = New System.Drawing.Size(86, 27)
+        Me.ButtonModeEng.TabIndex = 92
+        Me.ButtonModeEng.Text = "Engineering"
+        Me.ButtonModeEng.UseVisualStyleBackColor = True
+        '
+        'GroupBox8
+        '
+        Me.GroupBox8.Controls.Add(Me.ButtonCrtExport)
+        Me.GroupBox8.Controls.Add(Me.ButtonCrtImport)
+        Me.GroupBox8.Location = New System.Drawing.Point(109, 6)
+        Me.GroupBox8.Name = "GroupBox8"
+        Me.GroupBox8.Size = New System.Drawing.Size(105, 77)
+        Me.GroupBox8.TabIndex = 96
+        Me.GroupBox8.TabStop = False
+        Me.GroupBox8.Text = "Criteria operations"
+        '
+        'ButtonCrtExport
+        '
+        Me.ButtonCrtExport.Image = Global.AirDrag.My.Resources.Resources.Speichern_unter_klein
+        Me.ButtonCrtExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ButtonCrtExport.Location = New System.Drawing.Point(6, 45)
+        Me.ButtonCrtExport.Name = "ButtonCrtExport"
+        Me.ButtonCrtExport.Size = New System.Drawing.Size(80, 27)
+        Me.ButtonCrtExport.TabIndex = 86
+        Me.ButtonCrtExport.Text = " Export"
+        Me.ButtonCrtExport.UseVisualStyleBackColor = True
+        '
+        'ButtonCrtImport
+        '
+        Me.ButtonCrtImport.Image = Global.AirDrag.My.Resources.Resources.Öffnen
+        Me.ButtonCrtImport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ButtonCrtImport.Location = New System.Drawing.Point(6, 19)
+        Me.ButtonCrtImport.Name = "ButtonCrtImport"
+        Me.ButtonCrtImport.Size = New System.Drawing.Size(80, 27)
+        Me.ButtonCrtImport.TabIndex = 87
+        Me.ButtonCrtImport.Text = "Import"
+        Me.ButtonCrtImport.UseVisualStyleBackColor = True
         '
         'GroupBox5
         '
@@ -1139,9 +1221,9 @@ Partial Class F_Main
         Me.GroupBox5.Controls.Add(Me.LB_slope_max)
         Me.GroupBox5.Controls.Add(Me.Label52)
         Me.GroupBox5.Controls.Add(Me.TB_slope_max)
-        Me.GroupBox5.Location = New System.Drawing.Point(6, 144)
+        Me.GroupBox5.Location = New System.Drawing.Point(681, 10)
         Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Size = New System.Drawing.Size(219, 106)
+        Me.GroupBox5.Size = New System.Drawing.Size(219, 95)
         Me.GroupBox5.TabIndex = 91
         Me.GroupBox5.TabStop = False
         Me.GroupBox5.Text = "Altitude profile criteria"
@@ -1241,7 +1323,7 @@ Partial Class F_Main
         Me.GroupBox7.Controls.Add(Me.TB_length_MS_max)
         Me.GroupBox7.Controls.Add(Me.Label65)
         Me.GroupBox7.Controls.Add(Me.Label54)
-        Me.GroupBox7.Location = New System.Drawing.Point(231, 224)
+        Me.GroupBox7.Location = New System.Drawing.Point(456, 6)
         Me.GroupBox7.Name = "GroupBox7"
         Me.GroupBox7.Size = New System.Drawing.Size(219, 152)
         Me.GroupBox7.TabIndex = 42
@@ -1378,176 +1460,29 @@ Partial Class F_Main
         Me.Label54.TabIndex = 67
         Me.Label54.Text = "[m]"
         '
-        'GroupBox8
-        '
-        Me.GroupBox8.Controls.Add(Me.LDsMinHeadMS)
-        Me.GroupBox8.Controls.Add(Me.TB_segruns_min_head_MS)
-        Me.GroupBox8.Controls.Add(Me.LDsMinHS)
-        Me.GroupBox8.Controls.Add(Me.TB_segruns_min_HS)
-        Me.GroupBox8.Controls.Add(Me.LDsMinLS)
-        Me.GroupBox8.Controls.Add(Me.TB_segruns_min_LS)
-        Me.GroupBox8.Controls.Add(Me.LDsMinCAL)
-        Me.GroupBox8.Controls.Add(Me.TB_segruns_min_CAL)
-        Me.GroupBox8.Location = New System.Drawing.Point(6, 256)
-        Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Size = New System.Drawing.Size(219, 120)
-        Me.GroupBox8.TabIndex = 43
-        Me.GroupBox8.TabStop = False
-        Me.GroupBox8.Text = "Requirements on number of valid datasets"
-        '
-        'LDsMinHeadMS
-        '
-        Me.LDsMinHeadMS.AutoSize = True
-        Me.LDsMinHeadMS.Location = New System.Drawing.Point(7, 97)
-        Me.LDsMinHeadMS.Name = "LDsMinHeadMS"
-        Me.LDsMinHeadMS.Size = New System.Drawing.Size(118, 13)
-        Me.LDsMinHeadMS.TabIndex = 51
-        Me.LDsMinHeadMS.Text = "segruns_min_head_MS"
-        '
-        'TB_segruns_min_head_MS
-        '
-        Me.TB_segruns_min_head_MS.Location = New System.Drawing.Point(129, 94)
-        Me.TB_segruns_min_head_MS.Name = "TB_segruns_min_head_MS"
-        Me.TB_segruns_min_head_MS.Size = New System.Drawing.Size(45, 20)
-        Me.TB_segruns_min_head_MS.TabIndex = 50
-        Me.TB_segruns_min_head_MS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'LDsMinHS
-        '
-        Me.LDsMinHS.AutoSize = True
-        Me.LDsMinHS.Location = New System.Drawing.Point(7, 71)
-        Me.LDsMinHS.Name = "LDsMinHS"
-        Me.LDsMinHS.Size = New System.Drawing.Size(87, 13)
-        Me.LDsMinHS.TabIndex = 48
-        Me.LDsMinHS.Text = "segruns_min_HS"
-        '
-        'TB_segruns_min_HS
-        '
-        Me.TB_segruns_min_HS.Location = New System.Drawing.Point(129, 68)
-        Me.TB_segruns_min_HS.Name = "TB_segruns_min_HS"
-        Me.TB_segruns_min_HS.Size = New System.Drawing.Size(45, 20)
-        Me.TB_segruns_min_HS.TabIndex = 47
-        Me.TB_segruns_min_HS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'LDsMinLS
-        '
-        Me.LDsMinLS.AutoSize = True
-        Me.LDsMinLS.Location = New System.Drawing.Point(7, 45)
-        Me.LDsMinLS.Name = "LDsMinLS"
-        Me.LDsMinLS.Size = New System.Drawing.Size(85, 13)
-        Me.LDsMinLS.TabIndex = 45
-        Me.LDsMinLS.Text = "segruns_min_LS"
-        '
-        'TB_segruns_min_LS
-        '
-        Me.TB_segruns_min_LS.Location = New System.Drawing.Point(129, 42)
-        Me.TB_segruns_min_LS.Name = "TB_segruns_min_LS"
-        Me.TB_segruns_min_LS.Size = New System.Drawing.Size(45, 20)
-        Me.TB_segruns_min_LS.TabIndex = 44
-        Me.TB_segruns_min_LS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'LDsMinCAL
-        '
-        Me.LDsMinCAL.AutoSize = True
-        Me.LDsMinCAL.Location = New System.Drawing.Point(7, 19)
-        Me.LDsMinCAL.Name = "LDsMinCAL"
-        Me.LDsMinCAL.Size = New System.Drawing.Size(92, 13)
-        Me.LDsMinCAL.TabIndex = 42
-        Me.LDsMinCAL.Text = "segruns_min_CAL"
-        '
-        'TB_segruns_min_CAL
-        '
-        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(129, 16)
-        Me.TB_segruns_min_CAL.Name = "TB_segruns_min_CAL"
-        Me.TB_segruns_min_CAL.Size = New System.Drawing.Size(45, 20)
-        Me.TB_segruns_min_CAL.TabIndex = 41
-        Me.TB_segruns_min_CAL.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
         'GroupBox9
         '
-        Me.GroupBox9.Controls.Add(Me.ButtonCrtImport)
-        Me.GroupBox9.Controls.Add(Me.ButtonCrtExport)
-        Me.GroupBox9.Controls.Add(Me.ButtonCrtReset)
-        Me.GroupBox9.Controls.Add(Me.LDistFloat)
-        Me.GroupBox9.Controls.Add(Me.TB_dist_float)
-        Me.GroupBox9.Controls.Add(Me.Label81)
         Me.GroupBox9.Controls.Add(Me.GroupBox15)
         Me.GroupBox9.Controls.Add(Me.GroupBox13)
-        Me.GroupBox9.Location = New System.Drawing.Point(456, 6)
+        Me.GroupBox9.Controls.Add(Me.TBInfoCrt)
+        Me.GroupBox9.Controls.Add(Me.PBInfoIconCrt)
+        Me.GroupBox9.Location = New System.Drawing.Point(6, 199)
         Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(455, 454)
+        Me.GroupBox9.Size = New System.Drawing.Size(894, 269)
         Me.GroupBox9.TabIndex = 44
         Me.GroupBox9.TabStop = False
         Me.GroupBox9.Text = "Dataset validity criteria"
-        '
-        'ButtonCrtImport
-        '
-        Me.ButtonCrtImport.Image = Global.AirDrag.My.Resources.Resources.Öffnen
-        Me.ButtonCrtImport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ButtonCrtImport.Location = New System.Drawing.Point(305, 62)
-        Me.ButtonCrtImport.Name = "ButtonCrtImport"
-        Me.ButtonCrtImport.Size = New System.Drawing.Size(143, 43)
-        Me.ButtonCrtImport.TabIndex = 87
-        Me.ButtonCrtImport.Text = "Import Criteria"
-        Me.ButtonCrtImport.UseVisualStyleBackColor = True
-        '
-        'ButtonCrtExport
-        '
-        Me.ButtonCrtExport.Image = Global.AirDrag.My.Resources.Resources.Speichern_unter
-        Me.ButtonCrtExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ButtonCrtExport.Location = New System.Drawing.Point(306, 111)
-        Me.ButtonCrtExport.Name = "ButtonCrtExport"
-        Me.ButtonCrtExport.Size = New System.Drawing.Size(142, 43)
-        Me.ButtonCrtExport.TabIndex = 86
-        Me.ButtonCrtExport.Text = "Export Criteria"
-        Me.ButtonCrtExport.UseVisualStyleBackColor = True
-        '
-        'ButtonCrtReset
-        '
-        Me.ButtonCrtReset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ButtonCrtReset.Location = New System.Drawing.Point(306, 13)
-        Me.ButtonCrtReset.Name = "ButtonCrtReset"
-        Me.ButtonCrtReset.Size = New System.Drawing.Size(142, 43)
-        Me.ButtonCrtReset.TabIndex = 85
-        Me.ButtonCrtReset.Text = "Reset Criteria"
-        Me.ButtonCrtReset.UseVisualStyleBackColor = True
-        '
-        'LDistFloat
-        '
-        Me.LDistFloat.AutoSize = True
-        Me.LDistFloat.Location = New System.Drawing.Point(12, 22)
-        Me.LDistFloat.Name = "LDistFloat"
-        Me.LDistFloat.Size = New System.Drawing.Size(49, 13)
-        Me.LDistFloat.TabIndex = 83
-        Me.LDistFloat.Text = "dist_float"
-        '
-        'TB_dist_float
-        '
-        Me.TB_dist_float.Location = New System.Drawing.Point(134, 19)
-        Me.TB_dist_float.Name = "TB_dist_float"
-        Me.TB_dist_float.Size = New System.Drawing.Size(45, 20)
-        Me.TB_dist_float.TabIndex = 82
-        Me.TB_dist_float.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label81
-        '
-        Me.Label81.AutoSize = True
-        Me.Label81.Location = New System.Drawing.Point(179, 22)
-        Me.Label81.Name = "Label81"
-        Me.Label81.Size = New System.Drawing.Size(21, 13)
-        Me.Label81.TabIndex = 84
-        Me.Label81.Text = "[m]"
         '
         'GroupBox15
         '
         Me.GroupBox15.Controls.Add(Me.LLengCrit)
         Me.GroupBox15.Controls.Add(Me.TB_leng_crit)
-        Me.GroupBox15.Controls.Add(Me.Label79)
         Me.GroupBox15.Controls.Add(Me.GroupBox12)
         Me.GroupBox15.Controls.Add(Me.GroupBox11)
-        Me.GroupBox15.Location = New System.Drawing.Point(6, 152)
+        Me.GroupBox15.Controls.Add(Me.Label79)
+        Me.GroupBox15.Location = New System.Drawing.Point(223, 19)
         Me.GroupBox15.Name = "GroupBox15"
-        Me.GroupBox15.Size = New System.Drawing.Size(442, 298)
+        Me.GroupBox15.Size = New System.Drawing.Size(663, 245)
         Me.GroupBox15.TabIndex = 81
         Me.GroupBox15.TabStop = False
         Me.GroupBox15.Text = "Low and high speed test"
@@ -1569,21 +1504,18 @@ Partial Class F_Main
         Me.TB_leng_crit.TabIndex = 79
         Me.TB_leng_crit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'Label79
-        '
-        Me.Label79.AutoSize = True
-        Me.Label79.Location = New System.Drawing.Point(179, 22)
-        Me.Label79.Name = "Label79"
-        Me.Label79.Size = New System.Drawing.Size(21, 13)
-        Me.Label79.TabIndex = 81
-        Me.Label79.Text = "[m]"
-        '
         'GroupBox12
         '
+        Me.GroupBox12.Controls.Add(Me.Label21)
         Me.GroupBox12.Controls.Add(Me.Label11)
+        Me.GroupBox12.Controls.Add(Me.Label20)
         Me.GroupBox12.Controls.Add(Me.TB_delta_v_avg_min_HS)
+        Me.GroupBox12.Controls.Add(Me.LDsMinHeadHS)
         Me.GroupBox12.Controls.Add(Me.LB_delta_v_avg_min_HS)
+        Me.GroupBox12.Controls.Add(Me.TB_segruns_min_head_HS)
         Me.GroupBox12.Controls.Add(Me.Label10)
+        Me.GroupBox12.Controls.Add(Me.LDsMinHS)
+        Me.GroupBox12.Controls.Add(Me.TB_segruns_min_HS)
         Me.GroupBox12.Controls.Add(Me.TB_v_veh_avg_max_HS)
         Me.GroupBox12.Controls.Add(Me.LB_v_veh_avg_max_HS)
         Me.GroupBox12.Controls.Add(Me.Label5)
@@ -1607,38 +1539,73 @@ Partial Class F_Main
         Me.GroupBox12.Controls.Add(Me.LB_v_wind_1s_max_HS)
         Me.GroupBox12.Controls.Add(Me.LB_v_veh_avg_min_HS)
         Me.GroupBox12.Controls.Add(Me.Label61)
-        Me.GroupBox12.Location = New System.Drawing.Point(223, 45)
+        Me.GroupBox12.Location = New System.Drawing.Point(223, 43)
         Me.GroupBox12.Name = "GroupBox12"
-        Me.GroupBox12.Size = New System.Drawing.Size(211, 250)
+        Me.GroupBox12.Size = New System.Drawing.Size(434, 200)
         Me.GroupBox12.TabIndex = 78
         Me.GroupBox12.TabStop = False
         Me.GroupBox12.Text = "High speed test"
         '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(389, 99)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(16, 13)
+        Me.Label21.TabIndex = 87
+        Me.Label21.Text = "[-]"
+        '
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(173, 230)
+        Me.Label11.Location = New System.Drawing.Point(387, 47)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(38, 13)
         Me.Label11.TabIndex = 103
         Me.Label11.Text = "[km/h]"
         '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(389, 73)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(16, 13)
+        Me.Label20.TabIndex = 86
+        Me.Label20.Text = "[-]"
+        '
         'TB_delta_v_avg_min_HS
         '
-        Me.TB_delta_v_avg_min_HS.Location = New System.Drawing.Point(128, 227)
+        Me.TB_delta_v_avg_min_HS.Location = New System.Drawing.Point(342, 44)
         Me.TB_delta_v_avg_min_HS.Name = "TB_delta_v_avg_min_HS"
         Me.TB_delta_v_avg_min_HS.Size = New System.Drawing.Size(45, 20)
         Me.TB_delta_v_avg_min_HS.TabIndex = 102
         Me.TB_delta_v_avg_min_HS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'LDsMinHeadHS
+        '
+        Me.LDsMinHeadHS.AutoSize = True
+        Me.LDsMinHeadHS.Location = New System.Drawing.Point(220, 99)
+        Me.LDsMinHeadHS.Name = "LDsMinHeadHS"
+        Me.LDsMinHeadHS.Size = New System.Drawing.Size(117, 13)
+        Me.LDsMinHeadHS.TabIndex = 51
+        Me.LDsMinHeadHS.Text = "segruns_min_head_HS"
+        '
         'LB_delta_v_avg_min_HS
         '
         Me.LB_delta_v_avg_min_HS.AutoSize = True
-        Me.LB_delta_v_avg_min_HS.Location = New System.Drawing.Point(6, 230)
+        Me.LB_delta_v_avg_min_HS.Location = New System.Drawing.Point(220, 47)
         Me.LB_delta_v_avg_min_HS.Name = "LB_delta_v_avg_min_HS"
         Me.LB_delta_v_avg_min_HS.Size = New System.Drawing.Size(109, 13)
         Me.LB_delta_v_avg_min_HS.TabIndex = 101
         Me.LB_delta_v_avg_min_HS.Text = "delta_v_avg_min_HS"
+        '
+        'TB_segruns_min_head_HS
+        '
+        Me.TB_segruns_min_head_HS.Location = New System.Drawing.Point(342, 96)
+        Me.TB_segruns_min_head_HS.Name = "TB_segruns_min_head_HS"
+        Me.TB_segruns_min_head_HS.Size = New System.Drawing.Size(45, 20)
+        Me.TB_segruns_min_head_HS.TabIndex = 50
+        Me.TB_segruns_min_head_HS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label10
         '
@@ -1648,6 +1615,23 @@ Partial Class F_Main
         Me.Label10.Size = New System.Drawing.Size(38, 13)
         Me.Label10.TabIndex = 100
         Me.Label10.Text = "[km/h]"
+        '
+        'LDsMinHS
+        '
+        Me.LDsMinHS.AutoSize = True
+        Me.LDsMinHS.Location = New System.Drawing.Point(220, 73)
+        Me.LDsMinHS.Name = "LDsMinHS"
+        Me.LDsMinHS.Size = New System.Drawing.Size(87, 13)
+        Me.LDsMinHS.TabIndex = 48
+        Me.LDsMinHS.Text = "segruns_min_HS"
+        '
+        'TB_segruns_min_HS
+        '
+        Me.TB_segruns_min_HS.Location = New System.Drawing.Point(342, 70)
+        Me.TB_segruns_min_HS.Name = "TB_segruns_min_HS"
+        Me.TB_segruns_min_HS.Size = New System.Drawing.Size(45, 20)
+        Me.TB_segruns_min_HS.TabIndex = 47
+        Me.TB_segruns_min_HS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'TB_v_veh_avg_max_HS
         '
@@ -1747,7 +1731,7 @@ Partial Class F_Main
         'Label62
         '
         Me.Label62.AutoSize = True
-        Me.Label62.Location = New System.Drawing.Point(173, 204)
+        Me.Label62.Location = New System.Drawing.Point(387, 21)
         Me.Label62.Name = "Label62"
         Me.Label62.Size = New System.Drawing.Size(17, 13)
         Me.Label62.TabIndex = 88
@@ -1755,7 +1739,7 @@ Partial Class F_Main
         '
         'TB_beta_avg_max_HS
         '
-        Me.TB_beta_avg_max_HS.Location = New System.Drawing.Point(128, 201)
+        Me.TB_beta_avg_max_HS.Location = New System.Drawing.Point(342, 18)
         Me.TB_beta_avg_max_HS.Name = "TB_beta_avg_max_HS"
         Me.TB_beta_avg_max_HS.Size = New System.Drawing.Size(45, 20)
         Me.TB_beta_avg_max_HS.TabIndex = 87
@@ -1764,7 +1748,7 @@ Partial Class F_Main
         'LB_beta_avg_max_HS
         '
         Me.LB_beta_avg_max_HS.AutoSize = True
-        Me.LB_beta_avg_max_HS.Location = New System.Drawing.Point(6, 204)
+        Me.LB_beta_avg_max_HS.Location = New System.Drawing.Point(220, 21)
         Me.LB_beta_avg_max_HS.Name = "LB_beta_avg_max_HS"
         Me.LB_beta_avg_max_HS.Size = New System.Drawing.Size(98, 13)
         Me.LB_beta_avg_max_HS.TabIndex = 86
@@ -1850,10 +1834,16 @@ Partial Class F_Main
         '
         'GroupBox11
         '
+        Me.GroupBox11.Controls.Add(Me.Label13)
         Me.GroupBox11.Controls.Add(Me.Label3)
         Me.GroupBox11.Controls.Add(Me.TB_delta_n_ec_LS)
         Me.GroupBox11.Controls.Add(Me.LB_delta_n_ec_LS)
+        Me.GroupBox11.Controls.Add(Me.LDistFloat)
+        Me.GroupBox11.Controls.Add(Me.LDsMinLS)
+        Me.GroupBox11.Controls.Add(Me.TB_segruns_min_LS)
+        Me.GroupBox11.Controls.Add(Me.TB_dist_float)
         Me.GroupBox11.Controls.Add(Me.Label72)
+        Me.GroupBox11.Controls.Add(Me.Label81)
         Me.GroupBox11.Controls.Add(Me.TB_tq_sum_float_delta_LS)
         Me.GroupBox11.Controls.Add(Me.LB_tq_sum_float_delta_LS)
         Me.GroupBox11.Controls.Add(Me.Label46)
@@ -1865,12 +1855,21 @@ Partial Class F_Main
         Me.GroupBox11.Controls.Add(Me.Label50)
         Me.GroupBox11.Controls.Add(Me.LB_v_veh_avg_max_LS)
         Me.GroupBox11.Controls.Add(Me.TB_v_veh_avg_min_LS)
-        Me.GroupBox11.Location = New System.Drawing.Point(6, 45)
+        Me.GroupBox11.Location = New System.Drawing.Point(6, 43)
         Me.GroupBox11.Name = "GroupBox11"
-        Me.GroupBox11.Size = New System.Drawing.Size(211, 151)
+        Me.GroupBox11.Size = New System.Drawing.Size(211, 200)
         Me.GroupBox11.TabIndex = 77
         Me.GroupBox11.TabStop = False
         Me.GroupBox11.Text = "Low speed test"
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(168, 177)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(16, 13)
+        Me.Label13.TabIndex = 86
+        Me.Label13.Text = "[-]"
         '
         'Label3
         '
@@ -1898,6 +1897,40 @@ Partial Class F_Main
         Me.LB_delta_n_ec_LS.TabIndex = 83
         Me.LB_delta_n_ec_LS.Text = "delta_n_ec_LS"
         '
+        'LDistFloat
+        '
+        Me.LDistFloat.AutoSize = True
+        Me.LDistFloat.Location = New System.Drawing.Point(0, 151)
+        Me.LDistFloat.Name = "LDistFloat"
+        Me.LDistFloat.Size = New System.Drawing.Size(49, 13)
+        Me.LDistFloat.TabIndex = 83
+        Me.LDistFloat.Text = "dist_float"
+        '
+        'LDsMinLS
+        '
+        Me.LDsMinLS.AutoSize = True
+        Me.LDsMinLS.Location = New System.Drawing.Point(0, 177)
+        Me.LDsMinLS.Name = "LDsMinLS"
+        Me.LDsMinLS.Size = New System.Drawing.Size(85, 13)
+        Me.LDsMinLS.TabIndex = 45
+        Me.LDsMinLS.Text = "segruns_min_LS"
+        '
+        'TB_segruns_min_LS
+        '
+        Me.TB_segruns_min_LS.Location = New System.Drawing.Point(122, 174)
+        Me.TB_segruns_min_LS.Name = "TB_segruns_min_LS"
+        Me.TB_segruns_min_LS.Size = New System.Drawing.Size(45, 20)
+        Me.TB_segruns_min_LS.TabIndex = 44
+        Me.TB_segruns_min_LS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'TB_dist_float
+        '
+        Me.TB_dist_float.Location = New System.Drawing.Point(122, 148)
+        Me.TB_dist_float.Name = "TB_dist_float"
+        Me.TB_dist_float.Size = New System.Drawing.Size(45, 20)
+        Me.TB_dist_float.TabIndex = 82
+        Me.TB_dist_float.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
         'Label72
         '
         Me.Label72.AutoSize = True
@@ -1906,6 +1939,15 @@ Partial Class F_Main
         Me.Label72.Size = New System.Drawing.Size(16, 13)
         Me.Label72.TabIndex = 82
         Me.Label72.Text = "[-]"
+        '
+        'Label81
+        '
+        Me.Label81.AutoSize = True
+        Me.Label81.Location = New System.Drawing.Point(167, 151)
+        Me.Label81.Name = "Label81"
+        Me.Label81.Size = New System.Drawing.Size(21, 13)
+        Me.Label81.TabIndex = 84
+        Me.Label81.Text = "[m]"
         '
         'TB_tq_sum_float_delta_LS
         '
@@ -2002,23 +2044,44 @@ Partial Class F_Main
         Me.TB_v_veh_avg_min_LS.TabIndex = 71
         Me.TB_v_veh_avg_min_LS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'Label79
+        '
+        Me.Label79.AutoSize = True
+        Me.Label79.Location = New System.Drawing.Point(179, 22)
+        Me.Label79.Name = "Label79"
+        Me.Label79.Size = New System.Drawing.Size(21, 13)
+        Me.Label79.TabIndex = 81
+        Me.Label79.Text = "[m]"
+        '
         'GroupBox13
         '
+        Me.GroupBox13.Controls.Add(Me.Label19)
         Me.GroupBox13.Controls.Add(Me.Label40)
         Me.GroupBox13.Controls.Add(Me.TB_v_wind_avg_max_CAL)
         Me.GroupBox13.Controls.Add(Me.LvWind1sCALMax)
         Me.GroupBox13.Controls.Add(Me.LvWindAveCALMax)
+        Me.GroupBox13.Controls.Add(Me.LDsMinCAL)
+        Me.GroupBox13.Controls.Add(Me.TB_segruns_min_CAL)
         Me.GroupBox13.Controls.Add(Me.TB_beta_avg_max_CAL)
         Me.GroupBox13.Controls.Add(Me.Label44)
         Me.GroupBox13.Controls.Add(Me.Label42)
         Me.GroupBox13.Controls.Add(Me.TB_v_wind_1s_max_CAL)
         Me.GroupBox13.Controls.Add(Me.LBetaAveCALMax)
-        Me.GroupBox13.Location = New System.Drawing.Point(6, 45)
+        Me.GroupBox13.Location = New System.Drawing.Point(6, 19)
         Me.GroupBox13.Name = "GroupBox13"
-        Me.GroupBox13.Size = New System.Drawing.Size(211, 101)
+        Me.GroupBox13.Size = New System.Drawing.Size(211, 127)
         Me.GroupBox13.TabIndex = 79
         Me.GroupBox13.TabStop = False
         Me.GroupBox13.Text = "Calibration run"
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(173, 101)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(16, 13)
+        Me.Label19.TabIndex = 86
+        Me.Label19.Text = "[-]"
         '
         'Label40
         '
@@ -2054,6 +2117,23 @@ Partial Class F_Main
         Me.LvWindAveCALMax.Size = New System.Drawing.Size(116, 13)
         Me.LvWindAveCALMax.TabIndex = 57
         Me.LvWindAveCALMax.Text = "v_wind_avg_max_CAL"
+        '
+        'LDsMinCAL
+        '
+        Me.LDsMinCAL.AutoSize = True
+        Me.LDsMinCAL.Location = New System.Drawing.Point(6, 101)
+        Me.LDsMinCAL.Name = "LDsMinCAL"
+        Me.LDsMinCAL.Size = New System.Drawing.Size(92, 13)
+        Me.LDsMinCAL.TabIndex = 42
+        Me.LDsMinCAL.Text = "segruns_min_CAL"
+        '
+        'TB_segruns_min_CAL
+        '
+        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(128, 98)
+        Me.TB_segruns_min_CAL.Name = "TB_segruns_min_CAL"
+        Me.TB_segruns_min_CAL.Size = New System.Drawing.Size(45, 20)
+        Me.TB_segruns_min_CAL.TabIndex = 41
+        Me.TB_segruns_min_CAL.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'TB_beta_avg_max_CAL
         '
@@ -2100,16 +2180,16 @@ Partial Class F_Main
         '
         'TBInfoCrt
         '
-        Me.TBInfoCrt.Location = New System.Drawing.Point(37, 382)
+        Me.TBInfoCrt.Location = New System.Drawing.Point(37, 152)
         Me.TBInfoCrt.Multiline = True
         Me.TBInfoCrt.Name = "TBInfoCrt"
-        Me.TBInfoCrt.Size = New System.Drawing.Size(413, 78)
+        Me.TBInfoCrt.Size = New System.Drawing.Size(180, 110)
         Me.TBInfoCrt.TabIndex = 83
         '
         'PBInfoIconCrt
         '
         Me.PBInfoIconCrt.Image = Global.AirDrag.My.Resources.Resources.Info
-        Me.PBInfoIconCrt.Location = New System.Drawing.Point(6, 382)
+        Me.PBInfoIconCrt.Location = New System.Drawing.Point(6, 152)
         Me.PBInfoIconCrt.Name = "PBInfoIconCrt"
         Me.PBInfoIconCrt.Size = New System.Drawing.Size(25, 30)
         Me.PBInfoIconCrt.TabIndex = 81
@@ -2127,8 +2207,8 @@ Partial Class F_Main
         Me.GroupBox14.Controls.Add(Me.LDeltaParaMax)
         Me.GroupBox14.Controls.Add(Me.TB_delta_parallel_max)
         Me.GroupBox14.Controls.Add(Me.Label66)
-        Me.GroupBox14.Controls.Add(Me.TB_delta_rr_corr_max)
-        Me.GroupBox14.Controls.Add(Me.LB_delta_rr_corr_max)
+        Me.GroupBox14.Controls.Add(Me.TB_delta_rr_max)
+        Me.GroupBox14.Controls.Add(Me.LB_delta_rr_max)
         Me.GroupBox14.Controls.Add(Me.TB_t_amb_max)
         Me.GroupBox14.Controls.Add(Me.Label69)
         Me.GroupBox14.Controls.Add(Me.Label18)
@@ -2229,22 +2309,22 @@ Partial Class F_Main
         Me.Label66.TabIndex = 64
         Me.Label66.Text = "[°C]"
         '
-        'TB_delta_rr_corr_max
+        'TB_delta_rr_max
         '
-        Me.TB_delta_rr_corr_max.Location = New System.Drawing.Point(133, 69)
-        Me.TB_delta_rr_corr_max.Name = "TB_delta_rr_corr_max"
-        Me.TB_delta_rr_corr_max.Size = New System.Drawing.Size(45, 20)
-        Me.TB_delta_rr_corr_max.TabIndex = 56
-        Me.TB_delta_rr_corr_max.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TB_delta_rr_max.Location = New System.Drawing.Point(133, 69)
+        Me.TB_delta_rr_max.Name = "TB_delta_rr_max"
+        Me.TB_delta_rr_max.Size = New System.Drawing.Size(45, 20)
+        Me.TB_delta_rr_max.TabIndex = 56
+        Me.TB_delta_rr_max.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'LB_delta_rr_corr_max
+        'LB_delta_rr_max
         '
-        Me.LB_delta_rr_corr_max.AutoSize = True
-        Me.LB_delta_rr_corr_max.Location = New System.Drawing.Point(11, 72)
-        Me.LB_delta_rr_corr_max.Name = "LB_delta_rr_corr_max"
-        Me.LB_delta_rr_corr_max.Size = New System.Drawing.Size(91, 13)
-        Me.LB_delta_rr_corr_max.TabIndex = 57
-        Me.LB_delta_rr_corr_max.Text = "delta_rr_corr_max"
+        Me.LB_delta_rr_max.AutoSize = True
+        Me.LB_delta_rr_max.Location = New System.Drawing.Point(11, 72)
+        Me.LB_delta_rr_max.Name = "LB_delta_rr_max"
+        Me.LB_delta_rr_max.Size = New System.Drawing.Size(67, 13)
+        Me.LB_delta_rr_max.TabIndex = 57
+        Me.LB_delta_rr_max.Text = "delta_rr_max"
         '
         'TB_t_amb_max
         '
@@ -2396,11 +2476,23 @@ Partial Class F_Main
         Me.TB_acc_corr_avg.TabIndex = 2
         Me.TB_acc_corr_avg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'LB_SelMode
+        '
+        Me.LB_SelMode.AutoSize = True
+        Me.LB_SelMode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LB_SelMode.ForeColor = System.Drawing.Color.Red
+        Me.LB_SelMode.Location = New System.Drawing.Point(158, 56)
+        Me.LB_SelMode.Name = "LB_SelMode"
+        Me.LB_SelMode.Size = New System.Drawing.Size(108, 13)
+        Me.LB_SelMode.TabIndex = 36
+        Me.LB_SelMode.Text = "Engineering mode"
+        '
         'F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(944, 738)
+        Me.ClientSize = New System.Drawing.Size(932, 727)
+        Me.Controls.Add(Me.LB_SelMode)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.TabControlOutMsg)
@@ -2411,7 +2503,7 @@ Partial Class F_Main
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Location = Global.AirDrag.My.MySettings.Default.F_Main_location
         Me.MainMenuStrip = Me.MenuStrip1
-        Me.MinimumSize = New System.Drawing.Size(960, 750)
+        Me.MinimumSize = New System.Drawing.Size(948, 765)
         Me.Name = "F_Main"
         Me.Text = "VECTO Air Drag"
         Me.MenuStrip1.ResumeLayout(False)
@@ -2438,13 +2530,13 @@ Partial Class F_Main
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.TPCriteria.ResumeLayout(False)
-        Me.TPCriteria.PerformLayout()
+        Me.GroupBox16.ResumeLayout(False)
+        Me.GroupBox6.ResumeLayout(False)
+        Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox5.PerformLayout()
         Me.GroupBox7.ResumeLayout(False)
         Me.GroupBox7.PerformLayout()
-        Me.GroupBox8.ResumeLayout(False)
-        Me.GroupBox8.PerformLayout()
         Me.GroupBox9.ResumeLayout(False)
         Me.GroupBox9.PerformLayout()
         Me.GroupBox15.ResumeLayout(False)
@@ -2523,7 +2615,6 @@ Partial Class F_Main
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents GroupBox10 As System.Windows.Forms.GroupBox
-    Friend WithEvents GroupBox8 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox7 As System.Windows.Forms.GroupBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents LDeltaHzMax As System.Windows.Forms.Label
@@ -2539,13 +2630,13 @@ Partial Class F_Main
     Friend WithEvents TB_length_MS_max As System.Windows.Forms.TextBox
     Friend WithEvents Label65 As System.Windows.Forms.Label
     Friend WithEvents Label66 As System.Windows.Forms.Label
-    Friend WithEvents TB_delta_rr_corr_max As System.Windows.Forms.TextBox
-    Friend WithEvents LB_delta_rr_corr_max As System.Windows.Forms.Label
+    Friend WithEvents TB_delta_rr_max As System.Windows.Forms.TextBox
+    Friend WithEvents LB_delta_rr_max As System.Windows.Forms.Label
     Friend WithEvents TB_t_amb_max As System.Windows.Forms.TextBox
     Friend WithEvents Label69 As System.Windows.Forms.Label
     Friend WithEvents LB_t_amb_max As System.Windows.Forms.Label
-    Friend WithEvents LDsMinHeadMS As System.Windows.Forms.Label
-    Friend WithEvents TB_segruns_min_head_MS As System.Windows.Forms.TextBox
+    Friend WithEvents LDsMinHeadHS As System.Windows.Forms.Label
+    Friend WithEvents TB_segruns_min_head_HS As System.Windows.Forms.TextBox
     Friend WithEvents LDsMinHS As System.Windows.Forms.Label
     Friend WithEvents TB_segruns_min_HS As System.Windows.Forms.TextBox
     Friend WithEvents LDsMinLS As System.Windows.Forms.Label
@@ -2639,7 +2730,6 @@ Partial Class F_Main
     Friend WithEvents ButtonDataHS As System.Windows.Forms.Button
     Friend WithEvents ButtonCrtImport As System.Windows.Forms.Button
     Friend WithEvents ButtonCrtExport As System.Windows.Forms.Button
-    Friend WithEvents ButtonCrtReset As System.Windows.Forms.Button
     Friend WithEvents MenuItemNewJob As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuItemLoadJob As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuItemReloadJob As System.Windows.Forms.ToolStripMenuItem
@@ -2677,5 +2767,15 @@ Partial Class F_Main
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents LB_delta_CdxA_anemo As System.Windows.Forms.Label
     Friend WithEvents TB_delta_CdxA_anemo As System.Windows.Forms.TextBox
+    Friend WithEvents LB_SelMode As System.Windows.Forms.Label
+    Friend WithEvents Label21 As System.Windows.Forms.Label
+    Friend WithEvents Label20 As System.Windows.Forms.Label
+    Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents Label19 As System.Windows.Forms.Label
+    Friend WithEvents ButtonModeEng As System.Windows.Forms.Button
+    Friend WithEvents ButtonModeDec As System.Windows.Forms.Button
+    Friend WithEvents GroupBox8 As System.Windows.Forms.GroupBox
+    Friend WithEvents GroupBox6 As System.Windows.Forms.GroupBox
+    Friend WithEvents GroupBox16 As System.Windows.Forms.GroupBox
 
 End Class
