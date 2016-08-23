@@ -802,42 +802,42 @@ Public Module main_calculation_call
 
         ' Ceck if enough sections are detected
         If anzHS1 < Crt.segruns_min_head_HS Or anzHS2 < Crt.segruns_min_head_HS Then
-            Throw New Exception(format("Number of valid high speed datasets({0}) too low!", anzHS1))
+            Throw New Exception(format("Number of valid high speed datasets too low! HeadDir1: {0}; HeadDir2: {1}.", anzHS1, anzHS2))
         End If
 
-        ' Set to equal Values
-        If anzHS1 <> anzHS2 Then
-            anz = 0
-            If anzHS1 > anzHS2 Then
-                For i = 0 To ErgValuesComp(tCompErg.SecID).Count - 1.0
-                    If ErgValuesComp(tCompErg.RunID)(i) = IDHS Then
-                        If ErgValuesComp(tCompErg.HeadID)(i) = 1 Then
-                            If ErgValuesComp(tCompErg.used)(i) = 1 Then
-                                If anz >= anzHS2 Then
-                                    ErgValuesComp(tCompErg.used)(i) = 0
-                                Else
-                                    anz += 1
-                                End If
-                            End If
-                        End If
-                    End If
-                Next i
-            Else
-                For i = 0 To ErgValuesComp(tCompErg.SecID).Count - 1.0
-                    If ErgValuesComp(tCompErg.RunID)(i) = IDHS Then
-                        If ErgValuesComp(tCompErg.HeadID)(i) = 2 Then
-                            If ErgValuesComp(tCompErg.used)(i) = 1 Then
-                                If anz >= anzHS1 Then
-                                    ErgValuesComp(tCompErg.used)(i) = 0
-                                Else
-                                    anz += 1
-                                End If
-                            End If
-                        End If
-                    End If
-                Next i
-            End If
-        End If
+        '' Set to equal Values
+        'If anzHS1 <> anzHS2 Then
+        '    anz = 0
+        '    If anzHS1 > anzHS2 Then
+        '        For i = 0 To ErgValuesComp(tCompErg.SecID).Count - 1.0
+        '            If ErgValuesComp(tCompErg.RunID)(i) = IDHS Then
+        '                If ErgValuesComp(tCompErg.HeadID)(i) = 1 Then
+        '                    If ErgValuesComp(tCompErg.used)(i) = 1 Then
+        '                        If anz >= anzHS2 Then
+        '                            ErgValuesComp(tCompErg.used)(i) = 0
+        '                        Else
+        '                            anz += 1
+        '                        End If
+        '                    End If
+        '                End If
+        '            End If
+        '        Next i
+        '    Else
+        '        For i = 0 To ErgValuesComp(tCompErg.SecID).Count - 1.0
+        '            If ErgValuesComp(tCompErg.RunID)(i) = IDHS Then
+        '                If ErgValuesComp(tCompErg.HeadID)(i) = 2 Then
+        '                    If ErgValuesComp(tCompErg.used)(i) = 1 Then
+        '                        If anz >= anzHS1 Then
+        '                            ErgValuesComp(tCompErg.used)(i) = 0
+        '                        Else
+        '                            anz += 1
+        '                        End If
+        '                    End If
+        '                End If
+        '            End If
+        '        Next i
+        '    End If
+        'End If
     End Sub
 
     ' Evaluate the Valid sections
