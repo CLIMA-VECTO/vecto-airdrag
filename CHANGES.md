@@ -1,5 +1,32 @@
 VECTO-CSE: Changes
 ===================
+#### 2016-08-31: v2.0.6-beta6 ####
+TUG improvements:
+
+  * New version number
+  * Including Declaration and Engineering Mode to program and Job-File
+  * Fv_veh calculation update (now option 2 is the new preferred one) Option 2 is deleted from result file
+  * Uneven numbers of datasets per heading in HS test now allowed
+  * Calculation of F_acc changed due to wheels inertia deletion (now F_acc = 1.03*m*a)
+  * New design of criteria tab
+  * Update Standard criteria values + renaming
+  * Include of new variables for validity criteria (t_amb; t_ground; tq_grd)
+  * gradient correction implemented
+  * Check of digits after decimal separator for all coordinates, transmission ratios (gear + axle) and altitudes (Values in vehicle file changed to string values)
+  * Vehicle file check included (For height and class code in Declaration mode)
+  * Expand vehicle file with vVehMax value
+  * Include of reference vehicle high in genshape file
+  * Calculation of new Result values (delta_CdxA_height; v_avg_LS/HS; t_amb_LS1)
+  * Output files in Declaration mode extended
+  * Output files adapted
+  * Expansion of the job-File due to new results
+  * vehWidth and wheelsInertia deleted from vehicle-file
+  * Deletion of unused variables (omega_wh; omega_wh_acc; omega_p_wh_acc; t_tire; p_tire; ...)
+  * Deletion of [ss.ss] coordinate input
+  * Update DEMOData
+  * Update of Excel DemoData file
+  * Update user manual and release notes
+
 #### 2016-01-21: v2.0.6-beta6 ####
 TUG improvements:
 
