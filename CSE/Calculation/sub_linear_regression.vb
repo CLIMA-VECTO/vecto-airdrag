@@ -15,8 +15,10 @@ Module sub_linear_regression
     Public Function fCalcReg(ByVal vehicle As cVehicle) As Boolean
         ' Declaration
         Dim i, j, numLS1, numLS2, numHS, numHSg, numT, PosHS(), PosHSg(), lauf, anzLS1, anzLS2, anzHS As Integer
+        Dim numH1, numH2 As Integer
         Dim XLS1_Array(,), XLS2_Array(,), XHS_Array(,), XHSg_Array(,), XHS_S(1, 1), YLS1_Array(), YLS2_Array(), YHS_Array(), YHSg_Array(), YHS_S(1) As Double
         Dim XLR(,), YLR(), WFLR(,), F0, F2, F095, F295, R2, Rho_air_LS1, Rho_air_LS2 As Double
+        Dim CdxAß_H1, CdxAß_H2, beta_H1, beta_H2 As Double
         Dim EnumStr As tCompErgReg
 
         ' Output on the GUI
@@ -27,6 +29,12 @@ Module sub_linear_regression
         anzLS1 = 0
         anzLS2 = 0
         anzHS = 0
+        CdxAß_H1 = 0
+        CdxAß_H2 = 0
+        beta_H1 = 0
+        beta_H2 = 0
+        numH1 = 0
+        numH2 = 0
         ErgValuesReg = New Dictionary(Of tCompErgReg, List(Of Double))
         Job.CdxAß = 0
         Job.CdxA0meas = 0
@@ -66,16 +74,17 @@ Module sub_linear_regression
                 ReDim XHSg_Array(1, 0)
                 ReDim YHSg_Array(0)
 
-                ' Save the SecID and DirID in result dictionary
+                ' Save the SecID, DirID and HeadID in result dictionary
                 ErgValuesReg(tCompErgReg.SecID).Add(ErgValuesComp(tCompErg.SecID)(i))
                 ErgValuesReg(tCompErgReg.DirID).Add(ErgValuesComp(tCompErg.DirID)(i))
+                ErgValuesReg(tCompErgReg.HeadID).Add(ErgValuesComp(tCompErg.HeadID)(i))
                 ErgValuesReg(tCompErgReg.beta_ave_singleMS).Add(0)
                 ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS).Add(0)
 
                 ' Go through all measurements
                 For j = i To ErgValuesComp(tCompErg.SecID).Count - 1
                     ' Find all with the same SecID and DirID 
-                    If ErgValuesComp(tCompErg.SecID)(i) = ErgValuesComp(tCompErg.SecID)(j) And ErgValuesComp(tCompErg.DirID)(i) = ErgValuesComp(tCompErg.DirID)(j) Then
+                    If ErgValuesComp(tCompErg.SecID)(i) = ErgValuesComp(tCompErg.SecID)(j) And ErgValuesComp(tCompErg.DirID)(i) = ErgValuesComp(tCompErg.DirID)(j) And ErgValuesComp(tCompErg.HeadID)(i) = ErgValuesComp(tCompErg.HeadID)(j) Then
                         ' Set there value to true
                         ErgValuesComp(tCompErg.calcT)(j) = 1
 
@@ -229,14 +238,24 @@ Module sub_linear_regression
                     ErgValuesReg(tCompErgReg.RRC_singleMS).Add(ErgValuesReg(tCompErgReg.F0_singleMS)(lauf) / (vehicle.testMass * 9.81) * 1000)
                     ErgValuesReg(tCompErgReg.delta_CdxA_singleMS).Add(fCalcGenShp(ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf), vehicle))
                     ErgValuesReg(tCompErgReg.CdxA0_singleMS).Add(ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) - ErgValuesReg(tCompErgReg.delta_CdxA_singleMS)(lauf))
+                    ErgValuesReg(tCompErgReg.NumUsed).Add(numT)
 
-                    ' Summerise for the endresults
-                    Job.CdxAß += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf)
-                    Job.beta += ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf)
+                    ' Wighted summerise for the endresults
+                    Select Case (ErgValuesComp(tCompErg.HeadID)(i))
+                        Case 1
+                            CdxAß_H1 += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                            beta_H1 += ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                            numH1 += ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                        Case 2
+                            CdxAß_H2 += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                            beta_H2 += ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                            numH2 += ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                    End Select
                 Else
                     ' Clear the data in the result dictionary
                     If ErgValuesReg(tCompErgReg.SecID).Count > 0 Then ErgValuesReg(tCompErgReg.SecID).RemoveAt(lauf)
                     If ErgValuesReg(tCompErgReg.DirID).Count > 0 Then ErgValuesReg(tCompErgReg.DirID).RemoveAt(lauf)
+                    If ErgValuesReg(tCompErgReg.HeadID).Count > 0 Then ErgValuesReg(tCompErgReg.HeadID).RemoveAt(lauf)
                     If ErgValuesReg(tCompErgReg.beta_ave_singleMS).Count > 0 Then ErgValuesReg(tCompErgReg.beta_ave_singleMS).RemoveAt(lauf)
                     lauf -= 1
                 End If
@@ -245,11 +264,11 @@ Module sub_linear_regression
 
         ' Calculate the Endresults
         If lauf <> -1 Then
-            Job.CdxAß = Job.CdxAß / (lauf + 1)
-            Job.beta = Job.beta / (lauf + 1)
+            Job.CdxAß = ((CdxAß_H1 / numH1) + (CdxAß_H2 / numH2)) / 2
+            Job.beta = ((beta_H1 / numH1) + (beta_H2 / numH2)) / 2
             Job.delta_CdxA_beta = fCalcGenShp(Job.beta, vehicle) * (-1)
             Job.CdxA0meas = Job.CdxAß + Job.delta_CdxA_beta
-            Job.delta_CdxA_height = (Job.CdxA0meas * (GenShape.h_ref(fFindGenShp(vehicle)) / vehicle.vehHeight)) - Job.CdxA0meas
+            Job.delta_CdxA_height = (Job.CdxA0meas * GenShape.h_ref / vehicle.vehHeight) - Job.CdxA0meas
             Job.CdxA0 = Job.CdxA0meas + Job.delta_CdxA_height + Crt.delta_CdxA_anemo
             Job.t_amb_LS1 = Job.t_amb_LS1 / anzLS1
             Job.v_avg_LS = Job.v_avg_LS / (anzLS1 + anzLS2)
@@ -327,50 +346,25 @@ Module sub_linear_regression
     ' Function to calculate interpolate delta_CdxA out of the generic shape
     Private Function fCalcGenShp(ByVal beta As Double, ByVal vehicleX As cVehicle) As Double
         ' Declaration
-        Dim i, pos As Integer
+        Dim i As Integer
         Dim ValueX As Double
 
-        ' Find the correct curve
-        For i = 0 To GenShape.veh_class.Count - 1
-            If GenShape.veh_class(i) = vehicleX.classCode And GenShape.veh_conf(i) = vehicleX.configuration Then
-                pos = i
-                Exit For
-            End If
-        Next i
-
         ' Interpolate the value
-        For i = 0 To GenShape.x_val(pos).Length - 2
-            If beta > GenShape.x_val(pos)(i) And beta < GenShape.x_val(pos)(i + 1) Then
-                ValueX = InterpLinear(GenShape.x_val(pos)(i), GenShape.x_val(pos)(i + 1), GenShape.y_val(pos)(i), GenShape.y_val(pos)(i + 1), beta)
+        For i = 0 To GenShape.x_val.Length - 2
+            If beta > GenShape.x_val(i) And beta < GenShape.x_val(i + 1) Then
+                ValueX = InterpLinear(GenShape.x_val(i), GenShape.x_val(i + 1), GenShape.y_val(i), GenShape.y_val(i + 1), beta)
                 Exit For
             End If
-            If i = GenShape.x_val(pos).Length - 1 And beta > GenShape.x_val(pos)(i + 1) Then
+            If i = GenShape.x_val.Length - 1 And beta > GenShape.x_val(i + 1) Then
                 ValueX = 0
                 logme(8, False, "The calculated yaw angle is higher than the greatest value in the generic curve. Delta_CdxA is set to 0!")
-            ElseIf i = 0 And GenShape.x_val(pos)(i) > beta Then
+            ElseIf i = 0 And GenShape.x_val(i) > beta Then
                 ValueX = 0
                 logme(8, False, "The calculated yaw angle is lower than the lowest value in the generic curve. Delta_CdxA is set to 0!")
             End If
         Next i
 
         Return ValueX
-    End Function
-
-    ' Function to generic shape curve
-    Private Function fFindGenShp(ByVal vehicleX As cVehicle) As Integer
-        ' Declaration
-        Dim i, pos As Integer
-
-        ' Find the correct curve
-        pos = 0
-        For i = 0 To GenShape.veh_class.Count - 1
-            If GenShape.veh_class(i) = vehicleX.classCode And GenShape.veh_conf(i) = vehicleX.configuration Then
-                pos = i
-                Exit For
-            End If
-        Next i
-
-        Return pos
     End Function
 
     ' Calculate the linear regression

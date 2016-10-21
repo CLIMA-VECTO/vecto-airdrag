@@ -292,7 +292,7 @@ Public Class cJob
         b.delta_CdxA_beta = Math.Round(delta_CdxA_beta, 5)
         b.CdxA0meas = Math.Round(CdxA0meas, 5)
         b.delta_CdxA_height = Math.Round(delta_CdxA_height, 5)
-        b.CdxA0 = Math.Round(CdxA0, 5)
+        b.CdxA0 = Math.Round(CdxA0, 2)
         b.valid_RRC = valid_RRC
 
         Crt.OnBeforeContentStored_hack()

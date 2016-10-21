@@ -33,7 +33,7 @@ Public Module main_calculation_call
             ' Read the input data
             logme(7, False, "Reading Input Files...")
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
-            If Not fCheckVeh(3, vehicle) And Job.mode = 1 Then Throw New Exception("Vehicle file for calculation incorrect!")
+            If Not fCheckVeh(3, vehicle) Then Throw New Exception("Vehicle file for calculation incorrect!")
             ReadInputMSC(MSC, Job.calib_track_fpath, isCalibrate)
             ReadDataFile(Job.calib_run_fpath, MSC, vehicle)
 
@@ -1055,18 +1055,28 @@ Public Module main_calculation_call
 
         ' Check the vehicle class
         Select Case vehicle.classCode
-            Case 1, 2, 3, 4, 5, 9, 10
+            Case 1, 2, 3, 4, 5, 9, 10, 21, 22, 23
                 ' Check the hight of the vehicle
-                If vehicle.vehHeight > GenShape.h_ref(vehicle.classCode) Then
-                    Flag = False
-                    logme(9, False, format("Vehicle height grater then allowed vehicle height (vehicle: {0} > reference: {1})!", vehicle.vehHeight, GenShape.h_ref(vehicle.classCode)))
+                If Job.mode = 1 Then
+                    If (vehicle.vehHeight > GenShape.h_max) Then
+                        Flag = False
+                        logme(9, False, format("Vehicle height grater then allowed vehicle height (vehicle: {0} > maximum: {1})!", vehicle.vehHeight, GenShape.h_max))
+                    End If
+                    If (vehicle.vehHeight < GenShape.h_min) Then
+                        Flag = False
+                        logme(9, False, format("Vehicle height smaller then allowed vehicle height (vehicle: {0} < minimum: {1})!", vehicle.vehHeight, GenShape.h_min))
+                    End If
                 End If
             Case Else
-                If Job.mode = 1 Then
-                    Flag = False
-                    logme(9, False, format("Vehicle class not supported by Declaration Mode ({0})! Supported classes are: 1 - 5, 9, 10.", vehicle.classCode))
-                End If
+                Flag = False
+                logme(9, False, format("Vehicle class not supported ({0})! Supported classes are: 1 - 5, 9, 10, 21 - 23.", vehicle.classCode))
         End Select
+
+        ' Check the configuration
+        If Not GenShape.valid Then
+            Flag = False
+            logme(9, False, format("The configuration from the vehicle (class: {0}, configuration {1}) was not supported by the generic shape file. \n\iPlease change to supported values.", vehicle.classCode, vehicle.configuration))
+        End If
 
         ' Check the geraRatio_high
         If Not fCheckDigits(Prefs.decSep, AnzDigit, vehicle.gearRatio_high) Then

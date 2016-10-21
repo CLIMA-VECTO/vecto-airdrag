@@ -159,9 +159,6 @@ in the `/Header/CreatedBy` property of JSON-files, for protecting its privacy.",
         ValidateJson(Me.Body, schema, validateMsgs)
     End Sub
 
-
-
-
 #Region "json props"
     Public Property workingDir As String
         Get

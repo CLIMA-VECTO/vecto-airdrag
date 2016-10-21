@@ -1,6 +1,6 @@
 VECTO-CSE: Changes
 ===================
-#### 2016-08-31: v2.0.6-beta6 ####
+#### 2016-10-20: v2.0.7-beta7 ####
 TUG improvements:
 
   * New version number
@@ -13,10 +13,14 @@ TUG improvements:
   * Include of new variables for validity criteria (t_amb; t_ground; tq_grd)
   * gradient correction implemented
   * Check of digits after decimal separator for all coordinates, transmission ratios (gear + axle) and altitudes (Values in vehicle file changed to string values)
-  * Vehicle file check included (For height and class code in Declaration mode)
-  * Expand vehicle file with vVehMax value
-  * Include of reference vehicle high in genshape file
+  * Vehicle file check included (For height and class code)
+  * Expand vehicle file with vVehMax and GVMMax value
+  * Displacement of Genshape file into code
+  * Add reference vehicle high in genshape class
+  * Add minimum/maximum vehicle high in genshape class
+  * Control of min/max height with vehicle height only in Declaration mode
   * Calculation of new Result values (delta_CdxA_height; v_avg_LS/HS; t_amb_LS1)
+  * Change of CdxA(ß) and beta calculation
   * Output files in Declaration mode extended
   * Output files adapted
   * Expansion of the job-File due to new results

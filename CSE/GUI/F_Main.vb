@@ -54,15 +54,6 @@ Public Class F_Main
             firstrun = True
         End Try
 
-        ' Load the generic shape curve file
-        Dim genShpFile = joinPaths(MyPath, "Declaration", "GenShape.shp")
-        Try
-            fGenShpLoad(genShpFile)
-        Catch ex As Exception
-            logme(9, True, format("Failed loading Declaration ShapeFile({0}) \n  due to: {1}", genShpFile, ex.Message), ex)
-            Me.Close()
-        End Try
-
         ' Create working dir if not exists.
         If Not IO.Directory.Exists(Prefs.workingDir) Then
             IO.Directory.CreateDirectory(Prefs.workingDir)

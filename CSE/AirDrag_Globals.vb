@@ -166,6 +166,8 @@ Module AirDrag_Globals
     Public Enum tCompErgReg
         SecID
         DirID
+        HeadID
+        NumUsed
         F0_singleMS
         F2_singleMS
         F0_singleMS_95
@@ -935,6 +937,10 @@ Module AirDrag_Globals
                 Return "SecID"
             Case tCompErgReg.DirID
                 Return "DirID"
+            Case tCompErgReg.HeadID
+                Return "HeadID"
+            Case tCompErgReg.NumUsed
+                Return "NumUsed"
             Case tCompErgReg.F0_singleMS
                 Return "F0_singleMS"
             Case tCompErgReg.F0_singleMS_95
@@ -979,6 +985,10 @@ Module AirDrag_Globals
             Case tCompErgReg.SecID
                 Return "[-]"
             Case tCompErgReg.DirID
+                Return "[-]"
+            Case tCompErgReg.HeadID
+                Return "[-]"
+            Case tCompErgReg.NumUsed
                 Return "[-]"
             Case tCompErgReg.F0_singleMS
                 Return "[N]"

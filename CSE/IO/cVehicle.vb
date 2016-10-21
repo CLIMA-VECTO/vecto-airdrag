@@ -38,6 +38,7 @@ Public Class cVehicle
         Return JObject.Parse(<json>{
                 "vehClass":         null,
                 "configuration":    null,
+                "GVMMax":           null,
                 "vVehMax":          null,
                 "vehHeight":        null,
                 "anemometerHeight": null,
@@ -71,11 +72,16 @@ The generic parameters for classes are stored in the GenShape.shp",
                     "required": true,
                     "title": "Vehicle is rigid or track'n tractor?", 
                 }, 
+                "GVMMax": {
+                    "title": "Maximum gross vehicle mass [kg]", 
+                    "type":"number",                     
+                    "required": true,
+                },
                 "vVehMax": {
                     "title": "Vehicle maximum design speed [km/h]", 
                     "type":"number",                     
-                    "required": true,
-                }, 
+                    "required": false,
+                },
                 "vehHeight": {
                     "title": "Vehicle height [m]", 
                     "type":"number",                     
@@ -160,17 +166,15 @@ The generic parameters for classes are stored in the GenShape.shp",
             MT_AMT = True
         End If
 
+        ' Set Vehicle maximum speed
+        If IsNothing(Me.Body("vVehMax")) Then Me.Body("vVehMax") = 88
+
         ' Check others
         ' Check if vehicle class with the given configuration class is available
-        For i = 0 To GenShape.veh_class.Count - 1
-            If GenShape.veh_class(i) = Me.classCode AndAlso CBool(GenShape.veh_conf(i)) = CBool(Me.configuration) Then
-                Job.fa_pe = GenShape.fa_pe(i)
-                Return
-            End If
-        Next i
-
-        ' The configuration was not found!
-        validateMsgs.Add(format("The vehicle (class: {0}, configuration {1}) was not found in the generic shape file. \n\iPlease add it in .", Me.classCode, Me.configuration))
+        Call GenShape.GetAirDragPara(Me.classCode, Me.configuration, Me.GVWMax, Me.vehHeight)
+        If GenShape.valid Then
+            Job.fa_pe = GenShape.fa_pe
+        End If
     End Sub
 
 #Region "json props"
@@ -190,6 +194,14 @@ The generic parameters for classes are stored in the GenShape.shp",
         End Get
         Set(ByVal value As VehicleConfig)
             Me.Body("configuration") = value.ToString()
+        End Set
+    End Property
+    Public Property GVWMax As Double
+        Get
+            Return Me.Body("GVMMax")
+        End Get
+        Set(ByVal value As Double)
+            Me.Body("GVMMax") = value
         End Set
     End Property
     Public Property vVehMax As Double

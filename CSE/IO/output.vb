@@ -244,7 +244,7 @@ Module output
             FileOut.WriteLine("# CdxA(0)meas:" & Prefs.listSep & Job.CdxA0meas & Prefs.listSep & "[m²] average measured CdxA for zero yaw angle")
             FileOut.WriteLine("# delta_CdxA_height:" & Prefs.listSep & Job.delta_CdxA_height & Prefs.listSep & "[m²] correction of CdxA to reference vehicle height")
             FileOut.WriteLine("# delta_CdxA_anemo:" & Prefs.listSep & Crt.delta_CdxA_anemo & Prefs.listSep & "[m²] CdxA influence from anemometer")
-            FileOut.WriteLine("# CdxA(0):" & Prefs.listSep & Job.CdxA0 & Prefs.listSep & "[m²] average CdxA for zero yaw angle")
+            FileOut.WriteLine("# CdxA(0):" & Prefs.listSep & Math.Round(Job.CdxA0, 2) & Prefs.listSep & "[m²] average CdxA for zero yaw angle")
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Validity criteria:")
             If Job.valid_RRC Then
@@ -465,6 +465,8 @@ Module output
         ' Result data
         AddToErg(tCompErgReg.SecID, fCompName(tCompErgReg.SecID), fCompUnit(tCompErgReg.SecID), "ErgValuesReg")
         AddToErg(tCompErgReg.DirID, fCompName(tCompErgReg.DirID), fCompUnit(tCompErgReg.DirID), "ErgValuesReg")
+        AddToErg(tCompErgReg.HeadID, fCompName(tCompErgReg.HeadID), fCompUnit(tCompErgReg.HeadID), "ErgValuesReg")
+        AddToErg(tCompErgReg.NumUsed, fCompName(tCompErgReg.NumUsed), fCompUnit(tCompErgReg.NumUsed), "ErgValuesReg")
         AddToErg(tCompErgReg.F0_singleMS, fCompName(tCompErgReg.F0_singleMS), fCompUnit(tCompErgReg.F0_singleMS), "ErgValuesReg")
         AddToErg(tCompErgReg.F0_singleMS_LS1, fCompName(tCompErgReg.F0_singleMS_LS1), fCompUnit(tCompErgReg.F0_singleMS_LS1), "ErgValuesReg")
         AddToErg(tCompErgReg.F0_singleMS_LS2, fCompName(tCompErgReg.F0_singleMS_LS2), fCompUnit(tCompErgReg.F0_singleMS_LS2), "ErgValuesReg")
