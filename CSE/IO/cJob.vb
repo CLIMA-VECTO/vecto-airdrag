@@ -44,6 +44,10 @@ Public Class cJob
         b.t_amb_LS1 = 0
         b.v_avg_LS = 0
         b.v_avg_HS = 0
+        b.CdxAß_H1 = 0
+        b.beta_H1 = 0
+        b.CdxAß_H2 = 0
+        b.beta_H2 = 0
         b.CdxAß = 0
         b.beta = 0
         b.delta_CdxA_beta = 0
@@ -148,6 +152,32 @@ Public Class cJob
                     'default': 0,
                     "units": "km/h",
                 },
+
+                "CdxAß_H1": {
+                    "type": "number", 
+                    "description": "Average CdxA before yaw angle correction for heading 1", 
+                    'default': 0,
+                    "units": "m²",
+                },
+                "beta_H1": {
+                    "type": "number", 
+                    "description": "Average absolute yaw angle from high speed tests for heading 1.", 
+                    'default': 0,
+                    "units": "m²",
+                },
+                "CdxAß_H2": {
+                    "type": "number", 
+                    "description": "Average CdxA before yaw angle correction for heading 2", 
+                    'default': 0,
+                    "units": "m²",
+                },
+                "beta_H2": {
+                    "type": "number", 
+                    "description": "Average absolute yaw angle from high speed tests for heading 2.", 
+                    'default': 0,
+                    "units": "m²",
+                },
+
                 "CdxAß": {
                     "type": "number", 
                     "description": "Average CdxA before yaw angle correction", 
@@ -223,6 +253,10 @@ Public Class cJob
         Job.t_amb_LS1 = 0
         Job.v_avg_LS = 0
         Job.v_avg_HS = 0
+        Job.CdxAß_H1 = 0
+        Job.beta_H1 = 0
+        Job.CdxAß_H2 = 0
+        Job.beta_H2 = 0
         Job.CdxAß = 0
         Job.beta = 0
         Job.delta_CdxA_beta = 0
@@ -268,6 +302,10 @@ Public Class cJob
     Public t_amb_LS1 As Double
     Public v_avg_LS As Double
     Public v_avg_HS As Double
+    Public CdxAß_H1 As Double
+    Public beta_H1 As Double
+    Public CdxAß_H2 As Double
+    Public beta_H2 As Double
     Public CdxAß As Double
     Public beta As Double
     Public delta_CdxA_beta As Double
@@ -287,6 +325,10 @@ Public Class cJob
         b.t_amb_LS1 = Math.Round(t_amb_LS1, 3)
         b.v_avg_LS = Math.Round(v_avg_LS, 3)
         b.v_avg_HS = Math.Round(v_avg_HS, 3)
+        b.CdxAß_H1 = Math.Round(CdxAß_H1, 5)
+        b.beta_H1 = Math.Round(beta_H1, 5)
+        b.CdxAß_H2 = Math.Round(CdxAß_H2, 5)
+        b.beta_H2 = Math.Round(beta_H2, 5)
         b.CdxAß = Math.Round(CdxAß, 5)
         b.beta = Math.Round(beta, 5)
         b.delta_CdxA_beta = Math.Round(delta_CdxA_beta, 5)

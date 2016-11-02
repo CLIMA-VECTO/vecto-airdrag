@@ -786,7 +786,6 @@ Public Class F_Main
         TB_delta_v_avg_min_HS.Enabled = SetState
         ' Evaluation box
         CB_accel_correction.Enabled = SetState
-        CB_gradient_correction.Enabled = SetState
         ' Altitude
         TB_dist_gridpoints_max.Enabled = SetState
         TB_dist_grid_ms_max.Enabled = SetState

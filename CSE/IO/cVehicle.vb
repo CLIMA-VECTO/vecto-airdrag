@@ -13,8 +13,8 @@ Imports Newtonsoft.Json.Linq
 Imports Newtonsoft.Json.Schema
 
 Public Enum VehicleConfig
-    Rigid
-    Tractor
+    No
+    Yes
 End Enum
 
 Public Enum gearBoxConfig
@@ -66,11 +66,11 @@ Public Class cVehicle
                     "description": "The class the vehicle belongs to according to the legislation.
 The generic parameters for classes are stored in the GenShape.shp",
                 }, 
-                "configuration": {
-                    "title": "Vehicle Configuration", 
-                    "enum": ["rigid", "tractor"],
+                "configuration with trailer": {
+                    "title": "Vehicle Configuration with trailer", 
+                    "enum": ["no", "yes"],
                     "required": true,
-                    "title": "Vehicle is rigid or track'n tractor?", 
+                    "title": "Vehicle contains trailer?", 
                 }, 
                 "GVMMax": {
                     "title": "Maximum gross vehicle mass [kg]", 
@@ -188,12 +188,12 @@ The generic parameters for classes are stored in the GenShape.shp",
     End Property
     Public Property configuration As VehicleConfig
         Get
-            Dim value As String = Me.Body("configuration")
+            Dim value As String = Me.Body("configuration with trailer")
 
             Return [Enum].Parse(GetType(VehicleConfig), value, True)
         End Get
         Set(ByVal value As VehicleConfig)
-            Me.Body("configuration") = value.ToString()
+            Me.Body("configuration with trailer") = value.ToString()
         End Set
     End Property
     Public Property GVWMax As Double
@@ -272,9 +272,9 @@ The generic parameters for classes are stored in the GenShape.shp",
     End Property
 #End Region ' "json props"
 
-    Public ReadOnly Property IsRigid As Boolean
+    Public ReadOnly Property IsWithTrailer As Boolean
         Get
-            Return Me.configuration = VehicleConfig.Rigid
+            Return Me.configuration = VehicleConfig.No
         End Get
     End Property
 

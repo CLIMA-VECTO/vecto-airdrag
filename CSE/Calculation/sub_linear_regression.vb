@@ -18,7 +18,6 @@ Module sub_linear_regression
         Dim numH1, numH2 As Integer
         Dim XLS1_Array(,), XLS2_Array(,), XHS_Array(,), XHSg_Array(,), XHS_S(1, 1), YLS1_Array(), YLS2_Array(), YHS_Array(), YHSg_Array(), YHS_S(1) As Double
         Dim XLR(,), YLR(), WFLR(,), F0, F2, F095, F295, R2, Rho_air_LS1, Rho_air_LS2 As Double
-        Dim CdxAß_H1, CdxAß_H2, beta_H1, beta_H2 As Double
         Dim EnumStr As tCompErgReg
 
         ' Output on the GUI
@@ -29,13 +28,13 @@ Module sub_linear_regression
         anzLS1 = 0
         anzLS2 = 0
         anzHS = 0
-        CdxAß_H1 = 0
-        CdxAß_H2 = 0
-        beta_H1 = 0
-        beta_H2 = 0
         numH1 = 0
         numH2 = 0
         ErgValuesReg = New Dictionary(Of tCompErgReg, List(Of Double))
+        Job.CdxAß_H1 = 0
+        Job.beta_H1 = 0
+        Job.CdxAß_H2 = 0
+        Job.beta_H2 = 0
         Job.CdxAß = 0
         Job.CdxA0meas = 0
         Job.CdxA0 = 0
@@ -243,12 +242,12 @@ Module sub_linear_regression
                     ' Wighted summerise for the endresults
                     Select Case (ErgValuesComp(tCompErg.HeadID)(i))
                         Case 1
-                            CdxAß_H1 += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
-                            beta_H1 += ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                            Job.CdxAß_H1 += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                            Job.beta_H1 += ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
                             numH1 += ErgValuesReg(tCompErgReg.NumUsed)(lauf)
                         Case 2
-                            CdxAß_H2 += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
-                            beta_H2 += ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                            Job.CdxAß_H2 += ErgValuesReg(tCompErgReg.CdxAß_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
+                            Job.beta_H2 += ErgValuesReg(tCompErgReg.beta_ave_singleMS)(lauf) * ErgValuesReg(tCompErgReg.NumUsed)(lauf)
                             numH2 += ErgValuesReg(tCompErgReg.NumUsed)(lauf)
                     End Select
                 Else
@@ -264,8 +263,12 @@ Module sub_linear_regression
 
         ' Calculate the Endresults
         If lauf <> -1 Then
-            Job.CdxAß = ((CdxAß_H1 / numH1) + (CdxAß_H2 / numH2)) / 2
-            Job.beta = ((beta_H1 / numH1) + (beta_H2 / numH2)) / 2
+            Job.CdxAß_H1 = Job.CdxAß_H1 / numH1
+            Job.beta_H1 = Job.beta_H1 / numH1
+            Job.CdxAß_H2 = Job.CdxAß_H2 / numH2
+            Job.beta_H2 = Job.beta_H2 / numH2
+            Job.CdxAß = (Job.CdxAß_H1 + Job.CdxAß_H2) / 2
+            Job.beta = (Job.beta_H1 + Job.beta_H2) / 2
             Job.delta_CdxA_beta = fCalcGenShp(Job.beta, vehicle) * (-1)
             Job.CdxA0meas = Job.CdxAß + Job.delta_CdxA_beta
             Job.delta_CdxA_height = (Job.CdxA0meas * GenShape.h_ref / vehicle.vehHeight) - Job.CdxA0meas
@@ -274,6 +277,10 @@ Module sub_linear_regression
             Job.v_avg_LS = Job.v_avg_LS / (anzLS1 + anzLS2)
             Job.v_avg_HS = Job.v_avg_HS / (anzHS)
         Else
+            Job.CdxAß_H1 = 0
+            Job.beta_H1 = 0
+            Job.CdxAß_H2 = 0
+            Job.beta_H2 = 0
             Job.CdxAß = 0
             Job.beta = 0
             Job.delta_CdxA_beta = 0

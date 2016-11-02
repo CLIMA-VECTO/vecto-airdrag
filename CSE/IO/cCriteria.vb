@@ -30,7 +30,7 @@ Public Class cCriteria
         g = New JObject()
         b.Processing = g
         g.accel_correction = True
-        g.gradient_correction = True
+        g.gradient_correction = False
         g.hz_out = 1
         g.rr_corr_factor = 1.143
         g.acc_corr_avg = 1
@@ -322,7 +322,7 @@ Public Class cCriteria
     ' Processing params
     Public rr_corr_factor As Double
     Public accel_correction As Boolean '= True
-    Public gradient_correction As Boolean '= True
+    Public gradient_correction As Boolean '= False
     Public hz_out As Integer '= 1
     Public acc_corr_avg As Single
     Public delta_CdxA_anemo As Single
