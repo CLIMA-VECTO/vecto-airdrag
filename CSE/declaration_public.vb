@@ -13,7 +13,7 @@ Module declaration_public
 
     ' Description of the form
     Public Const AppName As String = "Air Drag"                 ' Name of the programm
-    Public Const AppVers As String = "2.0.7-beta7"              ' Version of the Programm
+    Public Const AppVers As String = "2.0.7-beta8"              ' Version of the Programm
     Public AppDate As String                                    ' Date of the compilation of the programm
 
     ' Control variables

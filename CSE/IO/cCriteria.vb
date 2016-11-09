@@ -32,7 +32,7 @@ Public Class cCriteria
         g.accel_correction = True
         g.gradient_correction = False
         g.hz_out = 1
-        g.rr_corr_factor = 1.143
+        g.rr_corr_factor = 1
         g.acc_corr_avg = 1
         g.delta_CdxA_anemo = -0.15
         g.dist_float = 25

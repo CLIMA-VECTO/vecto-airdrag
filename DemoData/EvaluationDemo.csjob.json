@@ -2,8 +2,8 @@
   "Header": {
     "Title": "VECTO-Air Drag JOB",
     "FileVersion": "1.0.0",
-    "AppVersion": "2.0.6-beta6",
-    "ModifiedDate": "2016.08.22 14:10:30 +02:00",
+    "AppVersion": "2.0.7-beta7",
+    "ModifiedDate": "2016.11.09 14:10:50 +01:00",
     "CreatedBy": "VKMTHD\\martindippold@Dippold(lic: 88070b7c-1b69-4d65-a112-10c57f86f5ad)",
     "StrictBody": null,
     "BodySchema": null
@@ -23,7 +23,7 @@
         "accel_correction": true,
         "gradient_correction": true,
         "hz_out": 1,
-        "rr_corr_factor": 1.143,
+        "rr_corr_factor": 1.0,
         "acc_corr_avg": 1.0,
         "delta_CdxA_anemo": -0.15,
         "dist_float": 25.0,
@@ -67,10 +67,10 @@
         "t_ground_max": 40.0
       }
     },
-    "fv_veh": 0.969,
-    "fa_pe": 1.0,
-    "fv_pe": 1.07,
-    "beta_ame": -0.02,
+    "fv_veh": 0.0,
+    "fa_pe": 0.0,
+    "fv_pe": 0.0,
+    "beta_ame": 0.0,
     "t_amb_LS1": 0.0,
     "v_avg_LS": 0.0,
     "v_avg_HS": 0.0,
@@ -80,6 +80,10 @@
     "CdxA0meas": 0.0,
     "delta_CdxA_height": 0.0,
     "CdxA0": 0.0,
-    "valid_RRC": true
+    "valid_RRC": false,
+    "CdxAß_H1": 0.0,
+    "beta_H1": 0.0,
+    "CdxAß_H2": 0.0,
+    "beta_H2": 0.0
   }
 }

@@ -2,8 +2,8 @@
   "Header": {
     "Title": "VECTO-Air Drag CRITERIA",
     "FileVersion": "1.0.0",
-    "AppVersion": "2.0.6-beta6",
-    "ModifiedDate": "2016.08.22 12:08:36 +02:00",
+    "AppVersion": "2.0.7-beta7",
+    "ModifiedDate": "2016.11.09 14:10:27 +01:00",
     "CreatedBy": "VKMTHD\\martindippold@Dippold(lic: 88070b7c-1b69-4d65-a112-10c57f86f5ad)",
     "StrictBody": null,
     "BodySchema": null
@@ -11,9 +11,9 @@
   "Body": {
     "Processing": {
       "accel_correction": true,
-      "gradient_correction": true,
+      "gradient_correction": false,
       "hz_out": 1,
-      "rr_corr_factor": 1.143,
+      "rr_corr_factor": 1.0,
       "acc_corr_avg": 1.0,
       "delta_CdxA_anemo": -0.15,
       "dist_float": 25.0,
@@ -38,7 +38,7 @@
       "beta_avg_max_CAL": 5.0,
       "leng_crit": 3.0,
       "v_veh_avg_min_LS": 10.0,
-      "v_veh_avg_max_LS": 16.0,
+      "v_veh_avg_max_LS": 15.0,
       "v_veh_float_delta_LS": 0.5,
       "tq_sum_float_delta_LS": 0.3,
       "delta_n_ec_LS": 0.02,
