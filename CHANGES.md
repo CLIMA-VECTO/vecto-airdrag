@@ -1,9 +1,10 @@
 VECTO-CSE: Changes
 ===================
-#### 2016-11-09: v2.0.7-beta7 ####
+#### 2016-11-09: v2.0.7-beta8/9 ####
 TUG improvements:
 
   * Correction of rolling resistance criteria
+  * Correction of digit test for coordinates
 
 #### 2016-10-20: v2.0.7-beta7 ####
 TUG improvements:

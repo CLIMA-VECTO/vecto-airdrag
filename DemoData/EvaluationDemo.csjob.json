@@ -2,8 +2,8 @@
   "Header": {
     "Title": "VECTO-Air Drag JOB",
     "FileVersion": "1.0.0",
-    "AppVersion": "2.0.7-beta7",
-    "ModifiedDate": "2016.11.09 14:10:50 +01:00",
+    "AppVersion": "2.0.7-beta9",
+    "ModifiedDate": "2016.11.11 10:23:06 +01:00",
     "CreatedBy": "VKMTHD\\martindippold@Dippold(lic: 88070b7c-1b69-4d65-a112-10c57f86f5ad)",
     "StrictBody": null,
     "BodySchema": null
@@ -67,23 +67,23 @@
         "t_ground_max": 40.0
       }
     },
-    "fv_veh": 0.0,
-    "fa_pe": 0.0,
-    "fv_pe": 0.0,
-    "beta_ame": 0.0,
-    "t_amb_LS1": 0.0,
-    "v_avg_LS": 0.0,
-    "v_avg_HS": 0.0,
-    "CdxAß": 0.0,
-    "beta": 0.0,
-    "delta_CdxA_beta": 0.0,
-    "CdxA0meas": 0.0,
-    "delta_CdxA_height": 0.0,
-    "CdxA0": 0.0,
-    "valid_RRC": false,
-    "CdxAß_H1": 0.0,
-    "beta_H1": 0.0,
-    "CdxAß_H2": 0.0,
-    "beta_H2": 0.0
+    "fv_veh": 0.969,
+    "fa_pe": 1.0,
+    "fv_pe": 1.12,
+    "beta_ame": -0.02,
+    "t_amb_LS1": 20.0,
+    "v_avg_LS": 15.06,
+    "v_avg_HS": 84.787,
+    "CdxAß": 5.20636,
+    "beta": 0.95404,
+    "delta_CdxA_beta": -0.0292,
+    "CdxA0meas": 5.17716,
+    "delta_CdxA_height": 0.73959,
+    "CdxA0": 5.77,
+    "valid_RRC": true,
+    "CdxAß_H1": 5.23553,
+    "beta_H1": 0.74756,
+    "CdxAß_H2": 5.17719,
+    "beta_H2": 1.16051
   }
 }
