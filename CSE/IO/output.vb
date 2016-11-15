@@ -307,7 +307,7 @@ Module output
         End If
         AddToErg(tComp.tq_l, fCompName(tComp.tq_l), fCompUnit(tComp.tq_l), "InputData")
         AddToErg(tComp.tq_r, fCompName(tComp.tq_r), fCompUnit(tComp.tq_r), "InputData")
-        AddToErg(tComp.t_ground, fCompName(tComp.t_ground), fCompUnit(tComp.t_ground), "InputData")
+        If OptPar(1) Then AddToErg(tComp.t_ground, fCompName(tComp.t_ground), fCompUnit(tComp.t_ground), "InputData")
         AddToErg(tComp.t_amb_veh, fCompName(tComp.t_amb_veh), fCompUnit(tComp.t_amb_veh), "InputData")
         ' Write optional parameters
         If OptPar(0) Then AddToErg(tComp.trigger, fCompName(tComp.trigger), fCompUnit(tComp.trigger), "InputData")

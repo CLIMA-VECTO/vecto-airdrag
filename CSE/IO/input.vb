@@ -406,7 +406,7 @@ Public Module input
     End Sub
 
     ' Read the data file
-    Public Sub ReadDataFile(ByVal Datafile As String, ByVal MSCX As cMSC, ByVal vehicleX As cVehicle)
+    Public Sub ReadDataFile(ByVal Datafile As String, ByVal MSCX As cMSC, ByVal vehicleX As cVehicle, Optional ByVal Calib As Boolean = False)
         ' Declarations
         Using FileInMeasure As New cFile_V3
             Dim Line(), txt As String
@@ -415,6 +415,7 @@ Public Module input
             Dim HzIn = 100                                      ' Hz frequency demanded for .csdat-file
             Dim DayTimeSec = 24 * 60 * 60                       ' Time of the day in Seconds
             Dim valid_set As Boolean = False
+            Dim valid_set2 As Boolean = False
             Dim UTMcalc As Boolean = False
             Dim ZoneChange As Boolean = False
             Dim DemoDataF As Boolean = False
@@ -526,6 +527,13 @@ Public Module input
                             OptPar(0) = False
                         Case tComp.user_valid
                             valid_set = True
+                        Case tComp.t_ground
+                            If Not Calib Then
+                                Throw New Exception("Missing signal for " & fCompName(sKVM.Key))
+                            Else
+                                valid_set2 = True
+                                OptPar(1) = False
+                            End If
                         Case tComp.n_card, tComp.n_eng
                             If vehicleX.IsAT Then
                                 If MeasCheck(tComp.n_card) = False Then
@@ -642,6 +650,14 @@ Public Module input
                             InputData(tComp.user_valid).Add(CDbl(1))
                         Else
                             InputData(tComp.user_valid).Add(CDbl(1))
+                        End If
+                    End If
+                    If valid_set2 Then
+                        If tDim = 0 Then
+                            InputData.Add(tComp.t_ground, New List(Of Double))
+                            InputData(tComp.t_ground).Add(CDbl(20))
+                        Else
+                            InputData(tComp.t_ground).Add(CDbl(20))
                         End If
                     End If
 

@@ -35,7 +35,7 @@ Public Module main_calculation_call
             Dim vehicle As New cVehicle(Job.vehicle_fpath)
             If Not fCheckVeh(3, vehicle) Then Throw New Exception("Vehicle file for calculation incorrect!")
             ReadInputMSC(MSC, Job.calib_track_fpath, isCalibrate)
-            ReadDataFile(Job.calib_run_fpath, MSC, vehicle)
+            ReadDataFile(Job.calib_run_fpath, MSC, vehicle, isCalibrate)
 
             ' Exit function if error is detected
             If BWorker.CancellationPending Then Return
