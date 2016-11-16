@@ -1,6 +1,14 @@
 VECTO-CSE: Changes
 ===================
-#### 2016-11-09: v2.0.7-beta8/9/10 ####
+#### 2016-11-16: v3.0.0 ####
+TUG improvements:
+
+  * New version number
+  * Update of needed signals in calibration run (t_ground no longer needed as input)
+  * Always a 3 month lisense will be delivered with the program
+  * Update DEMOData
+
+#### 2016-11-09: v2.0.7-beta8/9 ####
 TUG improvements:
 
   * Correction of rolling resistance criteria
