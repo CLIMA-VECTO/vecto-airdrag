@@ -327,7 +327,7 @@ Module Signal_identification
     ' Function for calculation of the root points
     Function fCalcroot(ByVal orgMSCX As cMSC) As Boolean
         ' Declaration
-        Dim i As Integer
+        Dim i, pos As Integer
         Dim DXae, DYae, DXap, DYap, DXep, DYep, Aae, q As Double
         Dim BegCoordX, BegCoordY As Double
         Dim FirstIn As Boolean = True
@@ -335,12 +335,18 @@ Module Signal_identification
         Dim UTMCoordA As New cUTMCoord
         Dim UTMCoordE As New cUTMCoord
 
+        ' Initialisation
+        pos = 1
+
         ' Calculation
         For i = 0 To CalcData(tCompCali.SecID).Count - 1
             If CalcData(tCompCali.SecID)(i) <> 0 Then
+                ' Get the position of the section
+                pos = fMSPos(orgMSCX, CalcData(tCompCali.SecID)(i), CalcData(tCompCali.DirID)(i))
+
                 ' Calculation of the parameters
-                UTMCoordA = UTM(orgMSCX.latS(CalcData(tCompCali.SecID)(i)) / 60, orgMSCX.longS(CalcData(tCompCali.SecID)(i)) / 60)
-                UTMCoordE = UTM(orgMSCX.latE(CalcData(tCompCali.SecID)(i)) / 60, orgMSCX.longE(CalcData(tCompCali.SecID)(i)) / 60)
+                UTMCoordA = UTM(orgMSCX.latS(pos) / 60, orgMSCX.longS(pos) / 60)
+                UTMCoordE = UTM(orgMSCX.latE(pos) / 60, orgMSCX.longE(pos) / 60)
                 DYae = UTMCoordE.Northing - UTMCoordA.Northing
                 DXae = UTMCoordE.Easting - UTMCoordA.Easting
                 DYap = CalcData(tCompCali.lati_UTM)(i) - UTMCoordA.Northing
@@ -1046,6 +1052,20 @@ Module Signal_identification
         End If
 
         Return True
+    End Function
+
+    ' Find the position of the Measurement section
+    Private Function fMSPos(ByVal orgMSCX As cMSC, ByVal SecID As Integer, ByVal DirID As Integer) As Integer
+        ' Deklarations
+        Dim i As Integer
+
+        For i = 0 To orgMSCX.meID.Count - 1
+            If orgMSCX.meID(i) = SecID And orgMSCX.dID(i) = DirID Then
+                Return i
+            End If
+        Next
+
+        Throw New Exception(format("The section (SecID {0}, DirID {1}) is not inside the declared csms file", SecID, DirID))
     End Function
 
 End Module
