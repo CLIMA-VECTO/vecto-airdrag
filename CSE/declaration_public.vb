@@ -13,7 +13,7 @@ Module declaration_public
 
     ' Description of the form
     Public Const AppName As String = "Air Drag"                 ' Name of the programm
-    Public Const AppVers As String = "3.0.0"                    ' Version of the Programm
+    Public Const AppVers As String = "3.0.1"                    ' Version of the Programm
     Public AppDate As String                                    ' Date of the compilation of the programm
 
     ' Control variables
@@ -54,7 +54,7 @@ Module declaration_public
     Public AT As Boolean = False                                ' Calculation of an automatic transmission (with n_card)
     Public MT_AMT As Boolean = False                            ' Calculation of an manual transmission (always when n_eng available)
     Public KoordSys() As Boolean = {False, False}               ' Used Koordinate system 0. (MM.MM); 1.(DD.DD)
-    Public AnzDigit() As Integer = {6, 8}                       ' Minimum ammount of digits position 0. (MM.MM); 1.(DD.DD)
+    Public AnzDigit(,) As Integer = {{6, 8}, {4, 6}}            ' Minimum ammount of digits position (x) 0. DGPS, 1. GPS --> x.0 (MM.MM); x.1 (DD.DD)
 
     ' Boolean for the programm control
     Public FileBlock As Boolean = False                         ' Variable if a file is blocked by an other process

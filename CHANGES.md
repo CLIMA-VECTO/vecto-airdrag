@@ -1,11 +1,17 @@
 VECTO-CSE: Changes
 ===================
+#### 2016-11-25: v3.0.1 ####
+TUG improvements:
+
+  * New version number
+  * Bugfix for digit check by use of GPS
+  
 #### 2016-11-16: v3.0.0 ####
 TUG improvements:
 
   * New version number
-  * Update of needed signals in calibration run (t_ground no longer needed as input)
-  * Always a 3 month lisense will be delivered with the program
+  * Update of needed signals in calibration run (t_ground no longer required as input)
+  * A license valid until 16th of March is distributed with the code.
   * Update DEMOData
 
 #### 2016-11-09: v2.0.7-beta8/9 ####
@@ -13,7 +19,6 @@ TUG improvements:
 
   * Correction of rolling resistance criteria
   * Correction of digit test for coordinates
-  * Update of needed signals in calibration run (t_ground no longer needed as input)
 
 #### 2016-10-20: v2.0.7-beta7 ####
 TUG improvements:
