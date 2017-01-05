@@ -1,5 +1,11 @@
 VECTO-CSE: Changes
 ===================
+#### 2016-11-25: v3.0.3 ####
+TUG improvements:
+
+  * New version number
+  * Bugfix for the criteria detection in calibration and LS/HS run
+
 #### 2016-11-25: v3.0.1/2 ####
 TUG improvements:
 
