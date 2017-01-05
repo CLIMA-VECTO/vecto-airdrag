@@ -439,6 +439,9 @@ Public Module main_calculation_call
             OldUse(i) = ErgValues(tCompErg.used)(i)
         Next i
 
+        ' Reset the ErgValues for the criterias
+        ResetErgVal(True)
+
         ' Set the values
         For i = 0 To ErgValues(tCompErg.SecID).Count - 1
             If ErgValues(tCompErg.v_wind_avg)(i) < Crt.v_wind_avg_max_CAL Then ErgValues(tCompErg.val_vWind)(i) = 1
@@ -861,6 +864,8 @@ Public Module main_calculation_call
                 Else
                     igear = 1
                 End If
+                ' Reset the ErgValues for the criterias
+                ResetErgVal()
                 For i = 0 To ErgValues(tCompErg.SecID).Count - 1
                     ' Identify whitch criteria is not valid
                     If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
@@ -907,6 +912,9 @@ Public Module main_calculation_call
                     OldValid(i) = ErgValues(tCompErg.valid)(i)
                     OldUse(i) = ErgValues(tCompErg.used)(i)
                 Next i
+
+                ' Reset the ErgValues for the criterias
+                ResetErgVal()
 
                 ' Control the criterias
                 fgetSpeedLim(vehicleX, lim_v_veh_avg_max_HS, lim_v_veh_avg_min_HS)
@@ -1153,4 +1161,36 @@ Public Module main_calculation_call
             Next
         End If
     End Sub
+
+    ' Reset the ErgValues
+    Private Function ResetErgVal(Optional ByVal calib As Boolean = False) As Boolean
+        ' Deklaration
+        Dim i As Integer
+
+        If calib Then
+            For i = 0 To ErgValues(tCompErg.SecID).Count - 1
+                ErgValues(tCompErg.val_vWind)(i) = 0
+                ErgValues(tCompErg.val_beta)(i) = 0
+                ErgValues(tCompErg.val_vWind_1s)(i) = 0
+                ErgValues(tCompErg.val_User)(i) = 0
+            Next i
+        Else
+            For i = 0 To ErgValues(tCompErg.SecID).Count - 1
+                ErgValues(tCompErg.val_User)(i) = 0
+                ErgValues(tCompErg.val_vVeh_avg)(i) = 0
+                ErgValues(tCompErg.val_vVeh_f)(i) = 0
+                ErgValues(tCompErg.val_tq_f)(i) = 0
+                ErgValues(tCompErg.val_n_eng)(i) = 0
+                ErgValues(tCompErg.val_dist)(i) = 0
+                ErgValues(tCompErg.val_t_amb)(i) = 0
+                ErgValues(tCompErg.val_t_ground)(i) = 0
+                ErgValues(tCompErg.val_vWind)(i) = 0
+                ErgValues(tCompErg.val_vWind_1s)(i) = 0
+                ErgValues(tCompErg.val_beta)(i) = 0
+                ErgValues(tCompErg.val_vVeh_1s)(i) = 0
+                ErgValues(tCompErg.val_tq_1s)(i) = 0
+            Next i
+        End If
+        Return True
+    End Function
 End Module
