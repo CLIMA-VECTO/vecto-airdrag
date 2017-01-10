@@ -571,7 +571,7 @@ Module Signal_identification
         For i = 1 To foundSec.Count - 1
             If Not foundSec(i) Then
                 If firstIn Then logme(8, False, "Not all defined sections in the *.csms were found! Please check your section definition(s)!")
-                logme(8, False, format("SecID ({0}), DID ({0})", MSCX.meID(i), MSCX.dID(i)))
+                logme(8, False, format("SecID ({0}), DID ({1})", MSCX.meID(i), MSCX.dID(i)))
                 firstIn = False
             End If
         Next i

@@ -526,7 +526,7 @@ Public Module main_calculation_call
         For i = 0 To SecCount.NameSec.Count - 1
             For j = i + 1 To SecCount.NameSec.Count - 1
                 If Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) Then
-                    ' If enought sections in both directions are detected
+                    ' If enough sections in both directions are detected
                     If SecCount.AnzSec(i) >= Crt.segruns_min_CAL And SecCount.AnzSec(j) >= Crt.segruns_min_CAL Then
                         ' Set the whole sections on valid
                         SecCount.ValidSec(i) = True
@@ -670,7 +670,7 @@ Public Module main_calculation_call
             For j = i + 1 To SecCount.NameSec.Count - 1
                 If Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) And _
                    Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), "(") + 1, InStr(SecCount.NameSec(i), ",") - (InStr(SecCount.NameSec(i), "(") + 1))) = Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), "(") + 1, InStr(SecCount.NameSec(j), ",") - (InStr(SecCount.NameSec(j), "(") + 1))) Then
-                    ' If enought sections in both directions are detected
+                    ' If enough sections in both directions are detected
                     If SecCount.AnzSec(i) >= Crt.segruns_min_LS And SecCount.AnzSec(j) >= Crt.segruns_min_LS Then
 
                         ' If not both the same number
@@ -786,7 +786,7 @@ Public Module main_calculation_call
 
         ' Check if enough valid sections in both directionsection
         For i = 0 To SecCount.NameSec.Count - 1
-            ' If enought runs in the direction are detected
+            ' If enough runs in the direction are detected
             If SecCount.AnzSec(i) >= Crt.segruns_min_HS Then
                 ' Count the valid tests per HeadID
                 Dim headId = Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), ",") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), ",") + 1)))
@@ -1090,27 +1090,27 @@ Public Module main_calculation_call
         If Not fCheckDigits(Prefs.decSep, AnzDigit, vehicle.gearRatio_high) Then
             Flag = False
             If Job.mode = 1 Then
-                logme(9, False, format("The gearRatio_high in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+                logme(9, False, format("The gearRatio_high in the vehicle file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
             Else
-                logme(8, False, format("The gearRatio_high in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+                logme(8, False, format("The gearRatio_high in the vehicle file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
             End If
         End If
         ' Check the geraRatio_low
         If Not fCheckDigits(Prefs.decSep, AnzDigit, vehicle.gearRatio_low) Then
             Flag = False
             If Job.mode = 1 Then
-                logme(9, False, format("The gearRatio_low in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+                logme(9, False, format("The gearRatio_low in the vehicle file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
             Else
-                logme(8, False, format("The gearRatio_low in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+                logme(8, False, format("The gearRatio_low in the vehicle file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
             End If
         End If
         ' Check the axleRatio
         If Not fCheckDigits(Prefs.decSep, AnzDigit, vehicle.axleRatio) Then
             Flag = False
             If Job.mode = 1 Then
-                logme(9, False, format("The axleRatio in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+                logme(9, False, format("The axleRatio in the vehicle file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
             Else
-                logme(8, False, format("The axleRatio in the vehicle file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
+                logme(8, False, format("The axleRatio in the vehicle file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})!", Job.vehicle_fpath, AnzDigit))
             End If
         End If
 

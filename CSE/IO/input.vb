@@ -163,9 +163,9 @@ Public Module input
         ' Check coordinate digits after decimal seperator
         If Counter > 0 Then
             If Job.mode = 1 Then
-                Throw New Exception(format("The csms coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({1})!", MSCfile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), Counter))
+                Throw New Exception(format("The csms coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({1})!", MSCfile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), Counter))
             Else
-                logme(8, False, format("The csms coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({1})!", MSCfile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), Counter))
+                logme(8, False, format("The csms coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({1})!", MSCfile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), Counter))
             End If
         End If
 
@@ -269,23 +269,23 @@ Public Module input
                     ' Check coordinate digits after decimal seperator
                     If CounterLat > 0 Then
                         If Job.mode = 1 Then
-                            Throw New Exception(format("The altitude latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(0, CoordID), CounterLat))
+                            Throw New Exception(format("The altitude latitude coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(0, CoordID), CounterLat))
                         Else
-                            logme(8, False, format("The altitude latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(0, CoordID), CounterLat))
+                            logme(8, False, format("The altitude latitude coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(0, CoordID), CounterLat))
                         End If
                     End If
                     If CounterLong > 0 Then
                         If Job.mode = 1 Then
-                            Throw New Exception(format("The altitude longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(0, CoordID), CounterLong))
+                            Throw New Exception(format("The altitude longitude coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(0, CoordID), CounterLong))
                         Else
-                            logme(8, False, format("The altitude longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(0, CoordID), CounterLong))
+                            logme(8, False, format("The altitude longitude coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), AnzDigit(0, CoordID), CounterLong))
                         End If
                     End If
                     If CounterAlt > 0 Then
                         If Job.mode = 1 Then
-                            Throw New Exception(format("The altitude in the altitude file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), 2, CounterAlt))
+                            Throw New Exception(format("The altitude in the altitude file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), 2, CounterAlt))
                         Else
-                            logme(8, False, format("The altitude in the altitude file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), 2, CounterAlt))
+                            logme(8, False, format("The altitude in the altitude file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1}). Number of fails: ({2})!", MSCOrg.AltPath(i), 2, CounterAlt))
                         End If
                     End If
                 Catch ex As Exception
@@ -673,16 +673,16 @@ Public Module input
             ' Check coordinate digits
             If CounterLat > 0 Then
                 If Job.mode = 1 Then
-                    Throw New Exception(format("The latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), CounterLat))
+                    Throw New Exception(format("The latitude coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), CounterLat))
                 Else
-                    logme(8, False, format("The latitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), CounterLat))
+                    logme(8, False, format("The latitude coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), CounterLat))
                 End If
             End If
             If CounterLong > 0 Then
                 If Job.mode = 1 Then
-                    Throw New Exception(format("The longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), CounterLong))
+                    Throw New Exception(format("The longitude coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), CounterLong))
                 Else
-                    logme(8, False, format("The longitude coordinates from file ({0}) have not enought digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), CounterLong))
+                    logme(8, False, format("The longitude coordinates from file ({0}) have not enough digits after the decimal seperator (minimum digits are ({1})). Number of fails: ({2})!", Datafile, AnzDigit(Convert.ToInt32(MSCX.tUse), CoordID), CounterLong))
                 End If
             End If
 
