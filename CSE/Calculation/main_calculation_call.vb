@@ -532,32 +532,32 @@ Public Module main_calculation_call
                         SecCount.ValidSec(i) = True
                         SecCount.ValidSec(j) = True
 
-                        ' If not both the same amount
-                        If Not SecCount.AnzSec(i) = SecCount.AnzSec(j) Then
-                            ' First section greater then second
-                            If SecCount.AnzSec(i) > SecCount.AnzSec(j) Then
-                                anz = 0
-                                For k = 0 To ErgValues(tCompErg.SecID).Count - 1
-                                    If (Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = ErgValues(tCompErg.SecID)(k)) And (Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), "(") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), "(") + 1))) = ErgValues(tCompErg.DirID)(k)) Then
-                                        anz += 1
-                                        If anz > SecCount.AnzSec(j) Then
-                                            ErgValues(tCompErg.used)(k) = 0
-                                        End If
-                                    End If
-                                Next k
-                            Else
-                                ' Second section greater then first
-                                anz = 0
-                                For k = 0 To ErgValues(tCompErg.SecID).Count - 1
-                                    If (Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) = ErgValues(tCompErg.SecID)(k)) And (Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), "(") + 1, InStr(SecCount.NameSec(j), ")") - (InStr(SecCount.NameSec(j), "(") + 1))) = ErgValues(tCompErg.DirID)(k)) Then
-                                        anz += 1
-                                        If anz > SecCount.AnzSec(i) Then
-                                            ErgValues(tCompErg.used)(k) = 0
-                                        End If
-                                    End If
-                                Next k
-                            End If
-                        End If
+                        '' If not both the same amount
+                        'If Not SecCount.AnzSec(i) = SecCount.AnzSec(j) Then
+                        '    ' First section greater then second
+                        '    If SecCount.AnzSec(i) > SecCount.AnzSec(j) Then
+                        '        anz = 0
+                        '        For k = 0 To ErgValues(tCompErg.SecID).Count - 1
+                        '            If (Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = ErgValues(tCompErg.SecID)(k)) And (Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), "(") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), "(") + 1))) = ErgValues(tCompErg.DirID)(k)) Then
+                        '                anz += 1
+                        '                If anz > SecCount.AnzSec(j) Then
+                        '                    ErgValues(tCompErg.used)(k) = 0
+                        '                End If
+                        '            End If
+                        '        Next k
+                        '    Else
+                        '        ' Second section greater then first
+                        '        anz = 0
+                        '        For k = 0 To ErgValues(tCompErg.SecID).Count - 1
+                        '            If (Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) = ErgValues(tCompErg.SecID)(k)) And (Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), "(") + 1, InStr(SecCount.NameSec(j), ")") - (InStr(SecCount.NameSec(j), "(") + 1))) = ErgValues(tCompErg.DirID)(k)) Then
+                        '                anz += 1
+                        '                If anz > SecCount.AnzSec(i) Then
+                        '                    ErgValues(tCompErg.used)(k) = 0
+                        '                End If
+                        '            End If
+                        '        Next k
+                        '    End If
+                        'End If
                     Else
                         SecCount.ValidSec(i) = False
                         SecCount.ValidSec(j) = False

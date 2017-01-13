@@ -1,5 +1,12 @@
 VECTO-CSE: Changes
 ===================
+#### 2017-01-13: v3.0.5 ####
+TUG improvements:
+
+  * New version number
+  * Change of needed digits after the decimal separator (DGPS: DD.DD[7]/MM.MM[5]; GPS: DD.DD[5]/MM.MM[3])
+  * Uneven numbers of datasets per heading in calibration test now allowed
+  
 #### 2016-11-25: v3.0.3/4 ####
 TUG improvements:
 
