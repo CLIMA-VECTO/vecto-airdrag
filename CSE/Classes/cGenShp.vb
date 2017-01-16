@@ -61,18 +61,18 @@ Public Class cGenShp
     Private Sub GetVehClassData(ByVal VehClass As Integer, ByVal VehConf As Integer, ByVal GVM As Double, ByVal VehHeight As Double)
         Select Case (VehClass)
             Case 1 ' rigid or tractor 4x2
-                hmin = 3.5
-                hmax = 3.75
-                href = 3.75
+                hmin = 3.4
+                hmax = 3.6
+                href = 3.6
                 If VehConf = 0 Then
                     AirDragCurv_val = 0
                 Else
                     AirDragCurv_val = -1
                 End If
             Case 2 ' rigid or tractor 4x2
-                hmin = 3.4
-                hmax = 3.6
-                href = 3.6
+                hmin = 3.5
+                hmax = 3.75
+                href = 3.75
                 If VehConf = 0 Then
                     AirDragCurv_val = 0
                 Else
