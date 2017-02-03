@@ -125,13 +125,17 @@ Module Minor_routines_calculate
             If Sprung And lauf = 0 Then
                 zEnd = tI(lauf) - 1
                 pos = 0
+            ElseIf Sprung And lauf = laufE Then
+                zEnd = tI(lauf)
+                t0 = tI(lauf - 1)
+                pos = tI(lauf - 1)
             ElseIf Sprung And lauf <> 0 Then
                 zEnd = TI(lauf) - 1
                 t0 = TI(lauf - 1)
-                pos = TI(lauf - 1)
+                pos = tI(lauf - 1)
             Else
-                pos = TI(lauf)
-                t0 = TI(lauf)
+                pos = tI(lauf)
+                t0 = tI(lauf)
                 zEnd = TimeX.Count - 1
             End If
 
@@ -196,6 +200,10 @@ Module Minor_routines_calculate
             If Sprung And lauf = 0 Then
                 zEnd = tI(lauf) - 1
                 pos = 0
+            ElseIf Sprung And lauf = laufE Then
+                zEnd = tI(lauf)
+                t0 = tI(lauf - 1)
+                pos = tI(lauf - 1)
             ElseIf Sprung And lauf <> 0 Then
                 zEnd = tI(lauf) - 1
                 t0 = tI(lauf - 1)

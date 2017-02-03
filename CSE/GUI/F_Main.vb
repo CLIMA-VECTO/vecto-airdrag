@@ -580,6 +580,8 @@ Public Class F_Main
         Crt.v_wind_avg_max_CAL = TB_v_wind_avg_max_CAL.Text
         Crt.v_wind_1s_max_CAL = TB_v_wind_1s_max_CAL.Text
         Crt.beta_avg_max_CAL = TB_beta_avg_max_CAL.Text
+        Crt.v_veh_1s_delta_CAL = TB_v_veh_1s_delta_CAL.Text
+        Crt.v_veh_ave_delta_CAL = TB_v_veh_ave_delta_CAL.Text
         ' Low and high speed test
         Crt.leng_crit = TB_leng_crit.Text
         ' Low speed test
@@ -647,6 +649,8 @@ Public Class F_Main
         TB_v_wind_avg_max_CAL.Text = Crt.v_wind_avg_max_CAL
         TB_v_wind_1s_max_CAL.Text = Crt.v_wind_1s_max_CAL
         TB_beta_avg_max_CAL.Text = Crt.beta_avg_max_CAL
+        TB_v_veh_1s_delta_CAL.Text = Crt.v_veh_1s_delta_CAL
+        TB_v_veh_ave_delta_CAL.Text = Crt.v_veh_ave_delta_CAL
         ' Low and high speed test
         TB_leng_crit.Text = Crt.leng_crit
         ' Low speed test
@@ -766,6 +770,8 @@ Public Class F_Main
         TB_v_wind_avg_max_CAL.Enabled = SetState
         TB_v_wind_1s_max_CAL.Enabled = SetState
         TB_beta_avg_max_CAL.Enabled = SetState
+        TB_v_veh_1s_delta_CAL.Enabled = SetState
+        TB_v_veh_ave_delta_CAL.Enabled = SetState
         ' Low and high speed test
         TB_leng_crit.Enabled = SetState
         ' Low speed test
@@ -1061,7 +1067,7 @@ Public Class F_Main
 
     ' Check if the input is a number
     Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TB_length_MS_max.KeyPress, TB_delta_rr_max.KeyPress, _
-        TB_t_ground_max.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, _
+        TB_t_ground_max.KeyPress, TB_t_amb_max.KeyPress, TB_t_amb_min.KeyPress, TB_delta_Hz_max.KeyPress, TB_acc_corr_avg.KeyPress, TB_delta_parallel_max.KeyPress, TB_trigger_delta_x_max.KeyPress, TB_trigger_delta_y_max.KeyPress, TB_v_veh_1s_delta_CAL.KeyPress, TB_v_veh_ave_delta_CAL.KeyPress, _
         TB_delta_head_max.KeyPress, TB_segruns_min_CAL.KeyPress, TB_segruns_min_LS.KeyPress, TB_segruns_min_HS.KeyPress, TB_segruns_min_head_HS.KeyPress, TB_tq_sum_1s_delta_HS.KeyPress, TB_v_veh_1s_delta_HS.KeyPress, TB_beta_avg_max_HS.KeyPress, TB_v_veh_avg_min_HS.KeyPress, _
         TB_v_wind_1s_max_HS.KeyPress, TB_v_wind_avg_max_HS.KeyPress, TB_delta_n_ec_HS.KeyPress, TB_tq_sum_float_delta_LS.KeyPress, TB_v_veh_float_delta_LS.KeyPress, TB_v_veh_avg_max_LS.KeyPress, TB_v_veh_avg_min_LS.KeyPress, TB_slope_max.KeyPress, TB_length_MS_min.KeyPress, TB_delta_n_ec_LS.KeyPress, _
         TB_leng_crit.KeyPress, TB_beta_avg_max_CAL.KeyPress, TB_v_wind_1s_max_CAL.KeyPress, TB_v_wind_avg_max_CAL.KeyPress, TB_dist_float.KeyPress, TB_dist_gridpoints_max.KeyPress, TB_dist_grid_ms_max.KeyPress, TB_v_veh_avg_max_HS.KeyPress, TB_delta_v_avg_min_HS.KeyPress, TB_delta_CdxA_anemo.KeyPress
@@ -1221,6 +1227,8 @@ Public Class F_Main
             TB_v_wind_avg_max_CAL, LvWindAveCALMax, _
             TB_v_wind_1s_max_CAL, LvWind1sCALMax, _
             TB_beta_avg_max_CAL, LBetaAveCALMax, _
+            TB_v_veh_1s_delta_CAL, Lv_veh_1s_delta_CAL, _
+            TB_v_veh_ave_delta_CAL, Lv_veh_ave_delta_CAL, _
             TB_leng_crit, LLengCrit, _
             TB_v_veh_avg_min_LS, LB_v_veh_avg_min_LS, _
             TB_v_veh_avg_max_LS, LB_v_veh_avg_max_LS, _

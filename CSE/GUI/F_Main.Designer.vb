@@ -200,6 +200,12 @@ Partial Class F_Main
         Me.TB_v_veh_avg_min_LS = New System.Windows.Forms.TextBox()
         Me.Label79 = New System.Windows.Forms.Label()
         Me.GroupBox13 = New System.Windows.Forms.GroupBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.Lv_veh_ave_delta_CAL = New System.Windows.Forms.Label()
+        Me.TB_v_veh_ave_delta_CAL = New System.Windows.Forms.TextBox()
+        Me.TB_v_veh_1s_delta_CAL = New System.Windows.Forms.TextBox()
+        Me.Lv_veh_1s_delta_CAL = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.TB_v_wind_avg_max_CAL = New System.Windows.Forms.TextBox()
@@ -968,7 +974,7 @@ Partial Class F_Main
         Me.TabControlOutMsg.Controls.Add(Me.TabPageWar)
         Me.TabControlOutMsg.Controls.Add(Me.TabPageErr)
         Me.TabControlOutMsg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabControlOutMsg.Location = New System.Drawing.Point(8, 567)
+        Me.TabControlOutMsg.Location = New System.Drawing.Point(8, 606)
         Me.TabControlOutMsg.Margin = New System.Windows.Forms.Padding(2)
         Me.TabControlOutMsg.Multiline = True
         Me.TabControlOutMsg.Name = "TabControlOutMsg"
@@ -1076,7 +1082,7 @@ Partial Class F_Main
         Me.TabControl1.Location = New System.Drawing.Point(8, 72)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(913, 488)
+        Me.TabControl1.Size = New System.Drawing.Size(913, 529)
         Me.TabControl1.TabIndex = 35
         '
         'TPMain
@@ -1088,7 +1094,7 @@ Partial Class F_Main
         Me.TPMain.Location = New System.Drawing.Point(4, 22)
         Me.TPMain.Name = "TPMain"
         Me.TPMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.TPMain.Size = New System.Drawing.Size(905, 462)
+        Me.TPMain.Size = New System.Drawing.Size(905, 468)
         Me.TPMain.TabIndex = 0
         Me.TPMain.Text = "Main"
         Me.TPMain.UseVisualStyleBackColor = True
@@ -1131,7 +1137,7 @@ Partial Class F_Main
         Me.TPCriteria.Location = New System.Drawing.Point(4, 22)
         Me.TPCriteria.Name = "TPCriteria"
         Me.TPCriteria.Padding = New System.Windows.Forms.Padding(3)
-        Me.TPCriteria.Size = New System.Drawing.Size(905, 462)
+        Me.TPCriteria.Size = New System.Drawing.Size(905, 503)
         Me.TPCriteria.TabIndex = 1
         Me.TPCriteria.Text = "Criteria"
         Me.TPCriteria.UseVisualStyleBackColor = True
@@ -1468,7 +1474,7 @@ Partial Class F_Main
         Me.GroupBox9.Controls.Add(Me.PBInfoIconCrt)
         Me.GroupBox9.Location = New System.Drawing.Point(6, 199)
         Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(894, 269)
+        Me.GroupBox9.Size = New System.Drawing.Size(894, 298)
         Me.GroupBox9.TabIndex = 44
         Me.GroupBox9.TabStop = False
         Me.GroupBox9.Text = "Dataset validity criteria"
@@ -2055,13 +2061,19 @@ Partial Class F_Main
         '
         'GroupBox13
         '
+        Me.GroupBox13.Controls.Add(Me.Label2)
+        Me.GroupBox13.Controls.Add(Me.Label23)
+        Me.GroupBox13.Controls.Add(Me.Lv_veh_ave_delta_CAL)
+        Me.GroupBox13.Controls.Add(Me.TB_v_veh_ave_delta_CAL)
+        Me.GroupBox13.Controls.Add(Me.TB_v_veh_1s_delta_CAL)
+        Me.GroupBox13.Controls.Add(Me.Lv_veh_1s_delta_CAL)
         Me.GroupBox13.Controls.Add(Me.Label19)
         Me.GroupBox13.Controls.Add(Me.Label40)
         Me.GroupBox13.Controls.Add(Me.TB_v_wind_avg_max_CAL)
-        Me.GroupBox13.Controls.Add(Me.LvWind1sCALMax)
-        Me.GroupBox13.Controls.Add(Me.LvWindAveCALMax)
         Me.GroupBox13.Controls.Add(Me.LDsMinCAL)
         Me.GroupBox13.Controls.Add(Me.TB_segruns_min_CAL)
+        Me.GroupBox13.Controls.Add(Me.LvWind1sCALMax)
+        Me.GroupBox13.Controls.Add(Me.LvWindAveCALMax)
         Me.GroupBox13.Controls.Add(Me.TB_beta_avg_max_CAL)
         Me.GroupBox13.Controls.Add(Me.Label44)
         Me.GroupBox13.Controls.Add(Me.Label42)
@@ -2069,15 +2081,67 @@ Partial Class F_Main
         Me.GroupBox13.Controls.Add(Me.LBetaAveCALMax)
         Me.GroupBox13.Location = New System.Drawing.Point(6, 19)
         Me.GroupBox13.Name = "GroupBox13"
-        Me.GroupBox13.Size = New System.Drawing.Size(211, 127)
+        Me.GroupBox13.Size = New System.Drawing.Size(211, 178)
         Me.GroupBox13.TabIndex = 79
         Me.GroupBox13.TabStop = False
         Me.GroupBox13.Text = "Calibration run"
         '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(173, 129)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(38, 13)
+        Me.Label2.TabIndex = 92
+        Me.Label2.Text = "[km/h]"
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(173, 103)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(38, 13)
+        Me.Label23.TabIndex = 91
+        Me.Label23.Text = "[km/h]"
+        '
+        'Lv_veh_ave_delta_CAL
+        '
+        Me.Lv_veh_ave_delta_CAL.AutoSize = True
+        Me.Lv_veh_ave_delta_CAL.Location = New System.Drawing.Point(6, 129)
+        Me.Lv_veh_ave_delta_CAL.Name = "Lv_veh_ave_delta_CAL"
+        Me.Lv_veh_ave_delta_CAL.Size = New System.Drawing.Size(116, 13)
+        Me.Lv_veh_ave_delta_CAL.TabIndex = 88
+        Me.Lv_veh_ave_delta_CAL.Text = "v_veh_ave_delta_CAL"
+        '
+        'TB_v_veh_ave_delta_CAL
+        '
+        Me.TB_v_veh_ave_delta_CAL.Location = New System.Drawing.Point(128, 126)
+        Me.TB_v_veh_ave_delta_CAL.Name = "TB_v_veh_ave_delta_CAL"
+        Me.TB_v_veh_ave_delta_CAL.Size = New System.Drawing.Size(45, 20)
+        Me.TB_v_veh_ave_delta_CAL.TabIndex = 87
+        Me.TB_v_veh_ave_delta_CAL.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'TB_v_veh_1s_delta_CAL
+        '
+        Me.TB_v_veh_1s_delta_CAL.Location = New System.Drawing.Point(128, 100)
+        Me.TB_v_veh_1s_delta_CAL.Name = "TB_v_veh_1s_delta_CAL"
+        Me.TB_v_veh_1s_delta_CAL.Size = New System.Drawing.Size(45, 20)
+        Me.TB_v_veh_1s_delta_CAL.TabIndex = 90
+        Me.TB_v_veh_1s_delta_CAL.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Lv_veh_1s_delta_CAL
+        '
+        Me.Lv_veh_1s_delta_CAL.AutoSize = True
+        Me.Lv_veh_1s_delta_CAL.Location = New System.Drawing.Point(6, 103)
+        Me.Lv_veh_1s_delta_CAL.Name = "Lv_veh_1s_delta_CAL"
+        Me.Lv_veh_1s_delta_CAL.Size = New System.Drawing.Size(109, 13)
+        Me.Lv_veh_1s_delta_CAL.TabIndex = 89
+        Me.Lv_veh_1s_delta_CAL.Text = "v_veh_1s_delta_CAL"
+        '
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(173, 101)
+        Me.Label19.Location = New System.Drawing.Point(173, 155)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(16, 13)
         Me.Label19.TabIndex = 86
@@ -2121,7 +2185,7 @@ Partial Class F_Main
         'LDsMinCAL
         '
         Me.LDsMinCAL.AutoSize = True
-        Me.LDsMinCAL.Location = New System.Drawing.Point(6, 101)
+        Me.LDsMinCAL.Location = New System.Drawing.Point(6, 155)
         Me.LDsMinCAL.Name = "LDsMinCAL"
         Me.LDsMinCAL.Size = New System.Drawing.Size(92, 13)
         Me.LDsMinCAL.TabIndex = 42
@@ -2129,7 +2193,7 @@ Partial Class F_Main
         '
         'TB_segruns_min_CAL
         '
-        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(128, 98)
+        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(128, 152)
         Me.TB_segruns_min_CAL.Name = "TB_segruns_min_CAL"
         Me.TB_segruns_min_CAL.Size = New System.Drawing.Size(45, 20)
         Me.TB_segruns_min_CAL.TabIndex = 41
@@ -2180,16 +2244,17 @@ Partial Class F_Main
         '
         'TBInfoCrt
         '
-        Me.TBInfoCrt.Location = New System.Drawing.Point(37, 152)
+        Me.TBInfoCrt.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TBInfoCrt.Location = New System.Drawing.Point(40, 203)
         Me.TBInfoCrt.Multiline = True
         Me.TBInfoCrt.Name = "TBInfoCrt"
-        Me.TBInfoCrt.Size = New System.Drawing.Size(180, 110)
+        Me.TBInfoCrt.Size = New System.Drawing.Size(177, 89)
         Me.TBInfoCrt.TabIndex = 83
         '
         'PBInfoIconCrt
         '
         Me.PBInfoIconCrt.Image = Global.AirDrag.My.Resources.Resources.Info
-        Me.PBInfoIconCrt.Location = New System.Drawing.Point(6, 152)
+        Me.PBInfoIconCrt.Location = New System.Drawing.Point(9, 203)
         Me.PBInfoIconCrt.Name = "PBInfoIconCrt"
         Me.PBInfoIconCrt.Size = New System.Drawing.Size(25, 30)
         Me.PBInfoIconCrt.TabIndex = 81
@@ -2491,7 +2556,7 @@ Partial Class F_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(932, 727)
+        Me.ClientSize = New System.Drawing.Size(932, 773)
         Me.Controls.Add(Me.LB_SelMode)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.PictureBox2)
@@ -2777,5 +2842,11 @@ Partial Class F_Main
     Friend WithEvents GroupBox8 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox6 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox16 As System.Windows.Forms.GroupBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents Label23 As System.Windows.Forms.Label
+    Friend WithEvents Lv_veh_ave_delta_CAL As System.Windows.Forms.Label
+    Friend WithEvents TB_v_veh_ave_delta_CAL As System.Windows.Forms.TextBox
+    Friend WithEvents TB_v_veh_1s_delta_CAL As System.Windows.Forms.TextBox
+    Friend WithEvents Lv_veh_1s_delta_CAL As System.Windows.Forms.Label
 
 End Class

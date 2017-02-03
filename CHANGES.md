@@ -1,5 +1,12 @@
 VECTO-CSE: Changes
 ===================
+#### 2017-02-03: v3.0.7 ####
+TUG improvements:
+
+  * New version number
+  * Validity criterias for calibration run extended (see technical annex)
+  * New calibration criterias (v_veh_1s_delta_CAL, v_veh_ave_delta_CAL)
+
 #### 2017-01-13: v3.0.5/6 ####
 TUG improvements:
 

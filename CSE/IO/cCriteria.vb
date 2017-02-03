@@ -57,6 +57,8 @@ Public Class cCriteria
         g.v_wind_avg_max_CAL = 5
         g.v_wind_1s_max_CAL = 8
         g.beta_avg_max_CAL = 5
+        g.v_veh_1s_delta_CAL = 1
+        g.v_veh_ave_delta_CAL = 2
 
         g.leng_crit = 3
 
@@ -193,6 +195,14 @@ Public Class cCriteria
                         "beta_avg_max_CAL": {"type": "number", "required": true, 
                             "description": "Maximum average beta (calibration).", 
                             "units": "°", 
+                        },
+                        "v_veh_1s_delta_CAL": {"type": "number", "required": true, 
+                            "description": "+/- maximum deviation of 1s average vehicle speed from average vehicle speed over entire section (calibration).", 
+                            "units": "km/h", 
+                        },
+                        "v_veh_ave_delta_CAL": {"type": "number", "required": true, 
+                            "description": "+/- maximum deviation of average speeds per heading (calibration).", 
+                            "units": "km/h", 
                         },
 
                         "leng_crit": {"type": "number", "required": true, 
@@ -347,6 +357,8 @@ Public Class cCriteria
     Public v_wind_avg_max_CAL As Single
     Public v_wind_1s_max_CAL As Single
     Public beta_avg_max_CAL As Single
+    Public v_veh_1s_delta_CAL As Single
+    Public v_veh_ave_delta_CAL As Single
     Public v_veh_avg_max_LS As Single
     Public v_veh_avg_min_LS As Single
     Public v_veh_float_delta_LS As Single
@@ -401,6 +413,8 @@ Public Class cCriteria
         Me.v_wind_avg_max_CAL = g("v_wind_avg_max_CAL")
         Me.v_wind_1s_max_CAL = g("v_wind_1s_max_CAL")
         Me.beta_avg_max_CAL = g("beta_avg_max_CAL")
+        Me.v_veh_1s_delta_CAL = g("v_veh_1s_delta_CAL")
+        Me.v_veh_ave_delta_CAL = g("v_veh_ave_delta_CAL")
 
         Me.v_veh_avg_max_LS = g("v_veh_avg_max_LS")
         Me.v_veh_avg_min_LS = g("v_veh_avg_min_LS")
@@ -461,6 +475,8 @@ Public Class cCriteria
         g.v_wind_avg_max_CAL = Me.v_wind_avg_max_CAL
         g.v_wind_1s_max_CAL = Me.v_wind_1s_max_CAL
         g.beta_avg_max_CAL = Me.beta_avg_max_CAL
+        g.v_veh_1s_delta_CAL = Me.v_veh_1s_delta_CAL
+        g.v_veh_ave_delta_CAL = Me.v_veh_ave_delta_CAL
 
         g.leng_crit = Me.leng_crit
 

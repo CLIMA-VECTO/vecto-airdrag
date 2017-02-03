@@ -206,7 +206,7 @@ Public Module main_calculation_call
         run = 0
 
         ' Check if the calibration run has the same and enough sections measured
-        fCheckCalib(run, Change)
+        fCheckCalib(run, vehicleX, Change)
 
         Do While Change
             ' Initialise Parameter
@@ -233,8 +233,11 @@ Public Module main_calculation_call
             ' Calculate the average values for v_wind, beta and v_wind_1s_max
             fWindBetaAirErg()
 
+            ' Calculate the other speed run relevant values
+            fCalcSpeedValCalib()
+
             ' Check if the calibration run is valid
-            fCheckCalib(run, Change)
+            fCheckCalib(run, vehicleX, Change)
 
             ' Error
             If run > 10 Then
@@ -423,12 +426,13 @@ Public Module main_calculation_call
     End Function
 
     ' Function to check if the calibration run is valid
-    Sub fCheckCalib(ByVal Run As Integer, ByRef Change As Boolean)
+    Sub fCheckCalib(ByVal Run As Integer, ByVal vehicleX As cVehicle, ByRef Change As Boolean)
         ' Declaration
         Dim i, j, k, anz As Integer
         Dim control As Boolean
         Dim SecCount As New cValidSec
         Dim OldValid(ErgValues(tCompErg.SecID).Count - 1), OldUse(ErgValues(tCompErg.SecID).Count - 1) As Boolean
+        Dim lim_v_veh_avg_max_CAL, lim_v_veh_avg_min_CAL As Single
 
         ' Initialisation
         Change = False
@@ -442,16 +446,30 @@ Public Module main_calculation_call
         ' Reset the ErgValues for the criterias
         ResetErgVal(True)
 
+        ' Get the speed limit (!!use same criterias like for the HS test)
+        fgetSpeedLim(vehicleX, lim_v_veh_avg_max_CAL, lim_v_veh_avg_min_CAL)
+
         ' Set the values
         For i = 0 To ErgValues(tCompErg.SecID).Count - 1
             If ErgValues(tCompErg.v_wind_avg)(i) < Crt.v_wind_avg_max_CAL Then ErgValues(tCompErg.val_vWind)(i) = 1
             If Math.Abs(ErgValues(tCompErg.beta_avg)(i)) < Crt.beta_avg_max_CAL Then ErgValues(tCompErg.val_beta)(i) = 1
             If ErgValues(tCompErg.v_wind_1s_max)(i) < Crt.v_wind_1s_max_CAL Then ErgValues(tCompErg.val_vWind_1s)(i) = 1
             If ErgValues(tCompErg.user_valid)(i) = 1 Then ErgValues(tCompErg.val_User)(i) = 1
+            If Run = 0 Then
+                ' Only by initialisation. Otherwise its always false
+                ErgValues(tCompErg.val_vVeh_avg)(i) = 1
+            Else
+                ' Check by calibration
+                If ErgValues(tCompErg.v_veh)(i) < lim_v_veh_avg_max_CAL And _
+                   ErgValues(tCompErg.v_veh)(i) > lim_v_veh_avg_min_CAL Then ErgValues(tCompErg.val_vVeh_avg)(i) = 1
+            End If
+            If ErgValues(tCompErg.v_veh_1s_max)(i) < (ErgValues(tCompErg.v_veh)(i) + Crt.v_veh_1s_delta_CAL) And _
+               ErgValues(tCompErg.v_veh_1s_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_CAL) Then ErgValues(tCompErg.val_vVeh_1s)(i) = 1
 
             ' Check if all criterias are valid
             If ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_beta)(i) = 1 And _
-               ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_User)(i) = 1 Then
+               ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_User)(i) = 1 And _
+               ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 Then
                 ErgValues(tCompErg.valid)(i) = 1
                 ErgValues(tCompErg.used)(i) = 1
             Else
@@ -460,7 +478,7 @@ Public Module main_calculation_call
             End If
         Next i
 
-        ' Count the valid sections in both rounds
+        ' Count the valid sections in both rounds and calculate the average vehicle speed
         For i = 0 To ErgValues(tCompErg.SecID).Count - 1
             ' Initialisation
             control = False
@@ -471,8 +489,10 @@ Public Module main_calculation_call
                 SecCount.ValidSec.Add(False)
                 If ErgValues(tCompErg.valid)(i) = 1 Then
                     SecCount.AnzSec.Add(1)
+                    SecCount.vVeh.Add(ErgValues(tCompErg.v_veh)(i))
                 Else
                     SecCount.AnzSec.Add(0)
+                    SecCount.vVeh.Add(0)
                 End If
             End If
 
@@ -483,15 +503,17 @@ Public Module main_calculation_call
                 End If
             Next k
 
-            ' Count the valid section
+            ' Count the valid section and calculate the average vehicle speed
             If control = False Then
                 If i = ErgValues(tCompErg.SecID).Count - 1 Then
                     SecCount.NameSec.Add(ErgValues(tCompErg.SecID)(i) & " (" & ErgValues(tCompErg.DirID)(i) & ")")
                     SecCount.ValidSec.Add(False)
                     If ErgValues(tCompErg.valid)(i) = 1 Then
                         SecCount.AnzSec.Add(1)
+                        SecCount.vVeh.Add(ErgValues(tCompErg.v_veh)(i))
                     Else
                         SecCount.AnzSec.Add(0)
+                        SecCount.vVeh.Add(0)
                     End If
                 Else
                     For j = i + 1 To ErgValues(tCompErg.SecID).Count - 1
@@ -501,8 +523,10 @@ Public Module main_calculation_call
                             SecCount.ValidSec.Add(False)
                             If ErgValues(tCompErg.valid)(i) = 1 Then
                                 SecCount.AnzSec.Add(1)
+                                SecCount.vVeh.Add(ErgValues(tCompErg.v_veh)(i))
                             Else
                                 SecCount.AnzSec.Add(0)
+                                SecCount.vVeh.Add(0)
                             End If
                         End If
 
@@ -510,24 +534,28 @@ Public Module main_calculation_call
                         If ErgValues(tCompErg.SecID)(i) = ErgValues(tCompErg.SecID)(j) And ErgValues(tCompErg.DirID)(i) = ErgValues(tCompErg.DirID)(j) Then
                             If ErgValues(tCompErg.valid)(j) = 1 Then
                                 SecCount.AnzSec(SecCount.AnzSec.Count - 1) += 1
+                                SecCount.vVeh(SecCount.vVeh.Count - 1) += ErgValues(tCompErg.v_veh)(j)
                             End If
                         End If
                     Next j
                 End If
             End If
         Next i
+        'Calculate average vehicle speed
+        SecCount.calcAveSpeed()
 
         ' Ceck if enough sections are detected
         If SecCount.AnzSec.Count - 1 < 1 Then
             Throw New Exception(format("Insufficient numbers of valid measurement sections({0}) available!", SecCount.AnzSec.Count))
         End If
 
-        ' Check if enough valid sections in both directionsection
+        ' Check if enough valid sections in both directions and average vehicle speeds differ not more then v_veh_ave_delta_CAL
         For i = 0 To SecCount.NameSec.Count - 1
             For j = i + 1 To SecCount.NameSec.Count - 1
                 If Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) Then
                     ' If enough sections in both directions are detected
-                    If SecCount.AnzSec(i) >= Crt.segruns_min_CAL And SecCount.AnzSec(j) >= Crt.segruns_min_CAL Then
+                    If SecCount.AnzSec(i) >= Crt.segruns_min_CAL And SecCount.AnzSec(j) >= Crt.segruns_min_CAL And _
+                       Math.Abs(SecCount.vVeh(i) - SecCount.vVeh(j)) < Crt.v_veh_ave_delta_CAL Then
                         ' Set the whole sections on valid
                         SecCount.ValidSec(i) = True
                         SecCount.ValidSec(j) = True
@@ -559,6 +587,10 @@ Public Module main_calculation_call
                         '    End If
                         'End If
                     Else
+                        If Math.Abs(SecCount.vVeh(i) - SecCount.vVeh(j)) > Crt.v_veh_ave_delta_CAL Then
+                            logme(8, False, format("Deviation of average speeds per heading is to high ({0} km/h) in SecID: {1}! Section is set to invalid", Math.Round(Math.Abs(SecCount.vVeh(i) - SecCount.vVeh(j)), 3), ErgValues(tCompErg.SecID)(i)))
+                        End If
+
                         SecCount.ValidSec(i) = False
                         SecCount.ValidSec(j) = False
                         For k = 0 To ErgValues(tCompErg.SecID).Count - 1
@@ -570,7 +602,7 @@ Public Module main_calculation_call
             Next j
         Next i
 
-        ' Ceck if enough sections are valid
+        ' Check if enough sections are valid
         anz = 0
         For i = 0 To SecCount.ValidSec.Count - 1
             If SecCount.ValidSec(i) Then
@@ -1172,6 +1204,8 @@ Public Module main_calculation_call
                 ErgValues(tCompErg.val_vWind)(i) = 0
                 ErgValues(tCompErg.val_beta)(i) = 0
                 ErgValues(tCompErg.val_vWind_1s)(i) = 0
+                ErgValues(tCompErg.val_vVeh_avg)(i) = 0
+                ErgValues(tCompErg.val_vVeh_1s)(i) = 0
                 ErgValues(tCompErg.val_User)(i) = 0
             Next i
         Else

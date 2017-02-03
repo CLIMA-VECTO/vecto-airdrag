@@ -450,20 +450,30 @@ Module Signal_identification
                     ErgValues(tCompErg.vair_ic).Add(InputData(tComp.vair_ic)(i))
                     ErgValues(tCompErg.beta_ic).Add(InputData(tComp.beta_ic)(i))
                     ErgValues(tCompErg.user_valid).Add(InputData(tComp.user_valid)(i))
-                    If i = 0 Then
-                        ' First data Point lies in a section. This is not allowed and set this section to invalid
-                        ErgValues(tCompErg.valid).Add(0)
-                        ErgValues(tCompErg.used).Add(0)
-                    Else
-                        ErgValues(tCompErg.valid).Add(1)
-                        ErgValues(tCompErg.used).Add(1)
-                    End If
+
                     If MSCX.tUse Then
                         ErgValues(tCompErg.v_MSC).Add(0)
                     Else
                         ErgValues(tCompErg.v_MSC).Add(0)
                         ErgValues(tCompErg.v_MSC_GPS).Add(InputData(tComp.v_veh_GPS)(i))
                     End If
+
+                    If i = 0 Then
+                        ' First data Point lies in a section. This is not allowed and set this section to invalid
+                        ErgValues(tCompErg.valid).Add(0)
+                        ErgValues(tCompErg.used).Add(0)
+                    ElseIf i = CalcData(tCompCali.SecID).Count - 1 Then
+                        ' Last data Point lies in a section. This is not allowed and set this section to invalid
+                        ErgValues(tCompErg.valid).Add(0)
+                        ErgValues(tCompErg.used).Add(0)
+                        ErgValues(tCompErg.delta_t)(run) = ErgValues(tCompErg.delta_t)(run) - CalcData(tCompCali.t)(i - 1)
+                        ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
+                        ErgValues(tCompErg.user_valid)(run) = 0
+                    Else
+                        ErgValues(tCompErg.valid).Add(1)
+                        ErgValues(tCompErg.used).Add(1)
+                    End If
+
                     For Each sKV In ErgValues
                         If ErgValues(sKV.Key).Count <= run Then
                             ErgValues(sKV.Key).Add(0)
@@ -490,6 +500,27 @@ Module Signal_identification
                         Next
 
                         anz += 1
+
+                        ' Last data Point lies in a section. This is not allowed and set this section to invalid
+                        If i = CalcData(tCompCali.SecID).Count - 1 Then
+                            ' Calculate the results from the last section
+                            ErgValues(tCompErg.delta_t)(run) = CalcData(tCompCali.t)(i) - ErgValues(tCompErg.delta_t)(run)
+                            ErgValues(tCompErg.v_veh_CAN)(run) = ErgValues(tCompErg.v_veh_CAN)(run) / anz
+                            ErgValues(tCompErg.vair_ic)(run) = ErgValues(tCompErg.vair_ic)(run) / anz
+                            ErgValues(tCompErg.beta_ic)(run) = ErgValues(tCompErg.beta_ic)(run) / anz
+                            ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
+                            ErgValues(tCompErg.user_valid)(run) = 0
+                            If Not MSCX.tUse Then
+                                ErgValues(tCompErg.v_MSC_GPS)(run) = ErgValues(tCompErg.v_MSC_GPS)(run) / anz
+                            End If
+                            For Each sKVE In InputUndefData
+                                ErgValuesUndef(sKVE.Key)(run) = ErgValuesUndef(sKVE.Key)(run) / anz
+                            Next
+
+                            ' Set the section to invalid
+                            ErgValues(tCompErg.valid)(run) = 0
+                            ErgValues(tCompErg.used)(run) = 0
+                        End If
                     Else
                         ' Calculate the results from the last section
                         ErgValues(tCompErg.delta_t)(run) = CalcData(tCompCali.t)(i - 1) - ErgValues(tCompErg.delta_t)(run)
@@ -540,6 +571,15 @@ Module Signal_identification
 
                         anz = 1
                         run += 1
+
+                        ' Last data Point lies in a section. This is not allowed and set this section to invalid
+                        If i = CalcData(tCompCali.SecID).Count - 1 Then
+                            ErgValues(tCompErg.valid)(run) = 0
+                            ErgValues(tCompErg.used)(run) = 0
+                            ErgValues(tCompErg.user_valid)(run) = 0
+                            ErgValues(tCompErg.delta_t)(run) = ErgValues(tCompErg.delta_t)(run) - CalcData(tCompCali.t)(i - 1)
+                            ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
+                        End If
                     End If
                 End If
             Else
@@ -605,11 +645,22 @@ Module Signal_identification
                     ErgValues(tCompErg.dist)(run) = (CalcData(tCompCali.dist)(i))
                     firstIn = False
                     anz += 1
+
+                    ' Last data Point lies in a section. This is not allowed but done for correct calculation
+                    If i = CalcData(tCompCali.SecID).Count - 1 Then
+                        ErgValues(tCompErg.dist)(run) = (CalcData(tCompCali.v_veh_c)(i) / 3.6) * (1 / HzIn2)
+                    End If
                 Else
                     If (CalcData(tCompCali.SecID)(i) = CalcData(tCompCali.SecID)(i - 1)) And (CalcData(tCompCali.DirID)(i) = CalcData(tCompCali.DirID)(i - 1)) Then
                         ' Build the sum
                         ErgValues(tCompErg.v_veh)(run) += CalcData(tCompCali.v_veh_c)(i)
                         anz += 1
+
+                        ' Last data Point lies in a section. This is not allowed but done for correct calculation
+                        If i = CalcData(tCompCali.SecID).Count - 1 Then
+                            ErgValues(tCompErg.v_veh)(run) = ErgValues(tCompErg.v_veh)(run) / anz
+                            ErgValues(tCompErg.dist)(run) = CalcData(tCompCali.dist)(i) - ErgValues(tCompErg.dist)(run)
+                        End If
                     Else
                         ' Calculate the results from the last section
                         ErgValues(tCompErg.v_veh)(run) = ErgValues(tCompErg.v_veh)(run) / anz
@@ -620,6 +671,11 @@ Module Signal_identification
                         anz = 1
                         ErgValues(tCompErg.v_veh)(run) = (CalcData(tCompCali.v_veh_c)(i))
                         ErgValues(tCompErg.dist)(run) = (CalcData(tCompCali.dist)(i))
+
+                        ' Last data Point lies in a section. This is not allowed but done for correct calculation
+                        If i = CalcData(tCompCali.SecID).Count - 1 Then
+                            ErgValues(tCompErg.dist)(run) = (CalcData(tCompCali.v_veh_c)(run) / 3.6) * (1 / HzIn2)
+                        End If
                     End If
                 End If
             Else
@@ -672,6 +728,16 @@ Module Signal_identification
                         ErgValues(tCompErg.vair_uf)(run) += CalcData(tCompCali.vair_uf)(i)
                         If ErgValues(tCompErg.v_wind_1s_max)(run) < CalcData(tCompCali.vwind_1s)(i) Then ErgValues(tCompErg.v_wind_1s_max)(run) = CalcData(tCompCali.vwind_1s)(i)
                         anz += 1
+
+                        ' If last point lies inside of a section (Not allowed only for correct calculation)
+                        If i = CalcData(tCompCali.SecID).Count - 1 Then
+                            ErgValues(tCompErg.v_wind_avg)(run) = ErgValues(tCompErg.v_wind_avg)(run) / anz
+                            ErgValues(tCompErg.v_wind_1s)(run) = ErgValues(tCompErg.v_wind_1s)(run) / anz
+                            ErgValues(tCompErg.beta_avg)(run) = ErgValues(tCompErg.beta_avg)(run) / anz
+                            ErgValues(tCompErg.vair)(run) = ErgValues(tCompErg.vair)(run) / anz
+                            ErgValues(tCompErg.beta_uf)(run) = ErgValues(tCompErg.beta_uf)(run) / anz
+                            ErgValues(tCompErg.vair_uf)(run) = ErgValues(tCompErg.vair_uf)(run) / anz
+                        End If
                     Else
                         ' Calculate the results from the last section
                         ErgValues(tCompErg.v_wind_avg)(run) = ErgValues(tCompErg.v_wind_avg)(run) / anz
@@ -706,6 +772,44 @@ Module Signal_identification
                     anz = 0
                     run += 1
                     firstIn = True
+                End If
+            End If
+        Next i
+
+        Return True
+    End Function
+
+    ' Calculate the corrected vehicle speed
+    Public Function fCalcSpeedValCalib() As Boolean
+        ' Declaration
+        Dim i, run As Integer
+        Dim firstIn As Boolean = True
+
+        ' Initialise
+        run = 0
+
+        ' Calculate the moving average
+        fMoveAve(CalcData(tCompCali.t), CalcData(tCompCali.v_veh_c), CalcData(tCompCali.v_veh_1s))
+
+        ' Calculate the section averages
+        For i = 0 To CalcData(tCompCali.SecID).Count - 1
+            If CalcData(tCompCali.SecID)(i) <> 0 Then
+                If firstIn Then
+                    ErgValues(tCompErg.v_veh_1s_max)(run) = (CalcData(tCompCali.v_veh_1s)(i))
+                    ErgValues(tCompErg.v_veh_1s_min)(run) = (CalcData(tCompCali.v_veh_1s)(i))
+
+                    firstIn = False
+                Else
+                    If (CalcData(tCompCali.SecID)(i) = CalcData(tCompCali.SecID)(i - 1)) And (CalcData(tCompCali.DirID)(i) = CalcData(tCompCali.DirID)(i - 1)) Then
+                        ' Find min/max
+                        If ErgValues(tCompErg.v_veh_1s_max)(run) < CalcData(tCompCali.v_veh_1s)(i) Then ErgValues(tCompErg.v_veh_1s_max)(run) = CalcData(tCompCali.v_veh_1s)(i)
+                        If ErgValues(tCompErg.v_veh_1s_min)(run) > CalcData(tCompCali.v_veh_1s)(i) Then ErgValues(tCompErg.v_veh_1s_min)(run) = CalcData(tCompCali.v_veh_1s)(i)
+                    Else
+                        ' Start with a new section
+                        run += 1
+                        ErgValues(tCompErg.v_veh_1s_max)(run) = (CalcData(tCompCali.v_veh_1s)(i))
+                        ErgValues(tCompErg.v_veh_1s_min)(run) = (CalcData(tCompCali.v_veh_1s)(i))
+                    End If
                 End If
             End If
         Next i
@@ -890,6 +994,20 @@ Module Signal_identification
                     ErgValues(tCompErg.n_ec_float_min)(run) = (CalcData(tCompCali.n_ec_float)(i))
                     ErgValues(tCompErg.t_ground)(run) = (InputData(tComp.t_ground)(i))
 
+                    ' Last point lies inside of a section (Not allowed only for correct calculation)
+                    If i = CalcData(tCompCali.SecID).Count - 1 Then
+                        ErgValues(tCompErg.beta_abs)(run) = Math.Abs(ErgValues(tCompErg.beta_avg)(run))
+                        ErgValues(tCompErg.vp_H2O)(run) = ((ErgValues(tCompErg.rh_stat)(run) / 100) * 611 * 10 ^ ((7.5 * ErgValues(tCompErg.t_amb_stat)(run)) / (237 + ErgValues(tCompErg.t_amb_stat)(run))))
+                        ErgValues(tCompErg.rho_air)(run) = (ErgValues(tCompErg.p_amb_stat)(run) * 100 - ErgValues(tCompErg.vp_H2O)(run)) / (287.05 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15)) + ErgValues(tCompErg.vp_H2O)(run) / (461.9 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15))
+                        If ErgValues(tCompErg.RunID)(run) = IDHS Then
+                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS
+                        Else
+                            ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor
+                        End If
+                        ErgValues(tCompErg.r_dyn)(run) = (30 * igear * vehicleX.axleRatio * ErgValues(tCompErg.v_veh)(run) / 3.6) / (ErgValues(tCompErg.n_ec)(run) * Math.PI)
+                        ErgValues(tCompErg.tq_grd)(run) = ErgValues(tCompErg.F_grd)(run) * ErgValues(tCompErg.r_dyn)(run)
+                    End If
+
                     firstIn = False
                     anz += 1
                 Else
@@ -927,6 +1045,39 @@ Module Signal_identification
                         If ErgValues(tCompErg.n_ec_float_min)(run) > CalcData(tCompCali.n_ec_float)(i) Then ErgValues(tCompErg.n_ec_float_min)(run) = CalcData(tCompCali.n_ec_float)(i)
                         ErgValues(tCompErg.t_ground)(run) += (InputData(tComp.t_ground)(i))
                         anz += 1
+
+                        ' Last point lies inside of a section (Not allowed only for correct calculation)
+                        If i = CalcData(tCompCali.SecID).Count - 1 Then
+                            ErgValues(tCompErg.n_ec)(run) = ErgValues(tCompErg.n_ec)(run) / anz
+                            ErgValues(tCompErg.tq_sum)(run) = ErgValues(tCompErg.tq_sum)(run) / anz
+                            ErgValues(tCompErg.tq_sum_1s)(run) = ErgValues(tCompErg.tq_sum_1s)(run) / anz
+                            ErgValues(tCompErg.tq_sum_float)(run) = ErgValues(tCompErg.tq_sum_float)(run) / anz
+                            ErgValues(tCompErg.t_float)(run) = ErgValues(tCompErg.t_float)(run) / anz
+                            ErgValues(tCompErg.F_trac)(run) = ErgValues(tCompErg.F_trac)(run) / anz
+                            ErgValues(tCompErg.v_veh_acc)(run) = ErgValues(tCompErg.v_veh_acc)(run) / anz
+                            ErgValues(tCompErg.a_veh_avg)(run) = ErgValues(tCompErg.a_veh_avg)(run) / anz
+                            ErgValues(tCompErg.F_acc)(run) = ErgValues(tCompErg.F_acc)(run) / anz
+                            ErgValues(tCompErg.F_grd)(run) = ErgValues(tCompErg.F_grd)(run) / anz
+                            ErgValues(tCompErg.F_res)(run) = ErgValues(tCompErg.F_res)(run) / anz
+                            ErgValues(tCompErg.v_veh_1s)(run) = ErgValues(tCompErg.v_veh_1s)(run) / anz
+                            ErgValues(tCompErg.v_veh_float)(run) = ErgValues(tCompErg.v_veh_float)(run) / anz
+                            ErgValues(tCompErg.t_amb_veh)(run) = ErgValues(tCompErg.t_amb_veh)(run) / anz
+                            ErgValues(tCompErg.t_amb_stat)(run) = ErgValues(tCompErg.t_amb_stat)(run) / anz
+                            ErgValues(tCompErg.p_amb_stat)(run) = ErgValues(tCompErg.p_amb_stat)(run) / anz
+                            ErgValues(tCompErg.rh_stat)(run) = ErgValues(tCompErg.rh_stat)(run) / anz
+                            ErgValues(tCompErg.v_air_sq)(run) = ErgValues(tCompErg.v_air_sq)(run) / anz
+                            ErgValues(tCompErg.beta_abs)(run) = Math.Abs(ErgValues(tCompErg.beta_avg)(run))
+                            ErgValues(tCompErg.vp_H2O)(run) = ((ErgValues(tCompErg.rh_stat)(run) / 100) * 611 * 10 ^ ((7.5 * ErgValues(tCompErg.t_amb_stat)(run)) / (237 + ErgValues(tCompErg.t_amb_stat)(run))))
+                            ErgValues(tCompErg.rho_air)(run) = (ErgValues(tCompErg.p_amb_stat)(run) * 100 - ErgValues(tCompErg.vp_H2O)(run)) / (287.05 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15)) + ErgValues(tCompErg.vp_H2O)(run) / (461.9 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15))
+                            If ErgValues(tCompErg.RunID)(run) = IDHS Then
+                                ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS
+                            Else
+                                ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor
+                            End If
+                            ErgValues(tCompErg.t_ground)(run) = ErgValues(tCompErg.t_ground)(run) / anz
+                            ErgValues(tCompErg.r_dyn)(run) = (30 * igear * vehicleX.axleRatio * ErgValues(tCompErg.v_veh)(run) / 3.6) / (ErgValues(tCompErg.n_ec)(run) * Math.PI)
+                            ErgValues(tCompErg.tq_grd)(run) = ErgValues(tCompErg.F_grd)(run) * ErgValues(tCompErg.r_dyn)(run)
+                        End If
                     Else
                         ' Calculate the results from the last section
                         ErgValues(tCompErg.n_ec)(run) = ErgValues(tCompErg.n_ec)(run) / anz
@@ -994,6 +1145,20 @@ Module Signal_identification
                         ErgValues(tCompErg.n_ec_float_max)(run) = (CalcData(tCompCali.n_ec_float)(i))
                         ErgValues(tCompErg.n_ec_float_min)(run) = (CalcData(tCompCali.n_ec_float)(i))
                         ErgValues(tCompErg.t_ground)(run) = (InputData(tComp.t_ground)(i))
+
+                        ' Last point lies inside of a section (Not allowed only for correct calculation)
+                        If i = CalcData(tCompCali.SecID).Count - 1 Then
+                            ErgValues(tCompErg.beta_abs)(run) = Math.Abs(ErgValues(tCompErg.beta_avg)(run))
+                            ErgValues(tCompErg.vp_H2O)(run) = ((ErgValues(tCompErg.rh_stat)(run) / 100) * 611 * 10 ^ ((7.5 * ErgValues(tCompErg.t_amb_stat)(run)) / (237 + ErgValues(tCompErg.t_amb_stat)(run))))
+                            ErgValues(tCompErg.rho_air)(run) = (ErgValues(tCompErg.p_amb_stat)(run) * 100 - ErgValues(tCompErg.vp_H2O)(run)) / (287.05 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15)) + ErgValues(tCompErg.vp_H2O)(run) / (461.9 * (ErgValues(tCompErg.t_amb_veh)(run) + 273.15))
+                            If ErgValues(tCompErg.RunID)(run) = IDHS Then
+                                ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * f_rollHS
+                            Else
+                                ErgValues(tCompErg.F_res_ref)(run) = ErgValues(tCompErg.F_res)(run) * Crt.rr_corr_factor
+                            End If
+                            ErgValues(tCompErg.r_dyn)(run) = (30 * igear * vehicleX.axleRatio * ErgValues(tCompErg.v_veh)(run) / 3.6) / (ErgValues(tCompErg.n_ec)(run) * Math.PI)
+                            ErgValues(tCompErg.tq_grd)(run) = ErgValues(tCompErg.F_grd)(run) * ErgValues(tCompErg.r_dyn)(run)
+                        End If
                     End If
                 End If
             Else

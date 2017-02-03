@@ -387,6 +387,8 @@ Module output
             AddToErg(tCompErg.val_vWind, fCompName(tCompErg.val_vWind), fCompUnit(tCompErg.val_vWind), "ErgValues")
             AddToErg(tCompErg.val_vWind_1s, fCompName(tCompErg.val_vWind_1s), fCompUnit(tCompErg.val_vWind_1s), "ErgValues")
             AddToErg(tCompErg.val_beta, fCompName(tCompErg.val_beta), fCompUnit(tCompErg.val_beta), "ErgValues")
+            AddToErg(tCompErg.val_vVeh_avg, fCompName(tCompErg.val_vVeh_avg), fCompUnit(tCompErg.val_vVeh_avg), "ErgValues")
+            AddToErg(tCompErg.val_vVeh_1s, fCompName(tCompErg.val_vVeh_1s), fCompUnit(tCompErg.val_vVeh_1s), "ErgValues")
         End If
 
         If Not calibration Then
