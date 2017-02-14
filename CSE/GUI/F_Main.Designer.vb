@@ -209,10 +209,10 @@ Partial Class F_Main
         Me.Label19 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.TB_v_wind_avg_max_CAL = New System.Windows.Forms.TextBox()
-        Me.LvWind1sCALMax = New System.Windows.Forms.Label()
-        Me.LvWindAveCALMax = New System.Windows.Forms.Label()
         Me.LDsMinCAL = New System.Windows.Forms.Label()
         Me.TB_segruns_min_CAL = New System.Windows.Forms.TextBox()
+        Me.LvWind1sCALMax = New System.Windows.Forms.Label()
+        Me.LvWindAveCALMax = New System.Windows.Forms.Label()
         Me.TB_beta_avg_max_CAL = New System.Windows.Forms.TextBox()
         Me.Label44 = New System.Windows.Forms.Label()
         Me.Label42 = New System.Windows.Forms.Label()
@@ -430,9 +430,6 @@ Partial Class F_Main
         '
         Me.GroupBoxJob.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBoxJob.Controls.Add(Me.TextBoxWeather)
-        Me.GroupBoxJob.Controls.Add(Me.ButtonWeather)
-        Me.GroupBoxJob.Controls.Add(Me.ButtonSelectWeather)
         Me.GroupBoxJob.Controls.Add(Me.TextBoxVeh1)
         Me.GroupBoxJob.Controls.Add(Me.ButtonVeh)
         Me.GroupBoxJob.Controls.Add(Me.ButtonSelectVeh)
@@ -440,7 +437,7 @@ Partial Class F_Main
         Me.GroupBoxJob.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBoxJob.Name = "GroupBoxJob"
         Me.GroupBoxJob.Padding = New System.Windows.Forms.Padding(2)
-        Me.GroupBoxJob.Size = New System.Drawing.Size(894, 71)
+        Me.GroupBoxJob.Size = New System.Drawing.Size(894, 47)
         Me.GroupBoxJob.TabIndex = 21
         Me.GroupBoxJob.TabStop = False
         Me.GroupBoxJob.Text = "General"
@@ -449,16 +446,16 @@ Partial Class F_Main
         '
         Me.TextBoxWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxWeather.Location = New System.Drawing.Point(144, 42)
+        Me.TextBoxWeather.Location = New System.Drawing.Point(144, 18)
         Me.TextBoxWeather.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxWeather.Name = "TextBoxWeather"
-        Me.TextBoxWeather.Size = New System.Drawing.Size(707, 20)
+        Me.TextBoxWeather.Size = New System.Drawing.Size(644, 20)
         Me.TextBoxWeather.TabIndex = 2
         '
         'ButtonWeather
         '
         Me.ButtonWeather.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonWeather.Location = New System.Drawing.Point(6, 41)
+        Me.ButtonWeather.Location = New System.Drawing.Point(6, 17)
         Me.ButtonWeather.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonWeather.Name = "ButtonWeather"
         Me.ButtonWeather.Size = New System.Drawing.Size(135, 23)
@@ -470,7 +467,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectWeather.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectWeather.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectWeather.Location = New System.Drawing.Point(855, 42)
+        Me.ButtonSelectWeather.Location = New System.Drawing.Point(792, 16)
         Me.ButtonSelectWeather.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectWeather.Name = "ButtonSelectWeather"
         Me.ButtonSelectWeather.Size = New System.Drawing.Size(31, 23)
@@ -568,7 +565,10 @@ Partial Class F_Main
         '
         Me.GroupBoxInput.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBoxInput.Controls.Add(Me.TextBoxWeather)
         Me.GroupBoxInput.Controls.Add(Me.ButtonDataLS1)
+        Me.GroupBoxInput.Controls.Add(Me.ButtonWeather)
+        Me.GroupBoxInput.Controls.Add(Me.ButtonSelectWeather)
         Me.GroupBoxInput.Controls.Add(Me.TextBoxDataLS2)
         Me.GroupBoxInput.Controls.Add(Me.ButtonSelectDataLS1)
         Me.GroupBoxInput.Controls.Add(Me.ButtonDataLS2)
@@ -582,11 +582,11 @@ Partial Class F_Main
         Me.GroupBoxInput.Controls.Add(Me.ButtonMSCT)
         Me.GroupBoxInput.Controls.Add(Me.ButtonSelectMSCT)
         Me.GroupBoxInput.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupBoxInput.Location = New System.Drawing.Point(5, 261)
+        Me.GroupBoxInput.Location = New System.Drawing.Point(5, 247)
         Me.GroupBoxInput.Margin = New System.Windows.Forms.Padding(2)
         Me.GroupBoxInput.Name = "GroupBoxInput"
         Me.GroupBoxInput.Padding = New System.Windows.Forms.Padding(2)
-        Me.GroupBoxInput.Size = New System.Drawing.Size(895, 141)
+        Me.GroupBoxInput.Size = New System.Drawing.Size(895, 167)
         Me.GroupBoxInput.TabIndex = 23
         Me.GroupBoxInput.TabStop = False
         Me.GroupBoxInput.Text = "Constant speed test"
@@ -594,7 +594,7 @@ Partial Class F_Main
         'ButtonDataLS1
         '
         Me.ButtonDataLS1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonDataLS1.Location = New System.Drawing.Point(6, 54)
+        Me.ButtonDataLS1.Location = New System.Drawing.Point(7, 81)
         Me.ButtonDataLS1.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonDataLS1.Name = "ButtonDataLS1"
         Me.ButtonDataLS1.Size = New System.Drawing.Size(134, 23)
@@ -606,7 +606,7 @@ Partial Class F_Main
         '
         Me.TextBoxDataLS2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxDataLS2.Location = New System.Drawing.Point(145, 110)
+        Me.TextBoxDataLS2.Location = New System.Drawing.Point(146, 137)
         Me.TextBoxDataLS2.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataLS2.Name = "TextBoxDataLS2"
         Me.TextBoxDataLS2.Size = New System.Drawing.Size(642, 20)
@@ -616,7 +616,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectDataLS1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectDataLS1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectDataLS1.Location = New System.Drawing.Point(791, 53)
+        Me.ButtonSelectDataLS1.Location = New System.Drawing.Point(792, 80)
         Me.ButtonSelectDataLS1.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectDataLS1.Name = "ButtonSelectDataLS1"
         Me.ButtonSelectDataLS1.Size = New System.Drawing.Size(31, 23)
@@ -627,7 +627,7 @@ Partial Class F_Main
         'ButtonDataLS2
         '
         Me.ButtonDataLS2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonDataLS2.Location = New System.Drawing.Point(6, 108)
+        Me.ButtonDataLS2.Location = New System.Drawing.Point(7, 135)
         Me.ButtonDataLS2.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonDataLS2.Name = "ButtonDataLS2"
         Me.ButtonDataLS2.Size = New System.Drawing.Size(134, 23)
@@ -639,7 +639,7 @@ Partial Class F_Main
         '
         Me.TextBoxDataLS1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxDataLS1.Location = New System.Drawing.Point(145, 56)
+        Me.TextBoxDataLS1.Location = New System.Drawing.Point(146, 83)
         Me.TextBoxDataLS1.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataLS1.Name = "TextBoxDataLS1"
         Me.TextBoxDataLS1.Size = New System.Drawing.Size(642, 20)
@@ -649,7 +649,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectDataLS2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectDataLS2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectDataLS2.Location = New System.Drawing.Point(791, 107)
+        Me.ButtonSelectDataLS2.Location = New System.Drawing.Point(792, 134)
         Me.ButtonSelectDataLS2.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectDataLS2.Name = "ButtonSelectDataLS2"
         Me.ButtonSelectDataLS2.Size = New System.Drawing.Size(31, 23)
@@ -661,7 +661,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectDataHS.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectDataHS.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectDataHS.Location = New System.Drawing.Point(791, 80)
+        Me.ButtonSelectDataHS.Location = New System.Drawing.Point(792, 107)
         Me.ButtonSelectDataHS.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectDataHS.Name = "ButtonSelectDataHS"
         Me.ButtonSelectDataHS.Size = New System.Drawing.Size(31, 23)
@@ -673,7 +673,7 @@ Partial Class F_Main
         '
         Me.TextBoxDataHS.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxDataHS.Location = New System.Drawing.Point(144, 83)
+        Me.TextBoxDataHS.Location = New System.Drawing.Point(145, 110)
         Me.TextBoxDataHS.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxDataHS.Name = "TextBoxDataHS"
         Me.TextBoxDataHS.Size = New System.Drawing.Size(643, 20)
@@ -682,7 +682,7 @@ Partial Class F_Main
         'ButtonDataHS
         '
         Me.ButtonDataHS.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonDataHS.Location = New System.Drawing.Point(6, 81)
+        Me.ButtonDataHS.Location = New System.Drawing.Point(7, 108)
         Me.ButtonDataHS.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonDataHS.Name = "ButtonDataHS"
         Me.ButtonDataHS.Size = New System.Drawing.Size(134, 23)
@@ -696,10 +696,10 @@ Partial Class F_Main
         Me.ButtonEval.Enabled = False
         Me.ButtonEval.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ButtonEval.Image = Global.AirDrag.My.Resources.Resources.Play
-        Me.ButtonEval.Location = New System.Drawing.Point(826, 17)
+        Me.ButtonEval.Location = New System.Drawing.Point(826, 16)
         Me.ButtonEval.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonEval.Name = "ButtonEval"
-        Me.ButtonEval.Size = New System.Drawing.Size(60, 113)
+        Me.ButtonEval.Size = New System.Drawing.Size(60, 140)
         Me.ButtonEval.TabIndex = 21
         Me.ButtonEval.Text = "Evaluate"
         Me.ButtonEval.TextAlign = System.Drawing.ContentAlignment.BottomCenter
@@ -710,7 +710,7 @@ Partial Class F_Main
         '
         Me.TextBoxMSCT.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxMSCT.Location = New System.Drawing.Point(144, 19)
+        Me.TextBoxMSCT.Location = New System.Drawing.Point(145, 46)
         Me.TextBoxMSCT.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxMSCT.Name = "TextBoxMSCT"
         Me.TextBoxMSCT.Size = New System.Drawing.Size(643, 20)
@@ -719,7 +719,7 @@ Partial Class F_Main
         'ButtonMSCT
         '
         Me.ButtonMSCT.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonMSCT.Location = New System.Drawing.Point(4, 17)
+        Me.ButtonMSCT.Location = New System.Drawing.Point(5, 44)
         Me.ButtonMSCT.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonMSCT.Name = "ButtonMSCT"
         Me.ButtonMSCT.Size = New System.Drawing.Size(136, 23)
@@ -731,7 +731,7 @@ Partial Class F_Main
         '
         Me.ButtonSelectMSCT.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonSelectMSCT.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectMSCT.Location = New System.Drawing.Point(791, 17)
+        Me.ButtonSelectMSCT.Location = New System.Drawing.Point(792, 44)
         Me.ButtonSelectMSCT.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonSelectMSCT.Name = "ButtonSelectMSCT"
         Me.ButtonSelectMSCT.Size = New System.Drawing.Size(31, 23)
@@ -775,7 +775,7 @@ Partial Class F_Main
         Me.ButtonCalC.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCalC.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ButtonCalC.Image = Global.AirDrag.My.Resources.Resources.Play
-        Me.ButtonCalC.Location = New System.Drawing.Point(825, 18)
+        Me.ButtonCalC.Location = New System.Drawing.Point(825, 17)
         Me.ButtonCalC.Margin = New System.Windows.Forms.Padding(2)
         Me.ButtonCalC.Name = "ButtonCalC"
         Me.ButtonCalC.Size = New System.Drawing.Size(60, 50)
@@ -796,7 +796,7 @@ Partial Class F_Main
         Me.GroupBox1.Controls.Add(Me.ButtonMSCC)
         Me.GroupBox1.Controls.Add(Me.ButtonSelectMSCC)
         Me.GroupBox1.Controls.Add(Me.ButtonCalC)
-        Me.GroupBox1.Location = New System.Drawing.Point(6, 81)
+        Me.GroupBox1.Location = New System.Drawing.Point(5, 57)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(894, 79)
         Me.GroupBox1.TabIndex = 33
@@ -1094,7 +1094,7 @@ Partial Class F_Main
         Me.TPMain.Location = New System.Drawing.Point(4, 22)
         Me.TPMain.Name = "TPMain"
         Me.TPMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.TPMain.Size = New System.Drawing.Size(905, 468)
+        Me.TPMain.Size = New System.Drawing.Size(905, 503)
         Me.TPMain.TabIndex = 0
         Me.TPMain.Text = "Main"
         Me.TPMain.UseVisualStyleBackColor = True
@@ -1103,7 +1103,7 @@ Partial Class F_Main
         '
         Me.GroupBox4.Controls.Add(Me.GroupBox3)
         Me.GroupBox4.Controls.Add(Me.GroupBox2)
-        Me.GroupBox4.Location = New System.Drawing.Point(179, 166)
+        Me.GroupBox4.Location = New System.Drawing.Point(182, 157)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(560, 70)
         Me.GroupBox4.TabIndex = 35
@@ -2164,6 +2164,23 @@ Partial Class F_Main
         Me.TB_v_wind_avg_max_CAL.TabIndex = 56
         Me.TB_v_wind_avg_max_CAL.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'LDsMinCAL
+        '
+        Me.LDsMinCAL.AutoSize = True
+        Me.LDsMinCAL.Location = New System.Drawing.Point(6, 155)
+        Me.LDsMinCAL.Name = "LDsMinCAL"
+        Me.LDsMinCAL.Size = New System.Drawing.Size(92, 13)
+        Me.LDsMinCAL.TabIndex = 42
+        Me.LDsMinCAL.Text = "segruns_min_CAL"
+        '
+        'TB_segruns_min_CAL
+        '
+        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(128, 152)
+        Me.TB_segruns_min_CAL.Name = "TB_segruns_min_CAL"
+        Me.TB_segruns_min_CAL.Size = New System.Drawing.Size(45, 20)
+        Me.TB_segruns_min_CAL.TabIndex = 41
+        Me.TB_segruns_min_CAL.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
         'LvWind1sCALMax
         '
         Me.LvWind1sCALMax.AutoSize = True
@@ -2181,23 +2198,6 @@ Partial Class F_Main
         Me.LvWindAveCALMax.Size = New System.Drawing.Size(116, 13)
         Me.LvWindAveCALMax.TabIndex = 57
         Me.LvWindAveCALMax.Text = "v_wind_avg_max_CAL"
-        '
-        'LDsMinCAL
-        '
-        Me.LDsMinCAL.AutoSize = True
-        Me.LDsMinCAL.Location = New System.Drawing.Point(6, 155)
-        Me.LDsMinCAL.Name = "LDsMinCAL"
-        Me.LDsMinCAL.Size = New System.Drawing.Size(92, 13)
-        Me.LDsMinCAL.TabIndex = 42
-        Me.LDsMinCAL.Text = "segruns_min_CAL"
-        '
-        'TB_segruns_min_CAL
-        '
-        Me.TB_segruns_min_CAL.Location = New System.Drawing.Point(128, 152)
-        Me.TB_segruns_min_CAL.Name = "TB_segruns_min_CAL"
-        Me.TB_segruns_min_CAL.Size = New System.Drawing.Size(45, 20)
-        Me.TB_segruns_min_CAL.TabIndex = 41
-        Me.TB_segruns_min_CAL.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'TB_beta_avg_max_CAL
         '
