@@ -562,33 +562,6 @@ Public Module main_calculation_call
                         ' Set the whole sections on valid
                         SecCount.ValidSec(i) = True
                         SecCount.ValidSec(j) = True
-
-                        '' If not both the same amount
-                        'If Not SecCount.AnzSec(i) = SecCount.AnzSec(j) Then
-                        '    ' First section greater then second
-                        '    If SecCount.AnzSec(i) > SecCount.AnzSec(j) Then
-                        '        anz = 0
-                        '        For k = 0 To ErgValues(tCompErg.SecID).Count - 1
-                        '            If (Trim(Mid(SecCount.NameSec(i), 1, InStr(SecCount.NameSec(i), "(") - 2)) = ErgValues(tCompErg.SecID)(k)) And (Trim(Mid(SecCount.NameSec(i), InStr(SecCount.NameSec(i), "(") + 1, InStr(SecCount.NameSec(i), ")") - (InStr(SecCount.NameSec(i), "(") + 1))) = ErgValues(tCompErg.DirID)(k)) Then
-                        '                anz += 1
-                        '                If anz > SecCount.AnzSec(j) Then
-                        '                    ErgValues(tCompErg.used)(k) = 0
-                        '                End If
-                        '            End If
-                        '        Next k
-                        '    Else
-                        '        ' Second section greater then first
-                        '        anz = 0
-                        '        For k = 0 To ErgValues(tCompErg.SecID).Count - 1
-                        '            If (Trim(Mid(SecCount.NameSec(j), 1, InStr(SecCount.NameSec(j), "(") - 2)) = ErgValues(tCompErg.SecID)(k)) And (Trim(Mid(SecCount.NameSec(j), InStr(SecCount.NameSec(j), "(") + 1, InStr(SecCount.NameSec(j), ")") - (InStr(SecCount.NameSec(j), "(") + 1))) = ErgValues(tCompErg.DirID)(k)) Then
-                        '                anz += 1
-                        '                If anz > SecCount.AnzSec(i) Then
-                        '                    ErgValues(tCompErg.used)(k) = 0
-                        '                End If
-                        '            End If
-                        '        Next k
-                        '    End If
-                        'End If
                     Else
                         If Math.Abs(SecCount.vVeh(i) - SecCount.vVeh(j)) > Crt.v_veh_ave_delta_CAL Then
                             logme(8, False, format("Deviation of average speeds per heading is to high ({0} km/h) in SecID: {1}! Section is set to invalid", Math.Round(Math.Abs(SecCount.vVeh(i) - SecCount.vVeh(j)), 3), ErgValues(tCompErg.SecID)(i)))
@@ -842,40 +815,6 @@ Public Module main_calculation_call
         If anzHS1 < Crt.segruns_min_head_HS Or anzHS2 < Crt.segruns_min_head_HS Then
             Throw New Exception(format("Number of valid high speed datasets too low! HeadDir1: {0}; HeadDir2: {1}.", anzHS1, anzHS2))
         End If
-
-        '' Set to equal Values
-        'If anzHS1 <> anzHS2 Then
-        '    anz = 0
-        '    If anzHS1 > anzHS2 Then
-        '        For i = 0 To ErgValuesComp(tCompErg.SecID).Count - 1.0
-        '            If ErgValuesComp(tCompErg.RunID)(i) = IDHS Then
-        '                If ErgValuesComp(tCompErg.HeadID)(i) = 1 Then
-        '                    If ErgValuesComp(tCompErg.used)(i) = 1 Then
-        '                        If anz >= anzHS2 Then
-        '                            ErgValuesComp(tCompErg.used)(i) = 0
-        '                        Else
-        '                            anz += 1
-        '                        End If
-        '                    End If
-        '                End If
-        '            End If
-        '        Next i
-        '    Else
-        '        For i = 0 To ErgValuesComp(tCompErg.SecID).Count - 1.0
-        '            If ErgValuesComp(tCompErg.RunID)(i) = IDHS Then
-        '                If ErgValuesComp(tCompErg.HeadID)(i) = 2 Then
-        '                    If ErgValuesComp(tCompErg.used)(i) = 1 Then
-        '                        If anz >= anzHS1 Then
-        '                            ErgValuesComp(tCompErg.used)(i) = 0
-        '                        Else
-        '                            anz += 1
-        '                        End If
-        '                    End If
-        '                End If
-        '            End If
-        '        Next i
-        '    End If
-        'End If
     End Sub
 
     ' Evaluate the Valid sections
