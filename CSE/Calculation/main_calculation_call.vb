@@ -492,8 +492,7 @@ Public Module main_calculation_call
                     SecCount.vVeh.Add(ErgValues(tCompErg.v_veh)(i))
                 Else
                     SecCount.AnzSec.Add(0)
-                    'SecCount.vVeh.Add(0)
-                    SecCount.vVeh.Add(ErgValues(tCompErg.v_veh)(i))
+                    SecCount.vVeh.Add(0)
                 End If
             End If
 
@@ -514,8 +513,7 @@ Public Module main_calculation_call
                         SecCount.vVeh.Add(ErgValues(tCompErg.v_veh)(i))
                     Else
                         SecCount.AnzSec.Add(0)
-                        'SecCount.vVeh.Add(0)
-                        SecCount.vVeh.Add(ErgValues(tCompErg.v_veh)(i))
+                        SecCount.vVeh.Add(0)
                     End If
                 Else
                     For j = i + 1 To ErgValues(tCompErg.SecID).Count - 1
@@ -528,8 +526,7 @@ Public Module main_calculation_call
                                 SecCount.vVeh.Add(ErgValues(tCompErg.v_veh)(i))
                             Else
                                 SecCount.AnzSec.Add(0)
-                                'SecCount.vVeh.Add(0)
-                                SecCount.vVeh.Add(ErgValues(tCompErg.v_veh)(i))
+                                SecCount.vVeh.Add(0)
                             End If
                         End If
 
