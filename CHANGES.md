@@ -1,5 +1,11 @@
-VECTO-CSE: Changes
+VECTO-AirDrag: Changes
 ===================
+#### 2017-03-22: v3.0.8 ####
+TUG improvements:
+
+  * New version number
+  * Correction calc vehicle speed stability criteria
+  
 #### 2017-02-03: v3.0.7 ####
 TUG improvements:
 
