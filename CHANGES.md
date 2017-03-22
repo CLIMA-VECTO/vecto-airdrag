@@ -5,6 +5,10 @@ TUG improvements:
 
   * New version number
   * Correction calc vehicle speed stability criteria
+  * Update DemoData
+  * Update ReleaseNotes
+  * Update UserManual
+  * Update JobFile
   
 #### 2017-02-03: v3.0.7 ####
 TUG improvements:
