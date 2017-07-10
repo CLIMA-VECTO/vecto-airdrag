@@ -23,6 +23,8 @@ Module declaration_public
     Public AppFormStarted = False
     Public PrefsPath As String
     Public Prefs As cPreferences
+    Public VECTOconfigPath As String
+    Public VECTOconf As cVECTOconfig
     Public Job As cJob                                          ' The values for the 'Main' tab (and Criteria)
     Public Crt As cCriteria                                     ' The values for the 'Options' tab
     Public Sub installJob(ByVal newJob As cJob)

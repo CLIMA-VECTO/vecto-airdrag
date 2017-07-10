@@ -44,11 +44,13 @@ Namespace My
 
                 Prefs = New cPreferences(True) ' !!!Skip schema-validation here, or else app hangs as zombie! (do it instead when creating new for Dialog)
                 Job = New cJob(True)  ' !!!Skip schema
+                VECTOconf = New cVECTOconfig(True)
                 Crt = Job.Criteria
 
                 ' Path to the *.exe 
                 MyPath = My.Application.Info.DirectoryPath & "\"
                 PrefsPath = joinPaths(MyPath, "config", "preferences.json")
+                VECTOconfigPath = joinPaths(MyPath, "config", "VECTOconfig.json")
 
                 'Separator!
                 If System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator <> "." Then

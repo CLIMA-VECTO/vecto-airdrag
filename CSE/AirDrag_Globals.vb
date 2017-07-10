@@ -102,6 +102,7 @@ Module AirDrag_Globals
         user_valid
         valid
         used
+        system_valid
         calcT
         n_ec
         n_ec_1s
@@ -599,6 +600,8 @@ Module AirDrag_Globals
                 Return "user valid"
             Case tCompErg.used
                 Return "used"
+            Case tCompErg.system_valid
+                Return "system_valid"
             Case tCompErg.calcT
                 Return "calcT"
             Case tCompErg.n_ec
@@ -807,6 +810,8 @@ Module AirDrag_Globals
             Case tCompErg.user_valid
                 Return "[-]"
             Case tCompErg.used
+                Return "[-]"
+            Case tCompErg.system_valid
                 Return "[-]"
             Case tCompErg.calcT
                 Return "[-]"

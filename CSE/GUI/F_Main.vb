@@ -167,6 +167,11 @@ Public Class F_Main
             End Get
         End Property
 
+        Public ReadOnly Property IsEvaluation As Boolean
+            Get
+                Return Me.Operation = OpType.Evaluation
+            End Get
+        End Property
     End Class
 
     '*********Backgroundworker*********
@@ -223,6 +228,7 @@ Public Class F_Main
 
             Dim asyncJob As cAsyncJob = e.Result
             If asyncJob.IsCalibration Then Me.ButtonEval.Enabled = True
+            If asyncJob.IsEvaluation And SelMode = 1 Then Me.ButtonGenVECTO.Enabled = True
             doSaveJob(False)
         End If
 
@@ -722,6 +728,7 @@ Public Class F_Main
             TextBoxDataLS2.Clear()
 
             ButtonEval.Enabled = False
+            ButtonGenVECTO.Enabled = False
             EvaluationState = False
 
             ' Option parameters to standard
@@ -1004,6 +1011,15 @@ Public Class F_Main
 #End Region ' Evaluation
 
 
+#Region "VECTO Input"
+    ' Button to generate VECTO input 
+    Private Sub ButtonGenVECTO_Click(sender As Object, e As EventArgs) Handles ButtonGenVECTO.Click
+        ' Show the VECTOinput window
+        F_VECTOInput.Show()
+    End Sub
+#End Region ' VECTOinput
+
+
 #Region "Tools menu"
     ' Menu open the Log
     Private Sub ToolStripMenuItemLog_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemLog.Click
@@ -1263,6 +1279,5 @@ Public Class F_Main
         TBInfoCrt.Visible = False
         PBInfoIconCrt.Visible = False
     End Sub
-
 #End Region
 End Class

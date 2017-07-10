@@ -462,16 +462,19 @@ Module Signal_identification
                         ' First data Point lies in a section. This is not allowed and set this section to invalid
                         ErgValues(tCompErg.valid).Add(0)
                         ErgValues(tCompErg.used).Add(0)
+                        ErgValues(tCompErg.system_valid).Add(0)
                     ElseIf i = CalcData(tCompCali.SecID).Count - 1 Then
                         ' Last data Point lies in a section. This is not allowed and set this section to invalid
                         ErgValues(tCompErg.valid).Add(0)
                         ErgValues(tCompErg.used).Add(0)
+                        ErgValues(tCompErg.system_valid).Add(0)
                         ErgValues(tCompErg.delta_t)(run) = ErgValues(tCompErg.delta_t)(run) - CalcData(tCompCali.t)(i - 1)
                         ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
-                        ErgValues(tCompErg.user_valid)(run) = 0
+                        'ErgValues(tCompErg.user_valid)(run) = 0
                     Else
                         ErgValues(tCompErg.valid).Add(1)
                         ErgValues(tCompErg.used).Add(1)
+                        ErgValues(tCompErg.system_valid).Add(1)
                     End If
 
                     For Each sKV In ErgValues
@@ -509,7 +512,7 @@ Module Signal_identification
                             ErgValues(tCompErg.vair_ic)(run) = ErgValues(tCompErg.vair_ic)(run) / anz
                             ErgValues(tCompErg.beta_ic)(run) = ErgValues(tCompErg.beta_ic)(run) / anz
                             ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
-                            ErgValues(tCompErg.user_valid)(run) = 0
+                            ErgValues(tCompErg.user_valid)(run) = ErgValues(tCompErg.user_valid)(run) / anz
                             If Not MSCX.tUse Then
                                 ErgValues(tCompErg.v_MSC_GPS)(run) = ErgValues(tCompErg.v_MSC_GPS)(run) / anz
                             End If
@@ -520,6 +523,7 @@ Module Signal_identification
                             ' Set the section to invalid
                             ErgValues(tCompErg.valid)(run) = 0
                             ErgValues(tCompErg.used)(run) = 0
+                            ErgValues(tCompErg.system_valid)(run) = 0
                         End If
                     Else
                         ' Calculate the results from the last section
@@ -554,6 +558,7 @@ Module Signal_identification
                         ErgValues(tCompErg.user_valid).Add(InputData(tComp.user_valid)(i))
                         ErgValues(tCompErg.valid).Add(1)
                         ErgValues(tCompErg.used).Add(1)
+                        ErgValues(tCompErg.system_valid).Add(1)
                         If MSCX.tUse Then
                             ErgValues(tCompErg.v_MSC).Add(0)
                         Else
@@ -576,7 +581,8 @@ Module Signal_identification
                         If i = CalcData(tCompCali.SecID).Count - 1 Then
                             ErgValues(tCompErg.valid)(run) = 0
                             ErgValues(tCompErg.used)(run) = 0
-                            ErgValues(tCompErg.user_valid)(run) = 0
+                            ErgValues(tCompErg.system_valid)(run) = 0
+                            'ErgValues(tCompErg.user_valid)(run) = 0
                             ErgValues(tCompErg.delta_t)(run) = ErgValues(tCompErg.delta_t)(run) - CalcData(tCompCali.t)(i - 1)
                             ErgValues(tCompErg.v_MSC)(run) = (ErgValues(tCompErg.s_MSC)(run) / ErgValues(tCompErg.delta_t)(run)) * 3.6
                         End If

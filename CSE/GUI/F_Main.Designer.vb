@@ -46,12 +46,12 @@ Partial Class F_Main
         Me.ToolStripMenuItemAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.BackgroundWorkerVECTO = New System.ComponentModel.BackgroundWorker()
         Me.GroupBoxJob = New System.Windows.Forms.GroupBox()
-        Me.TextBoxWeather = New System.Windows.Forms.TextBox()
-        Me.ButtonWeather = New System.Windows.Forms.Button()
-        Me.ButtonSelectWeather = New System.Windows.Forms.Button()
         Me.TextBoxVeh1 = New System.Windows.Forms.TextBox()
         Me.ButtonVeh = New System.Windows.Forms.Button()
         Me.ButtonSelectVeh = New System.Windows.Forms.Button()
+        Me.TextBoxWeather = New System.Windows.Forms.TextBox()
+        Me.ButtonWeather = New System.Windows.Forms.Button()
+        Me.ButtonSelectWeather = New System.Windows.Forms.Button()
         Me.GB_hz_out = New System.Windows.Forms.GroupBox()
         Me.RB100Hz = New System.Windows.Forms.RadioButton()
         Me.RB1Hz = New System.Windows.Forms.RadioButton()
@@ -102,6 +102,7 @@ Partial Class F_Main
         Me.TextBoxVeh = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TPMain = New System.Windows.Forms.TabPage()
+        Me.ButtonGenVECTO = New System.Windows.Forms.Button()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.TPCriteria = New System.Windows.Forms.TabPage()
@@ -337,7 +338,7 @@ Partial Class F_Main
         '
         Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuItemClearLog, Me.ToolStripMenuItemLog, Me.ToolStripMenuItem2, Me.CreateActivationFileToolStripMenuItem, Me.ToolStripSeparator3, Me.ToolStripMenuItemOption})
         Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
-        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(48, 20)
+        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
         Me.ToolsToolStripMenuItem.Text = "Tools"
         '
         'MenuItemClearLog
@@ -388,37 +389,37 @@ Partial Class F_Main
         'ToolStripMenuItemManu
         '
         Me.ToolStripMenuItemManu.Name = "ToolStripMenuItemManu"
-        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(189, 22)
+        Me.ToolStripMenuItemManu.Size = New System.Drawing.Size(188, 22)
         Me.ToolStripMenuItemManu.Text = "User Manual"
         '
         'ReleaseNotesToolStripMenuItem
         '
         Me.ReleaseNotesToolStripMenuItem.Name = "ReleaseNotesToolStripMenuItem"
-        Me.ReleaseNotesToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+        Me.ReleaseNotesToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
         Me.ReleaseNotesToolStripMenuItem.Text = "Release Notes"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(186, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(185, 6)
         '
         'ReportBugToolStripMenuItem
         '
         Me.ReportBugToolStripMenuItem.Image = Global.AirDrag.My.Resources.Resources.bug_edit_icon
         Me.ReportBugToolStripMenuItem.Name = "ReportBugToolStripMenuItem"
-        Me.ReportBugToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+        Me.ReportBugToolStripMenuItem.Size = New System.Drawing.Size(188, 22)
         Me.ReportBugToolStripMenuItem.Text = "Report Bug via CITnet"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(186, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(185, 6)
         '
         'ToolStripMenuItemAbout
         '
         Me.ToolStripMenuItemAbout.Image = Global.AirDrag.My.Resources.Resources.Info
         Me.ToolStripMenuItemAbout.Name = "ToolStripMenuItemAbout"
-        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(189, 22)
+        Me.ToolStripMenuItemAbout.Size = New System.Drawing.Size(188, 22)
         Me.ToolStripMenuItemAbout.Text = "About Air Drag"
         '
         'BackgroundWorkerVECTO
@@ -441,39 +442,6 @@ Partial Class F_Main
         Me.GroupBoxJob.TabIndex = 21
         Me.GroupBoxJob.TabStop = False
         Me.GroupBoxJob.Text = "General"
-        '
-        'TextBoxWeather
-        '
-        Me.TextBoxWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxWeather.Location = New System.Drawing.Point(144, 18)
-        Me.TextBoxWeather.Margin = New System.Windows.Forms.Padding(2)
-        Me.TextBoxWeather.Name = "TextBoxWeather"
-        Me.TextBoxWeather.Size = New System.Drawing.Size(644, 20)
-        Me.TextBoxWeather.TabIndex = 2
-        '
-        'ButtonWeather
-        '
-        Me.ButtonWeather.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonWeather.Location = New System.Drawing.Point(6, 17)
-        Me.ButtonWeather.Margin = New System.Windows.Forms.Padding(2)
-        Me.ButtonWeather.Name = "ButtonWeather"
-        Me.ButtonWeather.Size = New System.Drawing.Size(135, 23)
-        Me.ButtonWeather.TabIndex = 37
-        Me.ButtonWeather.Text = "Ambient cond."
-        Me.ButtonWeather.UseVisualStyleBackColor = True
-        '
-        'ButtonSelectWeather
-        '
-        Me.ButtonSelectWeather.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonSelectWeather.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonSelectWeather.Location = New System.Drawing.Point(792, 16)
-        Me.ButtonSelectWeather.Margin = New System.Windows.Forms.Padding(2)
-        Me.ButtonSelectWeather.Name = "ButtonSelectWeather"
-        Me.ButtonSelectWeather.Size = New System.Drawing.Size(31, 23)
-        Me.ButtonSelectWeather.TabIndex = 3
-        Me.ButtonSelectWeather.Text = "..."
-        Me.ButtonSelectWeather.UseVisualStyleBackColor = True
         '
         'TextBoxVeh1
         '
@@ -507,6 +475,39 @@ Partial Class F_Main
         Me.ButtonSelectVeh.TabIndex = 1
         Me.ButtonSelectVeh.Text = "..."
         Me.ButtonSelectVeh.UseVisualStyleBackColor = True
+        '
+        'TextBoxWeather
+        '
+        Me.TextBoxWeather.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TextBoxWeather.Location = New System.Drawing.Point(144, 18)
+        Me.TextBoxWeather.Margin = New System.Windows.Forms.Padding(2)
+        Me.TextBoxWeather.Name = "TextBoxWeather"
+        Me.TextBoxWeather.Size = New System.Drawing.Size(644, 20)
+        Me.TextBoxWeather.TabIndex = 2
+        '
+        'ButtonWeather
+        '
+        Me.ButtonWeather.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ButtonWeather.Location = New System.Drawing.Point(6, 17)
+        Me.ButtonWeather.Margin = New System.Windows.Forms.Padding(2)
+        Me.ButtonWeather.Name = "ButtonWeather"
+        Me.ButtonWeather.Size = New System.Drawing.Size(135, 23)
+        Me.ButtonWeather.TabIndex = 37
+        Me.ButtonWeather.Text = "Ambient cond."
+        Me.ButtonWeather.UseVisualStyleBackColor = True
+        '
+        'ButtonSelectWeather
+        '
+        Me.ButtonSelectWeather.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonSelectWeather.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ButtonSelectWeather.Location = New System.Drawing.Point(792, 16)
+        Me.ButtonSelectWeather.Margin = New System.Windows.Forms.Padding(2)
+        Me.ButtonSelectWeather.Name = "ButtonSelectWeather"
+        Me.ButtonSelectWeather.Size = New System.Drawing.Size(31, 23)
+        Me.ButtonSelectWeather.TabIndex = 3
+        Me.ButtonSelectWeather.Text = "..."
+        Me.ButtonSelectWeather.UseVisualStyleBackColor = True
         '
         'GB_hz_out
         '
@@ -1087,6 +1088,7 @@ Partial Class F_Main
         '
         'TPMain
         '
+        Me.TPMain.Controls.Add(Me.ButtonGenVECTO)
         Me.TPMain.Controls.Add(Me.GroupBox4)
         Me.TPMain.Controls.Add(Me.GroupBoxJob)
         Me.TPMain.Controls.Add(Me.GroupBox1)
@@ -1098,6 +1100,22 @@ Partial Class F_Main
         Me.TPMain.TabIndex = 0
         Me.TPMain.Text = "Main"
         Me.TPMain.UseVisualStyleBackColor = True
+        '
+        'ButtonGenVECTO
+        '
+        Me.ButtonGenVECTO.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonGenVECTO.Enabled = False
+        Me.ButtonGenVECTO.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ButtonGenVECTO.Image = Global.AirDrag.My.Resources.Resources.Play
+        Me.ButtonGenVECTO.Location = New System.Drawing.Point(831, 418)
+        Me.ButtonGenVECTO.Margin = New System.Windows.Forms.Padding(2)
+        Me.ButtonGenVECTO.Name = "ButtonGenVECTO"
+        Me.ButtonGenVECTO.Size = New System.Drawing.Size(60, 80)
+        Me.ButtonGenVECTO.TabIndex = 36
+        Me.ButtonGenVECTO.Text = "Generate VECTO Input"
+        Me.ButtonGenVECTO.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.ButtonGenVECTO.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        Me.ButtonGenVECTO.UseVisualStyleBackColor = True
         '
         'GroupBox4
         '
@@ -2848,5 +2866,5 @@ Partial Class F_Main
     Friend WithEvents TB_v_veh_ave_delta_CAL As System.Windows.Forms.TextBox
     Friend WithEvents TB_v_veh_1s_delta_CAL As System.Windows.Forms.TextBox
     Friend WithEvents Lv_veh_1s_delta_CAL As System.Windows.Forms.Label
-
+    Friend WithEvents ButtonGenVECTO As Button
 End Class

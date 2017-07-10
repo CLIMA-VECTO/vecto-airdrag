@@ -467,9 +467,10 @@ Public Module main_calculation_call
                ErgValues(tCompErg.v_veh_1s_min)(i) > (ErgValues(tCompErg.v_veh)(i) - Crt.v_veh_1s_delta_CAL) Then ErgValues(tCompErg.val_vVeh_1s)(i) = 1
 
             ' Check if all criterias are valid
-            If ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_beta)(i) = 1 And _
-               ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_User)(i) = 1 And _
-               ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 Then
+            If ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_beta)(i) = 1 And
+               ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_User)(i) = 1 And
+               ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And
+               ErgValues(tCompErg.system_valid)(i) = 1 Then
                 ErgValues(tCompErg.valid)(i) = 1
                 ErgValues(tCompErg.used)(i) = 1
             Else
@@ -855,8 +856,10 @@ Public Module main_calculation_call
                     If ErgValues(tCompErg.t_ground)(i) < Crt.t_ground_max Then ErgValues(tCompErg.val_t_ground)(i) = 1
 
                     ' Check if all criterias are valid
-                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vVeh_f)(i) = 1 And _
-                        ErgValues(tCompErg.val_tq_f)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 And ErgValues(tCompErg.val_t_amb)(i) = 1 And ErgValues(tCompErg.val_t_ground)(i) = 1 Then
+                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vVeh_f)(i) = 1 And
+                        ErgValues(tCompErg.val_tq_f)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 And
+                        ErgValues(tCompErg.val_t_amb)(i) = 1 And ErgValues(tCompErg.val_t_ground)(i) = 1 And
+                        ErgValues(tCompErg.system_valid)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
                         allFalse = False
@@ -910,8 +913,9 @@ Public Module main_calculation_call
                     If ErgValues(tCompErg.t_ground)(i) < Crt.t_ground_max Then ErgValues(tCompErg.val_t_ground)(i) = 1
 
                     ' Check if all criterias are valid
-                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_beta)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And _
-                       ErgValues(tCompErg.val_tq_1s)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 And ErgValues(tCompErg.val_t_amb)(i) = 1 And ErgValues(tCompErg.val_t_ground)(i) = 1 Then
+                    If ErgValues(tCompErg.val_User)(i) = 1 And ErgValues(tCompErg.val_vVeh_avg)(i) = 1 And ErgValues(tCompErg.val_vWind)(i) = 1 And ErgValues(tCompErg.val_vWind_1s)(i) = 1 And ErgValues(tCompErg.val_beta)(i) = 1 And ErgValues(tCompErg.val_vVeh_1s)(i) = 1 And
+                       ErgValues(tCompErg.val_tq_1s)(i) = 1 And ErgValues(tCompErg.val_n_eng)(i) = 1 And ErgValues(tCompErg.val_dist)(i) = 1 And ErgValues(tCompErg.val_t_amb)(i) = 1 And ErgValues(tCompErg.val_t_ground)(i) = 1 And
+                       ErgValues(tCompErg.system_valid)(i) = 1 Then
                         ErgValues(tCompErg.valid)(i) = 1
                         ErgValues(tCompErg.used)(i) = 1
                         allFalse = False
