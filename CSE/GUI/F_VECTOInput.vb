@@ -107,7 +107,7 @@ Public Class F_VECTOInput
             TBTransR.Text = "0"
         End If
 
-        TBCdxA.Text = Math.Round(Job.CdxA0, 4) + Convert.ToDouble(TBWorstCase.Text) + Convert.ToDouble(TBTransR.Text)
+        'TBCdxA.Text = Math.Round(Job.CdxA0, 4) + Convert.ToDouble(TBWorstCase.Text) + Convert.ToDouble(TBTransR.Text)
     End Sub
 
     ' Check the input in TBWorstCase
@@ -135,8 +135,8 @@ Public Class F_VECTOInput
             TBWorstCase.Clear()
             MessageBox.Show("only values between 0 and 0.2 are allowed. Please correct your input.")
             TBWorstCase.Focus()
-        Else
-            TBCdxA.Text = Math.Round(Job.CdxA0, 4) + Convert.ToDouble(TBWorstCase.Text) + Convert.ToDouble(TBTransR.Text)
+            'Else
+            '    TBCdxA.Text = Math.Round(Job.CdxA0, 4) + Convert.ToDouble(TBWorstCase.Text) + Convert.ToDouble(TBTransR.Text)
         End If
     End Sub
 #End Region
@@ -183,9 +183,9 @@ Public Class F_VECTOInput
                     New XElement(tns + "CertificationNumber", VECTOconf.CertNum),
                     New XElement(tns + "Date", XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
                     New XElement(tns + "AppVersion", "VECTOAirDrag_" + AppVers),
-                    New XElement(tns + "CdxA_0", Math.Round(VECTOconf.CdxA, 2)),
-                    New XElement(tns + "TransferredCdxA", Math.Round(VECTOconf.TransfR, 2)),
-                    New XElement(tns + "DeclaredCdxA", Math.Round(VECTOconf.WorstCase, 2))))
+                    New XElement(tns + "CdxA_0", VECTOconf.CdxA.ToString("F2")),
+                    New XElement(tns + "TransferredCdxA", (VECTOconf.CdxA + VECTOconf.TransfR).ToString("F2")),
+                    New XElement(tns + "DeclaredCdxA", (VECTOconf.CdxA + VECTOconf.TransfR + VECTOconf.WorstCase).ToString("F2"))))
     End Function
 #End Region
 End Class

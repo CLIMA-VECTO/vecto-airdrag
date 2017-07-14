@@ -1,5 +1,15 @@
 VECTO-AirDrag: Changes
 ===================
+#### 2017-07-14: v3.1.0 ####
+TUG improvements:
+
+  * New version number
+  * Bugfix for correct detection of first/last datapoint inside of a MS
+  * Update VECTO input file generation
+  * Update VECTO hashing added
+  * Update ReleaseNotes
+  * Update UserManual
+  
 #### 2017-03-22: v3.0.8 ####
 TUG improvements:
 
