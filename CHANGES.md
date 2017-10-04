@@ -4,8 +4,8 @@ VECTO-AirDrag: Changes
 TUG improvements:
 
   * New version number
-  * Bugfix for direct start option (now the VECTO input files ca be created)
-  * Correction version number (now the version number is generated over the assambly number)
+  * Bugfix for direct start option (now the VECTO input files can be created)
+  * Correction version number (now the version number is generated over the assembly number)
   
 #### 2017-07-14: v3.1.0 ####
 TUG improvements:
