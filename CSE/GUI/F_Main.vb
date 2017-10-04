@@ -113,6 +113,12 @@ Public Class F_Main
                 Do While BWorker.IsBusy
                     Application.DoEvents()
                 Loop
+
+                ' Write the VECTO output files
+                If SelMode = 1 Then
+                    Me.ButtonGenVECTO.Enabled = True
+                    F_VECTOInput.ShowDialog()
+                End If
             Finally
                 ' Close the form after calculation
                 Me.Close()

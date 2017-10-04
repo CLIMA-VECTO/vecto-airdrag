@@ -55,7 +55,7 @@ Partial Class F_About
         Me.Label1.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(27, 431)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(179, 13)
+        Me.Label1.Size = New System.Drawing.Size(178, 13)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Graz University of Technology"
         '
@@ -126,9 +126,9 @@ Partial Class F_About
         Me.Label8.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label8.Location = New System.Drawing.Point(27, 167)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(158, 65)
+        Me.Label8.Size = New System.Drawing.Size(157, 65)
         Me.Label8.TabIndex = 3
-        Me.Label8.Text = "European Commission" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "DG CLIMA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "and" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Joint Research Centre" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Sustainable Transport " & _
+        Me.Label8.Text = "European Commission" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "DG CLIMA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "and" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Joint Research Centre" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Sustainable Transport " &
     "Unit" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         '
         'PictureBoxJRC
@@ -167,7 +167,7 @@ Partial Class F_About
         Me.Label4.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.Location = New System.Drawing.Point(12, 269)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(124, 13)
+        Me.Label4.Size = New System.Drawing.Size(123, 13)
         Me.Label4.TabIndex = 8
         Me.Label4.Text = "Georgios FONTARAS"
         '
@@ -217,10 +217,10 @@ Partial Class F_About
         Me.LinkLabel1.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LinkLabel1.Location = New System.Drawing.Point(11, 327)
         Me.LinkLabel1.Name = "LinkLabel1"
-        Me.LinkLabel1.Size = New System.Drawing.Size(142, 13)
+        Me.LinkLabel1.Size = New System.Drawing.Size(143, 13)
         Me.LinkLabel1.TabIndex = 19
         Me.LinkLabel1.TabStop = True
-        Me.LinkLabel1.Text = "vecto@jrc.ec.europa.eu"
+        Me.LinkLabel1.Text = "jrc-vecto@ec.europa.eu"
         '
         'Label6
         '
@@ -268,7 +268,7 @@ Partial Class F_About
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(464, 557)
+        Me.ClientSize = New System.Drawing.Size(464, 552)
         Me.Controls.Add(Me.LVersion)
         Me.Controls.Add(Me.LinkLicensed)
         Me.Controls.Add(Me.Label13)

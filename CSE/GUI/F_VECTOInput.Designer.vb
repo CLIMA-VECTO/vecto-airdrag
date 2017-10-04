@@ -166,6 +166,7 @@ Partial Class F_VECTOInput
         '
         'ButtonCancel
         '
+        Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.ButtonCancel.Location = New System.Drawing.Point(247, 181)
         Me.ButtonCancel.Name = "ButtonCancel"
         Me.ButtonCancel.Size = New System.Drawing.Size(75, 23)
@@ -184,8 +185,10 @@ Partial Class F_VECTOInput
         '
         'F_VECTOInput
         '
+        Me.AcceptButton = Me.ButtonOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.ButtonCancel
         Me.ClientSize = New System.Drawing.Size(334, 216)
         Me.Controls.Add(Me.ButtonOK)
         Me.Controls.Add(Me.ButtonCancel)
