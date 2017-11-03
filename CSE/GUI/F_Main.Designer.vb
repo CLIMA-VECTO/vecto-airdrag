@@ -34,8 +34,6 @@ Partial Class F_Main
         Me.MenuItemClearLog = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemLog = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.CreateActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripMenuItemOption = New System.Windows.Forms.ToolStripMenuItem()
         Me.InfoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemManu = New System.Windows.Forms.ToolStripMenuItem()
@@ -336,7 +334,7 @@ Partial Class F_Main
         '
         'ToolsToolStripMenuItem
         '
-        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuItemClearLog, Me.ToolStripMenuItemLog, Me.ToolStripMenuItem2, Me.CreateActivationFileToolStripMenuItem, Me.ToolStripSeparator3, Me.ToolStripMenuItemOption})
+        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuItemClearLog, Me.ToolStripMenuItemLog, Me.ToolStripMenuItem2, Me.ToolStripMenuItemOption})
         Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
         Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
         Me.ToolsToolStripMenuItem.Text = "Tools"
@@ -344,37 +342,26 @@ Partial Class F_Main
         'MenuItemClearLog
         '
         Me.MenuItemClearLog.Name = "MenuItemClearLog"
-        Me.MenuItemClearLog.Size = New System.Drawing.Size(186, 22)
+        Me.MenuItemClearLog.Size = New System.Drawing.Size(152, 22)
         Me.MenuItemClearLog.Text = "Clear Log"
         '
         'ToolStripMenuItemLog
         '
         Me.ToolStripMenuItemLog.Image = Global.AirDrag.My.Resources.Resources.Log_File
         Me.ToolStripMenuItemLog.Name = "ToolStripMenuItemLog"
-        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(186, 22)
+        Me.ToolStripMenuItemLog.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemLog.Text = "Open LogFile"
         '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(183, 6)
-        '
-        'CreateActivationFileToolStripMenuItem
-        '
-        Me.CreateActivationFileToolStripMenuItem.Name = "CreateActivationFileToolStripMenuItem"
-        Me.CreateActivationFileToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
-        Me.CreateActivationFileToolStripMenuItem.Text = "Create Activation File"
-        '
-        'ToolStripSeparator3
-        '
-        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(183, 6)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(149, 6)
         '
         'ToolStripMenuItemOption
         '
         Me.ToolStripMenuItemOption.Image = Global.AirDrag.My.Resources.Resources.Optionen
         Me.ToolStripMenuItemOption.Name = "ToolStripMenuItemOption"
-        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(186, 22)
+        Me.ToolStripMenuItemOption.Size = New System.Drawing.Size(152, 22)
         Me.ToolStripMenuItemOption.Text = "Preferences"
         '
         'InfoToolStripMenuItem
@@ -2642,7 +2629,6 @@ Partial Class F_Main
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents ToolsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItemLog As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripMenuItemOption As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents InfoToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItemAbout As System.Windows.Forms.ToolStripMenuItem
@@ -2822,7 +2808,6 @@ Partial Class F_Main
     Friend WithEvents MenuItemExit As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents CreateActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents Label5 As System.Windows.Forms.Label

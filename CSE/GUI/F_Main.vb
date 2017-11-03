@@ -59,13 +59,6 @@ Public Class F_Main
             IO.Directory.CreateDirectory(Prefs.workingDir)
         End If
 
-        'Lizenz checken
-        If Not Lic.LICcheck() Then
-            logme(9, True, Lic.FailMsg)
-            CreatActivationFileToolStripMenuItem_Click(sender, e)
-            Me.Close()
-        End If
-
         ' Write a defult config file if failed to read one.
         If Not configL Then
             Try
@@ -1041,13 +1034,6 @@ Public Class F_Main
 
 
 #Region "Infos menu"
-    ' Create activation file
-
-    Private Sub CreatActivationFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreateActivationFileToolStripMenuItem.Click
-        Lic.CreateActFile(MyPath & "ActivationCode.dat")
-        logme(7, True, "Activation code created under: " & MyPath & "ActivationCode.dat")
-    End Sub
-
     ' Menu open the Infobox
     Private Sub ToolStripMenuItemAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItemAbout.Click
         ' Show the info GUI

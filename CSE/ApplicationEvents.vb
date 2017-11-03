@@ -69,10 +69,6 @@ Namespace My
                 ' compile date
                 AppDate = fiAss.LastWriteTime.Date
 
-                ' Licencemodul
-                Lic.FilePath = joinPaths(MyPath, "License.dat")
-                Lic.AppVersion = AppVers
-
                 ' Declaration from the filebrowser optionen
                 fbVECTO = New cFileBrowser("AirDrag")
                 fbVECTO.Extensions = New String() {"csjob.json", "csjob"}

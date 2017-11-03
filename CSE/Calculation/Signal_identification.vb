@@ -937,7 +937,6 @@ Module Signal_identification
                             Else
                                 CalcData(tCompCali.slope_deg)(i) = (Math.Atan((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i)))) * 180 / Math.PI
                             End If
-                            'CalcData(tCompCali.slope_deg)(i) = (Math.Atan((CalcData(tCompCali.alt)(i + 1) - CalcData(tCompCali.alt)(i)) / (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i)))) * 180 / Math.PI
                         ElseIf CalcData(tCompCali.SecID)(i + 1) <> CalcData(tCompCali.SecID)(i) Then
                             ' Last value
                             If (CalcData(tCompCali.dist_root)(i) - CalcData(tCompCali.dist_root)(i - 1)) = 0 Then
@@ -946,7 +945,6 @@ Module Signal_identification
                             Else
                                 CalcData(tCompCali.slope_deg)(i) = (Math.Atan((CalcData(tCompCali.alt)(i) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI
                             End If
-                            'CalcData(tCompCali.slope_deg)(i) = (Math.Atan((CalcData(tCompCali.alt)(i) - CalcData(tCompCali.alt)(i - 1)) / (CalcData(tCompCali.dist_root)(i) - CalcData(tCompCali.dist_root)(i - 1)))) * 180 / Math.PI
                         ElseIf CalcData(tCompCali.SecID)(i - 1) = CalcData(tCompCali.SecID)(i) And CalcData(tCompCali.SecID)(i + 1) = CalcData(tCompCali.SecID)(i) Then
                             ' All other values inside MS
                             If (CalcData(tCompCali.dist_root)(i + 1) - CalcData(tCompCali.dist_root)(i - 1)) = 0 Then

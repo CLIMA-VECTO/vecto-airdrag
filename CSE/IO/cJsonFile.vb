@@ -218,7 +218,7 @@ When False, it overrides Application's choice and is not replaced ever.",
         If prefs Is Nothing OrElse Not prefs.hideUsername Then
             username = System.Security.Principal.WindowsIdentity.GetCurrent().Name & "@"
         End If
-        h("CreatedBy") = format("{0}{1}(lic: {2})", username, Lic.LicString, Lic.GUID)
+        h("CreatedBy") = format("{0})", username)
 
         h("AppVersion") = AppVers
 

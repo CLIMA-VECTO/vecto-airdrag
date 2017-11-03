@@ -115,10 +115,6 @@ Module declaration_public
     Public GenShape As New cGenShp
 
     ' *****************************************************************
-    ' Licencemodul
-    Public Lic As New vectolic.cLicense
-
-    ' *****************************************************************
     ' Backgroundworker
     Public BWorker As System.ComponentModel.BackgroundWorker
 End Module
