@@ -951,7 +951,7 @@ Public Module main_calculation_call
     ' Get the maximum allowed speed limit
     Private Function fgetSpeedLim(ByVal vehicle As cVehicle, ByRef lim_v_veh_avg_max_HS As Single, ByRef lim_v_veh_avg_min_HS As Single) As Boolean
         ' Get the limits dependend of maximum vehicle speed
-        lim_v_veh_avg_max_HS = Math.Min(vehicle.vVehMax, Crt.v_veh_avg_max_HS)
+        lim_v_veh_avg_max_HS = Crt.v_veh_avg_max_HS
         If vehicle.vVehMax < (Crt.v_veh_avg_min_HS + Crt.delta_v_avg_min_HS) Then
             lim_v_veh_avg_min_HS = vehicle.vVehMax - Crt.delta_v_avg_min_HS
         Else

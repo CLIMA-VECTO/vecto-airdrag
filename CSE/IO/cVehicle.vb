@@ -167,7 +167,7 @@ The generic parameters for classes are stored in the GenShape.shp",
         End If
 
         ' Set Vehicle maximum speed
-        If IsNothing(Me.Body("vVehMax")) Then Me.Body("vVehMax") = 88
+        If IsNothing(Me.Body("vVehMax")) Then Me.Body("vVehMax") = 95
 
         ' Check others
         ' Check if vehicle class with the given configuration class is available
