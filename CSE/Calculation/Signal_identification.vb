@@ -110,12 +110,12 @@ Module Signal_identification
         For i = 1 To MSCOrg.meID.Count - 1
             If Math.Abs(len(i) - MSCOrg.len(i)) > Crt.leng_crit Then
                 If Not headDiff Then logme(9, False, "Length difference between given coordinates and spezified section length in *.csms file!")
-                logme(9, False, "SecID(" & MSCOrg.meID(i) & "), DirID(" & MSCOrg.dID(i) & "), spez. Len(" & MSCOrg.len(i) & "), coord. Len(" & Math.Round(len(i), 2) & ")")
+                logme(9, False, "SecID(" & MSCOrg.meID(i) & "), DirID(" & MSCOrg.dID(i) & "), spez. Len(" & MSCOrg.len(i) & "), coord. Len(" & Math.Round(len(i), 2, MidpointRounding.AwayFromZero) & ")")
                 LenDiff = True
             End If
             If Math.Abs(Head(i) - MSCOrg.head(i)) > Crt.delta_head_max Then
                 If Not HeadDiff Then logme(9, False, "Heading difference between given coordinates and spezified section heading in *.csms file!")
-                logme(9, False, "SecID(" & MSCOrg.meID(i) & "), DirID(" & MSCOrg.dID(i) & "), spez. heading(" & MSCOrg.head(i) & "), coord. Heading(" & Math.Round(Head(i), 2) & ")")
+                logme(9, False, "SecID(" & MSCOrg.meID(i) & "), DirID(" & MSCOrg.dID(i) & "), spez. heading(" & MSCOrg.head(i) & "), coord. Heading(" & Math.Round(Head(i), 2, MidpointRounding.AwayFromZero) & ")")
                 HeadDiff = True
             End If
         Next i

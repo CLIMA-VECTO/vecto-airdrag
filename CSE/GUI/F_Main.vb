@@ -237,7 +237,7 @@ Public Class F_Main
         CalibrationState = False
         EvaluationState = False
 
-        Me.TextBoxRBetaMis.Text = Math.Round(Job.beta_ame, 2).ToString
+        Me.TextBoxRBetaMis.Text = Math.Round(Job.beta_ame, 2, MidpointRounding.AwayFromZero)
     End Sub
 
 

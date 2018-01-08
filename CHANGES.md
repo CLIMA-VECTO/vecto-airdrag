@@ -1,6 +1,6 @@
 VECTO-AirDrag: Changes
 ===================
-#### 2017-11-03: v3.1.3 ####
+#### 2017-11-07: v3.1.3 ####
 TUG improvements:
 
   * New version number

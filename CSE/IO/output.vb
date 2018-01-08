@@ -248,7 +248,7 @@ Module output
             FileOut.WriteLine("# CdxA(0)meas:" & Prefs.listSep & Job.CdxA0meas & Prefs.listSep & "[m²] average measured CdxA for zero yaw angle")
             FileOut.WriteLine("# delta_CdxA_height:" & Prefs.listSep & Job.delta_CdxA_height & Prefs.listSep & "[m²] correction of CdxA to reference vehicle height")
             FileOut.WriteLine("# delta_CdxA_anemo:" & Prefs.listSep & Crt.delta_CdxA_anemo & Prefs.listSep & "[m²] CdxA influence from anemometer")
-            FileOut.WriteLine("# CdxA(0):" & Prefs.listSep & Math.Round(Job.CdxA0, 2) & Prefs.listSep & "[m²] average CdxA for zero yaw angle")
+            FileOut.WriteLine("# CdxA(0):" & Prefs.listSep & Math.Round(Job.CdxA0, 2, MidpointRounding.AwayFromZero) & Prefs.listSep & "[m²] average CdxA for zero yaw angle")
             FileOut.WriteLine("#")
             FileOut.WriteLine("# Validity criteria:")
             If Job.valid_RRC Then

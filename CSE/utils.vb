@@ -310,8 +310,8 @@ Module utils
 
     ' Update the Resultboxes on the GUI
     Public Sub updateResultBoxes()
-        F_Main.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3).ToString
-        F_Main.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3).ToString
+        F_Main.TextBoxRVeh.Text = Math.Round(Job.fv_veh, 3, MidpointRounding.AwayFromZero)
+        F_Main.TextBoxRAirPos.Text = Math.Round(Job.fv_pe, 3, MidpointRounding.AwayFromZero)
     End Sub
 
     ' Definition for the Backgroundworker

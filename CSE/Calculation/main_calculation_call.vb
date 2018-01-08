@@ -180,9 +180,9 @@ Public Module main_calculation_call
 
             ' Write the results on the GUI
             logme(7, False, "Results from the calculation")
-            logme(6, False, "average absolute beta HS test: " & Math.Round(Job.beta, 4))
-            logme(6, False, "delta CdxA correction: " & Math.Round(Job.delta_CdxA_beta, 4))
-            logme(6, False, "CdxA(0): " & Math.Round(Job.CdxA0, 4))
+            logme(6, False, "average absolute beta HS test: " & Math.Round(Job.beta, 4, MidpointRounding.AwayFromZero))
+            logme(6, False, "delta CdxA correction: " & Math.Round(Job.delta_CdxA_beta, 4, MidpointRounding.AwayFromZero))
+            logme(6, False, "CdxA(0): " & Math.Round(Job.CdxA0, 4, MidpointRounding.AwayFromZero))
 
             ' Clear the dictionaries
             ErgValuesComp = Nothing
@@ -562,7 +562,7 @@ Public Module main_calculation_call
                         SecCount.ValidSec(j) = True
                     Else
                         If Math.Abs(SecCount.vVeh(i) - SecCount.vVeh(j)) > Crt.v_veh_ave_delta_CAL Then
-                            logme(8, False, format("Deviation of average speeds per heading is to high ({0} km/h) in SecID: {1}! Section is set to invalid", Math.Round(Math.Abs(SecCount.vVeh(i) - SecCount.vVeh(j)), 3), ErgValues(tCompErg.SecID)(i)))
+                            logme(8, False, format("Deviation of average speeds per heading is to high ({0} km/h) in SecID: {1}! Section is set to invalid", Math.Round(Math.Abs(SecCount.vVeh(i) - SecCount.vVeh(j)), 3, MidpointRounding.AwayFromZero), ErgValues(tCompErg.SecID)(i)))
                         End If
 
                         SecCount.ValidSec(i) = False
