@@ -1,5 +1,11 @@
 VECTO-AirDrag: Changes
 ===================
+#### 2018-01-22: v3.1.4 ####
+TUG improvements:
+
+  * New version number
+  * Bugfix for rounding method
+  
 #### 2017-11-07: v3.1.3 ####
 TUG improvements:
 
