@@ -14,7 +14,7 @@ Public Class F_VECTOInput
         Dim configL As Boolean = True
 
         ' Disable the CdxA box
-        TBCdxA.Text = Math.Round(Job.CdxA0, 4, MidpointRounding.AwayFromZero)
+        TBCdxA.Text = Job.CdxA0
         TBCdxA.Enabled = False
 
         ' Load the config file

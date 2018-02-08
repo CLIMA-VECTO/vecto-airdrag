@@ -170,7 +170,11 @@ Public Module main_calculation_call
             For i = 0 To ErgValuesReg(tCompErgReg.SecID).Count - 1
                 If ErgValuesReg(tCompErgReg.valid_RRC)(i) = 0 Then
                     Job.valid_RRC = False
-                    If Job.mode = 1 Then Throw New Exception("Invalid test - maximum deviation of RRCs between low speed tests exceeded")
+                    If Job.mode = 1 Then
+                        Throw New Exception("Invalid test - maximum deviation of RRCs between low speed tests exceeded")
+                    Else
+                        logme(8, False, format("Invalid test - maximum deviation of RRCs between low speed tests exceeded"))
+                    End If
                 End If
             Next i
 
@@ -182,7 +186,7 @@ Public Module main_calculation_call
             logme(7, False, "Results from the calculation")
             logme(6, False, "average absolute beta HS test: " & Math.Round(Job.beta, 4, MidpointRounding.AwayFromZero))
             logme(6, False, "delta CdxA correction: " & Math.Round(Job.delta_CdxA_beta, 4, MidpointRounding.AwayFromZero))
-            logme(6, False, "CdxA(0): " & Math.Round(Job.CdxA0, 4, MidpointRounding.AwayFromZero))
+            logme(6, False, "CdxA(0): " & Math.Round(Job.CdxA0, 2, MidpointRounding.AwayFromZero))
 
             ' Clear the dictionaries
             ErgValuesComp = Nothing
